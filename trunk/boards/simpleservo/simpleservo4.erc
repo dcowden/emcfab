@@ -1,0 +1,20 @@
+EAGLE Version 4.16r2 Copyright (c) 1988-2006 CadSoft
+
+Electrical Rule Check for D:/projects/rapid_proto/boards/simpleservo4.sch at 12/22/2008 09:48:45a
+
+WARNING: Sheet 1/1: POWER Pin U$1 VDD connected to VCC
+WARNING: Sheet 1/1: POWER Pin U$1 VSS connected to GND
+WARNING: Sheet 1/1: POWER Pin U$1 AVSS connected to GND
+WARNING: Sheet 1/1: POWER Pin U$1 AVDD connected to VCC
+ERROR: Sheet 1/1: unconnected INPUT Pin: IC2 T2IN
+ERROR: Sheet 1/1: unconnected INPUT Pin: IC2 R2IN
+WARNING: Only 1 Pin on net N$28
+WARNING: Only 1 Pin on net N$29
+WARNING: Only 1 Pin on net N$30
+WARNING: Only 1 Pin on net N$31
+WARNING: Sheet 1/1, Net MCLR: wire overlaps pin at (3.7 -0.1)
+
+Board and schematic are consistent
+
+    2 errors
+    9 warnings

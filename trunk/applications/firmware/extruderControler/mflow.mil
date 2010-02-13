@@ -1,0 +1,104 @@
+_calc_vel:
+  begin
+//mflow.c,19 :: 		maxoutput = ps->maxoutput;
+	FSR0L <-  FARG_calc_vel+0 + 40
+	calc_vel_maxoutput_L0 <- *FSR0L
+	calc_vel_maxoutput_L0 <- calc_vel_maxoutput_L0
+//mflow.c,20 :: 		Qmf = ps->Qmf;
+	FSR0L <-  FARG_calc_vel+0 + 16
+	FLOC_calc_vel+31 <- *FSR0L
+	calc_vel_Qmf_L0 <- FLOC_calc_vel+31
+//mflow.c,23 :: 		vel = ps->position - ps->prev_position;
+	STACK_8 <- *FARG_calc_vel+0
+	FLOC_calc_vel+29 <-  FARG_calc_vel+0 + 8
+	STACK_0 <- *FLOC_calc_vel+29
+	STACK_4 <-  STACK_8 - STACK_0
+	calc_vel_vel_L0 <- STACK_4
+//mflow.c,26 :: 		accel  =  vel - ps->prev_vel;
+	FSR0L <-  FARG_calc_vel+0 + 12
+	STACK_0 <- *FSR0L
+	FLOC_calc_vel+25 <-  STACK_4 - STACK_0
+//mflow.c,29 :: 		Qtarget = ps->mfgain * ( (float)vel + ( (float)accel * ps->tex ));
+	FSR0L <-  FARG_calc_vel+0 + 32
+	FLOC_calc_vel+21 <- *FSR0L
+	FLOC_calc_vel+17 <- (type cast)STACK_4
+	FLOC_calc_vel+17 <- STACK_0
+	STACK_0 <- (type cast)FLOC_calc_vel+25
+	FSR0L <-  FARG_calc_vel+0 + 24
+	STACK_4 <- *FSR0L
+	STACK_0 <-  STACK_0 * STACK_4
+	STACK_0 <-  FLOC_calc_vel+17 + STACK_0
+	STACK_0 <-  FLOC_calc_vel+21 * STACK_0
+//mflow.c,32 :: 		Qout  = ps->qgain * ( Qtarget - Qmf );
+	FSR0L <-  FARG_calc_vel+0 + 36
+	FLOC_calc_vel+17 <- *FSR0L
+	STACK_0 <-  STACK_0 - FLOC_calc_vel+31
+	STACK_0 <-  FLOC_calc_vel+17 * STACK_0
+	calc_vel_Qout_L0 <- STACK_0
+//mflow.c,35 :: 		Qmf += ps->tmf * ( (0.09 * Qout ) - Qmf );
+	FSR0L <-  FARG_calc_vel+0 + 20
+	FLOC_calc_vel+17 <- *FSR0L
+	STACK_0 <-  9.000000E-002 * STACK_0
+	STACK_0 <-  STACK_0 - FLOC_calc_vel+31
+	STACK_0 <-  FLOC_calc_vel+17 * STACK_0
+	STACK_0 <-  FLOC_calc_vel+31 + STACK_0
+	calc_vel_Qmf_L0 <- STACK_0
+//mflow.c,38 :: 		ps->prev_position = ps->position;
+	STACK_0 <- *FARG_calc_vel+0
+	*FLOC_calc_vel+29 <- STACK_0
+//mflow.c,39 :: 		ps->prev_vel = vel;
+	FSR1L <-  FARG_calc_vel+0 + 12
+	*FSR1L <- calc_vel_vel_L0
+//mflow.c,40 :: 		ps->Qmf = Qmf;
+	FSR1L <-  FARG_calc_vel+0 + 16
+	*FSR1L <- calc_vel_Qmf_L0
+//mflow.c,45 :: 		limitstate=0u;
+	calc_vel_limitstate_L0 <- 0
+//mflow.c,47 :: 		if ( Qout > maxoutput){
+	STACK_0 <- (type cast)calc_vel_maxoutput_L0
+	STACK_0 <-  calc_vel_Qout_L0 > STACK_0
+	if (!STACK_0) then goto L_calc_vel_0
+//mflow.c,48 :: 		output = maxoutput;
+	calc_vel_output_L0 <- calc_vel_maxoutput_L0
+//mflow.c,49 :: 		limitstate=1u;
+	calc_vel_limitstate_L0 <- 1
+//mflow.c,50 :: 		}
+	goto	L_calc_vel_1
+L_calc_vel_0:
+//mflow.c,51 :: 		else if ( Qout < -maxoutput ){
+	STACK_0 <-  0 - calc_vel_maxoutput_L0
+	STACK_0 <- (type cast)STACK_0
+	STACK_0 <-  calc_vel_Qout_L0 < STACK_0
+	if (!STACK_0) then goto L_calc_vel_2
+//mflow.c,52 :: 		output = -maxoutput;
+	calc_vel_output_L0 <-  0 - calc_vel_maxoutput_L0
+	calc_vel_output_L0 <- calc_vel_output_L0
+//mflow.c,53 :: 		limitstate=1u;
+	calc_vel_limitstate_L0 <- 1
+//mflow.c,54 :: 		}
+	goto	L_calc_vel_3
+L_calc_vel_2:
+//mflow.c,56 :: 		output = (int)Qout;
+	STACK_0 <- (type cast)calc_vel_Qout_L0
+	calc_vel_output_L0 <- STACK_0
+//mflow.c,57 :: 		}
+L_calc_vel_3:
+L_calc_vel_1:
+//mflow.c,59 :: 		if ( ps->enable == 0 ){
+	FSR0L <-  FARG_calc_vel+0 + 44
+	STACK_4 <- *FSR0L
+	if ( STACK_4 != 0) then goto L_calc_vel_4
+//mflow.c,60 :: 		output = 0;
+	calc_vel_output_L0 <- 0
+//mflow.c,61 :: 		limitstate = 0;
+	calc_vel_limitstate_L0 <- 0
+//mflow.c,62 :: 		}
+L_calc_vel_4:
+//mflow.c,63 :: 		ps->limit_state = limitstate;
+	FSR1L <-  FARG_calc_vel+0 + 45
+	*FSR1L <- calc_vel_limitstate_L0
+//mflow.c,64 :: 		ps->output = output;
+	FSR1L <-  FARG_calc_vel+0 + 42
+	*FSR1L <- calc_vel_output_L0
+  end
+

@@ -1,0 +1,934 @@
+_strConstCpy:
+  begin
+//cnc_control.c,153 :: 		while(*source){
+L_strConstCpy_0:
+	STACK_0 <- *FARG_strConstCpy+2
+	if (!STACK_0) then goto L_strConstCpy_1
+//cnc_control.c,154 :: 		*dest++ = *source++ ;
+	STACK_0 <- *FARG_strConstCpy+2
+	*FARG_strConstCpy+0 <- STACK_0
+	FARG_strConstCpy+0 <-  FARG_strConstCpy+0 + 1
+	FARG_strConstCpy+0 <- FARG_strConstCpy+0
+	FARG_strConstCpy+2 <-  FARG_strConstCpy+2 + 1
+	FARG_strConstCpy+2 <- FARG_strConstCpy+2
+//cnc_control.c,155 :: 		*dest = 0 ;
+	*FARG_strConstCpy+0 <- 0
+//cnc_control.c,156 :: 		}
+	goto	L_strConstCpy_0
+L_strConstCpy_1:
+  end
+
+_USART_Send_String:
+  begin
+//cnc_control.c,161 :: 		while( *data != 0u ){
+L_USART_Send_String_2:
+	STACK_1 <- *FARG_USART_Send_String+0
+	if ( STACK_1 = 0) then goto L_USART_Send_String_3
+//cnc_control.c,162 :: 		c = *data;
+	FARG_Usart_Write+0 <- *FARG_USART_Send_String+0
+//cnc_control.c,163 :: 		USART_Write(c);
+	FARG_Usart_Write+0 <- FARG_Usart_Write+0
+	CALL _Usart_Write
+//cnc_control.c,164 :: 		data++;
+	FARG_USART_Send_String+0 <-  FARG_USART_Send_String+0 + 1
+	FARG_USART_Send_String+0 <- FARG_USART_Send_String+0
+//cnc_control.c,165 :: 		}
+	goto	L_USART_Send_String_2
+L_USART_Send_String_3:
+//cnc_control.c,166 :: 		USART_Write(13);
+	FARG_Usart_Write+0 <- 13
+	CALL _Usart_Write
+  end
+
+_pushChar:
+  begin
+//cnc_control.c,170 :: 		if ( ch == 10u || ch == 13u){
+	if ( FARG_pushChar+0 = 10) then goto L38_ex_L_pushChar_6
+	if ( FARG_pushChar+0 != 13) then goto L_pushChar_6
+L38_ex_L_pushChar_6:
+//cnc_control.c,172 :: 		cmdBuffer[txtPos] = 0;
+	FSR1L <-  0 + _txtPos
+	*FSR1L <- 0
+//cnc_control.c,173 :: 		if ( txtPos > 0u ){
+	if ( _txtPos <= 0) then goto L_pushChar_7
+//cnc_control.c,174 :: 		txtPos = 0;
+	_txtPos <- 0
+//cnc_control.c,175 :: 		return 1u;
+	STACK_0 <- 1
+	return
+//cnc_control.c,176 :: 		}
+L_pushChar_7:
+//cnc_control.c,178 :: 		return 0u;
+	STACK_0 <- 0
+	return
+//cnc_control.c,181 :: 		}
+L_pushChar_6:
+//cnc_control.c,183 :: 		Usart_write(ch);  //enable this line to echo input
+	FARG_Usart_Write+0 <- FARG_pushChar+0
+	CALL _Usart_Write
+//cnc_control.c,184 :: 		cmdBuffer[txtPos] = ch;
+	FSR1L <-  0 + _txtPos
+	*FSR1L <- FARG_pushChar+0
+//cnc_control.c,185 :: 		txtPos++;
+	_txtPos <-  _txtPos + 1
+	_txtPos <- _txtPos
+//cnc_control.c,186 :: 		return 0;
+	STACK_0 <- 0
+	return
+  end
+
+_printMessage:
+  begin
+//cnc_control.c,191 :: 		USART_Write(13);
+	FARG_Usart_Write+0 <- 13
+	CALL _Usart_Write
+//cnc_control.c,192 :: 		strConstCpy(txtBuffer,msg);
+	FARG_strConstCpy+0 <- 0
+	FARG_strConstCpy+2 <- FARG_printMessage+0
+	CALL _strConstCpy
+//cnc_control.c,193 :: 		USART_Send_String(txtBuffer);
+	FARG_USART_Send_String+0 <- 0
+	CALL _USART_Send_String
+  end
+
+_printFloat:
+  begin
+//cnc_control.c,199 :: 		USART_Send_String(name);
+	FARG_USART_Send_String+0 <- FARG_printFloat+0
+	CALL _USART_Send_String
+//cnc_control.c,200 :: 		FloatToStr(f,floatTxt);
+	FARG_FloatToStr+0 <- FARG_printFloat+2
+	FARG_FloatToStr+4 <- 0
+	CALL _FloatToStr
+//cnc_control.c,201 :: 		USART_Send_String(floatTxt);
+	FARG_USART_Send_String+0 <- 0
+	CALL _USART_Send_String
+  end
+
+_delay5ClockCycles:
+  begin
+//cnc_control.c,205 :: 		unsigned short i = 0;
+	delay5ClockCycles_i_L0 <- 0
+//cnc_control.c,206 :: 		for ( i=0;i< value;i++){
+	delay5ClockCycles_i_L0 <- 0
+L_delay5ClockCycles_10:
+	if ( delay5ClockCycles_i_L0 >= FARG_delay5ClockCycles+0) then goto L_delay5ClockCycles_11
+//cnc_control.c,207 :: 		}
+L_delay5ClockCycles_12:
+//cnc_control.c,206 :: 		for ( i=0;i< value;i++){
+	delay5ClockCycles_i_L0 <-  delay5ClockCycles_i_L0 + 1
+	delay5ClockCycles_i_L0 <- delay5ClockCycles_i_L0
+//cnc_control.c,207 :: 		}
+	goto	L_delay5ClockCycles_10
+L_delay5ClockCycles_11:
+//cnc_control.c,208 :: 		return;
+	return
+  end
+
+_printStatus:
+  begin
+//cnc_control.c,212 :: 		USART_Send_String("\nCNC Controller Status:\n");
+	FARG_USART_Send_String+0 <- 0
+	CALL _USART_Send_String
+//cnc_control.c,213 :: 		printFloat("err=", statusError );
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_statusError
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//cnc_control.c,214 :: 		printFloat("xmult=",multipliers.x);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_multipliers+0
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//cnc_control.c,215 :: 		printFloat("ymult=",multipliers.y);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_multipliers+1
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//cnc_control.c,216 :: 		printFloat("zmult=",multipliers.z);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_multipliers+2
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//cnc_control.c,217 :: 		printFloat("amult=",multipliers.a);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_multipliers+3
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//cnc_control.c,218 :: 		printFloat("multiplier enable=",multipliers.enable);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_multipliers+4
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//cnc_control.c,219 :: 		printFloat("steprate=",multipliers.delayCycles);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_multipliers+5
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//cnc_control.c,220 :: 		USART_Send_String("\nCurrent Status: ");
+	FARG_USART_Send_String+0 <- 0
+	CALL _USART_Send_String
+//cnc_control.c,221 :: 		USART_Send_String(currentStatus);
+	FARG_USART_Send_String+0 <- _currentStatus
+	CALL _USART_Send_String
+  end
+
+_readMemory:
+  begin
+//cnc_control.c,226 :: 		unsigned short size = sizeof ( multipliers );
+	readMemory_size_L0 <- 7
+//cnc_control.c,230 :: 		Eeprom_Read_Obj(0, &versionId,1 );
+	FARG_Eeprom_Read_Obj+0 <- 0
+	FARG_Eeprom_Read_Obj+2 <- 0
+	FARG_Eeprom_Read_Obj+4 <- 1
+	CALL _Eeprom_Read_Obj
+//cnc_control.c,231 :: 		if ( versionId == EEPROM_VERSION_ID ){
+	if ( readMemory_versionId_L0 != _EEPROM_VERSION_ID) then goto L_readMemory_13
+//cnc_control.c,232 :: 		Eeprom_Read_Obj(1,&multipliers,size );
+	FARG_Eeprom_Read_Obj+0 <- 1
+	FARG_Eeprom_Read_Obj+2 <- 0
+	FARG_Eeprom_Read_Obj+4 <- readMemory_size_L0
+	CALL _Eeprom_Read_Obj
+//cnc_control.c,233 :: 		return 1;
+	STACK_0 <- 1
+	return
+//cnc_control.c,234 :: 		}
+L_readMemory_13:
+//cnc_control.c,236 :: 		return 0;
+	STACK_0 <- 0
+	return
+  end
+
+_writeMemory:
+  begin
+//cnc_control.c,241 :: 		unsigned short size = sizeof( multipliers );
+	writeMemory_size_L0 <- 7
+//cnc_control.c,243 :: 		EEprom_Write_Obj(0,&EEPROM_VERSION_ID,1);
+	FARG_Eeprom_Write_Obj+0 <- 0
+	FARG_Eeprom_Write_Obj+2 <- 0
+	FARG_Eeprom_Write_Obj+4 <- 1
+	CALL _Eeprom_Write_Obj
+//cnc_control.c,246 :: 		EEprom_Write_Obj(1,&multipliers,size);
+	FARG_Eeprom_Write_Obj+0 <- 1
+	FARG_Eeprom_Write_Obj+2 <- 0
+	FARG_Eeprom_Write_Obj+4 <- writeMemory_size_L0
+	CALL _Eeprom_Write_Obj
+  end
+
+_clearMemory:
+  begin
+//cnc_control.c,253 :: 		unsigned short blank = 0xFF;
+	clearMemory_blank_L0 <- 255
+//cnc_control.c,254 :: 		EEprom_Write_Obj(0,&blank,1);
+	FARG_Eeprom_Write_Obj+0 <- 0
+	FARG_Eeprom_Write_Obj+2 <- 0
+	FARG_Eeprom_Write_Obj+4 <- 1
+	CALL _Eeprom_Write_Obj
+  end
+
+_commandMatches:
+  begin
+//cnc_control.c,263 :: 		char *cmdptr = cmdBuffer;
+	commandMatches_cmdptr_L0 <- 0
+//cnc_control.c,264 :: 		while(*source && *cmdptr ){
+L_commandMatches_15:
+	STACK_0 <- *FARG_commandMatches+0
+	if (!STACK_0) then goto L_commandMatches_16
+	STACK_0 <- *commandMatches_cmdptr_L0
+	if (!STACK_0) then goto L_commandMatches_16
+L164_ex_L_commandMatches_16:
+//cnc_control.c,265 :: 		if ( *cmdptr != *source )
+	STACK_2 <- *commandMatches_cmdptr_L0
+	STACK_1 <- *FARG_commandMatches+0
+	if ( STACK_2 = STACK_1) then goto L_commandMatches_19
+//cnc_control.c,266 :: 		return 0;
+	STACK_0 <- 0
+	return
+L_commandMatches_19:
+//cnc_control.c,267 :: 		cmdptr++;
+	commandMatches_cmdptr_L0 <-  commandMatches_cmdptr_L0 + 1
+	commandMatches_cmdptr_L0 <- commandMatches_cmdptr_L0
+//cnc_control.c,268 :: 		source++;
+	FARG_commandMatches+0 <-  FARG_commandMatches+0 + 1
+	FARG_commandMatches+0 <- FARG_commandMatches+0
+//cnc_control.c,269 :: 		}
+	goto	L_commandMatches_15
+L_commandMatches_16:
+//cnc_control.c,270 :: 		return 1;
+	STACK_0 <- 1
+	return
+  end
+
+_findFloatValue:
+  begin
+//cnc_control.c,276 :: 		char *ptr = strchr(buffer,'=');
+	FARG_strchr+0 <- FARG_findFloatValue+0
+	FARG_strchr+2 <- 61
+	CALL _strchr
+	findFloatValue_ptr_L0 <- STACK_0
+//cnc_control.c,277 :: 		return atof(++ptr);
+	findFloatValue_ptr_L0 <-  STACK_0 + 1
+	findFloatValue_ptr_L0 <- findFloatValue_ptr_L0
+	FARG_atof+0 <- findFloatValue_ptr_L0
+	CALL _atof
+	STACK_0 <- STACK_0
+	return
+  end
+
+_findIntValue:
+  begin
+//cnc_control.c,282 :: 		char *ptr = strchr(buffer,'=');
+	FARG_strchr+0 <- FARG_findIntValue+0
+	FARG_strchr+2 <- 61
+	CALL _strchr
+	findIntValue_ptr_L0 <- STACK_0
+//cnc_control.c,283 :: 		return atoi(++ptr);
+	findIntValue_ptr_L0 <-  STACK_0 + 1
+	findIntValue_ptr_L0 <- findIntValue_ptr_L0
+	FARG_atoi+0 <- findIntValue_ptr_L0
+	CALL _atoi
+	STACK_0 <- STACK_0
+	return
+  end
+
+_findLongValue:
+  begin
+//cnc_control.c,288 :: 		char *ptr = strchr(buffer,'=');
+	FARG_strchr+0 <- FARG_findLongValue+0
+	FARG_strchr+2 <- 61
+	CALL _strchr
+	findLongValue_ptr_L0 <- STACK_0
+//cnc_control.c,289 :: 		return atol(++ptr);
+	findLongValue_ptr_L0 <-  STACK_0 + 1
+	findLongValue_ptr_L0 <- findLongValue_ptr_L0
+	FARG_atol+0 <- findLongValue_ptr_L0
+	CALL _atol
+	STACK_0 <- STACK_0
+	return
+  end
+
+_findLargest:
+  begin
+//cnc_control.c,294 :: 		if ( a > b ){
+	if ( FARG_findLargest+0 <= FARG_findLargest+1) then goto L_findLargest_20
+//cnc_control.c,295 :: 		if ( a > c ){
+	if ( FARG_findLargest+0 <= FARG_findLargest+2) then goto L_findLargest_21
+//cnc_control.c,296 :: 		if ( a > d )
+	if ( FARG_findLargest+0 <= FARG_findLargest+3) then goto L_findLargest_22
+//cnc_control.c,297 :: 		return a;
+	STACK_0 <- FARG_findLargest+0
+	return
+L_findLargest_22:
+//cnc_control.c,299 :: 		return d;
+	STACK_0 <- FARG_findLargest+3
+	return
+//cnc_control.c,300 :: 		}
+L_findLargest_21:
+//cnc_control.c,302 :: 		if ( c > d )
+	if ( FARG_findLargest+2 <= FARG_findLargest+3) then goto L_findLargest_25
+//cnc_control.c,303 :: 		return c;
+	STACK_0 <- FARG_findLargest+2
+	return
+L_findLargest_25:
+//cnc_control.c,305 :: 		return d;
+	STACK_0 <- FARG_findLargest+3
+	return
+//cnc_control.c,307 :: 		}
+L_findLargest_20:
+//cnc_control.c,309 :: 		if ( b > c ){
+	if ( FARG_findLargest+1 <= FARG_findLargest+2) then goto L_findLargest_28
+//cnc_control.c,310 :: 		if ( b > d ){
+	if ( FARG_findLargest+1 <= FARG_findLargest+3) then goto L_findLargest_29
+//cnc_control.c,311 :: 		return b;
+	STACK_0 <- FARG_findLargest+1
+	return
+//cnc_control.c,312 :: 		}
+L_findLargest_29:
+//cnc_control.c,314 :: 		return d;
+	STACK_0 <- FARG_findLargest+3
+	return
+//cnc_control.c,316 :: 		}
+L_findLargest_28:
+//cnc_control.c,319 :: 		if ( c > d )
+	if ( FARG_findLargest+2 <= FARG_findLargest+3) then goto L_findLargest_32
+//cnc_control.c,320 :: 		return c;
+	STACK_0 <- FARG_findLargest+2
+	return
+L_findLargest_32:
+//cnc_control.c,322 :: 		return d;
+	STACK_0 <- FARG_findLargest+3
+	return
+  end
+
+_interrupt:
+  begin
+//cnc_control.c,330 :: 		if ( INTCON.RBIF ){
+	if (!INTCON) then goto L_interrupt_34
+//cnc_control.c,335 :: 		unsigned short stepX = 0;
+	interrupt_stepX_L1 <- 0
+//cnc_control.c,336 :: 		unsigned short stepY = 0;
+	interrupt_stepY_L1 <- 0
+//cnc_control.c,337 :: 		unsigned short stepZ = 0;
+	interrupt_stepZ_L1 <- 0
+//cnc_control.c,338 :: 		unsigned short stepA = 0;
+	interrupt_stepA_L1 <- 0
+//cnc_control.c,342 :: 		if ( statusError == 1 ){
+	if ( _statusError != 1) then goto L_interrupt_35
+//cnc_control.c,343 :: 		X_STEP_OUT = 0;
+	PORTC <-  PORTC & -2
+//cnc_control.c,344 :: 		Y_STEP_OUT = 0;
+	PORTC <-  PORTC & -3
+//cnc_control.c,345 :: 		Z_STEP_OUT = 0;
+	PORTC <-  PORTC & -5
+//cnc_control.c,346 :: 		A_STEP_OUT = 0;
+	PORTC <-  PORTC & -9
+//cnc_control.c,347 :: 		INTCON.RBIF = 0;
+	INTCON <-  INTCON & -2
+//cnc_control.c,348 :: 		return;
+	return
+//cnc_control.c,349 :: 		}
+L_interrupt_35:
+//cnc_control.c,353 :: 		if ( multipliers.enable == 0 ){
+	if ( _multipliers+4 != 0) then goto L_interrupt_36
+//cnc_control.c,355 :: 		X_STEP_OUT = X_STEP_IN;
+	STACK_1 <-  PORTB & 128
+	STACK_0 <- 7
+	STACK_1 <-  STACK_1 shr STACK_0
+	PORTC <- setbit(STACK_1)
+//cnc_control.c,356 :: 		Y_STEP_OUT = Y_STEP_IN;
+	STACK_1 <-  PORTB & 64
+	STACK_0 <- 6
+	STACK_1 <-  STACK_1 shr STACK_0
+	PORTC <- setbit(STACK_1)
+//cnc_control.c,357 :: 		Z_STEP_OUT = Z_STEP_IN;
+	STACK_1 <-  PORTB & 32
+	STACK_0 <- 5
+	STACK_1 <-  STACK_1 shr STACK_0
+	PORTC <- setbit(STACK_1)
+//cnc_control.c,358 :: 		A_STEP_OUT = A_STEP_IN;
+	STACK_1 <-  PORTB & 16
+	STACK_0 <- 4
+	STACK_1 <-  STACK_1 shr STACK_0
+	PORTC <- setbit(STACK_1)
+//cnc_control.c,359 :: 		INTCON.RBIF = 0;
+	INTCON <-  INTCON & -2
+//cnc_control.c,360 :: 		return;
+	return
+//cnc_control.c,361 :: 		}
+L_interrupt_36:
+//cnc_control.c,376 :: 		maxmult = findLargest(multipliers.x,multipliers.y,multipliers.z,multipliers.a );
+	FARG_findLargest+0 <- _multipliers+0
+	FARG_findLargest+1 <- _multipliers+1
+	FARG_findLargest+2 <- _multipliers+2
+	FARG_findLargest+3 <- _multipliers+3
+	CALL _findLargest
+	interrupt_maxmult_L1 <- STACK_0
+//cnc_control.c,382 :: 		stepX = ( X_STEP_IN == 0 ) && ( currentSteps.F7 == 1 );
+	STACK_1 <-  PORTB & 128
+	STACK_0 <- 7
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 != 0) then goto L_interrupt_38
+	STACK_1 <-  _currentSteps & 128
+	STACK_0 <- 7
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 != 1) then goto L_interrupt_38
+	STACK_0 <- 1
+	goto	L_interrupt_37
+L_interrupt_38:
+	STACK_0 <- 0
+L_interrupt_37:
+tmi: LogicalEnd
+	interrupt_stepX_L1 <- STACK_0
+//cnc_control.c,383 :: 		stepY = ( Y_STEP_IN == 0 ) && ( currentSteps.F6 == 1 );
+	STACK_1 <-  PORTB & 64
+	STACK_0 <- 6
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 != 0) then goto L_interrupt_40
+	STACK_1 <-  _currentSteps & 64
+	STACK_0 <- 6
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 != 1) then goto L_interrupt_40
+	STACK_0 <- 1
+	goto	L_interrupt_39
+L_interrupt_40:
+	STACK_0 <- 0
+L_interrupt_39:
+tmi: LogicalEnd
+	interrupt_stepY_L1 <- STACK_0
+//cnc_control.c,384 :: 		stepZ = ( Z_STEP_IN == 0 ) && ( currentSteps.F5 == 1 );
+	STACK_1 <-  PORTB & 32
+	STACK_0 <- 5
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 != 0) then goto L_interrupt_42
+	STACK_1 <-  _currentSteps & 32
+	STACK_0 <- 5
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 != 1) then goto L_interrupt_42
+	STACK_0 <- 1
+	goto	L_interrupt_41
+L_interrupt_42:
+	STACK_0 <- 0
+L_interrupt_41:
+tmi: LogicalEnd
+	interrupt_stepZ_L1 <- STACK_0
+//cnc_control.c,385 :: 		stepA = ( A_STEP_IN == 0 ) && ( currentSteps.F4 == 1 );
+	STACK_1 <-  PORTB & 16
+	STACK_0 <- 4
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 != 0) then goto L_interrupt_44
+	STACK_1 <-  _currentSteps & 16
+	STACK_0 <- 4
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 != 1) then goto L_interrupt_44
+	STACK_0 <- 1
+	goto	L_interrupt_43
+L_interrupt_44:
+	STACK_0 <- 0
+L_interrupt_43:
+tmi: LogicalEnd
+	interrupt_stepA_L1 <- STACK_0
+//cnc_control.c,388 :: 		for ( i=0;i<maxmult;i++ ){
+	interrupt_i_L1 <- 0
+L_interrupt_45:
+	if ( interrupt_i_L1 >= interrupt_maxmult_L1) then goto L_interrupt_46
+//cnc_control.c,391 :: 		if (  (stepX == 1 ) && (i < multipliers.x ) ){
+	if ( interrupt_stepX_L1 != 1) then goto L_interrupt_50
+	if ( interrupt_i_L1 >= _multipliers+0) then goto L_interrupt_50
+L379_ex_L_interrupt_50:
+//cnc_control.c,392 :: 		X_STEP_OUT = 1;
+	PORTC <-  PORTC | 1
+//cnc_control.c,393 :: 		}
+L_interrupt_50:
+//cnc_control.c,394 :: 		if ( (stepY == 1 ) && (i < multipliers.y ) ){
+	if ( interrupt_stepY_L1 != 1) then goto L_interrupt_53
+	if ( interrupt_i_L1 >= _multipliers+1) then goto L_interrupt_53
+L392_ex_L_interrupt_53:
+//cnc_control.c,395 :: 		Y_STEP_OUT = 1;
+	PORTC <-  PORTC | 2
+//cnc_control.c,396 :: 		}
+L_interrupt_53:
+//cnc_control.c,397 :: 		if ( (stepZ == 1 ) && (i < multipliers.z ) ){
+	if ( interrupt_stepZ_L1 != 1) then goto L_interrupt_56
+	if ( interrupt_i_L1 >= _multipliers+2) then goto L_interrupt_56
+L405_ex_L_interrupt_56:
+//cnc_control.c,398 :: 		Z_STEP_OUT = 1;
+	PORTC <-  PORTC | 4
+//cnc_control.c,399 :: 		}
+L_interrupt_56:
+//cnc_control.c,400 :: 		if ( ( stepA == 1) && (i < multipliers.a ) ){
+	if ( interrupt_stepA_L1 != 1) then goto L_interrupt_59
+	if ( interrupt_i_L1 >= _multipliers+3) then goto L_interrupt_59
+L418_ex_L_interrupt_59:
+//cnc_control.c,401 :: 		A_STEP_OUT = 1;
+	PORTC <-  PORTC | 8
+//cnc_control.c,402 :: 		}
+L_interrupt_59:
+//cnc_control.c,405 :: 		delay5ClockCycles(multipliers.stepLengthCycles);
+	FARG_delay5ClockCycles+0 <- _multipliers+6
+	CALL _delay5ClockCycles
+//cnc_control.c,408 :: 		if (  (stepX == 1 ) && (i < multipliers.x ) ){
+	if ( interrupt_stepX_L1 != 1) then goto L_interrupt_62
+	if ( interrupt_i_L1 >= _multipliers+0) then goto L_interrupt_62
+L433_ex_L_interrupt_62:
+//cnc_control.c,409 :: 		X_STEP_OUT = 0;
+	PORTC <-  PORTC & -2
+//cnc_control.c,410 :: 		}
+L_interrupt_62:
+//cnc_control.c,411 :: 		if ( (stepY == 1 ) && (i < multipliers.y ) ){
+	if ( interrupt_stepY_L1 != 1) then goto L_interrupt_65
+	if ( interrupt_i_L1 >= _multipliers+1) then goto L_interrupt_65
+L446_ex_L_interrupt_65:
+//cnc_control.c,412 :: 		Y_STEP_OUT = 0;
+	PORTC <-  PORTC & -3
+//cnc_control.c,413 :: 		}
+L_interrupt_65:
+//cnc_control.c,414 :: 		if ( (stepZ == 1 ) && (i < multipliers.z ) ){
+	if ( interrupt_stepZ_L1 != 1) then goto L_interrupt_68
+	if ( interrupt_i_L1 >= _multipliers+2) then goto L_interrupt_68
+L459_ex_L_interrupt_68:
+//cnc_control.c,415 :: 		Z_STEP_OUT = 0;
+	PORTC <-  PORTC & -5
+//cnc_control.c,416 :: 		}
+L_interrupt_68:
+//cnc_control.c,417 :: 		if ( ( stepA == 1) && (i < multipliers.a ) ){
+	if ( interrupt_stepA_L1 != 1) then goto L_interrupt_71
+	if ( interrupt_i_L1 >= _multipliers+3) then goto L_interrupt_71
+L472_ex_L_interrupt_71:
+//cnc_control.c,418 :: 		A_STEP_OUT = 0;
+	PORTC <-  PORTC & -9
+//cnc_control.c,419 :: 		}
+L_interrupt_71:
+//cnc_control.c,422 :: 		delay5ClockCycles(multipliers.delayCycles);
+	FARG_delay5ClockCycles+0 <- _multipliers+5
+	CALL _delay5ClockCycles
+//cnc_control.c,423 :: 		}
+L_interrupt_47:
+//cnc_control.c,388 :: 		for ( i=0;i<maxmult;i++ ){
+	interrupt_i_L1 <-  interrupt_i_L1 + 1
+	interrupt_i_L1 <- interrupt_i_L1
+//cnc_control.c,423 :: 		}
+	goto	L_interrupt_45
+L_interrupt_46:
+//cnc_control.c,426 :: 		currentSteps = PORTB;
+	_currentSteps <- PORTB
+//cnc_control.c,427 :: 		INTCON.RBIF = 0;
+	INTCON <-  INTCON & -2
+//cnc_control.c,428 :: 		}
+L_interrupt_34:
+  end
+
+_interrupt_low:
+  begin
+//cnc_control.c,432 :: 		if ( INTCON.TMR0IF ){
+	if (!INTCON) then goto L_interrupt_low_72
+//cnc_control.c,436 :: 		unsigned short enable = 1;
+	interrupt_low_enable_L1 <- 1
+//cnc_control.c,438 :: 		if ( LIMIT_IN == 0 ){
+	STACK_1 <-  PORTD & 128
+	STACK_0 <- 7
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 != 0) then goto L_interrupt_low_73
+//cnc_control.c,439 :: 		enable = 0;
+	interrupt_low_enable_L1 <- 0
+//cnc_control.c,440 :: 		*currentStatus = *msg_atLimits;
+	STACK_0 <- *_msg_atLimits
+	*_currentStatus <- STACK_0
+//cnc_control.c,441 :: 		}
+L_interrupt_low_73:
+//cnc_control.c,442 :: 		if ( ESTOP_IN == 0 ){
+	STACK_1 <-  PORTD & 64
+	STACK_0 <- 6
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 != 0) then goto L_interrupt_low_74
+//cnc_control.c,443 :: 		enable = 0;
+	interrupt_low_enable_L1 <- 0
+//cnc_control.c,444 :: 		*currentStatus = *msg_eStop;
+	STACK_0 <- *_msg_eStop
+	*_currentStatus <- STACK_0
+//cnc_control.c,445 :: 		}
+L_interrupt_low_74:
+//cnc_control.c,447 :: 		if ( PC_ENABLE_IN == 0 ){
+	STACK_1 <-  PORTD & 32
+	STACK_0 <- 5
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 != 0) then goto L_interrupt_low_75
+//cnc_control.c,448 :: 		enable = 0;
+	interrupt_low_enable_L1 <- 0
+//cnc_control.c,449 :: 		*currentStatus = *msg_disabled;
+	STACK_0 <- *_msg_disabled
+	*_currentStatus <- STACK_0
+//cnc_control.c,450 :: 		}
+L_interrupt_low_75:
+//cnc_control.c,451 :: 		if ( A_ENABLE_IN == 0 || Z_ENABLE_IN == 0 || Y_ENABLE_IN == 0
+	STACK_1 <-  PORTD & 16
+	STACK_0 <- 4
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 = 0) then goto L470_ex_L_interrupt_low_78
+	STACK_1 <-  PORTD & 8
+	STACK_0 <- 3
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 = 0) then goto L470_ex_L_interrupt_low_78
+	STACK_1 <-  PORTD & 4
+	STACK_0 <- 2
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 = 0) then goto L470_ex_L_interrupt_low_78
+//cnc_control.c,452 :: 		|| X_ENABLE_IN == 0 ){
+	STACK_1 <-  PORTD & 2
+	STACK_0 <- 1
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 != 0) then goto L_interrupt_low_78
+L470_ex_L_interrupt_low_78:
+//cnc_control.c,453 :: 		enable = 0;
+	interrupt_low_enable_L1 <- 0
+//cnc_control.c,454 :: 		*currentStatus = *msg_servoFault;
+	STACK_0 <- *_msg_servoFault
+	*_currentStatus <- STACK_0
+//cnc_control.c,455 :: 		}
+L_interrupt_low_78:
+//cnc_control.c,457 :: 		if ( enable == 1 ){
+	if ( interrupt_low_enable_L1 != 1) then goto L_interrupt_low_79
+//cnc_control.c,458 :: 		*currentStatus = *msg_ok;
+	STACK_0 <- *_msg_ok
+	*_currentStatus <- STACK_0
+//cnc_control.c,459 :: 		MACHINE_ERROR_OUT  = 0;
+	PORTC <-  PORTC & -17
+//cnc_control.c,460 :: 		SPINDLE_ENABLE_OUT  = 1;
+	PORTC <-  PORTC | 32
+//cnc_control.c,461 :: 		}
+	goto	L_interrupt_low_80
+L_interrupt_low_79:
+//cnc_control.c,463 :: 		MACHINE_ERROR_OUT  = 1;
+	PORTC <-  PORTC | 16
+//cnc_control.c,464 :: 		SPINDLE_ENABLE_OUT  = 0;
+	PORTC <-  PORTC & -33
+//cnc_control.c,465 :: 		}
+L_interrupt_low_80:
+//cnc_control.c,466 :: 		statusError = enable;
+	_statusError <- interrupt_low_enable_L1
+//cnc_control.c,467 :: 		INTCON.TMR0IF = 0;
+	INTCON <-  INTCON & -5
+//cnc_control.c,468 :: 		}
+L_interrupt_low_72:
+  end
+
+_initRegisters:
+  begin
+//cnc_control.c,474 :: 		TRISD = 0b11111111;  //inputs
+	TRISD <- 255
+//cnc_control.c,475 :: 		TRISC = 0b10000000; //rs-232, outputs
+	TRISC <- 128
+//cnc_control.c,476 :: 		TRISB = 0b11110000; //step inputs from pc
+	TRISB <- 240
+//cnc_control.c,477 :: 		TRISA = 0b00000000;  //not used
+	TRISA <- 0
+//cnc_control.c,479 :: 		currentSteps = PORTB;
+	_currentSteps <- PORTB
+//cnc_control.c,483 :: 		T0CON = 0b10000000;
+	T0CON <- 128
+//cnc_control.c,486 :: 		INTCON.RBIE = 1;   //interrupt on portb changes
+	INTCON <-  INTCON | 8
+//cnc_control.c,487 :: 		INTCON2.RBIP=1; //portb change interttupt high priority
+	INTCON2 <-  INTCON2 | 1
+//cnc_control.c,488 :: 		INTCON2.RBPU = 0; //enable portb pullups
+	INTCON2 <-  INTCON2 & -129
+//cnc_control.c,489 :: 		INTCON.TMR0IE = 1; //enable timer0 interrupts
+	INTCON <-  INTCON | 32
+//cnc_control.c,490 :: 		INTCON2.TMR0IP = 0; //timer 0 low priority
+	INTCON2 <-  INTCON2 & -5
+  end
+
+_main:
+  begin
+//cnc_control.c,503 :: 		Usart_Init(SERIAL_BAUD);
+	SPBRG <- 8
+	asm: BSF	TXSTA, BRGH
+	CALL _Usart_Init
+//cnc_control.c,504 :: 		initRegisters();
+	CALL _initRegisters
+//cnc_control.c,507 :: 		Delay_ms(100);
+	asm: MOVLW	2
+	asm: MOVWF	STACK_12
+	asm: MOVLW	255
+	asm: MOVWF	STACK_11
+	asm: MOVLW	255
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_12,F
+	asm: GOTO	$+2
+	asm: GOTO	$+8
+	asm: DECFSZ	STACK_11,F
+	asm: GOTO	$+2
+	asm: GOTO	$+4
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: GOTO	$-5
+	asm: GOTO	$-9
+	asm: MOVLW	6
+	asm: MOVWF	STACK_11
+	asm: MOVLW	255
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_11,F
+	asm: GOTO	$+2
+	asm: GOTO	$+4
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: GOTO	$-5
+	asm: MOVLW	10
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+//cnc_control.c,508 :: 		printMessage(splash);
+	FARG_printMessage+0 <- _splash
+	CALL _printMessage
+//cnc_control.c,511 :: 		if ( ! readMemory() ){
+	CALL _readMemory
+	if (STACK_0) then goto L_main_81
+//cnc_control.c,512 :: 		printMessage(noEeprom);
+	FARG_printMessage+0 <- _noEeprom
+	CALL _printMessage
+//cnc_control.c,513 :: 		}
+L_main_81:
+//cnc_control.c,514 :: 		printMessage(cmdPrompt);
+	FARG_printMessage+0 <- _cmdPrompt
+	CALL _printMessage
+//cnc_control.c,516 :: 		Delay_ms(200);
+	asm: MOVLW	3
+	asm: MOVWF	STACK_12
+	asm: MOVLW	255
+	asm: MOVWF	STACK_11
+	asm: MOVLW	255
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_12,F
+	asm: GOTO	$+2
+	asm: GOTO	$+8
+	asm: DECFSZ	STACK_11,F
+	asm: GOTO	$+2
+	asm: GOTO	$+4
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: GOTO	$-5
+	asm: GOTO	$-9
+	asm: MOVLW	11
+	asm: MOVWF	STACK_11
+	asm: MOVLW	255
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_11,F
+	asm: GOTO	$+2
+	asm: GOTO	$+4
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: GOTO	$-5
+	asm: MOVLW	24
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+//cnc_control.c,519 :: 		RCON.IPEN = 1;
+	RCON <-  RCON | 128
+//cnc_control.c,520 :: 		INTCON.GIE = 1;
+	INTCON <-  INTCON | 128
+//cnc_control.c,522 :: 		while(1) {
+L_main_82:
+//cnc_control.c,523 :: 		while ( Usart_Data_Ready() ){
+L_main_84:
+	CALL _Usart_Data_Ready
+	if (!STACK_0) then goto L_main_85
+//cnc_control.c,524 :: 		x = Usart_Read();
+	CALL _Usart_Read
+//cnc_control.c,530 :: 		if ( pushChar(x) ){
+	FARG_pushChar+0 <- STACK_0
+	CALL _pushChar
+	if (!STACK_0) then goto L_main_86
+//cnc_control.c,532 :: 		if ( commandMatches(cmd_status ) ){
+	FARG_commandMatches+0 <- _cmd_status
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_87
+//cnc_control.c,533 :: 		printStatus();
+	CALL _printStatus
+//cnc_control.c,534 :: 		}
+	goto	L_main_88
+L_main_87:
+//cnc_control.c,535 :: 		else if ( commandMatches(cmd_saveEEprom )){
+	FARG_commandMatches+0 <- _cmd_saveEEprom
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_89
+//cnc_control.c,536 :: 		writeMemory();
+	CALL _writeMemory
+//cnc_control.c,537 :: 		}
+	goto	L_main_90
+L_main_89:
+//cnc_control.c,538 :: 		else if ( commandMatches(cmd_readEEprom )){
+	FARG_commandMatches+0 <- _cmd_readEEprom
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_91
+//cnc_control.c,539 :: 		readMemory();
+	CALL _readMemory
+//cnc_control.c,540 :: 		}
+	goto	L_main_92
+L_main_91:
+//cnc_control.c,541 :: 		else if ( commandMatches(cmd_defaults)){
+	FARG_commandMatches+0 <- _cmd_defaults
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_93
+//cnc_control.c,543 :: 		clearMemory();
+	CALL _clearMemory
+//cnc_control.c,544 :: 		}
+	goto	L_main_94
+L_main_93:
+//cnc_control.c,545 :: 		else if ( commandMatches(cmd_step_multiplier_x)){
+	FARG_commandMatches+0 <- _cmd_step_multiplier_x
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_95
+//cnc_control.c,546 :: 		multipliers.x = findIntValue(cmdBuffer);
+	FARG_findIntValue+0 <- 0
+	CALL _findIntValue
+	_multipliers+0 <- STACK_0
+//cnc_control.c,547 :: 		}
+	goto	L_main_96
+L_main_95:
+//cnc_control.c,548 :: 		else if ( commandMatches(cmd_step_multiplier_y)){
+	FARG_commandMatches+0 <- _cmd_step_multiplier_y
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_97
+//cnc_control.c,549 :: 		multipliers.y = findIntValue(cmdBuffer);
+	FARG_findIntValue+0 <- 0
+	CALL _findIntValue
+	_multipliers+1 <- STACK_0
+//cnc_control.c,550 :: 		}
+	goto	L_main_98
+L_main_97:
+//cnc_control.c,551 :: 		else if ( commandMatches(cmd_step_multiplier_z)){
+	FARG_commandMatches+0 <- _cmd_step_multiplier_z
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_99
+//cnc_control.c,552 :: 		multipliers.z = findIntValue(cmdBuffer);
+	FARG_findIntValue+0 <- 0
+	CALL _findIntValue
+	_multipliers+2 <- STACK_0
+//cnc_control.c,553 :: 		}
+	goto	L_main_100
+L_main_99:
+//cnc_control.c,554 :: 		else if ( commandMatches(cmd_step_multiplier_a)){
+	FARG_commandMatches+0 <- _cmd_step_multiplier_a
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_101
+//cnc_control.c,555 :: 		multipliers.a = findIntValue(cmdBuffer);
+	FARG_findIntValue+0 <- 0
+	CALL _findIntValue
+	_multipliers+3 <- STACK_0
+//cnc_control.c,556 :: 		}
+	goto	L_main_102
+L_main_101:
+//cnc_control.c,557 :: 		else if ( commandMatches(cmd_enable_multiplers)){
+	FARG_commandMatches+0 <- _cmd_enable_multiplers
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_103
+//cnc_control.c,558 :: 		multipliers.enable = findIntValue(cmdBuffer);
+	FARG_findIntValue+0 <- 0
+	CALL _findIntValue
+	_multipliers+4 <- STACK_0
+//cnc_control.c,559 :: 		}
+	goto	L_main_104
+L_main_103:
+//cnc_control.c,560 :: 		else if ( commandMatches(cmd_delay_cycles)){
+	FARG_commandMatches+0 <- _cmd_delay_cycles
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_105
+//cnc_control.c,561 :: 		multipliers.delayCycles = findIntValue(cmdBuffer);
+	FARG_findIntValue+0 <- 0
+	CALL _findIntValue
+	_multipliers+5 <- STACK_0
+//cnc_control.c,562 :: 		}
+	goto	L_main_106
+L_main_105:
+//cnc_control.c,564 :: 		printMessage(unknownCommand);
+	FARG_printMessage+0 <- _unknownCommand
+	CALL _printMessage
+//cnc_control.c,565 :: 		USART_Send_String(cmdBuffer);
+	FARG_USART_Send_String+0 <- 0
+	CALL _USART_Send_String
+//cnc_control.c,566 :: 		}
+L_main_106:
+L_main_104:
+L_main_102:
+L_main_100:
+L_main_98:
+L_main_96:
+L_main_94:
+L_main_92:
+L_main_90:
+L_main_88:
+//cnc_control.c,567 :: 		printMessage(cmdPrompt);
+	FARG_printMessage+0 <- _cmdPrompt
+	CALL _printMessage
+//cnc_control.c,568 :: 		}
+L_main_86:
+//cnc_control.c,569 :: 		}
+	goto	L_main_84
+L_main_85:
+//cnc_control.c,572 :: 		};
+	goto	L_main_82
+  end
+
+GlobalInicnc_control:
+  begin
+  end
+

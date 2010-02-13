@@ -1,0 +1,45 @@
+_initDuty:
+  begin
+//duty.c,27 :: 		setpoint = 0;
+	_setpoint <- 0
+//duty.c,28 :: 		duty_period = dtyperiod;
+	_duty_period <- FARG_initDuty+0
+//duty.c,29 :: 		duty_count = duty_period;
+	_duty_count <- FARG_initDuty+0
+  end
+
+_setDuty:
+  begin
+//duty.c,41 :: 		setpoint = 255 - setpnt;
+	STACK_1 <-  255 - FARG_setDuty+0  [Optimized To Dest]
+	_setpoint <- STACK_1
+//duty.c,42 :: 		setpoint = setpoint >> 1;
+	STACK_0 <- 1
+	_setpoint <-  STACK_1 shr STACK_0
+	_setpoint <- _setpoint
+  end
+
+_dutyInterruptProc:
+  begin
+//duty.c,49 :: 		duty_count--;
+	_duty_count <-  _duty_count - 1
+	_duty_count <- _duty_count
+//duty.c,50 :: 		if ( duty_count < setpoint ){
+	if ( _duty_count >= _setpoint) then goto L_dutyInterruptProc_0
+//duty.c,51 :: 		DUTY_PIN = 1;
+	PORTD <-  PORTD | 32
+//duty.c,52 :: 		}
+	goto	L_dutyInterruptProc_1
+L_dutyInterruptProc_0:
+//duty.c,54 :: 		DUTY_PIN = 0;
+	PORTD <-  PORTD & -33
+//duty.c,55 :: 		}
+L_dutyInterruptProc_1:
+//duty.c,56 :: 		if ( duty_count == 0 ){
+	if ( _duty_count != 0) then goto L_dutyInterruptProc_2
+//duty.c,57 :: 		duty_count = duty_period;
+	_duty_count <- _duty_period
+//duty.c,58 :: 		}
+L_dutyInterruptProc_2:
+  end
+

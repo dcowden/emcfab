@@ -1,0 +1,49 @@
+[DeviceName]
+Value=P18F4431
+[DeviceClock]
+Value=40
+[MainUnit]
+Value=extruder.c
+[DeviceFlags]
+Count=5
+Value0=_OSC_HSPLL_1H = $00F6
+Value1=_BOREN_OFF_2L = $00FD
+Value2=_WDTEN_OFF_2H = $00FE
+Value3=_MCLRE_ON_3H = $00FF
+Value4=_SSPMX_RD1_3H = $00FB
+Value5=_EXCLKMX_RD0_3H = $00EF
+Value6=_PWM4MX_RD5_3H = $00F7
+Value7=_SSPMX_RD1_3H = $00FB
+Value8=_FLTAMX_RC1_3H = $00FF
+Value9=_LVP_OFF_4L = $00FB
+[ProjectFiles]
+Count=4
+Value0=extruder.c
+Value1=pid.c
+Value2=duty.c
+Value3=eeprom.c
+[SearchPath]
+Count=7
+Value11=C:\Program Files\Mikroelektronika\mikroC\2.00_beta\Examples\_P16F877A\_ADC+USART\
+Value12=C:\Program Files\Mikroelektronika\mikroC\2.00_beta\Uses\p18\
+Value0=C:\Program Files\Mikroelektronika\mikroC\Defs\
+Value1=C:\Program Files\Mikroelektronika\mikroC\Uses\p18\
+Value2=D:\projects\rapid_proto\firmware\
+Value3=Z:\Projects\rapid prototype machine\Extruder\
+Value4=C:\apps\mikroC\Defs\
+Value5=C:\apps\mikroC\Uses\p16\
+Value6=C:\Program Files\Mikroelektronika\mikroC\Examples\BigPic4\P18F8627\LED_Blinking\
+[EEPROMinfo]
+isused=0
+[ObjLibFiles]
+Count=0
+[IncludePath]
+Count=0
+[BuildType]
+bType=0
+[HeaderFiles]
+Count=2
+Value0=Z:\Projects\rapid prototype machine\Extruder\pid.h
+Value1=Z:\Projects\rapid prototype machine\Extruder\eeprom.h
+[PLDFiles]
+Count=0

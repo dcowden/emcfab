@@ -1,0 +1,368 @@
+<?xml version="1.0" standalone="no"?>
+<!--Created by DaveSlicer-->
+<svg contentScriptType="text/ecmascript"
+	baseProfile="full" zoomAndPan="magnify" contentStyleType="text/css"
+	width="550px" height="1680px" onload="init()"
+	preserveAspectRatio="xMidYMid meet"
+	xmlns="http://www.w3.org/2000/svg" version="1.0"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:slice="http://www.reprap.org/slice">
+	<script type="text/ecmascript"><![CDATA[
+//Meta data variables 
+units='mm';
+//End of svg header
+sliceMinX = 0;
+sliceMaxX = 0;
+sliceMinY = 0;
+sliceMaxY = 0;
+sliceMinZ = 0;
+sliceMaxZ = 0;
+
+//Control var's
+currentLayer = 0; //Number of currently viewed layer (zero index)
+javascriptControlBoxX = 510;
+javascriptControlBoxY = 95;
+sliding = false;
+
+//Display var's
+margin = 20;
+scale = 1; //unitScale * zoomScale
+sliceDimensionX = null;
+sliceDimensionY = null;
+sliceDimensionZ = null;
+svgMinWidth = javascriptControlBoxX + 2 * margin; //Width of control box and margins
+textHeight = 22.5;
+unitScale = 3.7; //mm = 1; inch = 25.4
+zoomScale = 1; //Default 1:1 may need smaller scale for large objects
+
+//No javascript control var
+noJavascriptControlBoxY = 110;
+
+var layers = [];
+
+function changeScale(newScale){
+	zoomScale = newScale
+	scale = unitScale * zoomScale
+	viewSingle()
+	setText('scaleNum','1 : ' + 1/zoomScale);
+	if(zoomScale >=1 ) //dont scale line thickness for large display scale 
+		document.getElementById('layerData').setAttributeNS(null,'stroke-width',2/(scale))
+}
+
+function displayLayer(layerNum){
+	if (layerNum >= 0 && layerNum < layers.length) {
+		layers[currentLayer].setAttributeNS(null,'visibility','hidden');
+		layers[layerNum].setAttributeNS(null,'visibility','visible');
+		currentLayer = layerNum;
+		setText('layerNum',currentLayer+1);
+		//Slider
+		if (!sliding) {
+			// 150 = width of sliderbar 14 = width circle
+			x = (150 - 14) / (layers.length - 1) * currentLayer
+			document.getElementById('thumb').setAttributeNS(null,'cx',x + 17)
+		}
+	}
+}
+
+function init(){
+	//Hide no javascript control box
+	document.getElementById('noJavascriptControls').setAttributeNS(null,'visibility','hidden')
+	
+	//Get meta data
+	mD = document.getElementsByTagNameNS('http://www.reprap.org/slice','layers')[0];
+	units = mD.getAttributeNS(null,'units');
+	sliceMinX = mD.getAttribute('minX') * 1;
+	sliceMaxX = mD.getAttribute('maxX') * 1;
+	sliceMinY = mD.getAttribute('minY') * 1;
+	sliceMaxY = mD.getAttribute('maxY') * 1;
+	sliceMinZ = mD.getAttribute('minZ') * 1;
+	sliceMaxZ = mD.getAttribute('maxZ') * 1;
+	
+	//Set Display variables
+	unitScale = units == 'in' ? 96 : 3.7;
+	scale = unitScale * zoomScale;
+	sliceDimensionX = Math.round((sliceMaxX - sliceMinX) * 1000) /1000; //Rounding to 3 decimal places
+	sliceDimensionY = Math.round((sliceMaxY - sliceMinY) * 1000) /1000;
+	sliceDimensionZ = Math.round((sliceMaxZ - sliceMinZ) * 1000) /1000;
+	
+	//Find all groups
+	var allGroups = document.getElementsByTagName('g');
+	
+	//Find only layer groups
+	for ( var i = 0;i<allGroups.length;i++){
+		if ( allGroups[i].id.indexOf('z') == 0 ){
+			layers.push(allGroups[i] );
+		}
+	}
+	
+	//Slider
+	thumb = document.getElementById('thumb');
+	thumb.addEventListener("mousedown", SliderDown, false);
+	thumb.addEventListener("mouseup", SliderUp, false);
+	thumb.addEventListener("mousemove", SliderMove, false);
+	
+	//Control box data
+	setText('layerMax', layers.length)
+	setText('minX', sliceMinX)
+	setText('minX', sliceMinX)
+	setText('minY', sliceMinY)
+	setText('minZ', sliceMinZ)
+	setText('maxX', sliceMaxX)
+	setText('maxY', sliceMaxY)
+	setText('maxZ', sliceMaxZ)
+	setText('dimX', sliceDimensionX)
+	setText('dimY', sliceDimensionY)
+	setText('dimZ', sliceDimensionZ)
+	setText('scaleNum','1 : ' + 1/zoomScale);
+	setText('layerThickness', 'Layer Thickness: ' + mD.getAttribute('layerThickness') + units);
+	
+	changeScale(zoomScale);
+}
+
+function setSVG(width, height) {
+	svgObjs = document.getElementsByTagName('svg');
+	rootSVG = svgObjs[0];
+	rootSVG.setAttributeNS(null,'width',width + 'px')
+	rootSVG.setAttributeNS(null,'height',height + 'px')
+}
+
+function setText(id, str ){
+	e = document.getElementById(id)
+	if ( e != null )
+		e.firstChild.nodeValue = str;
+}
+
+function SliderDown(event){sliding = true;}
+
+function SliderUp(event){sliding = false;}
+
+function SliderMove(event){
+	value = event.clientX - 130
+	thumb = document.getElementById("thumb");
+	if (sliding && value > 6 && value < 144){
+		thumb.setAttribute("cx", 10 + value);
+		zoneWidth = (150 - 14) / (layers.length)
+		newLayer = Math.round((value - 7 - 0.5 * zoneWidth) / zoneWidth)
+		if(newLayer != currentLayer){
+			displayLayer(newLayer)
+		}
+	}
+}
+
+function viewAll(){
+	//Set svg size and view port
+	width = margin + (sliceDimensionX * unitScale) + margin;
+	width = Math.max( width, svgMinWidth );
+	height = layers.length * (margin + sliceDimensionY * unitScale + textHeight) + 3 * margin + textHeight + noJavascriptControlBoxY
+	setSVG(width,height);
+	
+	//move and show all layers 
+	for (var i in layers) {
+		x = margin
+		//y = margin + sliceDimensionY * scale
+		y = (1 * i + 1) * ( margin + sliceDimensionY * unitScale) + i * textHeight
+		layers[i].setAttributeNS(null,'transform','translate(' + x + ', ' + y + ')')
+		transform = 'scale(' + unitScale + ' ' + (unitScale * -1) + ') translate(' + (sliceMinX * -1) + ' ' + (sliceMinY * -1) + ')'
+		layers[i].getElementsByTagName('path')[0].setAttributeNS(null,'transform',transform)
+		layers[i].setAttributeNS(null,'visibility','visible')
+		layers[i].getElementsByTagName('text')[0].setAttributeNS(null,'visibility','visible')
+	}
+	
+	//show control box
+	document.getElementById('javascriptControls').setAttributeNS(null,'visibility','hidden')
+	document.getElementById('noJavascriptControls').setAttributeNS(null,'visibility','visible')
+	x = margin
+	y = layers.length * (margin + sliceDimensionY * unitScale + textHeight) + margin
+	document.getElementById('buttonSingle').setAttributeNS(null,'visibility','visible')
+	document.getElementById('buttonSingle').setAttributeNS(null,'transform','translate('+x+' '+y+')')
+}
+
+function viewSingle(){
+	//Set svg size and view port
+	width = margin + (sliceDimensionX * scale) + margin;
+	width = Math.max( width, svgMinWidth );
+	height = margin + (sliceDimensionY * scale) + margin + javascriptControlBoxY + margin 
+	setSVG(width,height);
+	
+	//move and hide all layers 
+	for (var i in layers) {
+		x = margin
+		y = margin + sliceDimensionY * scale
+		layers[i].setAttributeNS(null,'transform','translate(' + x + ' ' + y + ')')
+		layers[i].setAttributeNS(null,'visibility','hidden')
+		layers[i].getElementsByTagName('text')[0].setAttributeNS(null,'visibility','hidden')
+		transform = 'scale(' + scale + ' ' + (scale * -1) + ') translate(' + (sliceMinX * -1) + ' ' + (sliceMinY * -1) + ')'
+		layers[i].getElementsByTagName('path')[0].setAttributeNS(null,'transform',transform)
+	}
+	
+	//show control box
+	document.getElementById('javascriptControls').setAttributeNS(null,'visibility','visible')
+	document.getElementById('noJavascriptControls').setAttributeNS(null,'visibility','hidden')
+	x = margin
+	y = margin + sliceDimensionY * scale + margin
+	document.getElementById('javascriptControls').setAttributeNS(null,'transform','translate('+x+' '+y+')')
+	document.getElementById('buttonSingle').setAttributeNS(null,'visibility','hidden')
+	
+	//show current layer
+	displayLayer(currentLayer);
+}
+	]]></script>
+	
+	<title>RepRap Test</title>
+	<desc>Test Description</desc>
+	<metadata>
+		<slice:layers id="sliceData" version="0.1" units="mm" layerThickness="2.000" 
+				minX="-0.041" maxX="97.831" 
+				minY="0.491" maxY="51.372" 
+				minZ="-0.041" maxZ="22.266"/>
+	</metadata>
+	<!--Begin Layer Data   -->
+	<g id="layerData" fill="darkseagreen" stroke="#00F" stroke-width="0.54px" 
+	font-weight="bold" font-family="Arial" font-size="15px">
+<!--Beginning of path section-->
+<!-- transform algorithm
+	unit scale (mm=3.7, in=96)
+	
+	g transform
+		x = margin
+		y = (layer + 1) * ( margin + (slice height * unit scale)) + (layer * 20)
+	
+	text
+		y = text height
+	
+	path transform
+		scale = (unit scale) (-1 * unitscale)
+		translate = (-1 * minX) (-1 * minY)
+-->
+		<g id="z 1.959" transform="translate(20, 122.2)">
+			<text y="15" fill="#000" stroke="none">Layer 2, z 1.959</text>
+			<path transform="scale(3.7, -3.7) translate(0.0406218254787, -0.490514418894 )" d="M 82.6820 31.8828 L 82.6820 38.3623 L 82.6820 38.3623 L 84.8060 38.4268 L 86.8591 37.8789 L 88.6685 36.7648 L 90.0821 35.1783 L 90.9808 33.2527 L 91.2890 31.1503 L 91.2890 31.1503 L 90.9305 28.8867 L 89.8900 26.8447 L 88.2695 25.2241 L 86.2275 24.1837 L 83.9639 23.8252 L 81.7003 24.1837 L 79.6583 25.2241 L 78.0378 26.8447 L 76.9973 28.8867 L 76.6388 31.1503 L 76.6388 31.1503 L 76.6755 31.8828 L 76.6755 31.8828  Z M 68.0318 9.5412 L 67.6832 7.1164 L 66.6655 4.8880 L 65.0612 3.0365 L 63.0003 1.7121 L 60.6497 1.0219 L 58.1999 1.0219 L 55.8494 1.7121 L 53.7884 3.0365 L 52.1842 4.8880 L 51.1665 7.1164 L 50.8178 9.5412 L 50.8178 9.5412 L 51.1665 11.9661 L 52.1842 14.1945 L 53.7884 16.0460 L 55.8494 17.3704 L 58.1999 18.0606 L 60.6497 18.0606 L 63.0003 17.3704 L 65.0612 16.0460 L 66.6655 14.1945 L 67.6832 11.9661  Z M 32.8714 32.4322 L 33.2571 35.1150 L 34.3830 37.5805 L 36.1580 39.6289 L 38.4381 41.0942 L 41.0388 41.8579 L 43.7492 41.8579 L 46.3498 41.0942 L 48.6300 39.6289 L 50.4049 37.5805 L 51.5309 35.1150 L 51.9166 32.4322 L 51.9166 32.4322 L 51.5309 29.7493 L 50.4049 27.2838 L 48.6300 25.2354 L 46.3498 23.7701 L 43.7492 23.0065 L 41.0388 23.0065 L 38.4381 23.7701 L 36.1580 25.2354 L 34.3830 27.2838 L 33.2571 29.7493  Z M 24.6306 18.6976 L 35.0689 18.6976 L 35.0689 18.6976 L 35.0689 6.6112 L 35.0689 6.6112 L 24.6306 6.6112 L 24.6306 6.6112  Z "/>
+		</g>
+		<g id="z 3.959" transform="translate(20, 169.6)">
+			<text y="15" fill="#000" stroke="none">Layer 3, z 3.959</text>
+			<path transform="scale(3.7, -3.7) translate(0.0406218254787, -0.490514418894 )" d="M 82.6820 31.8828 L 82.6820 38.3623 L 82.6820 38.3623 L 84.8060 38.4268 L 86.8591 37.8789 L 88.6685 36.7648 L 90.0821 35.1783 L 90.9808 33.2527 L 91.2890 31.1503 L 91.2890 31.1503 L 90.9305 28.8867 L 89.8900 26.8447 L 88.2695 25.2241 L 86.2275 24.1837 L 83.9639 23.8252 L 81.7003 24.1837 L 79.6583 25.2241 L 78.0378 26.8447 L 76.9973 28.8867 L 76.6388 31.1503 L 76.6388 31.1503 L 76.6755 31.8828 L 76.6755 31.8828  Z M 68.0318 9.5412 L 67.6832 7.1164 L 66.6655 4.8880 L 65.0612 3.0365 L 63.0003 1.7121 L 60.6497 1.0219 L 58.1999 1.0219 L 55.8494 1.7121 L 53.7884 3.0365 L 52.1842 4.8880 L 51.1665 7.1164 L 50.8178 9.5412 L 50.8178 9.5412 L 51.1665 11.9661 L 52.1842 14.1945 L 53.7884 16.0460 L 55.8494 17.3704 L 58.1999 18.0606 L 60.6497 18.0606 L 63.0003 17.3704 L 65.0612 16.0460 L 66.6655 14.1945 L 67.6832 11.9661  Z M 32.8714 32.4322 L 33.2571 35.1150 L 34.3830 37.5805 L 36.1580 39.6289 L 38.4381 41.0942 L 41.0388 41.8579 L 43.7492 41.8579 L 46.3498 41.0942 L 48.6300 39.6289 L 50.4049 37.5805 L 51.5309 35.1150 L 51.9166 32.4322 L 51.9166 32.4322 L 51.5309 29.7493 L 50.4049 27.2838 L 48.6300 25.2354 L 46.3498 23.7701 L 43.7492 23.0065 L 41.0388 23.0065 L 38.4381 23.7701 L 36.1580 25.2354 L 34.3830 27.2838 L 33.2571 29.7493  Z M 24.6306 18.6976 L 35.0689 18.6976 L 35.0689 18.6976 L 35.0689 6.6112 L 35.0689 6.6112 L 24.6306 6.6112 L 24.6306 6.6112  Z "/>
+		</g>
+		<g id="z 5.959" transform="translate(20, 217.0)">
+			<text y="15" fill="#000" stroke="none">Layer 4, z 5.959</text>
+			<path transform="scale(3.7, -3.7) translate(0.0406218254787, -0.490514418894 )" d="M 82.6820 31.8828 L 82.6820 38.3623 L 82.6820 38.3623 L 84.8060 38.4268 L 86.8591 37.8789 L 88.6685 36.7648 L 90.0821 35.1783 L 90.9808 33.2527 L 91.2890 31.1503 L 91.2890 31.1503 L 90.9305 28.8867 L 89.8900 26.8447 L 88.2695 25.2241 L 86.2275 24.1837 L 83.9639 23.8252 L 81.7003 24.1837 L 79.6583 25.2241 L 78.0378 26.8447 L 76.9973 28.8867 L 76.6388 31.1503 L 76.6388 31.1503 L 76.6755 31.8828 L 76.6755 31.8828  Z M 68.0318 9.5412 L 67.6832 7.1164 L 66.6655 4.8880 L 65.0612 3.0365 L 63.0003 1.7121 L 60.6497 1.0219 L 58.1999 1.0219 L 55.8494 1.7121 L 53.7884 3.0365 L 52.1842 4.8880 L 51.1665 7.1164 L 50.8178 9.5412 L 50.8178 9.5412 L 51.1665 11.9661 L 52.1842 14.1945 L 53.7884 16.0460 L 55.8494 17.3704 L 58.1999 18.0606 L 60.6497 18.0606 L 63.0003 17.3704 L 65.0612 16.0460 L 66.6655 14.1945 L 67.6832 11.9661  Z M 32.8714 32.4322 L 33.2571 35.1150 L 34.3830 37.5805 L 36.1580 39.6289 L 38.4381 41.0942 L 41.0388 41.8579 L 43.7492 41.8579 L 46.3498 41.0942 L 48.6300 39.6289 L 50.4049 37.5805 L 51.5309 35.1150 L 51.9166 32.4322 L 51.9166 32.4322 L 51.5309 29.7493 L 50.4049 27.2838 L 48.6300 25.2354 L 46.3498 23.7701 L 43.7492 23.0065 L 41.0388 23.0065 L 38.4381 23.7701 L 36.1580 25.2354 L 34.3830 27.2838 L 33.2571 29.7493  Z M 24.6306 18.6976 L 35.0689 18.6976 L 35.0689 18.6976 L 35.0689 6.6112 L 35.0689 6.6112 L 24.6306 6.6112 L 24.6306 6.6112  Z "/>
+		</g>
+		<g id="z 7.959" transform="translate(20, 264.4)">
+			<text y="15" fill="#000" stroke="none">Layer 5, z 7.959</text>
+			<path transform="scale(3.7, -3.7) translate(0.0406218254787, -0.490514418894 )" d="M 82.6820 31.8828 L 82.6820 38.3623 L 82.6820 38.3623 L 84.8060 38.4268 L 86.8591 37.8789 L 88.6685 36.7648 L 90.0821 35.1783 L 90.9808 33.2527 L 91.2890 31.1503 L 91.2890 31.1503 L 90.9305 28.8867 L 89.8900 26.8447 L 88.2695 25.2241 L 86.2275 24.1837 L 83.9639 23.8252 L 81.7003 24.1837 L 79.6583 25.2241 L 78.0378 26.8447 L 76.9973 28.8867 L 76.6388 31.1503 L 76.6388 31.1503 L 76.6755 31.8828 L 76.6755 31.8828  Z M 68.0318 9.5412 L 67.6832 7.1164 L 66.6655 4.8880 L 65.0612 3.0365 L 63.0003 1.7121 L 60.6497 1.0219 L 58.1999 1.0219 L 55.8494 1.7121 L 53.7884 3.0365 L 52.1842 4.8880 L 51.1665 7.1164 L 50.8178 9.5412 L 50.8178 9.5412 L 51.1665 11.9661 L 52.1842 14.1945 L 53.7884 16.0460 L 55.8494 17.3704 L 58.1999 18.0606 L 60.6497 18.0606 L 63.0003 17.3704 L 65.0612 16.0460 L 66.6655 14.1945 L 67.6832 11.9661  Z M 32.8714 32.4322 L 33.2571 35.1150 L 34.3830 37.5805 L 36.1580 39.6289 L 38.4381 41.0942 L 41.0388 41.8579 L 43.7492 41.8579 L 46.3498 41.0942 L 48.6300 39.6289 L 50.4049 37.5805 L 51.5309 35.1150 L 51.9166 32.4322 L 51.9166 32.4322 L 51.5309 29.7493 L 50.4049 27.2838 L 48.6300 25.2354 L 46.3498 23.7701 L 43.7492 23.0065 L 41.0388 23.0065 L 38.4381 23.7701 L 36.1580 25.2354 L 34.3830 27.2838 L 33.2571 29.7493  Z M 24.6306 18.6976 L 35.0689 18.6976 L 35.0689 18.6976 L 35.0689 6.6112 L 35.0689 6.6112 L 24.6306 6.6112 L 24.6306 6.6112  Z "/>
+		</g>
+		<g id="z 9.959" transform="translate(20, 311.8)">
+			<text y="15" fill="#000" stroke="none">Layer 6, z 9.959</text>
+			<path transform="scale(3.7, -3.7) translate(0.0406218254787, -0.490514418894 )" d="M 82.6820 31.8828 L 82.6820 38.3623 L 82.6820 38.3623 L 84.8060 38.4268 L 86.8591 37.8789 L 88.6685 36.7648 L 90.0821 35.1783 L 90.9808 33.2527 L 91.2890 31.1503 L 91.2890 31.1503 L 90.9305 28.8867 L 89.8900 26.8447 L 88.2695 25.2241 L 86.2275 24.1837 L 83.9639 23.8252 L 81.7003 24.1837 L 79.6583 25.2241 L 78.0378 26.8447 L 76.9973 28.8867 L 76.6388 31.1503 L 76.6388 31.1503 L 76.6755 31.8828 L 76.6755 31.8828  Z M 68.0318 9.5412 L 67.6832 7.1164 L 66.6655 4.8880 L 65.0612 3.0365 L 63.0003 1.7121 L 60.6497 1.0219 L 58.1999 1.0219 L 55.8494 1.7121 L 53.7884 3.0365 L 52.1842 4.8880 L 51.1665 7.1164 L 50.8178 9.5412 L 50.8178 9.5412 L 51.1665 11.9661 L 52.1842 14.1945 L 53.7884 16.0460 L 55.8494 17.3704 L 58.1999 18.0606 L 60.6497 18.0606 L 63.0003 17.3704 L 65.0612 16.0460 L 66.6655 14.1945 L 67.6832 11.9661  Z M 32.8714 32.4322 L 33.2571 35.1150 L 34.3830 37.5805 L 36.1580 39.6289 L 38.4381 41.0942 L 41.0388 41.8579 L 43.7492 41.8579 L 46.3498 41.0942 L 48.6300 39.6289 L 50.4049 37.5805 L 51.5309 35.1150 L 51.9166 32.4322 L 51.9166 32.4322 L 51.5309 29.7493 L 50.4049 27.2838 L 48.6300 25.2354 L 46.3498 23.7701 L 43.7492 23.0065 L 41.0388 23.0065 L 38.4381 23.7701 L 36.1580 25.2354 L 34.3830 27.2838 L 33.2571 29.7493  Z M 24.6306 18.6976 L 35.0689 18.6976 L 35.0689 18.6976 L 35.0689 6.6112 L 35.0689 6.6112 L 24.6306 6.6112 L 24.6306 6.6112  Z "/>
+		</g>
+		<g id="z 11.959" transform="translate(20, 359.2)">
+			<text y="15" fill="#000" stroke="none">Layer 7, z 11.959</text>
+			<path transform="scale(3.7, -3.7) translate(0.0406218254787, -0.490514418894 )" d="M 82.6820 31.8828 L 82.6820 38.3623 L 82.6820 38.3623 L 84.8060 38.4268 L 86.8591 37.8789 L 88.6685 36.7648 L 90.0821 35.1783 L 90.9808 33.2527 L 91.2890 31.1503 L 91.2890 31.1503 L 90.9305 28.8867 L 89.8900 26.8447 L 88.2695 25.2241 L 86.2275 24.1837 L 83.9639 23.8252 L 81.7003 24.1837 L 79.6583 25.2241 L 78.0378 26.8447 L 76.9973 28.8867 L 76.6388 31.1503 L 76.6388 31.1503 L 76.6755 31.8828 L 76.6755 31.8828  Z M 68.0318 9.5412 L 67.6832 7.1164 L 66.6655 4.8880 L 65.0612 3.0365 L 63.0003 1.7121 L 60.6497 1.0219 L 58.1999 1.0219 L 55.8494 1.7121 L 53.7884 3.0365 L 52.1842 4.8880 L 51.1665 7.1164 L 50.8178 9.5412 L 50.8178 9.5412 L 51.1665 11.9661 L 52.1842 14.1945 L 53.7884 16.0460 L 55.8494 17.3704 L 58.1999 18.0606 L 60.6497 18.0606 L 63.0003 17.3704 L 65.0612 16.0460 L 66.6655 14.1945 L 67.6832 11.9661  Z M 32.8714 32.4322 L 33.2571 35.1150 L 34.3830 37.5805 L 36.1580 39.6289 L 38.4381 41.0942 L 41.0388 41.8579 L 43.7492 41.8579 L 46.3498 41.0942 L 48.6300 39.6289 L 50.4049 37.5805 L 51.5309 35.1150 L 51.9166 32.4322 L 51.9166 32.4322 L 51.5309 29.7493 L 50.4049 27.2838 L 48.6300 25.2354 L 46.3498 23.7701 L 43.7492 23.0065 L 41.0388 23.0065 L 38.4381 23.7701 L 36.1580 25.2354 L 34.3830 27.2838 L 33.2571 29.7493  Z M 24.6306 18.6976 L 35.0689 18.6976 L 35.0689 18.6976 L 35.0689 6.6112 L 35.0689 6.6112 L 24.6306 6.6112 L 24.6306 6.6112  Z "/>
+		</g>
+		<g id="z 13.959" transform="translate(20, 406.6)">
+			<text y="15" fill="#000" stroke="none">Layer 8, z 13.959</text>
+			<path transform="scale(3.7, -3.7) translate(0.0406218254787, -0.490514418894 )" d="M 0.0000 51.3311 L 97.7900 51.3311 L 97.7900 51.3311 L 97.7900 0.5311 L 97.7900 0.5311 L 0.0000 0.5311 L 0.0000 0.5311  Z M 61.9125 25.9311 L 61.5500 27.7537 L 60.5176 29.2987 L 58.9725 30.3311 L 57.1500 30.6936 L 55.3275 30.3311 L 53.7824 29.2987 L 52.7500 27.7537 L 52.3875 25.9311 L 52.3875 25.9311 L 52.7500 24.1086 L 53.7824 22.5635 L 55.3275 21.5312 L 57.1500 21.1686 L 58.9725 21.5312 L 60.5176 22.5635 L 61.5500 24.1086  Z M 17.6657 16.2283 L 17.2877 18.1286 L 16.2113 19.7396 L 14.6003 20.8160 L 12.7000 21.1940 L 10.7997 20.8160 L 9.1887 19.7396 L 8.1123 18.1286 L 7.7343 16.2283 L 7.7343 16.2283 L 8.1123 14.3280 L 9.1887 12.7171 L 10.7997 11.6406 L 12.7000 11.2626 L 14.6003 11.6406 L 16.2113 12.7171 L 17.2877 14.3280  Z M 7.7343 35.2275 L 8.1123 33.3272 L 9.1887 31.7163 L 10.7997 30.6398 L 12.7000 30.2618 L 14.6003 30.6398 L 16.2113 31.7163 L 17.2877 33.3272 L 17.6657 35.2275 L 17.6657 35.2275 L 17.2877 37.1278 L 16.2113 38.7388 L 14.6003 39.8152 L 12.7000 40.1932 L 10.7997 39.8152 L 9.1887 38.7388 L 8.1123 37.1278  Z M 74.8075 31.8828 L 82.6820 31.8828 L 82.6820 31.8828 L 82.6820 39.9404 L 82.6820 39.9404 L 74.8075 39.9404 L 74.8075 39.9404  Z "/>
+		</g>
+		<g id="z 15.959" transform="translate(20, 454.0)">
+			<text y="15" fill="#000" stroke="none">Layer 9, z 15.959</text>
+			<path transform="scale(3.7, -3.7) translate(0.0406218254787, -0.490514418894 )" d="M 0.0000 51.3311 L 97.7900 51.3311 L 97.7900 51.3311 L 97.7900 0.5311 L 97.7900 0.5311 L 0.0000 0.5311 L 0.0000 0.5311  Z M 61.9125 25.9311 L 61.5500 27.7537 L 60.5176 29.2987 L 58.9725 30.3311 L 57.1500 30.6936 L 55.3275 30.3311 L 53.7824 29.2987 L 52.7500 27.7537 L 52.3875 25.9311 L 52.3875 25.9311 L 52.7500 24.1086 L 53.7824 22.5635 L 55.3275 21.5312 L 57.1500 21.1686 L 58.9725 21.5312 L 60.5176 22.5635 L 61.5500 24.1086  Z M 17.6657 16.2283 L 17.2877 18.1286 L 16.2113 19.7396 L 14.6003 20.8160 L 12.7000 21.1940 L 10.7997 20.8160 L 9.1887 19.7396 L 8.1123 18.1286 L 7.7343 16.2283 L 7.7343 16.2283 L 8.1123 14.3280 L 9.1887 12.7171 L 10.7997 11.6406 L 12.7000 11.2626 L 14.6003 11.6406 L 16.2113 12.7171 L 17.2877 14.3280  Z M 7.7343 35.2275 L 8.1123 33.3272 L 9.1887 31.7163 L 10.7997 30.6398 L 12.7000 30.2618 L 14.6003 30.6398 L 16.2113 31.7163 L 17.2877 33.3272 L 17.6657 35.2275 L 17.6657 35.2275 L 17.2877 37.1278 L 16.2113 38.7388 L 14.6003 39.8152 L 12.7000 40.1932 L 10.7997 39.8152 L 9.1887 38.7388 L 8.1123 37.1278  Z M 74.8075 31.8828 L 82.6820 31.8828 L 82.6820 31.8828 L 82.6820 39.9404 L 82.6820 39.9404 L 74.8075 39.9404 L 74.8075 39.9404  Z "/>
+		</g>
+		<g id="z 17.959" transform="translate(20, 501.4)">
+			<text y="15" fill="#000" stroke="none">Layer 10, z 17.959</text>
+			<path transform="scale(3.7, -3.7) translate(0.0406218254787, -0.490514418894 )" d="M 0.0000 51.3311 L 97.7900 51.3311 L 97.7900 51.3311 L 97.7900 0.5311 L 97.7900 0.5311 L 0.0000 0.5311 L 0.0000 0.5311  Z M 61.9125 25.9311 L 61.5500 27.7537 L 60.5176 29.2987 L 58.9725 30.3311 L 57.1500 30.6936 L 55.3275 30.3311 L 53.7824 29.2987 L 52.7500 27.7537 L 52.3875 25.9311 L 52.3875 25.9311 L 52.7500 24.1086 L 53.7824 22.5635 L 55.3275 21.5312 L 57.1500 21.1686 L 58.9725 21.5312 L 60.5176 22.5635 L 61.5500 24.1086  Z M 17.6657 16.2283 L 17.2877 18.1286 L 16.2113 19.7396 L 14.6003 20.8160 L 12.7000 21.1940 L 10.7997 20.8160 L 9.1887 19.7396 L 8.1123 18.1286 L 7.7343 16.2283 L 7.7343 16.2283 L 8.1123 14.3280 L 9.1887 12.7171 L 10.7997 11.6406 L 12.7000 11.2626 L 14.6003 11.6406 L 16.2113 12.7171 L 17.2877 14.3280  Z M 7.7343 35.2275 L 8.1123 33.3272 L 9.1887 31.7163 L 10.7997 30.6398 L 12.7000 30.2618 L 14.6003 30.6398 L 16.2113 31.7163 L 17.2877 33.3272 L 17.6657 35.2275 L 17.6657 35.2275 L 17.2877 37.1278 L 16.2113 38.7388 L 14.6003 39.8152 L 12.7000 40.1932 L 10.7997 39.8152 L 9.1887 38.7388 L 8.1123 37.1278  Z M 74.8075 31.8828 L 82.6820 31.8828 L 82.6820 31.8828 L 82.6820 39.9404 L 82.6820 39.9404 L 74.8075 39.9404 L 74.8075 39.9404  Z "/>
+		</g>
+		<g id="z 19.959" transform="translate(20, 548.8)">
+			<text y="15" fill="#000" stroke="none">Layer 11, z 19.959</text>
+			<path transform="scale(3.7, -3.7) translate(0.0406218254787, -0.490514418894 )" d="M 31.7500 51.3311 L 97.7900 51.3311 L 97.7900 51.3311 L 97.7900 0.5311 L 97.7900 0.5311 L 31.7500 0.5311 L 31.7500 0.5311  Z M 61.9125 25.9311 L 61.5500 27.7537 L 60.5176 29.2987 L 58.9725 30.3311 L 57.1500 30.6936 L 55.3275 30.3311 L 53.7824 29.2987 L 52.7500 27.7537 L 52.3875 25.9311 L 52.3875 25.9311 L 52.7500 24.1086 L 53.7824 22.5635 L 55.3275 21.5312 L 57.1500 21.1686 L 58.9725 21.5312 L 60.5176 22.5635 L 61.5500 24.1086  Z M 74.8075 31.8828 L 82.6820 31.8828 L 82.6820 31.8828 L 82.6820 39.9404 L 82.6820 39.9404 L 74.8075 39.9404 L 74.8075 39.9404  Z "/>
+		</g>
+		<g id="z 21.959" transform="translate(20, 596.2)">
+			<text y="15" fill="#000" stroke="none">Layer 12, z 21.959</text>
+			<path transform="scale(3.7, -3.7) translate(0.0406218254787, -0.490514418894 )" d="M 31.7500 51.3311 L 97.7900 51.3311 L 97.7900 51.3311 L 97.7900 0.5311 L 97.7900 0.5311 L 31.7500 0.5311 L 31.7500 0.5311  Z M 61.9125 25.9311 L 61.5500 27.7537 L 60.5176 29.2987 L 58.9725 30.3311 L 57.1500 30.6936 L 55.3275 30.3311 L 53.7824 29.2987 L 52.7500 27.7537 L 52.3875 25.9311 L 52.3875 25.9311 L 52.7500 24.1086 L 53.7824 22.5635 L 55.3275 21.5312 L 57.1500 21.1686 L 58.9725 21.5312 L 60.5176 22.5635 L 61.5500 24.1086  Z M 74.8075 31.8828 L 82.6820 31.8828 L 82.6820 31.8828 L 82.6820 39.9404 L 82.6820 39.9404 L 74.8075 39.9404 L 74.8075 39.9404  Z "/>
+		</g>
+<!--End of path section-->
+	</g>
+	<!--End Layer Data-->
+	
+	<!--Button to change from all to single-->
+	<g font-weight="bold" font-family="Arial" font-size="15px">
+		<text id="buttonSingle" fill="darkslateblue" visibility="hidden" onclick="viewSingle()">[Single View]</text>
+		
+	<!--Control box for single slice layout-->
+		<g id="javascriptControls" visibility="hidden" fill="#000">
+			<rect width="510" height="90" stroke="gray" stroke-width="4px" fill="silver"/>	
+			<g>
+				<path stroke="#000" stroke-width="3" d="M 20 20 h5 l-5 -10 l-5 10 h5 v35 h35 v-5 l10 5 l-10 5 v-5 h-35 z"/>
+				<text x="25" y="20">Y</text>
+				<text x="69" y="60">X</text>
+				<text x="10" y="80" id="buttonAll" onclick="viewAll();" fill="darkslateblue">[Show All]</text>
+			</g>
+			<g transform="translate(100, 20)">
+				<text id="layerMin">1</text>
+				<rect id="slider" x="10" y="-12" width="150" height="14" fill="gray"/>
+				<circle id="thumb" cx="17" cy="-5" r="7" fill="darkslateblue"/>
+				<text x="163" id="layerMax" >5</text>
+				<text y="20" x="0">Layer </text>
+				<text y="20" x="45" id="layerNum">100</text>
+				<text y="20" x="138" onclick="displayLayer(currentLayer-1)" fill="darkslateblue">&lt;</text>
+				<text y="20" x="153" onclick="displayLayer(currentLayer+1)" fill="darkslateblue">&gt;</text>
+				<text y="40" x="0">Scale</text>
+				<text y="40" x="45" id="scaleNum">0.125</text>
+				<text y="40" x="138" onclick="changeScale(zoomScale/2)" fill="darkslateblue">&lt;</text>
+				<text y="40" x="153" onclick="changeScale(zoomScale*2)" fill="darkslateblue">&gt;</text>
+				<text y="60" id="layerThickness" >Layer Thickness: </text>
+			</g>
+			<g transform="translate(290, 0)">
+				<text y="40">X</text>
+				<text y="60">Y</text>
+				<text y="80">Z</text>
+				<text x="20" y="20">Min</text>
+				<text id="minX" x="20" y="40">0.0</text>
+				<text id="minY" x="20" y="60">0.0</text>
+				<text id="minZ" x="20" y="80">0.0</text>
+				<text x="80" y="20">Max</text>
+				<text id="maxX" x="80" y="40">0.0</text>
+				<text id="maxY" x="80" y="60">0.0</text>
+				<text id="maxZ" x="80" y="80">0.0</text>
+				<text x="140" y="20">Dimension</text>
+				<text id="dimX" x="140" y="40">0.0</text>
+				<text id="dimY" x="140" y="60">0.0</text>
+				<text id="dimZ" x="140" y="80">0.0</text>
+			</g>
+		</g>
+	</g>
+	
+	<!--No Javascript Control box   -->
+	<g id="noJavascriptControls" fill="#000" transform="translate(20, 1400)">
+		<rect width="300" height="110" stroke="gray" stroke-width="4px" fill="silver"/>
+		<g transform="translate(10, 0)">
+			<g transform="translate(0, 20)">
+				<text x="120">Min</text>
+				<text x="170">Max</text>
+				<text x="220">Dimension</text>
+				<path stroke="#000" stroke-width="3" d="M 5 40 h5 l-5 -10 l-5 10 h5 v35 h35 v-5 l10 5 l-10 5 v-5 h-35 z"/>
+				<text x="3" y="20" font-weight="bold">Y</text>
+				<text x="60" y="80" font-weight="bold">X</text>
+				<text x="120" y="80" id="layerThicknessNoJavascript">Layer Thickness: 2.000 mm</text>
+			</g>
+			<g transform="translate(100, 40)">
+				<text>X</text>
+				<text id="minXNoJavascript" x="20">-0.041</text>
+				<text id="maxXNoJavascript" x="70">97.831</text>
+				<text id="dimXNoJavascript" x="120">97.871</text>
+			</g>
+			<g transform="translate(100, 60)">
+				<text>Y</text>
+				<text id="minYNoJavascript" x="20">0.491</text>
+				<text id="maxYNoJavascript" x="70">51.372</text>
+				<text id="dimYNoJavascript" x="120">50.881 </text>
+			</g>
+			<g transform="translate(100, 80)">
+				<text>Z</text>
+				<text id="minZNoJavascript" x="20">-0.041</text>
+				<text id="maxZNoJavascript" x="70">22.266</text>
+				<text id="dimZNoJavascript" x="120">22.306</text>
+			</g>
+		</g>
+	</g>
+	<!--End Controls-->
+	
+</svg>

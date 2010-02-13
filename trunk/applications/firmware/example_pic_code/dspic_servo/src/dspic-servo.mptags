@@ -1,0 +1,1461 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.5.4	//
+A10M	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	933;"	m	line:933	struct:tagI2CCONBITS
+ABAT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1813;"	m	line:1813	struct:tagCxCTRLBITS
+ABAUD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	992;"	m	line:992	struct:tagUxMODEBITS
+ACC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	87;"	t	line:87
+ACCSAT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	170;"	m	line:170	struct:tagCORCONBITS
+ACKDT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	928;"	m	line:928	struct:tagI2CCONBITS
+ACKEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	927;"	m	line:927	struct:tagI2CCONBITS
+ACKSTAT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	958;"	m	line:958	struct:tagI2CSTATBITS
+ADCHSBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1199;"	t	line:1199
+ADCMD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1966;"	m	line:1966	struct:tagPMD1BITS
+ADCON1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1159;"	t	line:1159
+ADCON2BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1174;"	t	line:1174
+ADCON3BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1185;"	t	line:1185
+ADCS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1180;"	m	line:1180	struct:tagADCON3BITS
+ADCSSLBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1225;"	t	line:1225
+ADD10	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	953;"	m	line:953	struct:tagI2CSTATBITS
+ADDEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1010;"	m	line:1010	struct:tagUxSTABITS
+ADDRERR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	232;"	m	line:232	struct:tagINTCON1BITS
+ADIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	319;"	m	line:319	struct:tagIEC0BITS
+ADIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	269;"	m	line:269	struct:tagIFS0BITS
+ADIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	392;"	m	line:392	struct:tagIPC2BITS
+ADON	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1158;"	m	line:1158	struct:tagADCON1BITS
+ADPCFGBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1212;"	t	line:1212
+ADRC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1182;"	m	line:1182	struct:tagADCON3BITS
+ADSIDL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1156;"	m	line:1156	struct:tagADCON1BITS
+ALL_EEPROM	C:\Documents and Settings\pluto\dspic-servo\DataEEPROM.h	42;"	d	line:42
+ALTIO	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	996;"	m	line:996	struct:tagUxMODEBITS
+ALTIVT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	251;"	m	line:251	struct:tagINTCON2BITS
+ALTS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1165;"	m	line:1165	struct:tagADCON2BITS
+ASAM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1150;"	m	line:1150	struct:tagADCON1BITS
+BCL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	955;"	m	line:955	struct:tagI2CSTATBITS
+BGST	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1906;"	m	line:1906	struct:tagRCONBITS
+BOR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1898;"	m	line:1898	struct:tagRCONBITS
+BORV_20	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2576;"	d	line:2576
+BORV_27	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2577;"	d	line:2577
+BORV_42	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2578;"	d	line:2578
+BORV_45	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2579;"	d	line:2579
+BREN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	209;"	m	line:209	struct:tagXBREVBITS
+BRP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1823;"	m	line:1823	struct:tagCxCFG1BITS
+BUFM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1166;"	m	line:1166	struct:tagADCON2BITS
+BUFS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1169;"	m	line:1169	struct:tagADCON2BITS
+BWM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	186;"	m	line:186	struct:tagMODCONBITS
+C	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	146;"	m	line:146	struct:tagSRBITS
+C1IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	338;"	m	line:338	struct:tagIEC1BITS
+C1IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	288;"	m	line:288	struct:tagIFS1BITS
+C1IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	440;"	m	line:440	struct:tagIPC6BITS
+C1MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1967;"	m	line:1967	struct:tagPMD1BITS
+CAN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1490;"	t	line:1490
+CANCAP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1816;"	m	line:1816	struct:tagCxCTRLBITS
+CANCKS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1812;"	m	line:1812	struct:tagCxCTRLBITS
+CEID	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	637;"	m	line:637	struct:tagDFLTCONBITS
+CF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1918;"	m	line:1918	struct:tagOSCCONBITS
+CH0NA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1192;"	m	line:1192	struct:tagADCHSBITS
+CH0NB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1196;"	m	line:1196	struct:tagADCHSBITS
+CH0SA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1191;"	m	line:1191	struct:tagADCHSBITS
+CH0SB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1195;"	m	line:1195	struct:tagADCHSBITS
+CH123NA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1194;"	m	line:1194	struct:tagADCHSBITS
+CH123NB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1198;"	m	line:1198	struct:tagADCHSBITS
+CH123SA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1193;"	m	line:1193	struct:tagADCHSBITS
+CH123SB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1197;"	m	line:1197	struct:tagADCHSBITS
+CHPS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1170;"	m	line:1170	struct:tagADCON2BITS
+CKE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1101;"	m	line:1101	struct:tagSPIxCONBITS
+CKP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1099;"	m	line:1099	struct:tagSPIxCONBITS
+CN0IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	471;"	m	line:471	struct:tagCNEN1BITS
+CN0PUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	486;"	m	line:486	struct:tagCNPU1BITS
+CN1IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	472;"	m	line:472	struct:tagCNEN1BITS
+CN1PUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	487;"	m	line:487	struct:tagCNPU1BITS
+CN2IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	473;"	m	line:473	struct:tagCNEN1BITS
+CN2PUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	488;"	m	line:488	struct:tagCNPU1BITS
+CN3IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	474;"	m	line:474	struct:tagCNEN1BITS
+CN3PUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	489;"	m	line:489	struct:tagCNPU1BITS
+CN4IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	475;"	m	line:475	struct:tagCNEN1BITS
+CN4PUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	490;"	m	line:490	struct:tagCNPU1BITS
+CN5IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	476;"	m	line:476	struct:tagCNEN1BITS
+CN5PUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	491;"	m	line:491	struct:tagCNPU1BITS
+CN6IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	477;"	m	line:477	struct:tagCNEN1BITS
+CN6PUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	492;"	m	line:492	struct:tagCNPU1BITS
+CN7IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	478;"	m	line:478	struct:tagCNEN1BITS
+CN7PUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	493;"	m	line:493	struct:tagCNPU1BITS
+CNEN1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	480;"	t	line:480
+CNIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	323;"	m	line:323	struct:tagIEC0BITS
+CNIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	273;"	m	line:273	struct:tagIFS0BITS
+CNIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	406;"	m	line:406	struct:tagIPC3BITS
+CNPU1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	495;"	t	line:495
+CNTERR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	627;"	m	line:627	struct:tagQEICONBITS
+CODE_PROT_OFF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2588;"	d	line:2588
+CODE_PROT_ON	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2589;"	d	line:2589
+CORCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	178;"	t	line:178
+COSC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1925;"	m	line:1925	struct:tagOSCCONBITS
+COVTE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	235;"	m	line:235	struct:tagINTCON1BITS
+CPWRT	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	19;"	d	line:19
+CSCNA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1171;"	m	line:1171	struct:tagADCON2BITS
+CSIDL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1814;"	m	line:1814	struct:tagCxCTRLBITS
+CSSL0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1218;"	m	line:1218	struct:tagADCSSLBITS
+CSSL1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1219;"	m	line:1219	struct:tagADCSSLBITS
+CSSL2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1220;"	m	line:1220	struct:tagADCSSLBITS
+CSSL3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1221;"	m	line:1221	struct:tagADCSSLBITS
+CSSL4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1222;"	m	line:1222	struct:tagADCSSLBITS
+CSSL5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1223;"	m	line:1223	struct:tagADCSSLBITS
+CSW_FSCM_OFF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2514;"	d	line:2514
+CSW_FSCM_ON	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2516;"	d	line:2516
+CSW_ON_FSCM_OFF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2515;"	d	line:2515
+ClrWdt	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2926;"	d	line:2926
+CxCFG1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1826;"	t	line:1826
+CxCFG2BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1840;"	t	line:1840
+CxCTRLBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1817;"	t	line:1817
+CxINTEBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1877;"	t	line:1877
+CxINTFBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1862;"	t	line:1862
+CxRX0CONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1775;"	t	line:1775
+CxRX1CONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1737;"	t	line:1737
+CxRXFxSIDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1501;"	t	line:1501
+CxRXMxSIDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1569;"	t	line:1569
+CxRXxDLCBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1728;"	t	line:1728
+CxRXxSIDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1718;"	t	line:1718
+CxTXxCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1626;"	t	line:1626
+CxTXxDLCBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1615;"	t	line:1615
+CxTXxEIDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1605;"	t	line:1605
+CxTXxSIDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1598;"	t	line:1598
+DA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	153;"	m	line:153	struct:tagSRBITS
+DBEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1770;"	m	line:1770	struct:tagCxRX0CONBITS
+DC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	152;"	m	line:152	struct:tagSRBITS
+DFLTCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	640;"	t	line:640
+DISI	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	250;"	m	line:250	struct:tagINTCON2BITS
+DISICNT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	216;"	m	line:216	struct:tagDISICNTBITS
+DISICNTBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	218;"	t	line:218
+DISSDO	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1104;"	m	line:1104	struct:tagSPIxCONBITS
+DISSLW	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	932;"	m	line:932	struct:tagI2CCONBITS
+DL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	174;"	m	line:174	struct:tagCORCONBITS
+DLC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1610;"	m	line:1610	struct:tagCxTXxDLCBITS
+DLC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1722;"	m	line:1722	struct:tagCxRXxDLCBITS
+DONE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1148;"	m	line:1148	struct:tagADCON1BITS
+DTA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	826;"	m	line:826	struct:tagDTCON1BITS
+DTAPS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	827;"	m	line:827	struct:tagDTCON1BITS
+DTCON1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	829;"	t	line:829
+D_A	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	950;"	m	line:950	struct:tagI2CSTATBITS
+EC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2517;"	d	line:2517
+ECIO	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2518;"	d	line:2518
+EC_PLL16	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2521;"	d	line:2521
+EC_PLL4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2519;"	d	line:2519
+EC_PLL8	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2520;"	d	line:2520
+EDT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	175;"	m	line:175	struct:tagCORCONBITS
+EID13_6	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1602;"	m	line:1602	struct:tagCxTXxEIDBITS
+EID17_14	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1604;"	m	line:1604	struct:tagCxTXxEIDBITS
+EID5_0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1614;"	m	line:1614	struct:tagCxTXxDLCBITS
+EID5_0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1727;"	m	line:1727	struct:tagCxRXxDLCBITS
+ERC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2522;"	d	line:2522
+ERCIO	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2523;"	d	line:2523
+ERRIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1873;"	m	line:1873	struct:tagCxINTEBITS
+ERRIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1851;"	m	line:1851	struct:tagCxINTFBITS
+ERROREE	C:\Documents and Settings\pluto\dspic-servo\DataEEPROM.h	43;"	d	line:43
+EWARN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1854;"	m	line:1854	struct:tagCxINTFBITS
+EXIDE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1497;"	m	line:1497	struct:tagCxRXFxSIDBITS
+EXTR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1904;"	m	line:1904	struct:tagRCONBITS
+EraseEE	C:\Documents and Settings\pluto\dspic-servo\DataEEPROM.h	67;"	p	line:67	signature:(int Page, int Offset, int Size)
+FAEN1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	835;"	m	line:835	struct:tagFLTACONBITS
+FAEN2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	836;"	m	line:836	struct:tagFLTACONBITS
+FAEN3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	837;"	m	line:837	struct:tagFLTACONBITS
+FALSE	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	40;"	d	line:40
+FAOV1H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	841;"	m	line:841	struct:tagFLTACONBITS
+FAOV1L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	840;"	m	line:840	struct:tagFLTACONBITS
+FAOV2H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	843;"	m	line:843	struct:tagFLTACONBITS
+FAOV2L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	842;"	m	line:842	struct:tagFLTACONBITS
+FAOV3H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	845;"	m	line:845	struct:tagFLTACONBITS
+FAOV3L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	844;"	m	line:844	struct:tagFLTACONBITS
+FCY	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	23;"	d	line:23
+FERR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1007;"	m	line:1007	struct:tagUxSTABITS
+FILHIT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1732;"	m	line:1732	struct:tagCxRX1CONBITS
+FILHIT0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1768;"	m	line:1768	struct:tagCxRX0CONBITS
+FLTACONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	847;"	t	line:847
+FLTAIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	350;"	m	line:350	struct:tagIEC2BITS
+FLTAIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	300;"	m	line:300	struct:tagIFS2BITS
+FLTAIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	459;"	m	line:459	struct:tagIPC10BITS
+FLTAM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	839;"	m	line:839	struct:tagFLTACONBITS
+FORM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1154;"	m	line:1154	struct:tagADCON1BITS
+FPWM	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	26;"	d	line:26
+FRC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2534;"	d	line:2534
+FRC_PLL16	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2531;"	d	line:2531
+FRC_PLL4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2529;"	d	line:2529
+FRC_PLL8	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2530;"	d	line:2530
+FRMEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1107;"	m	line:1107	struct:tagSPIxCONBITS
+GCEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	930;"	m	line:930	struct:tagI2CCONBITS
+GCSTAT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	954;"	m	line:954	struct:tagI2CSTATBITS
+H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	85;"	m	line:85	struct:tagACC
+HS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2532;"	d	line:2532
+I2CADD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	965;"	m	line:965	struct:tagI2CADDBITS
+I2CADDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	967;"	t	line:967
+I2CBRG	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	915;"	m	line:915	struct:tagI2CBRGBITS
+I2CBRGBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	917;"	t	line:917
+I2CCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	939;"	t	line:939
+I2CEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	938;"	m	line:938	struct:tagI2CCONBITS
+I2CMD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1973;"	m	line:1973	struct:tagPMD1BITS
+I2COV	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	951;"	m	line:951	struct:tagI2CSTATBITS
+I2CRCV0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	887;"	m	line:887	struct:tagI2CRCVBITS
+I2CRCV1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	888;"	m	line:888	struct:tagI2CRCVBITS
+I2CRCV2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	889;"	m	line:889	struct:tagI2CRCVBITS
+I2CRCV3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	890;"	m	line:890	struct:tagI2CRCVBITS
+I2CRCV4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	891;"	m	line:891	struct:tagI2CRCVBITS
+I2CRCV5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	892;"	m	line:892	struct:tagI2CRCVBITS
+I2CRCV6	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	893;"	m	line:893	struct:tagI2CRCVBITS
+I2CRCV7	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	894;"	m	line:894	struct:tagI2CRCVBITS
+I2CRCVBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	895;"	t	line:895
+I2CSIDL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	936;"	m	line:936	struct:tagI2CCONBITS
+I2CSTATBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	959;"	t	line:959
+I2CTRN0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	901;"	m	line:901	struct:tagI2CTRNBITS
+I2CTRN1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	902;"	m	line:902	struct:tagI2CTRNBITS
+I2CTRN2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	903;"	m	line:903	struct:tagI2CTRNBITS
+I2CTRN3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	904;"	m	line:904	struct:tagI2CTRNBITS
+I2CTRN4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	905;"	m	line:905	struct:tagI2CTRNBITS
+I2CTRN5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	906;"	m	line:906	struct:tagI2CTRNBITS
+I2CTRN6	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	907;"	m	line:907	struct:tagI2CTRNBITS
+I2CTRN7	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	908;"	m	line:908	struct:tagI2CTRNBITS
+I2CTRNBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	909;"	t	line:909
+IC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	657;"	t	line:657
+IC1IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	309;"	m	line:309	struct:tagIEC0BITS
+IC1IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	259;"	m	line:259	struct:tagIFS0BITS
+IC1IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	360;"	m	line:360	struct:tagIPC0BITS
+IC1MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1991;"	m	line:1991	struct:tagPMD2BITS
+IC2IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	312;"	m	line:312	struct:tagIEC0BITS
+IC2IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	262;"	m	line:262	struct:tagIFS0BITS
+IC2IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	372;"	m	line:372	struct:tagIPC1BITS
+IC2MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1992;"	m	line:1992	struct:tagPMD2BITS
+IC7IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	331;"	m	line:331	struct:tagIEC1BITS
+IC7IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	281;"	m	line:281	struct:tagIFS1BITS
+IC7IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	416;"	m	line:416	struct:tagIPC4BITS
+IC7MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1994;"	m	line:1994	struct:tagPMD2BITS
+IC8IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	332;"	m	line:332	struct:tagIEC1BITS
+IC8IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	282;"	m	line:282	struct:tagIFS1BITS
+IC8IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	418;"	m	line:418	struct:tagIPC4BITS
+IC8MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1995;"	m	line:1995	struct:tagPMD2BITS
+ICBNE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	668;"	m	line:668	struct:tagICxCONBITS
+ICI	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	670;"	m	line:670	struct:tagICxCONBITS
+ICM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	667;"	m	line:667	struct:tagICxCONBITS
+ICODE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1808;"	m	line:1808	struct:tagCxCTRLBITS
+ICOV	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	669;"	m	line:669	struct:tagICxCONBITS
+ICSIDL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	673;"	m	line:673	struct:tagICxCONBITS
+ICTMR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	671;"	m	line:671	struct:tagICxCONBITS
+ICxCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	675;"	t	line:675
+IDLE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1899;"	m	line:1899	struct:tagRCONBITS
+IEC0BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	324;"	t	line:324
+IEC1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	340;"	t	line:340
+IEC2BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	352;"	t	line:352
+IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	166;"	m	line:166	struct:tagCORCONBITS
+IFS0BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	274;"	t	line:274
+IFS1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	290;"	t	line:290
+IFS2BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	302;"	t	line:302
+IMV	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	638;"	m	line:638	struct:tagDFLTCONBITS
+INDX	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	624;"	m	line:624	struct:tagQEICONBITS
+INT0EP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	246;"	m	line:246	struct:tagINTCON2BITS
+INT0IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	308;"	m	line:308	struct:tagIEC0BITS
+INT0IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	258;"	m	line:258	struct:tagIFS0BITS
+INT0IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	358;"	m	line:358	struct:tagIPC0BITS
+INT1EP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	247;"	m	line:247	struct:tagINTCON2BITS
+INT1IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	330;"	m	line:330	struct:tagIEC1BITS
+INT1IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	280;"	m	line:280	struct:tagIFS1BITS
+INT1IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	414;"	m	line:414	struct:tagIPC4BITS
+INT2EP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	248;"	m	line:248	struct:tagINTCON2BITS
+INT2IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	336;"	m	line:336	struct:tagIEC1BITS
+INT2IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	286;"	m	line:286	struct:tagIFS1BITS
+INT2IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	431;"	m	line:431	struct:tagIPC5BITS
+INTCON1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	240;"	t	line:240
+INTCON2BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	252;"	t	line:252
+IOPUWR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1907;"	m	line:1907	struct:tagRCONBITS
+IPC0BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	366;"	t	line:366
+IPC10BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	461;"	t	line:461
+IPC1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	380;"	t	line:380
+IPC2BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	394;"	t	line:394
+IPC3BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	408;"	t	line:408
+IPC4BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	420;"	t	line:420
+IPC5BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	433;"	t	line:433
+IPC6BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	442;"	t	line:442
+IPC9BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	451;"	t	line:451
+IPL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	151;"	m	line:151	struct:tagSRBITS
+IPL3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	169;"	m	line:169	struct:tagCORCONBITS
+IPMIEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	934;"	m	line:934	struct:tagI2CCONBITS
+IUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	816;"	m	line:816	struct:tagPWMCON2BITS
+IVRIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1875;"	m	line:1875	struct:tagCxINTEBITS
+IVRIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1853;"	m	line:1853	struct:tagCxINTFBITS
+IWCOL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	952;"	m	line:952	struct:tagI2CSTATBITS
+Idle	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2928;"	d	line:2928
+JTOFF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1769;"	m	line:1769	struct:tagCxRX0CONBITS
+L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	84;"	m	line:84	struct:tagACC
+LATB0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1262;"	m	line:1262	struct:tagLATBBITS
+LATB1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1263;"	m	line:1263	struct:tagLATBBITS
+LATB2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1264;"	m	line:1264	struct:tagLATBBITS
+LATB3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1265;"	m	line:1265	struct:tagLATBBITS
+LATB4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1266;"	m	line:1266	struct:tagLATBBITS
+LATB5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1267;"	m	line:1267	struct:tagLATBBITS
+LATBBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1269;"	t	line:1269
+LATC13	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1296;"	m	line:1296	struct:tagLATCBITS
+LATC14	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1297;"	m	line:1297	struct:tagLATCBITS
+LATC15	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1298;"	m	line:1298	struct:tagLATCBITS
+LATCBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1299;"	t	line:1299
+LATD0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1323;"	m	line:1323	struct:tagLATDBITS
+LATD1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1324;"	m	line:1324	struct:tagLATDBITS
+LATDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1326;"	t	line:1326
+LATE0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1362;"	m	line:1362	struct:tagLATEBITS
+LATE1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1363;"	m	line:1363	struct:tagLATEBITS
+LATE2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1364;"	m	line:1364	struct:tagLATEBITS
+LATE3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1365;"	m	line:1365	struct:tagLATEBITS
+LATE4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1366;"	m	line:1366	struct:tagLATEBITS
+LATE5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1367;"	m	line:1367	struct:tagLATEBITS
+LATE8	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1369;"	m	line:1369	struct:tagLATEBITS
+LATEBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1371;"	t	line:1371
+LATF2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1398;"	m	line:1398	struct:tagLATFBITS
+LATF3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1399;"	m	line:1399	struct:tagLATFBITS
+LATFBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1401;"	t	line:1401
+LOCK	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1920;"	m	line:1920	struct:tagOSCCONBITS
+LP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2533;"	d	line:2533
+LPBACK	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	993;"	m	line:993	struct:tagUxMODEBITS
+LPOSCEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1916;"	m	line:1916	struct:tagOSCCONBITS
+LPRC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2535;"	d	line:2535
+MATHERR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	233;"	m	line:233	struct:tagINTCON1BITS
+MCLR_DIS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2567;"	d	line:2567
+MCLR_EN	C:\Documents and Settings\pluto\dspic-servo\main.c	45;"	v	line:45
+MCLR_EN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2566;"	d	line:2566
+MI2CIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	322;"	m	line:322	struct:tagIEC0BITS
+MI2CIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	272;"	m	line:272	struct:tagIFS0BITS
+MI2CIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	404;"	m	line:404	struct:tagIPC3BITS
+MIDE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1565;"	m	line:1565	struct:tagCxRXMxSIDBITS
+MODCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	190;"	t	line:190
+MODE16	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1103;"	m	line:1103	struct:tagSPIxCONBITS
+MSTEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1098;"	m	line:1098	struct:tagSPIxCONBITS
+M_PI	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	36;"	d	line:36
+N	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	149;"	m	line:149	struct:tagSRBITS
+NOSC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1922;"	m	line:1922	struct:tagOSCCONBITS
+NSTDIS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	239;"	m	line:239	struct:tagINTCON1BITS
+NVMCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1946;"	t	line:1946
+NVMIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	320;"	m	line:320	struct:tagIEC0BITS
+NVMIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	270;"	m	line:270	struct:tagIFS0BITS
+NVMIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	400;"	m	line:400	struct:tagIPC3BITS
+Nop	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2925;"	d	line:2925
+OA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	159;"	m	line:159	struct:tagSRBITS
+OAB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	155;"	m	line:155	struct:tagSRBITS
+OB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	158;"	m	line:158	struct:tagSRBITS
+OC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	715;"	t	line:715
+OC1IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	310;"	m	line:310	struct:tagIEC0BITS
+OC1IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	260;"	m	line:260	struct:tagIFS0BITS
+OC1IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	362;"	m	line:362	struct:tagIPC0BITS
+OC1MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1988;"	m	line:1988	struct:tagPMD2BITS
+OC2IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	313;"	m	line:313	struct:tagIEC0BITS
+OC2IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	263;"	m	line:263	struct:tagIFS0BITS
+OC2IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	374;"	m	line:374	struct:tagIPC1BITS
+OC2MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1989;"	m	line:1989	struct:tagPMD2BITS
+OCFLT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	725;"	m	line:725	struct:tagOCxCONBITS
+OCM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	723;"	m	line:723	struct:tagOCxCONBITS
+OCSIDL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	727;"	m	line:727	struct:tagOCxCONBITS
+OCTSEL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	724;"	m	line:724	struct:tagOCxCONBITS
+OCxCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	729;"	t	line:729
+OERR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1006;"	m	line:1006	struct:tagUxSTABITS
+OPMODE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1810;"	m	line:1810	struct:tagCxCTRLBITS
+OSCCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1928;"	t	line:1928
+OSCFAIL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	230;"	m	line:230	struct:tagINTCON1BITS
+OSWEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1915;"	m	line:1915	struct:tagOSCCONBITS
+OSYNC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	815;"	m	line:815	struct:tagPWMCON2BITS
+OV	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	148;"	m	line:148	struct:tagSRBITS
+OVATE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	237;"	m	line:237	struct:tagINTCON1BITS
+OVBTE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	236;"	m	line:236	struct:tagINTCON1BITS
+OVDCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	867;"	t	line:867
+P	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	949;"	m	line:949	struct:tagI2CSTATBITS
+PBOR_OFF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2575;"	d	line:2575
+PBOR_ON	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2574;"	d	line:2574
+PCAN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1490;"	t	line:1490
+PCDOUT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	620;"	m	line:620	struct:tagQEICONBITS
+PCFG0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1205;"	m	line:1205	struct:tagADPCFGBITS
+PCFG1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1206;"	m	line:1206	struct:tagADPCFGBITS
+PCFG2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1207;"	m	line:1207	struct:tagADPCFGBITS
+PCFG3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1208;"	m	line:1208	struct:tagADPCFGBITS
+PCFG4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1209;"	m	line:1209	struct:tagADPCFGBITS
+PCFG5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1210;"	m	line:1210	struct:tagADPCFGBITS
+PDSEL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	990;"	m	line:990	struct:tagUxMODEBITS
+PEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	925;"	m	line:925	struct:tagI2CCONBITS
+PEN1H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	800;"	m	line:800	struct:tagPWMCON1BITS
+PEN1L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	796;"	m	line:796	struct:tagPWMCON1BITS
+PEN2H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	801;"	m	line:801	struct:tagPWMCON1BITS
+PEN2L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	797;"	m	line:797	struct:tagPWMCON1BITS
+PEN3H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	802;"	m	line:802	struct:tagPWMCON1BITS
+PEN3L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	798;"	m	line:798	struct:tagPWMCON1BITS
+PERR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1008;"	m	line:1008	struct:tagUxSTABITS
+PIC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	657;"	t	line:657
+PID	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	42;"	s	line:42
+PID_ACTIVE	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	31;"	d	line:31
+PMD1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1982;"	t	line:1982
+PMD2BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1996;"	t	line:1996
+PMOD1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	804;"	m	line:804	struct:tagPWMCON1BITS
+PMOD2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	805;"	m	line:805	struct:tagPWMCON1BITS
+PMOD3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	806;"	m	line:806	struct:tagPWMCON1BITS
+POC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	715;"	t	line:715
+POR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1897;"	m	line:1897	struct:tagRCONBITS
+PORTBBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1256;"	t	line:1256
+PORTCBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1289;"	t	line:1289
+PORTDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1317;"	t	line:1317
+PORTEBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1356;"	t	line:1356
+PORTFBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1391;"	t	line:1391
+POSRES	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	617;"	m	line:617	struct:tagQEICONBITS
+POST	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1921;"	m	line:1921	struct:tagOSCCONBITS
+POUT1H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	854;"	m	line:854	struct:tagOVDCONBITS
+POUT1L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	853;"	m	line:853	struct:tagOVDCONBITS
+POUT2H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	856;"	m	line:856	struct:tagOVDCONBITS
+POUT2L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	855;"	m	line:855	struct:tagOVDCONBITS
+POUT3H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	858;"	m	line:858	struct:tagOVDCONBITS
+POUT3L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	857;"	m	line:857	struct:tagOVDCONBITS
+POVD1H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	861;"	m	line:861	struct:tagOVDCONBITS
+POVD1L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	860;"	m	line:860	struct:tagOVDCONBITS
+POVD2H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	863;"	m	line:863	struct:tagOVDCONBITS
+POVD2L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	862;"	m	line:862	struct:tagOVDCONBITS
+POVD3H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	865;"	m	line:865	struct:tagOVDCONBITS
+POVD3L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	864;"	m	line:864	struct:tagOVDCONBITS
+PPRE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1096;"	m	line:1096	struct:tagSPIxCONBITS
+PR1PRESET	C:\Documents and Settings\pluto\dspic-servo\timer1.c	76;"	d	line:76	file:
+PROGOP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1939;"	m	line:1939	struct:tagNVMCONBITS
+PRSEG	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1832;"	m	line:1832	struct:tagCxCFG2BITS
+PSPI	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1077;"	t	line:1077
+PSV	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	168;"	m	line:168	struct:tagCORCONBITS
+PTCKPS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	760;"	m	line:760	struct:tagPTCONBITS
+PTCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	766;"	t	line:766
+PTDIR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	773;"	m	line:773	struct:tagPTMRBITS
+PTEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	765;"	m	line:765	struct:tagPTCONBITS
+PTMOD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	759;"	m	line:759	struct:tagPTCONBITS
+PTMR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	772;"	m	line:772	struct:tagPTMRBITS
+PTMRBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	774;"	t	line:774
+PTOPS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	761;"	m	line:761	struct:tagPTCONBITS
+PTPER	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	780;"	m	line:780	struct:tagPTPERBITS
+PTPERBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	782;"	t	line:782
+PTSIDL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	763;"	m	line:763	struct:tagPTCONBITS
+PUART	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	982;"	t	line:982
+PWMCON1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	808;"	t	line:808
+PWMCON2BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	820;"	t	line:820
+PWMIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	347;"	m	line:347	struct:tagIEC2BITS
+PWMIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	297;"	m	line:297	struct:tagIFS2BITS
+PWMIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	449;"	m	line:449	struct:tagIPC9BITS
+PWMMD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1975;"	m	line:1975	struct:tagPMD1BITS
+PWMxH_ACT_HI	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2570;"	d	line:2570
+PWMxH_ACT_LO	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2571;"	d	line:2571
+PWMxL_ACT_HI	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2572;"	d	line:2572
+PWMxL_ACT_LO	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2573;"	d	line:2573
+PWRT_16	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2582;"	d	line:2582
+PWRT_4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2581;"	d	line:2581
+PWRT_64	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2583;"	d	line:2583
+PWRT_OFF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2580;"	d	line:2580
+QECK	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	635;"	m	line:635	struct:tagDFLTCONBITS
+QEICONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	628;"	t	line:628
+QEIIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	348;"	m	line:348	struct:tagIEC2BITS
+QEIIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	298;"	m	line:298	struct:tagIFS2BITS
+QEIIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	457;"	m	line:457	struct:tagIPC10BITS
+QEIM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	622;"	m	line:622	struct:tagQEICONBITS
+QEIMD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1976;"	m	line:1976	struct:tagPMD1BITS
+QEISIDL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	625;"	m	line:625	struct:tagQEICONBITS
+QEOUT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	636;"	m	line:636	struct:tagDFLTCONBITS
+RA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	150;"	m	line:150	struct:tagSRBITS
+RB0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1249;"	m	line:1249	struct:tagPORTBBITS
+RB1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1250;"	m	line:1250	struct:tagPORTBBITS
+RB2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1251;"	m	line:1251	struct:tagPORTBBITS
+RB3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1252;"	m	line:1252	struct:tagPORTBBITS
+RB4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1253;"	m	line:1253	struct:tagPORTBBITS
+RB5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1254;"	m	line:1254	struct:tagPORTBBITS
+RBF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	946;"	m	line:946	struct:tagI2CSTATBITS
+RC13	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1286;"	m	line:1286	struct:tagPORTCBITS
+RC14	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1287;"	m	line:1287	struct:tagPORTCBITS
+RC15	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1288;"	m	line:1288	struct:tagPORTCBITS
+RCEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	926;"	m	line:926	struct:tagI2CCONBITS
+RCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1909;"	t	line:1909
+RD0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1314;"	m	line:1314	struct:tagPORTDBITS
+RD1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1315;"	m	line:1315	struct:tagPORTDBITS
+RE0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1347;"	m	line:1347	struct:tagPORTEBITS
+RE1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1348;"	m	line:1348	struct:tagPORTEBITS
+RE2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1349;"	m	line:1349	struct:tagPORTEBITS
+RE3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1350;"	m	line:1350	struct:tagPORTEBITS
+RE4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1351;"	m	line:1351	struct:tagPORTEBITS
+RE5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1352;"	m	line:1352	struct:tagPORTEBITS
+RE8	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1354;"	m	line:1354	struct:tagPORTEBITS
+REQOP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1811;"	m	line:1811	struct:tagCxCTRLBITS
+RESTORE_CPU_IPL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	3022;"	d	line:3022
+RF2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1388;"	m	line:1388	struct:tagPORTFBITS
+RF3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1389;"	m	line:1389	struct:tagPORTFBITS
+RIDLE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1009;"	m	line:1009	struct:tagUxSTABITS
+RND	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	167;"	m	line:167	struct:tagCORCONBITS
+ROW	C:\Documents and Settings\pluto\dspic-servo\DataEEPROM.h	41;"	d	line:41
+RSEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	924;"	m	line:924	struct:tagI2CCONBITS
+RST_IOPIN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2568;"	d	line:2568
+RST_PWMPIN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2569;"	d	line:2569
+RX0IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1868;"	m	line:1868	struct:tagCxINTEBITS
+RX0IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1846;"	m	line:1846	struct:tagCxINTFBITS
+RX0OVR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1861;"	m	line:1861	struct:tagCxINTFBITS
+RX1IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1869;"	m	line:1869	struct:tagCxINTEBITS
+RX1IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1847;"	m	line:1847	struct:tagCxINTFBITS
+RX1OVR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1860;"	m	line:1860	struct:tagCxINTFBITS
+RXEP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1857;"	m	line:1857	struct:tagCxINTFBITS
+RXFUL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1735;"	m	line:1735	struct:tagCxRX1CONBITS
+RXFUL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1773;"	m	line:1773	struct:tagCxRX0CONBITS
+RXIDE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1714;"	m	line:1714	struct:tagCxRXxSIDBITS
+RXRB0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1723;"	m	line:1723	struct:tagCxRXxDLCBITS
+RXRB1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1725;"	m	line:1725	struct:tagCxRXxDLCBITS
+RXRTR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1726;"	m	line:1726	struct:tagCxRXxDLCBITS
+RXRTRRO	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1733;"	m	line:1733	struct:tagCxRX1CONBITS
+RXRTRRO	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1771;"	m	line:1771	struct:tagCxRX0CONBITS
+RXWAR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1855;"	m	line:1855	struct:tagCxINTFBITS
+R_W	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	947;"	m	line:947	struct:tagI2CSTATBITS
+ReadEE	C:\Documents and Settings\pluto\dspic-servo\DataEEPROM.h	55;"	p	line:55	signature:(int Page, int Offset, int* DataOut, int Size)
+S	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	948;"	m	line:948	struct:tagI2CSTATBITS
+SA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	157;"	m	line:157	struct:tagSRBITS
+SAB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	154;"	m	line:154	struct:tagSRBITS
+SAM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1834;"	m	line:1834	struct:tagCxCFG2BITS
+SAMC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1183;"	m	line:1183	struct:tagADCON3BITS
+SAMP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1149;"	m	line:1149	struct:tagADCON1BITS
+SATA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	173;"	m	line:173	struct:tagCORCONBITS
+SATB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	172;"	m	line:172	struct:tagCORCONBITS
+SATDW	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	171;"	m	line:171	struct:tagCORCONBITS
+SB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	156;"	m	line:156	struct:tagSRBITS
+SCLREL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	935;"	m	line:935	struct:tagI2CCONBITS
+SEG1PH	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1833;"	m	line:1833	struct:tagCxCFG2BITS
+SEG2PH	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1836;"	m	line:1836	struct:tagCxCFG2BITS
+SEG2PHTS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1835;"	m	line:1835	struct:tagCxCFG2BITS
+SEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	923;"	m	line:923	struct:tagI2CCONBITS
+SET_AND_SAVE_CPU_IPL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	3018;"	d	line:3018
+SET_CPU_IPL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	3010;"	d	line:3010
+SEVOPS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	818;"	m	line:818	struct:tagPWMCON2BITS
+SEVTCMP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	788;"	m	line:788	struct:tagSEVTCMPBITS
+SEVTCMPBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	790;"	t	line:790
+SEVTDIR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	789;"	m	line:789	struct:tagSEVTCMPBITS
+SI2CIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	321;"	m	line:321	struct:tagIEC0BITS
+SI2CIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	271;"	m	line:271	struct:tagIFS0BITS
+SI2CIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	402;"	m	line:402	struct:tagIPC3BITS
+SID	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1499;"	m	line:1499	struct:tagCxRXFxSIDBITS
+SID	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1567;"	m	line:1567	struct:tagCxRXMxSIDBITS
+SID	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1716;"	m	line:1716	struct:tagCxRXxSIDBITS
+SID10_6	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1597;"	m	line:1597	struct:tagCxTXxSIDBITS
+SID5_0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1595;"	m	line:1595	struct:tagCxTXxSIDBITS
+SIMSAM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1151;"	m	line:1151	struct:tagADCON1BITS
+SJW	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1824;"	m	line:1824	struct:tagCxCFG1BITS
+SLEEP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1900;"	m	line:1900	struct:tagRCONBITS
+SMEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	931;"	m	line:931	struct:tagI2CCONBITS
+SMP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1102;"	m	line:1102	struct:tagSPIxCONBITS
+SMPI	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1167;"	m	line:1167	struct:tagADCON2BITS
+SPI	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1077;"	t	line:1077
+SPI1IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	316;"	m	line:316	struct:tagIEC0BITS
+SPI1IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	266;"	m	line:266	struct:tagIFS0BITS
+SPI1IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	386;"	m	line:386	struct:tagIPC2BITS
+SPI1MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1969;"	m	line:1969	struct:tagPMD1BITS
+SPIEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1091;"	m	line:1091	struct:tagSPIxSTATBITS
+SPIFSD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1106;"	m	line:1106	struct:tagSPIxCONBITS
+SPIRBF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1084;"	m	line:1084	struct:tagSPIxSTATBITS
+SPIROV	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1087;"	m	line:1087	struct:tagSPIxSTATBITS
+SPISIDL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1089;"	m	line:1089	struct:tagSPIxSTATBITS
+SPITBF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1085;"	m	line:1085	struct:tagSPIxSTATBITS
+SPIxCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1109;"	t	line:1109
+SPIxSTATBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1092;"	t	line:1092
+SPRE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1097;"	m	line:1097	struct:tagSPIxCONBITS
+SRBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	160;"	t	line:160
+SRR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1594;"	m	line:1594	struct:tagCxTXxSIDBITS
+SRR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1715;"	m	line:1715	struct:tagCxRXxSIDBITS
+SSEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1100;"	m	line:1100	struct:tagSPIxCONBITS
+SSRC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1153;"	m	line:1153	struct:tagADCON1BITS
+STATUS_LED	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	29;"	d	line:29
+STKERR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	231;"	m	line:231	struct:tagINTCON1BITS
+STREN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	929;"	m	line:929	struct:tagI2CCONBITS
+STSEL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	989;"	m	line:989	struct:tagUxMODEBITS
+SVO_DIR	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	30;"	d	line:30
+SVO_ENABLE	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	32;"	d	line:32
+SWDTEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1902;"	m	line:1902	struct:tagRCONBITS
+SWPAB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	621;"	m	line:621	struct:tagQEICONBITS
+SWR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1903;"	m	line:1903	struct:tagRCONBITS
+Sleep	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2927;"	d	line:2927
+T1IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	311;"	m	line:311	struct:tagIEC0BITS
+T1IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	261;"	m	line:261	struct:tagIFS0BITS
+T1IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	364;"	m	line:364	struct:tagIPC0BITS
+T1MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1977;"	m	line:1977	struct:tagPMD1BITS
+T2IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	314;"	m	line:314	struct:tagIEC0BITS
+T2IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	264;"	m	line:264	struct:tagIFS0BITS
+T2IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	376;"	m	line:376	struct:tagIPC1BITS
+T2MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1978;"	m	line:1978	struct:tagPMD1BITS
+T32	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	536;"	m	line:536	struct:tagTCON_EVEN
+T3IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	315;"	m	line:315	struct:tagIEC0BITS
+T3IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	265;"	m	line:265	struct:tagIFS0BITS
+T3IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	378;"	m	line:378	struct:tagIPC1BITS
+T3MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1979;"	m	line:1979	struct:tagPMD1BITS
+T4IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	334;"	m	line:334	struct:tagIEC1BITS
+T4IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	284;"	m	line:284	struct:tagIFS1BITS
+T4IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	427;"	m	line:427	struct:tagIPC5BITS
+T4MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1980;"	m	line:1980	struct:tagPMD1BITS
+T5IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	335;"	m	line:335	struct:tagIEC1BITS
+T5IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	285;"	m	line:285	struct:tagIFS1BITS
+T5IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	429;"	m	line:429	struct:tagIPC5BITS
+T5MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1981;"	m	line:1981	struct:tagPMD1BITS
+TBF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	945;"	m	line:945	struct:tagI2CSTATBITS
+TCKPS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	509;"	m	line:509	struct:tagTCON_16BIT
+TCKPS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	537;"	m	line:537	struct:tagTCON_EVEN
+TCKPS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	550;"	m	line:550	struct:tagTCON_ODD
+TCON_16BIT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	515;"	t	line:515
+TCON_EVEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	543;"	t	line:543
+TCON_ODD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	556;"	t	line:556
+TCS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	506;"	m	line:506	struct:tagTCON_16BIT
+TCS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	534;"	m	line:534	struct:tagTCON_EVEN
+TCS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	548;"	m	line:548	struct:tagTCON_ODD
+TGATE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	510;"	m	line:510	struct:tagTCON_16BIT
+TGATE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	538;"	m	line:538	struct:tagTCON_EVEN
+TGATE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	551;"	m	line:551	struct:tagTCON_ODD
+THE_BAUD_RATE	C:\Documents and Settings\pluto\dspic-servo\serial.c	6;"	d	line:6	file:
+TON	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	514;"	m	line:514	struct:tagTCON_16BIT
+TON	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	542;"	m	line:542	struct:tagTCON_EVEN
+TON	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	555;"	m	line:555	struct:tagTCON_ODD
+TQCKPS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	618;"	m	line:618	struct:tagQEICONBITS
+TQCS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	616;"	m	line:616	struct:tagQEICONBITS
+TQGATE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	619;"	m	line:619	struct:tagQEICONBITS
+TRAPR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1908;"	m	line:1908	struct:tagRCONBITS
+TRISB0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1236;"	m	line:1236	struct:tagTRISBBITS
+TRISB1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1237;"	m	line:1237	struct:tagTRISBBITS
+TRISB2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1238;"	m	line:1238	struct:tagTRISBBITS
+TRISB3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1239;"	m	line:1239	struct:tagTRISBBITS
+TRISB4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1240;"	m	line:1240	struct:tagTRISBBITS
+TRISB5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1241;"	m	line:1241	struct:tagTRISBBITS
+TRISBBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1243;"	t	line:1243
+TRISC13	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1276;"	m	line:1276	struct:tagTRISCBITS
+TRISC14	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1277;"	m	line:1277	struct:tagTRISCBITS
+TRISC15	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1278;"	m	line:1278	struct:tagTRISCBITS
+TRISCBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1279;"	t	line:1279
+TRISD0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1305;"	m	line:1305	struct:tagTRISDBITS
+TRISD1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1306;"	m	line:1306	struct:tagTRISDBITS
+TRISDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1308;"	t	line:1308
+TRISE0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1332;"	m	line:1332	struct:tagTRISEBITS
+TRISE1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1333;"	m	line:1333	struct:tagTRISEBITS
+TRISE2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1334;"	m	line:1334	struct:tagTRISEBITS
+TRISE3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1335;"	m	line:1335	struct:tagTRISEBITS
+TRISE4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1336;"	m	line:1336	struct:tagTRISEBITS
+TRISE5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1337;"	m	line:1337	struct:tagTRISEBITS
+TRISE8	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1339;"	m	line:1339	struct:tagTRISEBITS
+TRISEBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1341;"	t	line:1341
+TRISF2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1378;"	m	line:1378	struct:tagTRISFBITS
+TRISF3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1379;"	m	line:1379	struct:tagTRISFBITS
+TRISFBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1381;"	t	line:1381
+TRMT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1012;"	m	line:1012	struct:tagUxSTABITS
+TRSTAT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	957;"	m	line:957	struct:tagI2CSTATBITS
+TRUE	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	39;"	d	line:39
+TSIDL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	512;"	m	line:512	struct:tagTCON_16BIT
+TSIDL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	540;"	m	line:540	struct:tagTCON_EVEN
+TSIDL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	553;"	m	line:553	struct:tagTCON_ODD
+TSYNC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	507;"	m	line:507	struct:tagTCON_16BIT
+TUN0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1923;"	m	line:1923	struct:tagOSCCONBITS
+TUN1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1924;"	m	line:1924	struct:tagOSCCONBITS
+TUN2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1926;"	m	line:1926	struct:tagOSCCONBITS
+TUN3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1927;"	m	line:1927	struct:tagOSCCONBITS
+TWRI	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1941;"	m	line:1941	struct:tagNVMCONBITS
+TX0IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1870;"	m	line:1870	struct:tagCxINTEBITS
+TX0IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1848;"	m	line:1848	struct:tagCxINTFBITS
+TX1IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1871;"	m	line:1871	struct:tagCxINTEBITS
+TX1IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1849;"	m	line:1849	struct:tagCxINTFBITS
+TX2IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1872;"	m	line:1872	struct:tagCxINTEBITS
+TX2IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1850;"	m	line:1850	struct:tagCxINTFBITS
+TXABT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1624;"	m	line:1624	struct:tagCxTXxCONBITS
+TXBO	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1859;"	m	line:1859	struct:tagCxINTFBITS
+TXEP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1858;"	m	line:1858	struct:tagCxINTFBITS
+TXERR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1622;"	m	line:1622	struct:tagCxTXxCONBITS
+TXIDE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1593;"	m	line:1593	struct:tagCxTXxSIDBITS
+TXLARB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1623;"	m	line:1623	struct:tagCxTXxCONBITS
+TXPRI	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1619;"	m	line:1619	struct:tagCxTXxCONBITS
+TXRB0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1611;"	m	line:1611	struct:tagCxTXxDLCBITS
+TXRB1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1612;"	m	line:1612	struct:tagCxTXxDLCBITS
+TXREQ	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1621;"	m	line:1621	struct:tagCxTXxCONBITS
+TXRTR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1613;"	m	line:1613	struct:tagCxTXxDLCBITS
+TXWAR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1856;"	m	line:1856	struct:tagCxINTFBITS
+U	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	86;"	m	line:86	struct:tagACC
+U1MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1971;"	m	line:1971	struct:tagPMD1BITS
+U1RXIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	317;"	m	line:317	struct:tagIEC0BITS
+U1RXIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	267;"	m	line:267	struct:tagIFS0BITS
+U1RXIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	388;"	m	line:388	struct:tagIPC2BITS
+U1TXIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	318;"	m	line:318	struct:tagIEC0BITS
+U1TXIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	268;"	m	line:268	struct:tagIFS0BITS
+U1TXIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	390;"	m	line:390	struct:tagIPC2BITS
+UART	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	982;"	t	line:982
+UARTEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1000;"	m	line:1000	struct:tagUxMODEBITS
+UDIS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	814;"	m	line:814	struct:tagPWMCON2BITS
+UPDN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	623;"	m	line:623	struct:tagQEICONBITS
+UPDN_SRC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	615;"	m	line:615	struct:tagQEICONBITS
+URX8	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1044;"	m	line:1044	struct:tagUxRXREGBITS
+URXDA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1005;"	m	line:1005	struct:tagUxSTABITS
+URXISEL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1011;"	m	line:1011	struct:tagUxSTABITS
+URXREG0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1036;"	m	line:1036	struct:tagUxRXREGBITS
+URXREG1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1037;"	m	line:1037	struct:tagUxRXREGBITS
+URXREG2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1038;"	m	line:1038	struct:tagUxRXREGBITS
+URXREG3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1039;"	m	line:1039	struct:tagUxRXREGBITS
+URXREG4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1040;"	m	line:1040	struct:tagUxRXREGBITS
+URXREG5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1041;"	m	line:1041	struct:tagUxRXREGBITS
+URXREG6	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1042;"	m	line:1042	struct:tagUxRXREGBITS
+URXREG7	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1043;"	m	line:1043	struct:tagUxRXREGBITS
+US	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	176;"	m	line:176	struct:tagCORCONBITS
+USIDL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	998;"	m	line:998	struct:tagUxMODEBITS
+UTX8	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1030;"	m	line:1030	struct:tagUxTXREGBITS
+UTXBF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1013;"	m	line:1013	struct:tagUxSTABITS
+UTXBRK	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1015;"	m	line:1015	struct:tagUxSTABITS
+UTXEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1014;"	m	line:1014	struct:tagUxSTABITS
+UTXISEL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1017;"	m	line:1017	struct:tagUxSTABITS
+UTXREG0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1022;"	m	line:1022	struct:tagUxTXREGBITS
+UTXREG1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1023;"	m	line:1023	struct:tagUxTXREGBITS
+UTXREG2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1024;"	m	line:1024	struct:tagUxTXREGBITS
+UTXREG3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1025;"	m	line:1025	struct:tagUxTXREGBITS
+UTXREG4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1026;"	m	line:1026	struct:tagUxTXREGBITS
+UTXREG5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1027;"	m	line:1027	struct:tagUxTXREGBITS
+UTXREG6	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1028;"	m	line:1028	struct:tagUxTXREGBITS
+UTXREG7	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1029;"	m	line:1029	struct:tagUxTXREGBITS
+UxMODEBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1001;"	t	line:1001
+UxRXREGBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1046;"	t	line:1046
+UxSTABITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1018;"	t	line:1018
+UxTXREGBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1032;"	t	line:1032
+VCFG	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1173;"	m	line:1173	struct:tagADCON2BITS
+VERSION	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	20;"	d	line:20
+WAKE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	994;"	m	line:994	struct:tagUxMODEBITS
+WAKFIL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1838;"	m	line:1838	struct:tagCxCFG2BITS
+WAKIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1874;"	m	line:1874	struct:tagCxINTEBITS
+WAKIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1852;"	m	line:1852	struct:tagCxINTFBITS
+WDTO	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1901;"	m	line:1901	struct:tagRCONBITS
+WDTPSA_1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2542;"	d	line:2542
+WDTPSA_512	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2545;"	d	line:2545
+WDTPSA_64	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2544;"	d	line:2544
+WDTPSA_8	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2543;"	d	line:2543
+WDTPSB_1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2546;"	d	line:2546
+WDTPSB_10	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2555;"	d	line:2555
+WDTPSB_11	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2556;"	d	line:2556
+WDTPSB_12	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2557;"	d	line:2557
+WDTPSB_13	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2558;"	d	line:2558
+WDTPSB_14	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2559;"	d	line:2559
+WDTPSB_15	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2560;"	d	line:2560
+WDTPSB_16	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2561;"	d	line:2561
+WDTPSB_2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2547;"	d	line:2547
+WDTPSB_3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2548;"	d	line:2548
+WDTPSB_4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2549;"	d	line:2549
+WDTPSB_5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2550;"	d	line:2550
+WDTPSB_6	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2551;"	d	line:2551
+WDTPSB_7	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2552;"	d	line:2552
+WDTPSB_8	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2553;"	d	line:2553
+WDTPSB_9	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2554;"	d	line:2554
+WDT_OFF	C:\Documents and Settings\pluto\dspic-servo\main.c	41;"	v	line:41
+WDT_OFF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2541;"	d	line:2541
+WDT_ON	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2540;"	d	line:2540
+WORD	C:\Documents and Settings\pluto\dspic-servo\DataEEPROM.h	40;"	d	line:40
+WR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1945;"	m	line:1945	struct:tagNVMCONBITS
+WREN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1944;"	m	line:1944	struct:tagNVMCONBITS
+WRERR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1943;"	m	line:1943	struct:tagNVMCONBITS
+WriteEE	C:\Documents and Settings\pluto\dspic-servo\DataEEPROM.h	79;"	p	line:79	signature:(int* DataIn, int Page, int Offset, int Size)
+XB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	208;"	m	line:208	struct:tagXBREVBITS
+XBREVBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	210;"	t	line:210
+XMODEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	189;"	m	line:189	struct:tagMODCONBITS
+XT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2524;"	d	line:2524
+XTL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2528;"	d	line:2528
+XT_PLL16	C:\Documents and Settings\pluto\dspic-servo\main.c	40;"	v	line:40
+XT_PLL16	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2527;"	d	line:2527
+XT_PLL4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2525;"	d	line:2525
+XT_PLL8	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2526;"	d	line:2526
+XWM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	184;"	m	line:184	struct:tagMODCONBITS
+YMODEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	188;"	m	line:188	struct:tagMODCONBITS
+YWM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	185;"	m	line:185	struct:tagMODCONBITS
+Z	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	147;"	m	line:147	struct:tagSRBITS
+_A10M	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2291;"	d	line:2291
+_ACCSAT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2025;"	d	line:2025
+_ACKDT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2286;"	d	line:2286
+_ACKEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2285;"	d	line:2285
+_ACKSTAT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2310;"	d	line:2310
+_ADCMD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2485;"	d	line:2485
+_ADCS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2331;"	d	line:2331
+_ADD10	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2306;"	d	line:2306
+_ADDRERR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2047;"	d	line:2047
+_ADIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2105;"	d	line:2105
+_ADIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2073;"	d	line:2073
+_ADIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2141;"	d	line:2141
+_ADON	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2320;"	d	line:2320
+_ADRC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2332;"	d	line:2332
+_ADSIDL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2319;"	d	line:2319
+_ALTIVT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2059;"	d	line:2059
+_ALTS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2323;"	d	line:2323
+_ASAM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2315;"	d	line:2315
+_AddressError	C:\Documents and Settings\pluto\dspic-servo\main.c	88;"	f	line:88	signature:(void)
+_BCL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2308;"	d	line:2308
+_BGST	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2460;"	d	line:2460
+_BOR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2453;"	d	line:2453
+_BREN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2042;"	d	line:2042
+_BUFM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2324;"	d	line:2324
+_BUFS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2326;"	d	line:2326
+_BWM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2036;"	d	line:2036
+_C	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2005;"	d	line:2005
+_C1IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2118;"	d	line:2118
+_C1IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2086;"	d	line:2086
+_C1IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2160;"	d	line:2160
+_C1MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2486;"	d	line:2486
+_CEID	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2206;"	d	line:2206
+_CF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2467;"	d	line:2467
+_CH0NA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2337;"	d	line:2337
+_CH0NB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2341;"	d	line:2341
+_CH0SA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2336;"	d	line:2336
+_CH0SB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2340;"	d	line:2340
+_CH123NA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2339;"	d	line:2339
+_CH123NB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2343;"	d	line:2343
+_CH123SA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2338;"	d	line:2338
+_CH123SB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2342;"	d	line:2342
+_CN0IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2170;"	d	line:2170
+_CN0PUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2180;"	d	line:2180
+_CN1IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2171;"	d	line:2171
+_CN1PUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2181;"	d	line:2181
+_CN2IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2172;"	d	line:2172
+_CN2PUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2182;"	d	line:2182
+_CN3IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2173;"	d	line:2173
+_CN3PUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2183;"	d	line:2183
+_CN4IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2174;"	d	line:2174
+_CN4PUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2184;"	d	line:2184
+_CN5IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2175;"	d	line:2175
+_CN5PUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2185;"	d	line:2185
+_CN6IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2176;"	d	line:2176
+_CN6PUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2186;"	d	line:2186
+_CN7IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2177;"	d	line:2177
+_CN7PUE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2187;"	d	line:2187
+_CNIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2109;"	d	line:2109
+_CNIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2077;"	d	line:2077
+_CNIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2147;"	d	line:2147
+_CNTERR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2201;"	d	line:2201
+_COSC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2473;"	d	line:2473
+_COVTE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2049;"	d	line:2049
+_CSCNA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2327;"	d	line:2327
+_CSSL0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2354;"	d	line:2354
+_CSSL1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2355;"	d	line:2355
+_CSSL2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2356;"	d	line:2356
+_CSSL3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2357;"	d	line:2357
+_CSSL4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2358;"	d	line:2358
+_CSSL5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2359;"	d	line:2359
+_DA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2012;"	d	line:2012
+_DC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2011;"	d	line:2011
+_DISI	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2058;"	d	line:2058
+_DISSLW	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2290;"	d	line:2290
+_DL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2029;"	d	line:2029
+_DONE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2313;"	d	line:2313
+_DTA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2239;"	d	line:2239
+_DTAPS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2240;"	d	line:2240
+_D_A	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2303;"	d	line:2303
+_EDT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2030;"	d	line:2030
+_EEDATA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2950;"	d	line:2950
+_EXTR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2459;"	d	line:2459
+_FAEN1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2243;"	d	line:2243
+_FAEN2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2244;"	d	line:2244
+_FAEN3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2245;"	d	line:2245
+_FAOV1H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2248;"	d	line:2248
+_FAOV1L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2247;"	d	line:2247
+_FAOV2H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2250;"	d	line:2250
+_FAOV2L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2249;"	d	line:2249
+_FAOV3H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2252;"	d	line:2252
+_FAOV3L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2251;"	d	line:2251
+_FBEN1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2255;"	d	line:2255
+_FBEN2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2256;"	d	line:2256
+_FBEN3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2257;"	d	line:2257
+_FBORPOR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2564;"	d	line:2564
+_FBOV1H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2260;"	d	line:2260
+_FBOV1L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2259;"	d	line:2259
+_FBOV2H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2262;"	d	line:2262
+_FBOV2L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2261;"	d	line:2261
+_FBOV3H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2264;"	d	line:2264
+_FBOV3L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2263;"	d	line:2263
+_FGS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2586;"	d	line:2586
+_FLTAIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2123;"	d	line:2123
+_FLTAIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2091;"	d	line:2091
+_FLTAIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2167;"	d	line:2167
+_FLTAM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2246;"	d	line:2246
+_FLTBM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2258;"	d	line:2258
+_FORM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2318;"	d	line:2318
+_FOSC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2512;"	d	line:2512
+_FWDT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2538;"	d	line:2538
+_GCEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2288;"	d	line:2288
+_GCSTAT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2307;"	d	line:2307
+_I2CEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2295;"	d	line:2295
+_I2CMD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2489;"	d	line:2489
+_I2COV	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2304;"	d	line:2304
+_I2CSIDL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2294;"	d	line:2294
+_IC1IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2095;"	d	line:2095
+_IC1IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2063;"	d	line:2063
+_IC1IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2127;"	d	line:2127
+_IC1Interrupt	C:\Documents and Settings\pluto\dspic-servo\capture.c	95;"	f	line:95	signature:(void)
+_IC1MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2501;"	d	line:2501
+_IC2IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2098;"	d	line:2098
+_IC2IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2066;"	d	line:2066
+_IC2IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2132;"	d	line:2132
+_IC2Interrupt	C:\Documents and Settings\pluto\dspic-servo\capture.c	118;"	f	line:118	signature:(void)
+_IC2MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2502;"	d	line:2502
+_IC7IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2113;"	d	line:2113
+_IC7IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2081;"	d	line:2081
+_IC7IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2151;"	d	line:2151
+_IC7MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2503;"	d	line:2503
+_IC8IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2114;"	d	line:2114
+_IC8IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2082;"	d	line:2082
+_IC8IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2152;"	d	line:2152
+_IC8MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2504;"	d	line:2504
+_IDLE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2454;"	d	line:2454
+_IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2021;"	d	line:2021
+_IMV	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2207;"	d	line:2207
+_INDX	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2199;"	d	line:2199
+_INT0EP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2055;"	d	line:2055
+_INT0IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2094;"	d	line:2094
+_INT0IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2062;"	d	line:2062
+_INT0IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2126;"	d	line:2126
+_INT1EP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2056;"	d	line:2056
+_INT1IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2112;"	d	line:2112
+_INT1IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2080;"	d	line:2080
+_INT1IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2150;"	d	line:2150
+_INT2EP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2057;"	d	line:2057
+_INT2IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2117;"	d	line:2117
+_INT2IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2085;"	d	line:2085
+_INT2IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2157;"	d	line:2157
+_IOPUWR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2461;"	d	line:2461
+_IPL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2010;"	d	line:2010
+_IPL3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2024;"	d	line:2024
+_IPMIEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2292;"	d	line:2292
+_ISR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2981;"	d	line:2981
+_ISRFAST	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2982;"	d	line:2982
+_IWCOL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2305;"	d	line:2305
+_LATB0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2378;"	d	line:2378
+_LATB1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2379;"	d	line:2379
+_LATB2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2380;"	d	line:2380
+_LATB3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2381;"	d	line:2381
+_LATB4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2382;"	d	line:2382
+_LATB5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2383;"	d	line:2383
+_LATC13	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2396;"	d	line:2396
+_LATC14	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2397;"	d	line:2397
+_LATC15	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2398;"	d	line:2398
+_LATD0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2409;"	d	line:2409
+_LATD1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2410;"	d	line:2410
+_LATE0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2431;"	d	line:2431
+_LATE1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2432;"	d	line:2432
+_LATE2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2433;"	d	line:2433
+_LATE3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2434;"	d	line:2434
+_LATE4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2435;"	d	line:2435
+_LATE5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2436;"	d	line:2436
+_LATE8	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2437;"	d	line:2437
+_LATF2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2448;"	d	line:2448
+_LATF3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2449;"	d	line:2449
+_LOCK	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2468;"	d	line:2468
+_LPOSCEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2466;"	d	line:2466
+_MATHERR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2048;"	d	line:2048
+_MI2CIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2108;"	d	line:2108
+_MI2CIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2076;"	d	line:2076
+_MI2CIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2146;"	d	line:2146
+_MathError	C:\Documents and Settings\pluto\dspic-servo\main.c	100;"	f	line:100	signature:(void)
+_N	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2008;"	d	line:2008
+_NEAR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2960;"	d	line:2960
+_NOSC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2470;"	d	line:2470
+_NSTDIS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2052;"	d	line:2052
+_NVMIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2106;"	d	line:2106
+_NVMIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2074;"	d	line:2074
+_NVMIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2144;"	d	line:2144
+_OA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2018;"	d	line:2018
+_OAB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2014;"	d	line:2014
+_OB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2017;"	d	line:2017
+_OC1IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2096;"	d	line:2096
+_OC1IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2064;"	d	line:2064
+_OC1IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2128;"	d	line:2128
+_OC1MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2499;"	d	line:2499
+_OC2IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2099;"	d	line:2099
+_OC2IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2067;"	d	line:2067
+_OC2IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2133;"	d	line:2133
+_OC2MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2500;"	d	line:2500
+_OSCFAIL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2045;"	d	line:2045
+_OSWEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2465;"	d	line:2465
+_OSYNC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2235;"	d	line:2235
+_OV	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2007;"	d	line:2007
+_OVATE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2051;"	d	line:2051
+_OVBTE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2050;"	d	line:2050
+_P	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2302;"	d	line:2302
+_PCDOUT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2195;"	d	line:2195
+_PCFG0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2346;"	d	line:2346
+_PCFG1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2347;"	d	line:2347
+_PCFG2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2348;"	d	line:2348
+_PCFG3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2349;"	d	line:2349
+_PCFG4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2350;"	d	line:2350
+_PCFG5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2351;"	d	line:2351
+_PEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2283;"	d	line:2283
+_PEN1H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2226;"	d	line:2226
+_PEN1L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2223;"	d	line:2223
+_PEN2H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2227;"	d	line:2227
+_PEN2L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2224;"	d	line:2224
+_PEN3H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2228;"	d	line:2228
+_PEN3L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2225;"	d	line:2225
+_PERSISTENT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2959;"	d	line:2959
+_PMOD1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2229;"	d	line:2229
+_PMOD2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2230;"	d	line:2230
+_PMOD3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2231;"	d	line:2231
+_POR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2452;"	d	line:2452
+_POSRES	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2192;"	d	line:2192
+_POST	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2469;"	d	line:2469
+_POUT1H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2268;"	d	line:2268
+_POUT1L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2267;"	d	line:2267
+_POUT2H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2270;"	d	line:2270
+_POUT2L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2269;"	d	line:2269
+_POUT3H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2272;"	d	line:2272
+_POUT3L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2271;"	d	line:2271
+_POVD1H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2274;"	d	line:2274
+_POVD1L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2273;"	d	line:2273
+_POVD2H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2276;"	d	line:2276
+_POVD2L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2275;"	d	line:2275
+_POVD3H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2278;"	d	line:2278
+_POVD3L	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2277;"	d	line:2277
+_PROGOP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2478;"	d	line:2478
+_PSV	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2023;"	d	line:2023
+_PTCKPS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2211;"	d	line:2211
+_PTDIR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2217;"	d	line:2217
+_PTEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2214;"	d	line:2214
+_PTMOD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2210;"	d	line:2210
+_PTOPS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2212;"	d	line:2212
+_PTSIDL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2213;"	d	line:2213
+_PWMIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2121;"	d	line:2121
+_PWMIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2089;"	d	line:2089
+_PWMIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2163;"	d	line:2163
+_PWMInterrupt	C:\Documents and Settings\pluto\dspic-servo\pwm.c	36;"	f	line:36	signature:(void)
+_PWMMD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2490;"	d	line:2490
+_QECK	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2204;"	d	line:2204
+_QEIIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2122;"	d	line:2122
+_QEIIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2090;"	d	line:2090
+_QEIIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2166;"	d	line:2166
+_QEIInterrupt	C:\Documents and Settings\pluto\dspic-servo\encoder.c	35;"	f	line:35	signature:(void)
+_QEIM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2197;"	d	line:2197
+_QEIMD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2491;"	d	line:2491
+_QEISIDL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2200;"	d	line:2200
+_QEOUT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2205;"	d	line:2205
+_RA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2009;"	d	line:2009
+_RB0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2370;"	d	line:2370
+_RB1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2371;"	d	line:2371
+_RB2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2372;"	d	line:2372
+_RB3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2373;"	d	line:2373
+_RB4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2374;"	d	line:2374
+_RB5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2375;"	d	line:2375
+_RBF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2299;"	d	line:2299
+_RC13	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2391;"	d	line:2391
+_RC14	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2392;"	d	line:2392
+_RC15	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2393;"	d	line:2393
+_RCEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2284;"	d	line:2284
+_RD0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2405;"	d	line:2405
+_RD1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2406;"	d	line:2406
+_RE0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2422;"	d	line:2422
+_RE1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2423;"	d	line:2423
+_RE2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2424;"	d	line:2424
+_RE3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2425;"	d	line:2425
+_RE4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2426;"	d	line:2426
+_RE5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2427;"	d	line:2427
+_RE8	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2428;"	d	line:2428
+_RF2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2444;"	d	line:2444
+_RF3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2445;"	d	line:2445
+_RND	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2022;"	d	line:2022
+_RSEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2282;"	d	line:2282
+_R_W	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2300;"	d	line:2300
+_S	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2301;"	d	line:2301
+_SA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2016;"	d	line:2016
+_SAB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2013;"	d	line:2013
+_SAMC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2333;"	d	line:2333
+_SAMP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2314;"	d	line:2314
+_SATA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2028;"	d	line:2028
+_SATB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2027;"	d	line:2027
+_SATDW	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2026;"	d	line:2026
+_SB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2015;"	d	line:2015
+_SCLREL	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2293;"	d	line:2293
+_SEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2281;"	d	line:2281
+_SEVOPS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2236;"	d	line:2236
+_SEVTDIR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2220;"	d	line:2220
+_SI2CIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2107;"	d	line:2107
+_SI2CIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2075;"	d	line:2075
+_SI2CIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2145;"	d	line:2145
+_SIMSAM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2316;"	d	line:2316
+_SLEEP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2455;"	d	line:2455
+_SMEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2289;"	d	line:2289
+_SMPI	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2325;"	d	line:2325
+_SPI1IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2102;"	d	line:2102
+_SPI1IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2070;"	d	line:2070
+_SPI1IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2138;"	d	line:2138
+_SPI1MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2487;"	d	line:2487
+_SSRC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2317;"	d	line:2317
+_STKERR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2046;"	d	line:2046
+_STREN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2287;"	d	line:2287
+_SWDTEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2457;"	d	line:2457
+_SWPAB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2196;"	d	line:2196
+_SWR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2458;"	d	line:2458
+_StackError	C:\Documents and Settings\pluto\dspic-servo\main.c	76;"	f	line:76	signature:(void)
+_T1IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2097;"	d	line:2097
+_T1IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2065;"	d	line:2065
+_T1IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2129;"	d	line:2129
+_T1Interrupt	C:\Documents and Settings\pluto\dspic-servo\timer1.c	35;"	f	line:35	signature:(void)
+_T1MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2492;"	d	line:2492
+_T2IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2100;"	d	line:2100
+_T2IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2068;"	d	line:2068
+_T2IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2134;"	d	line:2134
+_T2MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2493;"	d	line:2493
+_T3IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2101;"	d	line:2101
+_T3IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2069;"	d	line:2069
+_T3IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2135;"	d	line:2135
+_T3MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2494;"	d	line:2494
+_T4IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2115;"	d	line:2115
+_T4IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2083;"	d	line:2083
+_T4IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2155;"	d	line:2155
+_T4MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2495;"	d	line:2495
+_T5IE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2116;"	d	line:2116
+_T5IF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2084;"	d	line:2084
+_T5IP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2156;"	d	line:2156
+_T5MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2496;"	d	line:2496
+_TBF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2298;"	d	line:2298
+_TQCKPS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2193;"	d	line:2193
+_TQCS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2191;"	d	line:2191
+_TQGATE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2194;"	d	line:2194
+_TRAPR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2462;"	d	line:2462
+_TRISB0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2362;"	d	line:2362
+_TRISB1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2363;"	d	line:2363
+_TRISB2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2364;"	d	line:2364
+_TRISB3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2365;"	d	line:2365
+_TRISB4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2366;"	d	line:2366
+_TRISB5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2367;"	d	line:2367
+_TRISC13	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2386;"	d	line:2386
+_TRISC14	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2387;"	d	line:2387
+_TRISC15	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2388;"	d	line:2388
+_TRISD0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2401;"	d	line:2401
+_TRISD1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2402;"	d	line:2402
+_TRISE0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2413;"	d	line:2413
+_TRISE1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2414;"	d	line:2414
+_TRISE2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2415;"	d	line:2415
+_TRISE3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2416;"	d	line:2416
+_TRISE4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2417;"	d	line:2417
+_TRISE5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2418;"	d	line:2418
+_TRISE8	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2419;"	d	line:2419
+_TRISF2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2440;"	d	line:2440
+_TRISF3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2441;"	d	line:2441
+_TRSTAT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2309;"	d	line:2309
+_TUN0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2471;"	d	line:2471
+_TUN1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2472;"	d	line:2472
+_TUN2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2474;"	d	line:2474
+_TUN3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2475;"	d	line:2475
+_TWRI	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2479;"	d	line:2479
+_U1MD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2488;"	d	line:2488
+_U1RXIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2103;"	d	line:2103
+_U1RXIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2071;"	d	line:2071
+_U1RXIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2139;"	d	line:2139
+_U1RXInterrupt	C:\Documents and Settings\pluto\dspic-servo\serial.c	48;"	f	line:48	signature:(void)
+_U1TXIE	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2104;"	d	line:2104
+_U1TXIF	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2072;"	d	line:2072
+_U1TXIP	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2140;"	d	line:2140
+_UDIS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2234;"	d	line:2234
+_UPDN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2198;"	d	line:2198
+_UPDN_SRC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2190;"	d	line:2190
+_US	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2031;"	d	line:2031
+_VCFG	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2328;"	d	line:2328
+_WDTO	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2456;"	d	line:2456
+_WR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2482;"	d	line:2482
+_WREN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2481;"	d	line:2481
+_WRERR	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2480;"	d	line:2480
+_XB	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2041;"	d	line:2041
+_XBSS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2946;"	d	line:2946
+_XDATA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2947;"	d	line:2947
+_XMODEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2038;"	d	line:2038
+_XWM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2034;"	d	line:2034
+_YBSS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2948;"	d	line:2948
+_YDATA	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2949;"	d	line:2949
+_YMODEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2037;"	d	line:2037
+_YWM	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2035;"	d	line:2035
+_Z	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	2006;"	d	line:2006
+__30F4012_H	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	55;"	d	line:55
+amp_incr	C:\Documents and Settings\pluto\dspic-servo\test.c	38;"	l	line:38
+amps	C:\Documents and Settings\pluto\dspic-servo\test.c	37;"	l	line:37
+bias	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	56;"	m	line:56	struct:PID
+calc_cksum	C:\Documents and Settings\pluto\dspic-servo\main.c	60;"	p	line:60	file:	signature:(int sizew, int *adr)
+calc_cksum	C:\Documents and Settings\pluto\dspic-servo\save-res.c	44;"	f	line:44	signature:(int sizew, int *adr)
+calc_pid	C:\Documents and Settings\pluto\dspic-servo\main.c	70;"	p	line:70	file:	signature:( void )
+calc_pid	C:\Documents and Settings\pluto\dspic-servo\pid.c	139;"	f	line:139	signature:( void )
+calc_pid	C:\Documents and Settings\pluto\dspic-servo\pid.c	99;"	p	line:99	file:	signature:(void)
+calc_pid	C:\Documents and Settings\pluto\dspic-servo\test.c	32;"	p	line:32	file:	signature:( void )
+ch	C:\Documents and Settings\pluto\dspic-servo\serial.c	50;"	l	line:50
+change_DN	C:\Documents and Settings\pluto\dspic-servo\capture.c	43;"	f	line:43	signature:(void)
+change_ER	C:\Documents and Settings\pluto\dspic-servo\capture.c	47;"	f	line:47	signature:(void)
+change_NO	C:\Documents and Settings\pluto\dspic-servo\capture.c	34;"	f	line:34	signature:(void)
+change_UP	C:\Documents and Settings\pluto\dspic-servo\capture.c	39;"	f	line:39	signature:(void)
+cksum	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	68;"	m	line:68	struct:PID
+cksum	C:\Documents and Settings\pluto\dspic-servo\save-res.c	47;"	l	line:47
+cmd_bits	C:\Documents and Settings\pluto\dspic-servo\capture.c	31;"	v	line:31
+cmd_d	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	55;"	m	line:55	struct:PID
+cmd_err	C:\Documents and Settings\pluto\dspic-servo\capture.c	30;"	v	line:30
+cmd_posn	C:\Documents and Settings\pluto\dspic-servo\capture.c	29;"	v	line:29
+command	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	43;"	m	line:43	struct:PID
+config	C:\Documents and Settings\pluto\dspic-servo\pwm.c	61;"	l	line:61
+cs	C:\Documents and Settings\pluto\dspic-servo\main.c	181;"	l	line:181
+cxcfg1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1484;"	m	line:1484	struct:tagCAN
+cxcfg2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1485;"	m	line:1485	struct:tagCAN
+cxctrl	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1483;"	m	line:1483	struct:tagCAN
+cxec	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1488;"	m	line:1488	struct:tagCAN
+cxinte	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1487;"	m	line:1487	struct:tagCAN
+cxintf	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1486;"	m	line:1486	struct:tagCAN
+cxrx0b1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1478;"	m	line:1478	struct:tagCAN
+cxrx0b2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1479;"	m	line:1479	struct:tagCAN
+cxrx0b3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1480;"	m	line:1480	struct:tagCAN
+cxrx0b4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1481;"	m	line:1481	struct:tagCAN
+cxrx0con	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1482;"	m	line:1482	struct:tagCAN
+cxrx0dlc	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1477;"	m	line:1477	struct:tagCAN
+cxrx0eid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1476;"	m	line:1476	struct:tagCAN
+cxrx0sid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1475;"	m	line:1475	struct:tagCAN
+cxrx1b1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1470;"	m	line:1470	struct:tagCAN
+cxrx1b2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1471;"	m	line:1471	struct:tagCAN
+cxrx1b3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1472;"	m	line:1472	struct:tagCAN
+cxrx1b4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1473;"	m	line:1473	struct:tagCAN
+cxrx1con	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1474;"	m	line:1474	struct:tagCAN
+cxrx1dlc	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1469;"	m	line:1469	struct:tagCAN
+cxrx1eid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1468;"	m	line:1468	struct:tagCAN
+cxrx1sid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1467;"	m	line:1467	struct:tagCAN
+cxrxf0eidh	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1412;"	m	line:1412	struct:tagCAN
+cxrxf0eidl	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1413;"	m	line:1413	struct:tagCAN
+cxrxf0sid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1411;"	m	line:1411	struct:tagCAN
+cxrxf1eidh	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1416;"	m	line:1416	struct:tagCAN
+cxrxf1eidl	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1417;"	m	line:1417	struct:tagCAN
+cxrxf1sid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1415;"	m	line:1415	struct:tagCAN
+cxrxf2eidh	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1420;"	m	line:1420	struct:tagCAN
+cxrxf2eidl	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1421;"	m	line:1421	struct:tagCAN
+cxrxf2sid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1419;"	m	line:1419	struct:tagCAN
+cxrxf3eidh	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1424;"	m	line:1424	struct:tagCAN
+cxrxf3eidl	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1425;"	m	line:1425	struct:tagCAN
+cxrxf3sid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1423;"	m	line:1423	struct:tagCAN
+cxrxf4eidh	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1428;"	m	line:1428	struct:tagCAN
+cxrxf4eidl	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1429;"	m	line:1429	struct:tagCAN
+cxrxf4sid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1427;"	m	line:1427	struct:tagCAN
+cxrxf5eidh	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1432;"	m	line:1432	struct:tagCAN
+cxrxf5eidl	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1433;"	m	line:1433	struct:tagCAN
+cxrxf5sid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1431;"	m	line:1431	struct:tagCAN
+cxrxm0eidh	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1436;"	m	line:1436	struct:tagCAN
+cxrxm0eidl	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1437;"	m	line:1437	struct:tagCAN
+cxrxm0sid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1435;"	m	line:1435	struct:tagCAN
+cxrxm1eidh	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1440;"	m	line:1440	struct:tagCAN
+cxrxm1eidl	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1441;"	m	line:1441	struct:tagCAN
+cxrxm1sid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1439;"	m	line:1439	struct:tagCAN
+cxtx0b1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1462;"	m	line:1462	struct:tagCAN
+cxtx0b2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1463;"	m	line:1463	struct:tagCAN
+cxtx0b3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1464;"	m	line:1464	struct:tagCAN
+cxtx0b4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1465;"	m	line:1465	struct:tagCAN
+cxtx0con	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1466;"	m	line:1466	struct:tagCAN
+cxtx0dlc	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1461;"	m	line:1461	struct:tagCAN
+cxtx0eid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1460;"	m	line:1460	struct:tagCAN
+cxtx0sid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1459;"	m	line:1459	struct:tagCAN
+cxtx1b1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1454;"	m	line:1454	struct:tagCAN
+cxtx1b2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1455;"	m	line:1455	struct:tagCAN
+cxtx1b3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1456;"	m	line:1456	struct:tagCAN
+cxtx1b4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1457;"	m	line:1457	struct:tagCAN
+cxtx1con	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1458;"	m	line:1458	struct:tagCAN
+cxtx1dlc	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1453;"	m	line:1453	struct:tagCAN
+cxtx1eid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1452;"	m	line:1452	struct:tagCAN
+cxtx1sid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1451;"	m	line:1451	struct:tagCAN
+cxtx2b1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1446;"	m	line:1446	struct:tagCAN
+cxtx2b2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1447;"	m	line:1447	struct:tagCAN
+cxtx2b3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1448;"	m	line:1448	struct:tagCAN
+cxtx2b4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1449;"	m	line:1449	struct:tagCAN
+cxtx2con	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1450;"	m	line:1450	struct:tagCAN
+cxtx2dlc	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1445;"	m	line:1445	struct:tagCAN
+cxtx2eid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1444;"	m	line:1444	struct:tagCAN
+cxtx2sid	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1443;"	m	line:1443	struct:tagCAN
+deadband	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	46;"	m	line:46	struct:PID
+dgain	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	59;"	m	line:59	struct:PID
+do_servo	C:\Documents and Settings\pluto\dspic-servo\timer1.c	18;"	v	line:18
+dptr	C:\Documents and Settings\pluto\dspic-servo\save-res.c	105;"	l	line:105
+enable	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	64;"	m	line:64	struct:PID
+enable	C:\Documents and Settings\pluto\dspic-servo\pid.c	142;"	l	line:142
+error	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	45;"	m	line:45	struct:PID
+error_d	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	53;"	m	line:53	struct:PID
+error_i	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	51;"	m	line:51	struct:PID
+fabs	C:\Documents and Settings\pluto\dspic-servo\test.c	101;"	p	line:101	file:	signature:(pid.output)
+feedback	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	44;"	m	line:44	struct:PID
+ff0gain	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	60;"	m	line:60	struct:PID
+ff1gain	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	61;"	m	line:61	struct:PID
+funcArr	C:\Documents and Settings\pluto\dspic-servo\capture.c	75;"	v	line:75
+gear	C:\Documents and Settings\pluto\dspic-servo\timer1.c	37;"	l	line:37	file:
+holdtime	C:\Documents and Settings\pluto\dspic-servo\test.c	39;"	l	line:39
+i	C:\Documents and Settings\pluto\dspic-servo\save-res.c	46;"	l	line:46
+icxbuf	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	655;"	m	line:655	struct:tagIC
+icxcon	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	656;"	m	line:656	struct:tagIC
+igain	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	58;"	m	line:58	struct:PID
+init_pid	C:\Documents and Settings\pluto\dspic-servo\main.c	71;"	p	line:71	file:	signature:(void)
+init_pid	C:\Documents and Settings\pluto\dspic-servo\pid.c	100;"	p	line:100	file:	signature:(void)
+init_pid	C:\Documents and Settings\pluto\dspic-servo\pid.c	102;"	f	line:102	signature:(void)
+last_cmd	C:\Documents and Settings\pluto\dspic-servo\main.c	183;"	l	line:183
+last_dir	C:\Documents and Settings\pluto\dspic-servo\pwm.c	147;"	l	line:147	file:
+last_fb	C:\Documents and Settings\pluto\dspic-servo\main.c	183;"	l	line:183
+limit_state	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	65;"	m	line:65	struct:PID
+main	C:\Documents and Settings\pluto\dspic-servo\main.c	179;"	f	line:179	signature:(void)
+max_amps	C:\Documents and Settings\pluto\dspic-servo\test.c	36;"	l	line:36
+maxcmd_d	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	50;"	m	line:50	struct:PID
+maxerror	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	47;"	m	line:47	struct:PID
+maxerror_d	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	49;"	m	line:49	struct:PID
+maxerror_i	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	48;"	m	line:48	struct:PID
+maxoutput	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	62;"	m	line:62	struct:PID
+multiplier	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	66;"	m	line:66	struct:PID
+new_cmd	C:\Documents and Settings\pluto\dspic-servo\main.c	183;"	l	line:183
+new_fb	C:\Documents and Settings\pluto\dspic-servo\main.c	183;"	l	line:183
+ocxcon	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	714;"	m	line:714	struct:tagOC
+ocxr	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	713;"	m	line:713	struct:tagOC
+ocxrs	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	712;"	m	line:712	struct:tagOC
+offset	C:\Documents and Settings\pluto\dspic-servo\save-res.c	107;"	l	line:107
+offset	C:\Documents and Settings\pluto\dspic-servo\save-res.c	66;"	l	line:66
+output	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	63;"	m	line:63	struct:PID
+period	C:\Documents and Settings\pluto\dspic-servo\pid.c	144;"	l	line:144
+periodfp	C:\Documents and Settings\pluto\dspic-servo\pid.c	143;"	l	line:143
+periodrecip	C:\Documents and Settings\pluto\dspic-servo\pid.c	143;"	l	line:143
+pgain	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	57;"	m	line:57	struct:PID
+pid	C:\Documents and Settings\pluto\dspic-servo\pid.c	94;"	v	line:94
+prev_cmd	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	54;"	m	line:54	struct:PID
+prev_error	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	52;"	m	line:52	struct:PID
+print_tuning	C:\Documents and Settings\pluto\dspic-servo\commands.c	37;"	f	line:37	signature:(void)
+print_tuning	C:\Documents and Settings\pluto\dspic-servo\main.c	61;"	p	line:61	file:	signature:( void )
+process_serial_buffer	C:\Documents and Settings\pluto\dspic-servo\commands.c	53;"	f	line:53
+process_serial_buffer	C:\Documents and Settings\pluto\dspic-servo\main.c	72;"	p	line:72	file:
+pwm_max	C:\Documents and Settings\pluto\dspic-servo\pwm.c	145;"	l	line:145
+res	C:\Documents and Settings\pluto\dspic-servo\save-res.c	106;"	l	line:106
+res	C:\Documents and Settings\pluto\dspic-servo\save-res.c	65;"	l	line:65
+reserved0	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1414;"	m	line:1414	struct:tagCAN
+reserved1	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1418;"	m	line:1418	struct:tagCAN
+reserved2	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1422;"	m	line:1422	struct:tagCAN
+reserved3	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1426;"	m	line:1426	struct:tagCAN
+reserved4	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1430;"	m	line:1430	struct:tagCAN
+reserved5	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1434;"	m	line:1434	struct:tagCAN
+reserved6	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1438;"	m	line:1438	struct:tagCAN
+reserved7	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1442;"	m	line:1442	struct:tagCAN
+reserved8	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1489;"	m	line:1489	struct:tagCAN
+restore_setup	C:\Documents and Settings\pluto\dspic-servo\main.c	59;"	p	line:59	file:	signature:( void )
+restore_setup	C:\Documents and Settings\pluto\dspic-servo\save-res.c	102;"	f	line:102	signature:( void )
+rxbuff	C:\Documents and Settings\pluto\dspic-servo\serial.c	11;"	v	line:11
+rxbuffptr	C:\Documents and Settings\pluto\dspic-servo\serial.c	12;"	v	line:12
+rxrdy	C:\Documents and Settings\pluto\dspic-servo\serial.c	13;"	v	line:13
+save_setup	C:\Documents and Settings\pluto\dspic-servo\commands.c	35;"	p	line:35	file:	signature:( void )
+save_setup	C:\Documents and Settings\pluto\dspic-servo\save-res.c	61;"	f	line:61	signature:( void )
+set_pwm	C:\Documents and Settings\pluto\dspic-servo\main.c	56;"	p	line:56	file:	signature:(float amps)
+set_pwm	C:\Documents and Settings\pluto\dspic-servo\pwm.c	136;"	f	line:136	signature:(float amps)
+set_pwm	C:\Documents and Settings\pluto\dspic-servo\test.c	31;"	p	line:31	file:	signature:(float amplitude)
+setup_TMR1	C:\Documents and Settings\pluto\dspic-servo\main.c	47;"	p	line:47	file:	signature:(void)
+setup_TMR1	C:\Documents and Settings\pluto\dspic-servo\timer1.c	72;"	f	line:72	signature:(void)
+setup_adc10	C:\Documents and Settings\pluto\dspic-servo\main.c	57;"	p	line:57	file:	signature:(void)
+setup_capture	C:\Documents and Settings\pluto\dspic-servo\capture.c	142;"	f	line:142	signature:(void)
+setup_capture	C:\Documents and Settings\pluto\dspic-servo\main.c	58;"	p	line:58	file:	signature:(void)
+setup_encoder	C:\Documents and Settings\pluto\dspic-servo\encoder.c	78;"	f	line:78	signature:(void)
+setup_encoder	C:\Documents and Settings\pluto\dspic-servo\main.c	48;"	p	line:48	file:	signature:(void)
+setup_io	C:\Documents and Settings\pluto\dspic-servo\main.c	127;"	f	line:127	signature:(void)
+setup_pwm	C:\Documents and Settings\pluto\dspic-servo\main.c	55;"	p	line:55	file:	signature:(void)
+setup_pwm	C:\Documents and Settings\pluto\dspic-servo\pwm.c	58;"	f	line:58	signature:(void)
+setup_uart	C:\Documents and Settings\pluto\dspic-servo\main.c	49;"	p	line:49	file:	signature:(void)
+setup_uart	C:\Documents and Settings\pluto\dspic-servo\serial.c	85;"	f	line:85	signature:( void )
+size	C:\Documents and Settings\pluto\dspic-servo\save-res.c	104;"	l	line:104
+size	C:\Documents and Settings\pluto\dspic-servo\save-res.c	63;"	l	line:63
+spixbuf	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1076;"	m	line:1076	struct:tagSPI
+spixcon	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1075;"	m	line:1075	struct:tagSPI
+spixstat	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1074;"	m	line:1074	struct:tagSPI
+sptr	C:\Documents and Settings\pluto\dspic-servo\save-res.c	64;"	l	line:64
+tagACC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	83;"	s	line:83
+tagADCHSBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1190;"	s	line:1190
+tagADCON1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1147;"	s	line:1147
+tagADCON2BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1164;"	s	line:1164
+tagADCON3BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1179;"	s	line:1179
+tagADCSSLBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1217;"	s	line:1217
+tagADPCFGBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1204;"	s	line:1204
+tagCAN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1410;"	s	line:1410
+tagCNEN1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	470;"	s	line:470
+tagCNPU1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	485;"	s	line:485
+tagCORCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	165;"	s	line:165
+tagCxCFG1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1822;"	s	line:1822
+tagCxCFG2BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1831;"	s	line:1831
+tagCxCTRLBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1806;"	s	line:1806
+tagCxINTEBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1867;"	s	line:1867
+tagCxINTFBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1845;"	s	line:1845
+tagCxRX0CONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1767;"	s	line:1767
+tagCxRX1CONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1731;"	s	line:1731
+tagCxRXFxSIDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1496;"	s	line:1496
+tagCxRXMxSIDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1564;"	s	line:1564
+tagCxRXxDLCBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1721;"	s	line:1721
+tagCxRXxSIDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1713;"	s	line:1713
+tagCxTXxCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1618;"	s	line:1618
+tagCxTXxDLCBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1608;"	s	line:1608
+tagCxTXxEIDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1601;"	s	line:1601
+tagCxTXxSIDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1592;"	s	line:1592
+tagDFLTCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	633;"	s	line:633
+tagDISICNTBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	215;"	s	line:215
+tagDTCON1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	825;"	s	line:825
+tagFLTACONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	834;"	s	line:834
+tagI2CADDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	964;"	s	line:964
+tagI2CBRGBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	914;"	s	line:914
+tagI2CCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	922;"	s	line:922
+tagI2CRCVBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	886;"	s	line:886
+tagI2CSTATBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	944;"	s	line:944
+tagI2CTRNBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	900;"	s	line:900
+tagIC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	654;"	s	line:654
+tagICxCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	666;"	s	line:666
+tagIEC0BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	307;"	s	line:307
+tagIEC1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	329;"	s	line:329
+tagIEC2BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	345;"	s	line:345
+tagIFS0BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	257;"	s	line:257
+tagIFS1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	279;"	s	line:279
+tagIFS2BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	295;"	s	line:295
+tagINTCON1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	228;"	s	line:228
+tagINTCON2BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	245;"	s	line:245
+tagIPC0BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	357;"	s	line:357
+tagIPC10BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	456;"	s	line:456
+tagIPC1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	371;"	s	line:371
+tagIPC2BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	385;"	s	line:385
+tagIPC3BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	399;"	s	line:399
+tagIPC4BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	413;"	s	line:413
+tagIPC5BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	425;"	s	line:425
+tagIPC6BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	438;"	s	line:438
+tagIPC9BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	447;"	s	line:447
+tagLATBBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1261;"	s	line:1261
+tagLATCBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1294;"	s	line:1294
+tagLATDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1322;"	s	line:1322
+tagLATEBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1361;"	s	line:1361
+tagLATFBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1396;"	s	line:1396
+tagMODCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	183;"	s	line:183
+tagNVMCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1938;"	s	line:1938
+tagOC	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	711;"	s	line:711
+tagOCxCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	722;"	s	line:722
+tagOSCCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1914;"	s	line:1914
+tagOVDCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	852;"	s	line:852
+tagPMD1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1965;"	s	line:1965
+tagPMD2BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1987;"	s	line:1987
+tagPORTBBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1248;"	s	line:1248
+tagPORTCBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1284;"	s	line:1284
+tagPORTDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1313;"	s	line:1313
+tagPORTEBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1346;"	s	line:1346
+tagPORTFBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1386;"	s	line:1386
+tagPTCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	758;"	s	line:758
+tagPTMRBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	771;"	s	line:771
+tagPTPERBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	779;"	s	line:779
+tagPWMCON1BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	795;"	s	line:795
+tagPWMCON2BITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	813;"	s	line:813
+tagQEICONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	614;"	s	line:614
+tagRCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1896;"	s	line:1896
+tagSEVTCMPBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	787;"	s	line:787
+tagSPI	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1073;"	s	line:1073
+tagSPIxCONBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1095;"	s	line:1095
+tagSPIxSTATBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1083;"	s	line:1083
+tagSRBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	145;"	s	line:145
+tagTCON_16BIT	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	504;"	s	line:504
+tagTCON_EVEN	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	532;"	s	line:532
+tagTCON_ODD	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	546;"	s	line:546
+tagTRISBBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1235;"	s	line:1235
+tagTRISCBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1274;"	s	line:1274
+tagTRISDBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1304;"	s	line:1304
+tagTRISEBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1331;"	s	line:1331
+tagTRISFBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1376;"	s	line:1376
+tagUART	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	976;"	s	line:976
+tagUxMODEBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	988;"	s	line:988
+tagUxRXREGBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1035;"	s	line:1035
+tagUxSTABITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1004;"	s	line:1004
+tagUxTXREGBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	1021;"	s	line:1021
+tagXBREVBITS	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	207;"	s	line:207
+temp	C:\Documents and Settings\pluto\dspic-servo\main.c	282;"	l	line:282
+temp	C:\Documents and Settings\pluto\dspic-servo\pwm.c	148;"	l	line:148
+temp_dir	C:\Documents and Settings\pluto\dspic-servo\pwm.c	146;"	l	line:146
+test_pc_interface	C:\Documents and Settings\pluto\dspic-servo\main.c	63;"	p	line:63	file:	signature:( void )
+test_pc_interface	C:\Documents and Settings\pluto\dspic-servo\test.c	65;"	f	line:65	signature:( void )
+test_pid_interface	C:\Documents and Settings\pluto\dspic-servo\main.c	64;"	p	line:64	file:	signature:( void )
+test_pid_interface	C:\Documents and Settings\pluto\dspic-servo\test.c	85;"	f	line:85	signature:( void )
+test_pwm_interface	C:\Documents and Settings\pluto\dspic-servo\main.c	65;"	p	line:65	file:	signature:( void )
+test_pwm_interface	C:\Documents and Settings\pluto\dspic-servo\test.c	34;"	f	line:34	signature:( void )
+ticksperservo	C:\Documents and Settings\pluto\dspic-servo\dspicservo.h	67;"	m	line:67	struct:PID
+timer_test	C:\Documents and Settings\pluto\dspic-servo\timer1.c	17;"	v	line:17
+tmp1	C:\Documents and Settings\pluto\dspic-servo\pid.c	141;"	l	line:141
+uartmode	C:\Documents and Settings\pluto\dspic-servo\serial.c	87;"	l	line:87
+uxbrg	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	981;"	m	line:981	struct:tagUART
+uxmode	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	977;"	m	line:977	struct:tagUART
+uxrxreg	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	980;"	m	line:980	struct:tagUART
+uxsta	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	978;"	m	line:978	struct:tagUART
+uxtxreg	C:\Program Files\Microchip\MPLAB C30\support\h\p30f4012.h	979;"	m	line:979	struct:tagUART

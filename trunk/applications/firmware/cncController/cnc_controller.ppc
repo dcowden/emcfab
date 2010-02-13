@@ -1,0 +1,35 @@
+[DeviceName]
+Value=P18F4431
+[DeviceClock]
+Value=8
+[MainUnit]
+Value=LED_blinking.c
+[DeviceFlags]
+Count=5
+Value0=_OSC_RCIO_1H = $00F7
+Value1=_PWRTEN_OFF_2L = $00FF
+Value2=_BOREN_OFF_2L = $00FD
+Value3=_WDTEN_OFF_2H = $00FE
+Value4=_MCLRE_OFF_3H = $007F
+[BuildType]
+bType=0
+[ProjectFiles]
+Count=2
+Value0=cnc_control.c
+Value1=eeprom.c
+[HeaderFiles]
+Count=0
+[ObjLibFiles]
+Count=0
+[PLDFiles]
+Count=0
+[EEPROMinfo]
+isused=0
+[SearchPath]
+Count=4
+Value0=C:\apps\mikroC\Defs\
+Value1=C:\apps\mikroC\Uses\p18\
+Value2=Z:\Projects\rapid prototype machine\cnc_conrtoller\
+Value3=Z:\Projects\rapid prototype machine\cnc_conrtoller\
+[IncludePath]
+Count=0

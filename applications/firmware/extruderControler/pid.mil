@@ -1,0 +1,300 @@
+_calc_pid:
+  begin
+//pid.c,103 :: 		enable = ps->enable;
+	FSR0L <-  FARG_calc_pid+0 + 72
+	calc_pid_enable_L0 <- *FSR0L
+	calc_pid_enable_L0 <- calc_pid_enable_L0
+//pid.c,104 :: 		maxerror = ps->maxerror;
+	FSR0L <-  FARG_calc_pid+0 + 14
+	calc_pid_maxerror_L0 <- *FSR0L
+	calc_pid_maxerror_L0 <- calc_pid_maxerror_L0
+//pid.c,105 :: 		deadband = ps->deadband;
+	FSR0L <-  FARG_calc_pid+0 + 12
+	calc_pid_deadband_L0 <- *FSR0L
+	calc_pid_deadband_L0 <- calc_pid_deadband_L0
+//pid.c,106 :: 		maxerror_i = ps->maxerror_i;
+	FSR0L <-  FARG_calc_pid+0 + 18
+	calc_pid_maxerror_i_L0 <- *FSR0L
+	calc_pid_maxerror_i_L0 <- calc_pid_maxerror_i_L0
+//pid.c,107 :: 		maxerror_d = ps->maxerror_d;
+	FSR0L <-  FARG_calc_pid+0 + 20
+	calc_pid_maxerror_d_L0 <- *FSR0L
+	calc_pid_maxerror_d_L0 <- calc_pid_maxerror_d_L0
+//pid.c,108 :: 		maxoutput = ps->maxoutput;
+	FSR0L <-  FARG_calc_pid+0 + 68
+	calc_pid_maxoutput_L0 <- *FSR0L
+	calc_pid_maxoutput_L0 <- calc_pid_maxoutput_L0
+//pid.c,109 :: 		maxcmd_d = ps->maxcmd_d;
+	FSR0L <-  FARG_calc_pid+0 + 24
+	calc_pid_maxcmd_d_L0 <- *FSR0L
+	calc_pid_maxcmd_d_L0 <- calc_pid_maxcmd_d_L0
+//pid.c,112 :: 		tmp1 = (ps->command - ps->feedback);
+	STACK_8 <- *FARG_calc_pid+0
+	FSR0L <-  FARG_calc_pid+0 + 4
+	STACK_4 <- *FSR0L
+	STACK_0 <-  STACK_8 - STACK_4
+	calc_pid_tmp1_L0 <- STACK_0
+//pid.c,113 :: 		ps->error = tmp1;
+	FSR1L <-  FARG_calc_pid+0 + 8
+	*FSR1L <- STACK_0
+//pid.c,116 :: 		if (maxerror != 0){
+	if ( calc_pid_maxerror_L0 = 0) then goto L_calc_pid_0
+//pid.c,117 :: 		if (tmp1 > maxerror){
+	if ( calc_pid_tmp1_L0 <= calc_pid_maxerror_L0) then goto L_calc_pid_1
+//pid.c,118 :: 		tmp1 = maxerror;
+	calc_pid_tmp1_L0 <- calc_pid_maxerror_L0
+//pid.c,120 :: 		ps->enable = 0u;
+	FSR1L <-  FARG_calc_pid+0 + 72
+	*FSR1L <- 0
+//pid.c,121 :: 		}
+	goto	L_calc_pid_2
+L_calc_pid_1:
+//pid.c,122 :: 		else if (tmp1 < -maxerror){
+	STACK_4 <-  0 - calc_pid_maxerror_L0
+	if ( calc_pid_tmp1_L0 >= STACK_4) then goto L_calc_pid_3
+//pid.c,123 :: 		tmp1 = -maxerror;
+	calc_pid_tmp1_L0 <-  0 - calc_pid_maxerror_L0
+	calc_pid_tmp1_L0 <- calc_pid_tmp1_L0
+//pid.c,124 :: 		ps->enable = 0u;
+	FSR1L <-  FARG_calc_pid+0 + 72
+	*FSR1L <- 0
+//pid.c,125 :: 		}
+L_calc_pid_3:
+L_calc_pid_2:
+//pid.c,126 :: 		}
+L_calc_pid_0:
+//pid.c,129 :: 		if (tmp1 > deadband) {
+	if ( calc_pid_tmp1_L0 <= calc_pid_deadband_L0) then goto L_calc_pid_4
+//pid.c,130 :: 		tmp1 -= deadband;
+	STACK_0 <- calc_pid_deadband_L0
+	calc_pid_tmp1_L0 <-  calc_pid_tmp1_L0 - STACK_0
+	calc_pid_tmp1_L0 <- calc_pid_tmp1_L0
+//pid.c,131 :: 		}
+	goto	L_calc_pid_5
+L_calc_pid_4:
+//pid.c,132 :: 		else if (tmp1 < -deadband){
+	STACK_4 <-  0 - calc_pid_deadband_L0
+	if ( calc_pid_tmp1_L0 >= STACK_4) then goto L_calc_pid_6
+//pid.c,133 :: 		tmp1 += deadband;
+	calc_pid_tmp1_L0 <-  calc_pid_tmp1_L0 + calc_pid_deadband_L0
+	calc_pid_tmp1_L0 <- calc_pid_tmp1_L0
+//pid.c,134 :: 		}
+	goto	L_calc_pid_7
+L_calc_pid_6:
+//pid.c,136 :: 		tmp1 = 0;
+	calc_pid_tmp1_L0 <- 0
+//pid.c,138 :: 		ps->error_i = 0;
+	FSR1L <-  FARG_calc_pid+0 + 28
+	*FSR1L <- 0
+//pid.c,139 :: 		}
+L_calc_pid_7:
+L_calc_pid_5:
+//pid.c,142 :: 		error_i = ps->error_i;
+	FSR0L <-  FARG_calc_pid+0 + 28
+	calc_pid_error_i_L0 <- *FSR0L
+	calc_pid_error_i_L0 <- calc_pid_error_i_L0
+//pid.c,143 :: 		if (enable != 0u) {
+	if ( calc_pid_enable_L0 = 0) then goto L_calc_pid_8
+//pid.c,145 :: 		if ( ps->limit_state == 0u ){
+	FSR0L <-  FARG_calc_pid+0 + 73
+	STACK_4 <- *FSR0L
+	if ( STACK_4 != 0) then goto L_calc_pid_9
+//pid.c,147 :: 		error_i += tmp1;
+	calc_pid_error_i_L0 <-  calc_pid_error_i_L0 + calc_pid_tmp1_L0
+	calc_pid_error_i_L0 <- calc_pid_error_i_L0
+//pid.c,148 :: 		}
+L_calc_pid_9:
+//pid.c,151 :: 		if (maxerror_i != 0u)	{
+	if ( calc_pid_maxerror_i_L0 = 0) then goto L_calc_pid_10
+//pid.c,152 :: 		if (error_i > maxerror_i){
+	if ( calc_pid_error_i_L0 <= calc_pid_maxerror_i_L0) then goto L_calc_pid_11
+//pid.c,153 :: 		error_i = maxerror_i;
+	calc_pid_error_i_L0 <- calc_pid_maxerror_i_L0
+//pid.c,154 :: 		}
+	goto	L_calc_pid_12
+L_calc_pid_11:
+//pid.c,155 :: 		else if (error_i < (-maxerror_i)){
+	STACK_4 <-  0 - calc_pid_maxerror_i_L0
+	if ( calc_pid_error_i_L0 >= STACK_4) then goto L_calc_pid_13
+//pid.c,156 :: 		error_i = -maxerror_i;
+	calc_pid_error_i_L0 <-  0 - calc_pid_maxerror_i_L0
+	calc_pid_error_i_L0 <- calc_pid_error_i_L0
+//pid.c,157 :: 		}
+L_calc_pid_13:
+L_calc_pid_12:
+//pid.c,158 :: 		}
+L_calc_pid_10:
+//pid.c,159 :: 		}
+	goto	L_calc_pid_14
+L_calc_pid_8:
+//pid.c,162 :: 		error_i = 0;
+	calc_pid_error_i_L0 <- 0
+//pid.c,163 :: 		}
+L_calc_pid_14:
+//pid.c,164 :: 		ps->error_i = error_i;
+	FSR1L <-  FARG_calc_pid+0 + 28
+	*FSR1L <- calc_pid_error_i_L0
+//pid.c,167 :: 		error_d =  (tmp1 - ps->prev_error);
+	STACK_4 <-  FARG_calc_pid+0 + 30
+	STACK_0 <- *STACK_4
+	calc_pid_error_d_L0 <-  calc_pid_tmp1_L0 - STACK_0
+	calc_pid_error_d_L0 <- calc_pid_error_d_L0
+//pid.c,168 :: 		ps->prev_error = tmp1;
+	*STACK_4 <- calc_pid_tmp1_L0
+//pid.c,170 :: 		if (maxerror_d != 0u) {
+	if ( calc_pid_maxerror_d_L0 = 0) then goto L_calc_pid_15
+//pid.c,171 :: 		if (error_d > maxerror_d){
+	if ( calc_pid_error_d_L0 <= calc_pid_maxerror_d_L0) then goto L_calc_pid_16
+//pid.c,172 :: 		error_d = maxerror_d;
+	calc_pid_error_d_L0 <- calc_pid_maxerror_d_L0
+//pid.c,173 :: 		}
+	goto	L_calc_pid_17
+L_calc_pid_16:
+//pid.c,174 :: 		else if (error_d < -maxerror_d){
+	STACK_4 <-  0 - calc_pid_maxerror_d_L0
+	if ( calc_pid_error_d_L0 >= STACK_4) then goto L_calc_pid_18
+//pid.c,175 :: 		error_d = -maxerror_d;
+	calc_pid_error_d_L0 <-  0 - calc_pid_maxerror_d_L0
+	calc_pid_error_d_L0 <- calc_pid_error_d_L0
+//pid.c,176 :: 		}
+L_calc_pid_18:
+L_calc_pid_17:
+//pid.c,177 :: 		}
+L_calc_pid_15:
+//pid.c,178 :: 		ps->error_d = error_d;
+	FSR1L <-  FARG_calc_pid+0 + 34
+	*FSR1L <- calc_pid_error_d_L0
+//pid.c,182 :: 		cmd_d =  (long)(ps->command - ps->prev_cmd);
+	calc_pid_cmd_d_L0 <- *FARG_calc_pid+0
+	STACK_4 <-  FARG_calc_pid+0 + 38
+	STACK_0 <- *STACK_4
+	calc_pid_cmd_d_L0 <-  calc_pid_cmd_d_L0 - STACK_0
+	calc_pid_cmd_d_L0 <- calc_pid_cmd_d_L0
+//pid.c,183 :: 		ps->prev_cmd = ps->command;
+	STACK_0 <- *FARG_calc_pid+0
+	*STACK_4 <- STACK_0
+//pid.c,186 :: 		if (maxcmd_d != 0u) {
+	if ( calc_pid_maxcmd_d_L0 = 0) then goto L_calc_pid_19
+//pid.c,187 :: 		if (cmd_d > maxcmd_d){
+	if ( calc_pid_cmd_d_L0 <= calc_pid_maxcmd_d_L0) then goto L_calc_pid_20
+//pid.c,188 :: 		cmd_d = maxcmd_d;
+	calc_pid_cmd_d_L0 <- calc_pid_maxcmd_d_L0
+//pid.c,189 :: 		}
+	goto	L_calc_pid_21
+L_calc_pid_20:
+//pid.c,190 :: 		else if (cmd_d < -maxcmd_d){
+	STACK_4 <-  0 - calc_pid_maxcmd_d_L0
+	if ( calc_pid_cmd_d_L0 >= STACK_4) then goto L_calc_pid_22
+//pid.c,191 :: 		cmd_d = -maxcmd_d;
+	calc_pid_cmd_d_L0 <-  0 - calc_pid_maxcmd_d_L0
+	calc_pid_cmd_d_L0 <- calc_pid_cmd_d_L0
+//pid.c,192 :: 		}
+L_calc_pid_22:
+L_calc_pid_21:
+//pid.c,193 :: 		}
+L_calc_pid_19:
+//pid.c,194 :: 		ps->cmd_d = cmd_d;
+	FSR1L <-  FARG_calc_pid+0 + 42
+	*FSR1L <- calc_pid_cmd_d_L0
+//pid.c,197 :: 		output=0;
+	calc_pid_output_L0 <- 0
+//pid.c,198 :: 		if (enable != 0u) {
+	if ( calc_pid_enable_L0 = 0) then goto L_calc_pid_23
+//pid.c,205 :: 		(float)ps->bias + ( (float)ps->pgain * tmp1 ) +
+	FSR0L <-  FARG_calc_pid+0 + 46
+	STACK_0 <- *FSR0L
+	FLOC_calc_pid+48 <- (type cast)STACK_0
+	FLOC_calc_pid+48 <- STACK_0
+	FSR0L <-  FARG_calc_pid+0 + 48
+	FLOC_calc_pid+44 <- *FSR0L
+	STACK_0 <- (type cast)calc_pid_tmp1_L0
+	STACK_0 <-  FLOC_calc_pid+44 * STACK_0
+	FLOC_calc_pid+44 <-  FLOC_calc_pid+48 + STACK_0
+	FLOC_calc_pid+44 <- STACK_0
+//pid.c,206 :: 		((float)ps->error_i * (float)ps->igain) +
+	FSR0L <-  FARG_calc_pid+0 + 28
+	STACK_0 <- *FSR0L
+	STACK_0 <- (type cast)STACK_0
+	FSR0L <-  FARG_calc_pid+0 + 52
+	STACK_4 <- *FSR0L
+	STACK_0 <-  STACK_0 * STACK_4
+	FLOC_calc_pid+48 <-  FLOC_calc_pid+44 + STACK_0
+	FLOC_calc_pid+48 <- STACK_0
+//pid.c,207 :: 		((float)ps->dgain * (float)ps->error_d);
+	FSR0L <-  FARG_calc_pid+0 + 56
+	FLOC_calc_pid+44 <- *FSR0L
+	FSR0L <-  FARG_calc_pid+0 + 34
+	STACK_0 <- *FSR0L
+	STACK_0 <- (type cast)STACK_0
+	STACK_0 <-  FLOC_calc_pid+44 * STACK_0
+	FLOC_calc_pid+44 <-  FLOC_calc_pid+48 + STACK_0
+	FLOC_calc_pid+44 <- STACK_0
+	calc_pid_tmp2_L0 <- FLOC_calc_pid+44
+//pid.c,210 :: 		tmp2 += ((float)ps->command * (float)ps->ff0gain );
+	STACK_0 <- *FARG_calc_pid+0
+	STACK_0 <- (type cast)STACK_0
+	FSR0L <-  FARG_calc_pid+0 + 60
+	STACK_4 <- *FSR0L
+	STACK_0 <-  STACK_0 * STACK_4
+	FLOC_calc_pid+44 <-  FLOC_calc_pid+44 + STACK_0
+	FLOC_calc_pid+44 <- STACK_0
+	calc_pid_tmp2_L0 <- FLOC_calc_pid+44
+//pid.c,212 :: 		tmp2 += ((float)ps->cmd_d * (float)ps->ff1gain);
+	FSR0L <-  FARG_calc_pid+0 + 42
+	STACK_0 <- *FSR0L
+	STACK_0 <- (type cast)STACK_0
+	FSR0L <-  FARG_calc_pid+0 + 64
+	STACK_4 <- *FSR0L
+	STACK_0 <-  STACK_0 * STACK_4
+	FLOC_calc_pid+44 <-  FLOC_calc_pid+44 + STACK_0
+	FLOC_calc_pid+44 <- STACK_0
+	calc_pid_tmp2_L0 <- FLOC_calc_pid+44
+//pid.c,218 :: 		limitstate=0u;
+	calc_pid_limitstate_L0 <- 0
+//pid.c,220 :: 		if ( tmp2 > maxoutput){
+	STACK_0 <- (type cast)calc_pid_maxoutput_L0
+	STACK_0 <-  FLOC_calc_pid+44 > STACK_0
+	if (!STACK_0) then goto L_calc_pid_24
+//pid.c,221 :: 		output = maxoutput;
+	calc_pid_output_L0 <- calc_pid_maxoutput_L0
+//pid.c,222 :: 		limitstate=1u;
+	calc_pid_limitstate_L0 <- 1
+//pid.c,223 :: 		}
+	goto	L_calc_pid_25
+L_calc_pid_24:
+//pid.c,224 :: 		else if ( tmp2 < -maxoutput ){
+	STACK_0 <-  0 - calc_pid_maxoutput_L0
+	STACK_0 <- (type cast)STACK_0
+	STACK_0 <-  calc_pid_tmp2_L0 < STACK_0
+	if (!STACK_0) then goto L_calc_pid_26
+//pid.c,225 :: 		output = -maxoutput;
+	calc_pid_output_L0 <-  0 - calc_pid_maxoutput_L0
+	calc_pid_output_L0 <- calc_pid_output_L0
+//pid.c,226 :: 		limitstate=1u;
+	calc_pid_limitstate_L0 <- 1
+//pid.c,227 :: 		}
+	goto	L_calc_pid_27
+L_calc_pid_26:
+//pid.c,229 :: 		output = (int)tmp2;
+	STACK_0 <- (type cast)calc_pid_tmp2_L0
+	calc_pid_output_L0 <- STACK_0
+//pid.c,230 :: 		}
+L_calc_pid_27:
+L_calc_pid_25:
+//pid.c,232 :: 		}
+	goto	L_calc_pid_28
+L_calc_pid_23:
+//pid.c,235 :: 		output = 0;
+	calc_pid_output_L0 <- 0
+//pid.c,236 :: 		limitstate = 0;
+	calc_pid_limitstate_L0 <- 0
+//pid.c,237 :: 		}
+L_calc_pid_28:
+//pid.c,239 :: 		ps->output = output;
+	FSR1L <-  FARG_calc_pid+0 + 70
+	*FSR1L <- calc_pid_output_L0
+//pid.c,240 :: 		ps->limit_state = limitstate;
+	FSR1L <-  FARG_calc_pid+0 + 73
+	*FSR1L <- calc_pid_limitstate_L0
+  end
+

@@ -1,0 +1,1240 @@
+_strConstCpy:
+  begin
+//extruder.c,249 :: 		while(*source){
+L_strConstCpy_0:
+	STACK_0 <- *FARG_strConstCpy+2
+	if (!STACK_0) then goto L_strConstCpy_1
+//extruder.c,250 :: 		*dest++ = *source++ ;
+	STACK_0 <- *FARG_strConstCpy+2
+	*FARG_strConstCpy+0 <- STACK_0
+	FARG_strConstCpy+0 <-  FARG_strConstCpy+0 + 1
+	FARG_strConstCpy+0 <- FARG_strConstCpy+0
+	FARG_strConstCpy+2 <-  FARG_strConstCpy+2 + 1
+	FARG_strConstCpy+2 <- FARG_strConstCpy+2
+//extruder.c,251 :: 		*dest = 0 ;
+	*FARG_strConstCpy+0 <- 0
+//extruder.c,252 :: 		}
+	goto	L_strConstCpy_0
+L_strConstCpy_1:
+  end
+
+_USART_Send_String:
+  begin
+//extruder.c,257 :: 		while( *data != 0u ){
+L_USART_Send_String_2:
+	STACK_1 <- *FARG_USART_Send_String+0
+	if ( STACK_1 = 0) then goto L_USART_Send_String_3
+//extruder.c,258 :: 		c = *data;
+	FARG_Usart_Write+0 <- *FARG_USART_Send_String+0
+//extruder.c,259 :: 		USART_Write(c);
+	FARG_Usart_Write+0 <- FARG_Usart_Write+0
+	CALL _Usart_Write
+//extruder.c,260 :: 		data++;
+	FARG_USART_Send_String+0 <-  FARG_USART_Send_String+0 + 1
+	FARG_USART_Send_String+0 <- FARG_USART_Send_String+0
+//extruder.c,261 :: 		}
+	goto	L_USART_Send_String_2
+L_USART_Send_String_3:
+  end
+
+_pushChar:
+  begin
+//extruder.c,266 :: 		if ( ch == 10u || ch == 13u){
+	if ( FARG_pushChar+0 = 10) then goto L36_ex_L_pushChar_6
+	if ( FARG_pushChar+0 != 13) then goto L_pushChar_6
+L36_ex_L_pushChar_6:
+//extruder.c,268 :: 		cmdBuffer[txtPos] = 0;
+	FSR1L <-  0 + _txtPos
+	*FSR1L <- 0
+//extruder.c,269 :: 		if ( txtPos > 0u ){
+	if ( _txtPos <= 0) then goto L_pushChar_7
+//extruder.c,270 :: 		txtPos = 0;
+	_txtPos <- 0
+//extruder.c,271 :: 		return 1u;
+	STACK_0 <- 1
+	return
+//extruder.c,272 :: 		}
+L_pushChar_7:
+//extruder.c,274 :: 		return 0u;
+	STACK_0 <- 0
+	return
+//extruder.c,277 :: 		}
+L_pushChar_6:
+//extruder.c,280 :: 		cmdBuffer[txtPos] = ch;
+	FSR1L <-  0 + _txtPos
+	*FSR1L <- FARG_pushChar+0
+//extruder.c,281 :: 		txtPos++;
+	_txtPos <-  _txtPos + 1
+	_txtPos <- _txtPos
+//extruder.c,282 :: 		return 0;
+	STACK_0 <- 0
+	return
+  end
+
+_printMessage:
+  begin
+//extruder.c,287 :: 		USART_Write(13);
+	FARG_Usart_Write+0 <- 13
+	CALL _Usart_Write
+//extruder.c,288 :: 		strConstCpy(txtBuffer,msg);
+	FARG_strConstCpy+0 <- 0
+	FARG_strConstCpy+2 <- FARG_printMessage+0
+	CALL _strConstCpy
+//extruder.c,289 :: 		USART_Send_String(txtBuffer);
+	FARG_USART_Send_String+0 <- 0
+	CALL _USART_Send_String
+  end
+
+_readMemory:
+  begin
+//extruder.c,296 :: 		unsigned short pidSize = sizeof ( pid_heater );
+	readMemory_pidSize_L0 <- 74
+//extruder.c,300 :: 		Eeprom_Read_Obj(0, &versionId,1 );
+	FARG_Eeprom_Read_Obj+0 <- 0
+	FARG_Eeprom_Read_Obj+2 <- 0
+	FARG_Eeprom_Read_Obj+4 <- 1
+	CALL _Eeprom_Read_Obj
+//extruder.c,301 :: 		if ( versionId == EEPROM_VERSION_ID ){
+	if ( readMemory_versionId_L0 != _EEPROM_VERSION_ID) then goto L_readMemory_10
+//extruder.c,302 :: 		Eeprom_Read_Obj(1,&pid_heater,pidSize );
+	FARG_Eeprom_Read_Obj+0 <- 1
+	FARG_Eeprom_Read_Obj+2 <- 0
+	FARG_Eeprom_Read_Obj+4 <- readMemory_pidSize_L0
+	CALL _Eeprom_Read_Obj
+//extruder.c,303 :: 		Eeprom_Read_Obj(pidSize+2,&pid_motor,pidSize);
+	FARG_Eeprom_Read_Obj+0 <-  readMemory_pidSize_L0 + 2
+	FARG_Eeprom_Read_Obj+0 <- FARG_Eeprom_Read_Obj+0
+	FARG_Eeprom_Read_Obj+2 <- 0
+	FARG_Eeprom_Read_Obj+4 <- readMemory_pidSize_L0
+	CALL _Eeprom_Read_Obj
+//extruder.c,304 :: 		return 1;
+	STACK_0 <- 1
+	return
+//extruder.c,305 :: 		}
+L_readMemory_10:
+//extruder.c,307 :: 		return 0;
+	STACK_0 <- 0
+	return
+  end
+
+_writeMemory:
+  begin
+//extruder.c,312 :: 		unsigned short pidSize = sizeof( pid_heater );
+	writeMemory_pidSize_L0 <- 74
+//extruder.c,314 :: 		EEprom_Write_Obj(0,&EEPROM_VERSION_ID,1);
+	FARG_Eeprom_Write_Obj+0 <- 0
+	FARG_Eeprom_Write_Obj+2 <- 0
+	FARG_Eeprom_Write_Obj+4 <- 1
+	CALL _Eeprom_Write_Obj
+//extruder.c,317 :: 		EEprom_Write_Obj(1,&pid_heater,pidSize);
+	FARG_Eeprom_Write_Obj+0 <- 1
+	FARG_Eeprom_Write_Obj+2 <- 0
+	FARG_Eeprom_Write_Obj+4 <- writeMemory_pidSize_L0
+	CALL _Eeprom_Write_Obj
+//extruder.c,318 :: 		EEprom_Write_Obj(pidSize+2,&pid_motor,pidSize);
+	FARG_Eeprom_Write_Obj+0 <-  writeMemory_pidSize_L0 + 2
+	FARG_Eeprom_Write_Obj+0 <- FARG_Eeprom_Write_Obj+0
+	FARG_Eeprom_Write_Obj+2 <- 0
+	FARG_Eeprom_Write_Obj+4 <- writeMemory_pidSize_L0
+	CALL _Eeprom_Write_Obj
+  end
+
+_clearMemory:
+  begin
+//extruder.c,324 :: 		unsigned short blank = 0xFF;
+	clearMemory_blank_L0 <- 255
+//extruder.c,325 :: 		EEprom_Write_Obj(0,&blank,1);
+	FARG_Eeprom_Write_Obj+0 <- 0
+	FARG_Eeprom_Write_Obj+2 <- 0
+	FARG_Eeprom_Write_Obj+4 <- 1
+	CALL _Eeprom_Write_Obj
+  end
+
+_readTemp:
+  begin
+//extruder.c,336 :: 		unsigned short res_h = 0;
+	readTemp_res_h_L0 <- 0
+//extruder.c,337 :: 		unsigned short res_l = 0;
+	readTemp_res_l_L0 <- 0
+//extruder.c,339 :: 		SPI_PIN = 0;
+	PORTD <-  PORTD & -2
+//extruder.c,343 :: 		SSPBUF = 0xFF;
+	SSPBUF <- 255
+//extruder.c,344 :: 		while ( SSPSTAT.BF == 0u );
+L_readTemp_12:
+	STACK_1 <-  SSPSTAT & 1
+	if ( STACK_1 = 0) then goto L_readTemp_12
+L_readTemp_13:
+//extruder.c,345 :: 		res_h = SSPBUF;
+	readTemp_res_h_L0 <- SSPBUF
+//extruder.c,350 :: 		SSPBUF = 0xFF;
+	SSPBUF <- 255
+//extruder.c,351 :: 		while ( SSPSTAT.BF == 0u);
+L_readTemp_14:
+	STACK_1 <-  SSPSTAT & 1
+	if ( STACK_1 = 0) then goto L_readTemp_14
+L_readTemp_15:
+//extruder.c,352 :: 		res_l = SSPBUF;
+	readTemp_res_l_L0 <- SSPBUF
+//extruder.c,356 :: 		SPI_PIN = 1;
+	PORTD <-  PORTD | 1
+//extruder.c,359 :: 		if ( res_l & 0x04 ){
+	if () then goto L_readTemp_16
+//extruder.c,361 :: 		pid_heater.feedback = 2000;
+	_pid_heater+4 <- 2000
+//extruder.c,362 :: 		pid_heater.enable = 0;
+	_pid_heater+72 <- 0
+//extruder.c,363 :: 		}
+	goto	L_readTemp_17
+L_readTemp_16:
+//extruder.c,365 :: 		if ( heaterGlobalEnable == 1 ){
+	if ( _heaterGlobalEnable != 1) then goto L_readTemp_18
+//extruder.c,366 :: 		pid_heater.enable.F0 = 1;
+	_pid_heater+72 <-  _pid_heater+72 | 1
+//extruder.c,367 :: 		}
+	goto	L_readTemp_19
+L_readTemp_18:
+//extruder.c,369 :: 		pid_heater.enable.F0 = 0;
+	_pid_heater+72 <-  _pid_heater+72 & -2
+//extruder.c,370 :: 		}
+L_readTemp_19:
+//extruder.c,372 :: 		res_temp =  ( res_h << 5 )+ (   res_l >> 3 );
+	STACK_0 <- 5
+	_pid_heater+4 <-  readTemp_res_h_L0 shl STACK_0
+	STACK_1 <- 3
+	STACK_0 <-  readTemp_res_l_L0 shr STACK_1
+	_pid_heater+4 <-  _pid_heater+4 + STACK_0
+//extruder.c,374 :: 		pid_heater.feedback = (res_temp >> 2);
+	STACK_0 <- 2
+	_pid_heater+4 <-  _pid_heater+4 shr STACK_0
+	_pid_heater+4 <- _pid_heater+4
+//extruder.c,376 :: 		}
+L_readTemp_17:
+  end
+
+_setMotorDuty:
+  begin
+//extruder.c,382 :: 		unsigned int tmp2 = 0;
+	setMotorDuty_tmp2_L0 <- 0
+//extruder.c,383 :: 		if ( newDuty < 0u ){
+	if ( FARG_setMotorDuty+0 >= 0) then goto L_setMotorDuty_20
+//extruder.c,384 :: 		if ( MOTOR_DIR == 1 ){
+	STACK_1 <-  PORTB & 4
+	STACK_0 <- 2
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 != 1) then goto L_setMotorDuty_21
+//extruder.c,385 :: 		motorDirSwitches++;
+	_motorDirSwitches <-  _motorDirSwitches + 1
+	_motorDirSwitches <- _motorDirSwitches
+//extruder.c,386 :: 		}
+L_setMotorDuty_21:
+//extruder.c,387 :: 		MOTOR_DIR = 0;
+	PORTB <-  PORTB & -5
+//extruder.c,388 :: 		tmp2 = -newDuty;
+	setMotorDuty_tmp2_L0 <-  0 - FARG_setMotorDuty+0
+	setMotorDuty_tmp2_L0 <- setMotorDuty_tmp2_L0
+//extruder.c,389 :: 		}
+	goto	L_setMotorDuty_22
+L_setMotorDuty_20:
+//extruder.c,391 :: 		if ( MOTOR_DIR == 0 ){
+	STACK_1 <-  PORTB & 4
+	STACK_0 <- 2
+	STACK_1 <-  STACK_1 shr STACK_0
+	if ( STACK_1 != 0) then goto L_setMotorDuty_23
+//extruder.c,392 :: 		motorDirSwitches++;
+	_motorDirSwitches <-  _motorDirSwitches + 1
+	_motorDirSwitches <- _motorDirSwitches
+//extruder.c,393 :: 		}
+L_setMotorDuty_23:
+//extruder.c,394 :: 		MOTOR_DIR = 1;
+	PORTB <-  PORTB | 4
+//extruder.c,395 :: 		tmp2 = newDuty;
+	setMotorDuty_tmp2_L0 <- FARG_setMotorDuty+0
+//extruder.c,396 :: 		}
+L_setMotorDuty_22:
+//extruder.c,402 :: 		PDC0H = Hi(tmp2);
+	PDC0H <- setMotorDuty_tmp2_L0+1
+//extruder.c,403 :: 		PDC0L = Lo(tmp2);
+	PDC0L <- setMotorDuty_tmp2_L0
+  end
+
+_calcMotorPosition:
+  begin
+//extruder.c,414 :: 		long axis_adjust = 0;
+	calcMotorPosition_axis_adjust_L0 <- 0
+//extruder.c,415 :: 		long turn_adjust = 0;
+	calcMotorPosition_turn_adjust_L0 <- 0
+//extruder.c,417 :: 		if  ( pid_motor.command > AXIS_MAX || pid_motor.feedback > AXIS_MAX ){
+	if ( _pid_motor+0 > 2000000000) then goto L179_ex_L_calcMotorPosition_26
+	if ( _pid_motor+4 <= 2000000000) then goto L_calcMotorPosition_26
+L179_ex_L_calcMotorPosition_26:
+//extruder.c,419 :: 		axis_adjust = -AXIS_ADJUST;
+	calcMotorPosition_axis_adjust_L0 <- -400000000
+//extruder.c,420 :: 		turn_adjust = -TURN_ADJUST;
+	calcMotorPosition_turn_adjust_L0 <- -200000
+//extruder.c,421 :: 		}
+L_calcMotorPosition_26:
+//extruder.c,422 :: 		if ( pid_motor.command < AXIS_MIN || pid_motor.feedback < AXIS_MIN ){
+	if ( _pid_motor+0 < -2000000000) then goto L193_ex_L_calcMotorPosition_29
+	if ( _pid_motor+4 >= -2000000000) then goto L_calcMotorPosition_29
+L193_ex_L_calcMotorPosition_29:
+//extruder.c,424 :: 		axis_adjust = AXIS_ADJUST;
+	calcMotorPosition_axis_adjust_L0 <- 400000000
+//extruder.c,425 :: 		turn_adjust = TURN_ADJUST;
+	calcMotorPosition_turn_adjust_L0 <- 200000
+//extruder.c,427 :: 		}
+L_calcMotorPosition_29:
+//extruder.c,428 :: 		if ( axis_adjust != 0 ){
+	if ( calcMotorPosition_axis_adjust_L0 = 0) then goto L_calcMotorPosition_30
+//extruder.c,429 :: 		pid_motor.command += axis_adjust;
+	_pid_motor+0 <-  _pid_motor+0 + calcMotorPosition_axis_adjust_L0
+	_pid_motor+0 <- _pid_motor+0
+//extruder.c,430 :: 		pid_motor.feedback += axis_adjust;
+	_pid_motor+4 <-  _pid_motor+4 + calcMotorPosition_axis_adjust_L0
+	_pid_motor+4 <- _pid_motor+4
+//extruder.c,431 :: 		motorTurns += turn_adjust;
+	_motorTurns <-  _motorTurns + calcMotorPosition_turn_adjust_L0
+	_motorTurns <- _motorTurns
+//extruder.c,432 :: 		}
+L_calcMotorPosition_30:
+//extruder.c,436 :: 		pid_motor.command += motorPulses;
+	_pid_motor+0 <-  _pid_motor+0 + _motorPulses
+	_pid_motor+0 <- _pid_motor+0
+//extruder.c,437 :: 		motorPulses = 0;
+	_motorPulses <- 0
+//extruder.c,439 :: 		pid_motor.feedback = (long)(motorTurns * CNT_PER_TURN ) +
+	STACK_0 <-  _motorTurns * 2000
+//extruder.c,440 :: 		(long)(POSCNTH << 8 ) + (long)POSCNTL;
+	STACK_8 <- 8
+	STACK_4 <-  POSCNTH shl STACK_8
+	STACK_4 <- STACK_4
+	_pid_motor+4 <-  STACK_0 + STACK_4
+	STACK_0 <- POSCNTL
+	_pid_motor+4 <-  _pid_motor+4 + STACK_0
+	_pid_motor+4 <- _pid_motor+4
+  end
+
+_calcMotorVelocity:
+  begin
+//extruder.c,483 :: 		if ( meltFlowComp == 1){
+	if ( _meltFlowComp != 1) then goto L_calcMotorVelocity_31
+//extruder.c,496 :: 		}
+L_calcMotorVelocity_31:
+//extruder.c,500 :: 		pid_motor.command = motorPulses;
+	_pid_motor+0 <- _motorPulses
+//extruder.c,502 :: 		pid_motor.feedback = (long)(motorTurns * CNT_PER_TURN ) +
+	STACK_0 <-  _motorTurns * 2000
+//extruder.c,503 :: 		(long)(POSCNTH << 8 ) + (long)POSCNTL;
+	STACK_8 <- 8
+	STACK_4 <-  POSCNTH shl STACK_8
+	STACK_4 <- STACK_4
+	_pid_motor+4 <-  STACK_0 + STACK_4
+	STACK_0 <- POSCNTL
+	_pid_motor+4 <-  _pid_motor+4 + STACK_0
+	_pid_motor+4 <- _pid_motor+4
+//extruder.c,505 :: 		motorPulses = 0;
+	_motorPulses <- 0
+//extruder.c,506 :: 		motorTurns = 0;
+	_motorTurns <- 0
+  end
+
+_resetPosition:
+  begin
+//extruder.c,511 :: 		motorTurns = 0;
+	_motorTurns <- 0
+//extruder.c,512 :: 		POSCNTH = 0;
+	POSCNTH <- 0
+//extruder.c,513 :: 		POSCNTL = 0;
+	POSCNTL <- 0
+//extruder.c,514 :: 		pid_motor.feedback = 0;
+	_pid_motor+4 <- 0
+//extruder.c,515 :: 		pid_motor.command = 0;
+	_pid_motor+0 <- 0
+  end
+
+_interrupt:
+  begin
+//extruder.c,533 :: 		if ( INTCON.INT0IF ){
+	if (!INTCON) then goto L_interrupt_32
+//extruder.c,537 :: 		if ( DIR_PIN ){
+	if (!PORTC) then goto L_interrupt_33
+//extruder.c,538 :: 		motorPulses += stepMultiplier;
+	_motorPulses <-  _motorPulses + _stepMultiplier
+	_motorPulses <- _motorPulses
+//extruder.c,539 :: 		}
+	goto	L_interrupt_34
+L_interrupt_33:
+//extruder.c,541 :: 		motorPulses -= stepMultiplier;
+	STACK_0 <- _stepMultiplier
+	_motorPulses <-  _motorPulses - STACK_0
+	_motorPulses <- _motorPulses
+//extruder.c,542 :: 		}
+L_interrupt_34:
+//extruder.c,543 :: 		INTCON.INT0IF = 0;
+	INTCON <-  INTCON & -3
+//extruder.c,544 :: 		}
+L_interrupt_32:
+//extruder.c,545 :: 		if  ( PIR3.IC2QEIF ){
+	if (!PIR3) then goto L_interrupt_35
+//extruder.c,551 :: 		if ( QEICON.F5 = 1 ){
+	QEICON <-  QEICON | 32
+	if (!QEICON) then goto L_interrupt_36
+//extruder.c,553 :: 		motorTurns++;
+	_motorTurns <-  _motorTurns + 1
+	_motorTurns <- _motorTurns
+//extruder.c,554 :: 		}
+	goto	L_interrupt_37
+L_interrupt_36:
+//extruder.c,557 :: 		motorTurns--;
+	_motorTurns <-  _motorTurns - 1
+	_motorTurns <- _motorTurns
+//extruder.c,558 :: 		}
+L_interrupt_37:
+//extruder.c,559 :: 		PIR3.IC2QEIF = 0;
+	PIR3 <-  PIR3 & -5
+//extruder.c,560 :: 		}
+L_interrupt_35:
+  end
+
+_interrupt_low:
+  begin
+//extruder.c,571 :: 		if ( INTCON.TMR0IF ){  //timer0, 60 hz
+	if (!INTCON) then goto L_interrupt_low_38
+//extruder.c,574 :: 		dutyInterruptProc();
+	CALL _dutyInterruptProc
+//extruder.c,581 :: 		if ( tempCount++ == 60u ){
+	STACK_1 <- _tempCount
+	_tempCount <-  _tempCount + 1
+	_tempCount <- _tempCount
+	if ( STACK_1 != 60) then goto L_interrupt_low_39
+//extruder.c,583 :: 		readTemp();
+	CALL _readTemp
+//extruder.c,585 :: 		tempCount = 0;
+	_tempCount <- 0
+//extruder.c,587 :: 		calc_pid(&pid_heater);
+	FARG_calc_pid+0 <- 0
+	CALL _calc_pid
+//extruder.c,590 :: 		if ( pid_heater.output > 0 && heaterGlobalEnable == 1){
+	if ( _pid_heater+70 <= 0) then goto L_interrupt_low_42
+	if ( _heaterGlobalEnable != 1) then goto L_interrupt_low_42
+L271_ex_L_interrupt_low_42:
+//extruder.c,591 :: 		setDuty(pid_heater.output);
+	FARG_setDuty+0 <- _pid_heater+70
+	CALL _setDuty
+//extruder.c,592 :: 		}
+	goto	L_interrupt_low_43
+L_interrupt_low_42:
+//extruder.c,594 :: 		setDuty(0);
+	FARG_setDuty+0 <- 0
+	CALL _setDuty
+//extruder.c,595 :: 		}
+L_interrupt_low_43:
+//extruder.c,596 :: 		}
+L_interrupt_low_39:
+//extruder.c,600 :: 		if ( debugHeaterDuty != 0u ){
+	if ( _debugHeaterDuty = 0) then goto L_interrupt_low_44
+//extruder.c,601 :: 		setDuty((unsigned short)debugHeaterDuty);
+	FARG_setDuty+0 <- _debugHeaterDuty
+	CALL _setDuty
+//extruder.c,602 :: 		}
+L_interrupt_low_44:
+//extruder.c,607 :: 		TMR0H = 0x5D;
+	TMR0H <- 93
+//extruder.c,608 :: 		TMR0L = 0x3D;
+	TMR0L <- 61
+//extruder.c,610 :: 		INTCON.TMR0IF = 0;
+	INTCON <-  INTCON & -5
+//extruder.c,611 :: 		}
+L_interrupt_low_38:
+//extruder.c,612 :: 		if (PIR1.TMR1IF ){  //timer 1, 1khz
+	if (!PIR1) then goto L_interrupt_low_45
+//extruder.c,620 :: 		if ( velocityControlMode == 1u){
+	if ( _velocityControlMode != 1) then goto L_interrupt_low_46
+//extruder.c,621 :: 		calcMotorVelocity();
+	CALL _calcMotorVelocity
+//extruder.c,622 :: 		}
+	goto	L_interrupt_low_47
+L_interrupt_low_46:
+//extruder.c,624 :: 		calcMotorPosition();
+	CALL _calcMotorPosition
+//extruder.c,625 :: 		}
+L_interrupt_low_47:
+//extruder.c,629 :: 		if ( debugMotorSpeed != 0u && pid_motor.enable.F0 == 1 && motorGlobalEnable == 1 ) {
+	if ( _debugMotorSpeed = 0) then goto L_interrupt_low_50
+	STACK_1 <-  _pid_motor+72 & 1
+	if ( STACK_1 != 1) then goto L_interrupt_low_50
+	if ( _motorGlobalEnable != 1) then goto L_interrupt_low_50
+L311_ex_L_interrupt_low_50:
+//extruder.c,630 :: 		pid_motor.command += debugMotorSpeed;
+	_pid_motor+0 <-  _pid_motor+0 + _debugMotorSpeed
+	_pid_motor+0 <- _pid_motor+0
+//extruder.c,631 :: 		}
+L_interrupt_low_50:
+//extruder.c,636 :: 		if ( motorGlobalEnable == 1 ){
+	if ( _motorGlobalEnable != 1) then goto L_interrupt_low_51
+//extruder.c,637 :: 		if ( pid_heater.feedback > MOTOR_SAFE_TEMP ){
+	if ( _pid_heater+4 <= 1) then goto L_interrupt_low_52
+//extruder.c,638 :: 		pid_motor.enable.F0 = 1;
+	_pid_motor+72 <-  _pid_motor+72 | 1
+//extruder.c,639 :: 		FAULT_OUT = 0;
+	PORTC <-  PORTC & -33
+//extruder.c,640 :: 		}
+	goto	L_interrupt_low_53
+L_interrupt_low_52:
+//extruder.c,642 :: 		FAULT_OUT = 1;
+	PORTC <-  PORTC | 32
+//extruder.c,643 :: 		}
+L_interrupt_low_53:
+//extruder.c,644 :: 		}
+	goto	L_interrupt_low_54
+L_interrupt_low_51:
+//extruder.c,646 :: 		pid_motor.enable.F0 = 0;
+	_pid_motor+72 <-  _pid_motor+72 & -2
+//extruder.c,647 :: 		FAULT_OUT = 1;
+	PORTC <-  PORTC | 32
+//extruder.c,648 :: 		}
+L_interrupt_low_54:
+//extruder.c,649 :: 		calc_pid(&pid_motor);
+	FARG_calc_pid+0 <- 0
+	CALL _calc_pid
+//extruder.c,650 :: 		setMotorDuty(pid_motor.output );
+	FARG_setMotorDuty+0 <- _pid_motor+70
+	CALL _setMotorDuty
+//extruder.c,662 :: 		if ( velocityControlMode == 1 ){
+	if ( _velocityControlMode != 1) then goto L_interrupt_low_55
+//extruder.c,663 :: 		motorTurns = 0;
+	_motorTurns <- 0
+//extruder.c,664 :: 		pid_motor.feedback = 0;
+	_pid_motor+4 <- 0
+//extruder.c,665 :: 		pid_motor.command = 0;
+	_pid_motor+0 <- 0
+//extruder.c,666 :: 		}
+L_interrupt_low_55:
+//extruder.c,678 :: 		TMR1H = 0xE0;
+	TMR1H <- 224
+//extruder.c,679 :: 		TMR1L = 0x9F; //1khz       dmm reports 750 hz, 33% bandwidth
+	TMR1L <- 159
+//extruder.c,680 :: 		PIR1.TMR1IF = 0;
+	PIR1 <-  PIR1 & -2
+//extruder.c,682 :: 		}
+L_interrupt_low_45:
+  end
+
+_printFloat:
+  begin
+//extruder.c,690 :: 		USART_Send_String(name);
+	FARG_USART_Send_String+0 <- FARG_printFloat+0
+	CALL _USART_Send_String
+//extruder.c,691 :: 		FloatToStr(f,floatTxt);
+	FARG_FloatToStr+0 <- FARG_printFloat+2
+	FARG_FloatToStr+4 <- 0
+	CALL _FloatToStr
+//extruder.c,692 :: 		USART_Send_String(floatTxt);
+	FARG_USART_Send_String+0 <- 0
+	CALL _USART_Send_String
+  end
+
+_printStatus:
+  begin
+//extruder.c,697 :: 		printFloat("ht=",pid_heater.command);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_pid_heater+0
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,698 :: 		printFloat(",hv=",pid_heater.feedback);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_pid_heater+4
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,699 :: 		printFloat(",hp=",pid_heater.pgain);
+	FARG_printFloat+0 <- 0
+	FARG_printFloat+2 <- _pid_heater+48
+	CALL _printFloat
+//extruder.c,700 :: 		printFloat(",hi=",pid_heater.igain);
+	FARG_printFloat+0 <- 0
+	FARG_printFloat+2 <- _pid_heater+52
+	CALL _printFloat
+//extruder.c,701 :: 		printFloat(",hd=",pid_heater.dgain);
+	FARG_printFloat+0 <- 0
+	FARG_printFloat+2 <- _pid_heater+56
+	CALL _printFloat
+//extruder.c,702 :: 		printFloat(",hfg0=",pid_heater.ff0gain);
+	FARG_printFloat+0 <- 0
+	FARG_printFloat+2 <- _pid_heater+60
+	CALL _printFloat
+//extruder.c,703 :: 		printFloat(",hout=",pid_heater.output);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_pid_heater+70
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,704 :: 		printFloat(",herr=",pid_heater.error);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_pid_heater+8
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,705 :: 		printFloat(",herri=",pid_heater.error_i);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_pid_heater+28
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,706 :: 		printFloat(",herrd=",pid_heater.error_d);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_pid_heater+34
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,707 :: 		printFloat(",he=",pid_heater.enable);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_pid_heater+72
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,708 :: 		printFloat(",mcmd=",pid_motor.command);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_pid_motor+0
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,709 :: 		printFloat(",mv=",pid_motor.feedback);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_pid_motor+4
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,710 :: 		printFloat(",mp=",pid_motor.pgain);
+	FARG_printFloat+0 <- 0
+	FARG_printFloat+2 <- _pid_motor+48
+	CALL _printFloat
+//extruder.c,711 :: 		printFloat(",mi=",pid_motor.igain);
+	FARG_printFloat+0 <- 0
+	FARG_printFloat+2 <- _pid_motor+52
+	CALL _printFloat
+//extruder.c,712 :: 		printFloat(",md=",pid_motor.dgain);
+	FARG_printFloat+0 <- 0
+	FARG_printFloat+2 <- _pid_motor+56
+	CALL _printFloat
+//extruder.c,713 :: 		printFloat(",mfg=",pid_motor.ff1gain);
+	FARG_printFloat+0 <- 0
+	FARG_printFloat+2 <- _pid_motor+64
+	CALL _printFloat
+//extruder.c,714 :: 		printFloat(",mout=",pid_motor.output);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_pid_motor+70
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,715 :: 		printFloat(",merr=",pid_motor.error);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_pid_motor+8
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,716 :: 		printFloat(",merri=",pid_motor.error_i);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_pid_motor+28
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,717 :: 		printFloat(",merrd=",pid_motor.error_d);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_pid_motor+34
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,718 :: 		printFloat(",me=",pid_motor.enable);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_pid_motor+72
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,719 :: 		printFloat(",mTurns=",motorTurns);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_motorTurns
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,720 :: 		printFloat(",mge=",motorGlobalEnable);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_motorGlobalEnable
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,721 :: 		printFloat(",hge=",heaterGlobalEnable);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_heaterGlobalEnable
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+//extruder.c,722 :: 		printFloat(",dirswitchs=",motorDirSwitches);
+	FARG_printFloat+0 <- 0
+	STACK_0 <- (type cast)_motorDirSwitches
+	FARG_printFloat+2 <- STACK_0
+	CALL _printFloat
+  end
+
+_initRegisters:
+  begin
+//extruder.c,728 :: 		PORTB = 0;
+	PORTB <- 0
+//extruder.c,734 :: 		TRISD = 0b00000100;
+	TRISD <- 4
+//extruder.c,735 :: 		TRISC = 0b10011011; //RC3 is ext trigger, used for step input. RC0 is dir pin
+	TRISC <- 155
+//extruder.c,736 :: 		TRISB = 0b00000000;           // PORTB is output
+	TRISB <- 0
+//extruder.c,737 :: 		TRISA = 0b11111111;
+	TRISA <- 255
+//extruder.c,743 :: 		T0CON = 0b10000000; //256:1 prescaler, internal clock, enable
+	T0CON <- 128
+//extruder.c,748 :: 		T1CON = 0b10000101;
+	T1CON <- 133
+//extruder.c,751 :: 		ADCON1 = 0x00;
+	ADCON1 <- 0
+//extruder.c,752 :: 		ANSEL0 = 0b00000011;
+	ANSEL0 <- 3
+//extruder.c,757 :: 		INTCON2.INTEDG0 = 0; //interrupt on rising edge
+	INTCON2 <-  INTCON2 & -65
+//extruder.c,760 :: 		INTCON.INT0IE = 1; //enable int0 interrupts
+	INTCON <-  INTCON | 16
+//extruder.c,771 :: 		INTCON.TMR0IE = 1; //enable timer0 interrupts
+	INTCON <-  INTCON | 32
+//extruder.c,772 :: 		INTCON2.TMR0IP = 0; //timer 0 low priority
+	INTCON2 <-  INTCON2 & -5
+//extruder.c,773 :: 		PIE1.TMR1IE = 1; //enable timer1 interrupts
+	PIE1 <-  PIE1 | 1
+//extruder.c,774 :: 		IPR1.TMR1IP = 0; //timer 1 low priority
+	IPR1 <-  IPR1 & -2
+//extruder.c,783 :: 		SSPSTAT = 0b01000000;
+	SSPSTAT <- 64
+//extruder.c,787 :: 		SSPCON=0b00100001;
+	SSPCON <- 33
+//extruder.c,789 :: 		SSPCON.SSPEN = 1; //0=input pins, 1=spi port
+	SSPCON <-  SSPCON | 32
+//extruder.c,790 :: 		PIR1.SSPIF = 0;
+	PIR1 <-  PIR1 & -9
+//extruder.c,793 :: 		PIE1.SSPIE = 0;
+	PIE1 <-  PIE1 & -9
+//extruder.c,796 :: 		PIE3.PTIE = 0;
+	PIE3 <-  PIE3 & -17
+//extruder.c,802 :: 		QEICON = 0b10011000;
+	QEICON <- 152
+//extruder.c,834 :: 		T5CON = 0b00011001;
+	T5CON <- 25
+//extruder.c,837 :: 		DFLTCON = 0b00000000;
+	DFLTCON <- 0
+//extruder.c,839 :: 		POSCNTH = 0x00;
+	POSCNTH <- 0
+//extruder.c,840 :: 		POSCNTL = 0x00;
+	POSCNTL <- 0
+//extruder.c,841 :: 		VELRL = 0x00;
+	VELRL <- 0
+//extruder.c,842 :: 		VELRH = 0x00;
+	VELRH <- 0
+//extruder.c,845 :: 		MAXCNTH = 0x07;
+	MAXCNTH <- 7
+//extruder.c,846 :: 		MAXCNTL = 0xD0;
+	MAXCNTL <- 208
+//extruder.c,852 :: 		PIE3.IC2QEIE = 1;
+	PIE3 <-  PIE3 | 4
+//extruder.c,872 :: 		PTCON0 = 0b00000000;
+	PTCON0 <- 0
+//extruder.c,875 :: 		PTCON1 = 0b1000000;
+	PTCON1 <- 64
+//extruder.c,878 :: 		PWMCON0 = 0b00011111;
+	PWMCON0 <- 31
+//extruder.c,882 :: 		PWMCON1 = 0b00000000;
+	PWMCON1 <- 0
+//extruder.c,891 :: 		PTPERH = 0x00;
+	PTPERH <- 0
+//extruder.c,892 :: 		PTPERL = 0xFF;
+	PTPERL <- 255
+//extruder.c,900 :: 		PDC0H=0x00;
+	PDC0H <- 0
+//extruder.c,901 :: 		PDC0L = 0x00;
+	PDC0L <- 0
+//extruder.c,902 :: 		PTCON1.F7=1;
+	PTCON1 <-  PTCON1 | 128
+  end
+
+_commandMatches:
+  begin
+//extruder.c,911 :: 		char *cmdptr = cmdBuffer;
+	commandMatches_cmdptr_L0 <- 0
+//extruder.c,912 :: 		while(*source && *cmdptr ){
+L_commandMatches_56:
+	STACK_0 <- *FARG_commandMatches+0
+	if (!STACK_0) then goto L_commandMatches_57
+	STACK_0 <- *commandMatches_cmdptr_L0
+	if (!STACK_0) then goto L_commandMatches_57
+L485_ex_L_commandMatches_57:
+//extruder.c,913 :: 		if ( *cmdptr != *source )
+	STACK_2 <- *commandMatches_cmdptr_L0
+	STACK_1 <- *FARG_commandMatches+0
+	if ( STACK_2 = STACK_1) then goto L_commandMatches_60
+//extruder.c,914 :: 		return 0;
+	STACK_0 <- 0
+	return
+L_commandMatches_60:
+//extruder.c,915 :: 		cmdptr++;
+	commandMatches_cmdptr_L0 <-  commandMatches_cmdptr_L0 + 1
+	commandMatches_cmdptr_L0 <- commandMatches_cmdptr_L0
+//extruder.c,916 :: 		source++;
+	FARG_commandMatches+0 <-  FARG_commandMatches+0 + 1
+	FARG_commandMatches+0 <- FARG_commandMatches+0
+//extruder.c,917 :: 		}
+	goto	L_commandMatches_56
+L_commandMatches_57:
+//extruder.c,918 :: 		return 1;
+	STACK_0 <- 1
+	return
+  end
+
+_findFloatValue:
+  begin
+//extruder.c,924 :: 		char *ptr = strchr(buffer,'=');
+	FARG_strchr+0 <- FARG_findFloatValue+0
+	FARG_strchr+2 <- 61
+	CALL _strchr
+	findFloatValue_ptr_L0 <- STACK_0
+//extruder.c,925 :: 		return atof(++ptr);
+	findFloatValue_ptr_L0 <-  STACK_0 + 1
+	findFloatValue_ptr_L0 <- findFloatValue_ptr_L0
+	FARG_atof+0 <- findFloatValue_ptr_L0
+	CALL _atof
+	STACK_0 <- STACK_0
+	return
+  end
+
+_findIntValue:
+  begin
+//extruder.c,930 :: 		char *ptr = strchr(buffer,'=');
+	FARG_strchr+0 <- FARG_findIntValue+0
+	FARG_strchr+2 <- 61
+	CALL _strchr
+	findIntValue_ptr_L0 <- STACK_0
+//extruder.c,931 :: 		return atoi(++ptr);
+	findIntValue_ptr_L0 <-  STACK_0 + 1
+	findIntValue_ptr_L0 <- findIntValue_ptr_L0
+	FARG_atoi+0 <- findIntValue_ptr_L0
+	CALL _atoi
+	STACK_0 <- STACK_0
+	return
+  end
+
+_findLongValue:
+  begin
+//extruder.c,936 :: 		char *ptr = strchr(buffer,'=');
+	FARG_strchr+0 <- FARG_findLongValue+0
+	FARG_strchr+2 <- 61
+	CALL _strchr
+	findLongValue_ptr_L0 <- STACK_0
+//extruder.c,937 :: 		return atol(++ptr);
+	findLongValue_ptr_L0 <-  STACK_0 + 1
+	findLongValue_ptr_L0 <- findLongValue_ptr_L0
+	FARG_atol+0 <- findLongValue_ptr_L0
+	CALL _atol
+	STACK_0 <- STACK_0
+	return
+  end
+
+_delay_100_ms:
+  begin
+//extruder.c,942 :: 		Delay_ms(100);
+	asm: MOVLW	6
+	asm: MOVWF	STACK_12
+	asm: MOVLW	255
+	asm: MOVWF	STACK_11
+	asm: MOVLW	255
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_12,F
+	asm: GOTO	$+2
+	asm: GOTO	$+8
+	asm: DECFSZ	STACK_11,F
+	asm: GOTO	$+2
+	asm: GOTO	$+4
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: GOTO	$-5
+	asm: GOTO	$-9
+	asm: MOVLW	26
+	asm: MOVWF	STACK_11
+	asm: MOVLW	255
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_11,F
+	asm: GOTO	$+2
+	asm: GOTO	$+4
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: GOTO	$-5
+	asm: MOVLW	66
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+  end
+
+_main:
+  begin
+//extruder.c,949 :: 		txtPos = 0;
+	_txtPos <- 0
+//extruder.c,952 :: 		Usart_Init(57600);
+	SPBRG <- 42
+	asm: BSF	TXSTA, BRGH
+	CALL _Usart_Init
+//extruder.c,953 :: 		initDuty(120);
+	FARG_initDuty+0 <- 120
+	CALL _initDuty
+//extruder.c,954 :: 		initRegisters();
+	CALL _initRegisters
+//extruder.c,955 :: 		resetPosition();
+	CALL _resetPosition
+//extruder.c,958 :: 		Delay_ms(100);
+	asm: MOVLW	6
+	asm: MOVWF	STACK_12
+	asm: MOVLW	255
+	asm: MOVWF	STACK_11
+	asm: MOVLW	255
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_12,F
+	asm: GOTO	$+2
+	asm: GOTO	$+8
+	asm: DECFSZ	STACK_11,F
+	asm: GOTO	$+2
+	asm: GOTO	$+4
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: GOTO	$-5
+	asm: GOTO	$-9
+	asm: MOVLW	26
+	asm: MOVWF	STACK_11
+	asm: MOVLW	255
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_11,F
+	asm: GOTO	$+2
+	asm: GOTO	$+4
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: GOTO	$-5
+	asm: MOVLW	66
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+//extruder.c,959 :: 		printMessage(splash);
+	FARG_printMessage+0 <- _splash
+	CALL _printMessage
+//extruder.c,962 :: 		if ( ! readMemory() ){
+	CALL _readMemory
+	if (STACK_0) then goto L_main_61
+//extruder.c,963 :: 		printMessage(noEeprom);
+	FARG_printMessage+0 <- _noEeprom
+	CALL _printMessage
+//extruder.c,964 :: 		}
+L_main_61:
+//extruder.c,965 :: 		printMessage(cmdPrompt);
+	FARG_printMessage+0 <- _cmdPrompt
+	CALL _printMessage
+//extruder.c,967 :: 		Delay_ms(200);
+	asm: MOVLW	11
+	asm: MOVWF	STACK_12
+	asm: MOVLW	255
+	asm: MOVWF	STACK_11
+	asm: MOVLW	255
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_12,F
+	asm: GOTO	$+2
+	asm: GOTO	$+8
+	asm: DECFSZ	STACK_11,F
+	asm: GOTO	$+2
+	asm: GOTO	$+4
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: GOTO	$-5
+	asm: GOTO	$-9
+	asm: MOVLW	51
+	asm: MOVWF	STACK_11
+	asm: MOVLW	255
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_11,F
+	asm: GOTO	$+2
+	asm: GOTO	$+4
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+	asm: GOTO	$-5
+	asm: MOVLW	136
+	asm: MOVWF	STACK_10
+	asm: DECFSZ	STACK_10,F
+	asm: GOTO	$-1
+//extruder.c,970 :: 		RCON.IPEN = 1;
+	RCON <-  RCON | 128
+//extruder.c,971 :: 		INTCON.GIE = 1;
+	INTCON <-  INTCON | 128
+//extruder.c,972 :: 		INTCON.PEIE = 1;
+	INTCON <-  INTCON | 64
+//extruder.c,973 :: 		MOTOR_BRAKE_PIN = 0;
+	PORTB <-  PORTB & -2
+//extruder.c,974 :: 		while(1) {
+L_main_62:
+//extruder.c,978 :: 		while ( Usart_Data_Ready() ) {
+L_main_64:
+	CALL _Usart_Data_Ready
+	if (!STACK_0) then goto L_main_65
+//extruder.c,979 :: 		x = Usart_Read();
+	CALL _Usart_Read
+//extruder.c,985 :: 		if ( pushChar(x) ){
+	FARG_pushChar+0 <- STACK_0
+	CALL _pushChar
+	if (!STACK_0) then goto L_main_66
+//extruder.c,988 :: 		if ( commandMatches(cmd_status ) ){
+	FARG_commandMatches+0 <- _cmd_status
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_67
+//extruder.c,989 :: 		printStatus();
+	CALL _printStatus
+//extruder.c,990 :: 		}
+	goto	L_main_68
+L_main_67:
+//extruder.c,991 :: 		else if ( commandMatches(cmd_saveEEprom )){
+	FARG_commandMatches+0 <- _cmd_saveEEprom
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_69
+//extruder.c,992 :: 		writeMemory();
+	CALL _writeMemory
+//extruder.c,993 :: 		}
+	goto	L_main_70
+L_main_69:
+//extruder.c,994 :: 		else if ( commandMatches(cmd_readEEprom )){
+	FARG_commandMatches+0 <- _cmd_readEEprom
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_71
+//extruder.c,995 :: 		readMemory();
+	CALL _readMemory
+//extruder.c,996 :: 		}
+	goto	L_main_72
+L_main_71:
+//extruder.c,997 :: 		else if ( commandMatches(cmd_globalMotorEnable)){
+	FARG_commandMatches+0 <- _cmd_globalMotorEnable
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_73
+//extruder.c,998 :: 		motorGlobalEnable = findIntValue(cmdBuffer);
+	FARG_findIntValue+0 <- 0
+	CALL _findIntValue
+	_motorGlobalEnable <- STACK_0
+//extruder.c,1005 :: 		}
+	goto	L_main_74
+L_main_73:
+//extruder.c,1006 :: 		else if ( commandMatches(cmd_globalHeaterEnable)){
+	FARG_commandMatches+0 <- _cmd_globalHeaterEnable
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_75
+//extruder.c,1007 :: 		heaterGlobalEnable = findIntValue(cmdBuffer);
+	FARG_findIntValue+0 <- 0
+	CALL _findIntValue
+	_heaterGlobalEnable <- STACK_0
+//extruder.c,1008 :: 		}
+	goto	L_main_76
+L_main_75:
+//extruder.c,1009 :: 		else if ( commandMatches(cmd_defaults)){
+	FARG_commandMatches+0 <- _cmd_defaults
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_77
+//extruder.c,1011 :: 		clearMemory();
+	CALL _clearMemory
+//extruder.c,1012 :: 		}
+	goto	L_main_78
+L_main_77:
+//extruder.c,1013 :: 		else if ( commandMatches(cmd_heater_kff0)){
+	FARG_commandMatches+0 <- _cmd_heater_kff0
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_79
+//extruder.c,1014 :: 		pid_heater.ff0gain = findFloatValue(cmdBuffer);
+	FARG_findFloatValue+0 <- 0
+	CALL _findFloatValue
+	_pid_heater+60 <- STACK_0
+//extruder.c,1015 :: 		}
+	goto	L_main_80
+L_main_79:
+//extruder.c,1016 :: 		else if ( commandMatches(cmd_heater_SetFeedback)){
+	FARG_commandMatches+0 <- _cmd_heater_SetFeedback
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_81
+//extruder.c,1017 :: 		pid_heater.feedback = findIntValue(cmdBuffer);
+	FARG_findIntValue+0 <- 0
+	CALL _findIntValue
+	_pid_heater+4 <- STACK_0
+//extruder.c,1018 :: 		}
+	goto	L_main_82
+L_main_81:
+//extruder.c,1019 :: 		else if ( commandMatches(cmd_heater_Kp )){
+	FARG_commandMatches+0 <- _cmd_heater_Kp
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_83
+//extruder.c,1020 :: 		pid_heater.pgain = findFloatValue(cmdBuffer);
+	FARG_findFloatValue+0 <- 0
+	CALL _findFloatValue
+	_pid_heater+48 <- STACK_0
+//extruder.c,1021 :: 		}
+	goto	L_main_84
+L_main_83:
+//extruder.c,1022 :: 		else if ( commandMatches(cmd_heater_Ki )){
+	FARG_commandMatches+0 <- _cmd_heater_Ki
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_85
+//extruder.c,1023 :: 		pid_heater.igain = findFloatValue(cmdBuffer);
+	FARG_findFloatValue+0 <- 0
+	CALL _findFloatValue
+	_pid_heater+52 <- STACK_0
+//extruder.c,1024 :: 		}
+	goto	L_main_86
+L_main_85:
+//extruder.c,1025 :: 		else if ( commandMatches(cmd_heater_Kd )){
+	FARG_commandMatches+0 <- _cmd_heater_Kd
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_87
+//extruder.c,1026 :: 		pid_heater.dgain = findFloatValue(cmdBuffer);
+	FARG_findFloatValue+0 <- 0
+	CALL _findFloatValue
+	_pid_heater+56 <- STACK_0
+//extruder.c,1027 :: 		}
+	goto	L_main_88
+L_main_87:
+//extruder.c,1028 :: 		else if ( commandMatches(cmd_heater_duty )){
+	FARG_commandMatches+0 <- _cmd_heater_duty
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_89
+//extruder.c,1029 :: 		debugHeaterDuty = findIntValue(cmdBuffer);
+	FARG_findIntValue+0 <- 0
+	CALL _findIntValue
+	_debugHeaterDuty <- STACK_0
+//extruder.c,1030 :: 		}
+	goto	L_main_90
+L_main_89:
+//extruder.c,1032 :: 		else if ( commandMatches(cmd_heater_SetTemp )){
+	FARG_commandMatches+0 <- _cmd_heater_SetTemp
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_91
+//extruder.c,1033 :: 		pid_heater.command = findIntValue(cmdBuffer);
+	FARG_findIntValue+0 <- 0
+	CALL _findIntValue
+	_pid_heater+0 <- STACK_0
+//extruder.c,1034 :: 		}
+	goto	L_main_92
+L_main_91:
+//extruder.c,1035 :: 		else if ( commandMatches(cmd_motor_Kp )){
+	FARG_commandMatches+0 <- _cmd_motor_Kp
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_93
+//extruder.c,1036 :: 		pid_motor.pgain = findFloatValue(cmdBuffer);
+	FARG_findFloatValue+0 <- 0
+	CALL _findFloatValue
+	_pid_motor+48 <- STACK_0
+//extruder.c,1037 :: 		}
+	goto	L_main_94
+L_main_93:
+//extruder.c,1038 :: 		else if ( commandMatches(cmd_motor_Ki )){
+	FARG_commandMatches+0 <- _cmd_motor_Ki
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_95
+//extruder.c,1039 :: 		pid_motor.igain = findFloatValue(cmdBuffer);
+	FARG_findFloatValue+0 <- 0
+	CALL _findFloatValue
+	_pid_motor+52 <- STACK_0
+//extruder.c,1040 :: 		}
+	goto	L_main_96
+L_main_95:
+//extruder.c,1041 :: 		else if ( commandMatches(cmd_motor_Kd )){
+	FARG_commandMatches+0 <- _cmd_motor_Kd
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_97
+//extruder.c,1042 :: 		pid_motor.dgain = findFloatValue(cmdBuffer);
+	FARG_findFloatValue+0 <- 0
+	CALL _findFloatValue
+	_pid_motor+56 <- STACK_0
+//extruder.c,1043 :: 		}
+	goto	L_main_98
+L_main_97:
+//extruder.c,1044 :: 		else if ( commandMatches(cmd_motor_Kff1 )){
+	FARG_commandMatches+0 <- _cmd_motor_Kff1
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_99
+//extruder.c,1045 :: 		pid_motor.ff1gain = findFloatValue(cmdBuffer);
+	FARG_findFloatValue+0 <- 0
+	CALL _findFloatValue
+	_pid_motor+64 <- STACK_0
+//extruder.c,1046 :: 		}
+	goto	L_main_100
+L_main_99:
+//extruder.c,1047 :: 		else if ( commandMatches(cmd_motor_duty )){
+	FARG_commandMatches+0 <- _cmd_motor_duty
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_101
+//extruder.c,1048 :: 		debugMotorDuty = findIntValue(cmdBuffer);
+	FARG_findIntValue+0 <- 0
+	CALL _findIntValue
+	_debugMotorDuty <- STACK_0
+//extruder.c,1050 :: 		}
+	goto	L_main_102
+L_main_101:
+//extruder.c,1051 :: 		else if ( commandMatches(cmd_motor_SetPos )){
+	FARG_commandMatches+0 <- _cmd_motor_SetPos
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_103
+//extruder.c,1052 :: 		pid_motor.command = findLongValue(cmdBuffer);
+	FARG_findLongValue+0 <- 0
+	CALL _findLongValue
+	_pid_motor+0 <- STACK_0
+//extruder.c,1053 :: 		}
+	goto	L_main_104
+L_main_103:
+//extruder.c,1054 :: 		else if ( commandMatches(cmd_motor_Speed )){
+	FARG_commandMatches+0 <- _cmd_motor_Speed
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_105
+//extruder.c,1055 :: 		debugMotorSpeed = findIntValue(cmdBuffer);
+	FARG_findIntValue+0 <- 0
+	CALL _findIntValue
+	_debugMotorSpeed <- STACK_0
+//extruder.c,1056 :: 		}
+	goto	L_main_106
+L_main_105:
+//extruder.c,1057 :: 		else if ( commandMatches(cmd_motor_SetFeedback)){
+	FARG_commandMatches+0 <- _cmd_motor_SetFeedback
+	CALL _commandMatches
+	if (!STACK_0) then goto L_main_107
+//extruder.c,1058 :: 		pid_motor.feedback = findLongValue(cmdBuffer);
+	FARG_findLongValue+0 <- 0
+	CALL _findLongValue
+	_pid_motor+4 <- STACK_0
+//extruder.c,1060 :: 		}
+	goto	L_main_108
+L_main_107:
+//extruder.c,1063 :: 		printMessage(unknownCommand);
+	FARG_printMessage+0 <- _unknownCommand
+	CALL _printMessage
+//extruder.c,1064 :: 		USART_Send_String(cmdBuffer);
+	FARG_USART_Send_String+0 <- 0
+	CALL _USART_Send_String
+//extruder.c,1066 :: 		}
+L_main_108:
+L_main_106:
+L_main_104:
+L_main_102:
+L_main_100:
+L_main_98:
+L_main_96:
+L_main_94:
+L_main_92:
+L_main_90:
+L_main_88:
+L_main_86:
+L_main_84:
+L_main_82:
+L_main_80:
+L_main_78:
+L_main_76:
+L_main_74:
+L_main_72:
+L_main_70:
+L_main_68:
+//extruder.c,1067 :: 		printMessage(cmdPrompt);
+	FARG_printMessage+0 <- _cmdPrompt
+	CALL _printMessage
+//extruder.c,1068 :: 		}
+L_main_66:
+//extruder.c,1071 :: 		}
+	goto	L_main_64
+L_main_65:
+//extruder.c,1072 :: 		};
+	goto	L_main_62
+  end
+
+GlobalIniextruder:
+  begin
+  end
+

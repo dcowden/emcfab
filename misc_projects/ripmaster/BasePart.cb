@@ -1,0 +1,1491 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CADFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="BasePart.DXF" units="Inches">
+  <layers>
+    <layer name="0" color="255,0,128">
+      <mat />
+      <objects>
+        <circle id="8" c="15.2793589272,1.7029601106,0" d="0.313">
+          <mat />
+        </circle>
+        <circle id="18" c="15.2793589272,4.9529601106,0" d="0.313">
+          <mat />
+        </circle>
+        <circle id="20" c="1.0293589272,1.7029601106,0" d="0.313">
+          <mat />
+        </circle>
+        <circle id="22" c="1.0293589272,4.9529601106,0" d="0.313">
+          <mat />
+        </circle>
+        <circle id="29" c="15.2793589272,1.7029601106,0" d="0.195">
+          <mat />
+        </circle>
+        <circle id="30" c="1.0293589272,4.9529601106,0" d="0.194">
+          <mat />
+        </circle>
+        <circle id="31" c="1.0293589272,1.7029601106,0" d="0.194">
+          <mat />
+        </circle>
+        <circle id="32" c="15.2793589272,4.9529601106,0" d="0.195">
+          <mat />
+        </circle>
+        <line id="41">
+          <mat />
+          <pts>
+            <p>14.2793589272,4.9529601106</p>
+            <p>14.1793589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="42">
+          <mat />
+          <pts>
+            <p>14.2793589272,4.9529601106</p>
+            <p>14.2793589272,4.8529601106</p>
+          </pts>
+        </line>
+        <line id="43">
+          <mat />
+          <pts>
+            <p>14.2793589272,4.9529601106</p>
+            <p>14.3793589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="44">
+          <mat />
+          <pts>
+            <p>14.2793589272,4.9529601106</p>
+            <p>14.2793589272,5.0529601106</p>
+          </pts>
+        </line>
+        <line id="45">
+          <mat />
+          <pts>
+            <p>11.7793589272,4.9529601106</p>
+            <p>11.6793589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="46">
+          <mat />
+          <pts>
+            <p>11.7793589272,4.9529601106</p>
+            <p>11.7793589272,4.8529601106</p>
+          </pts>
+        </line>
+        <line id="47">
+          <mat />
+          <pts>
+            <p>11.7793589272,4.9529601106</p>
+            <p>11.8793589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="48">
+          <mat />
+          <pts>
+            <p>11.7793589272,4.9529601106</p>
+            <p>11.7793589272,5.0529601106</p>
+          </pts>
+        </line>
+        <line id="49">
+          <mat />
+          <pts>
+            <p>14.2793589272,2.4529601106</p>
+            <p>14.1793589272,2.4529601106</p>
+          </pts>
+        </line>
+        <line id="50">
+          <mat />
+          <pts>
+            <p>14.2793589272,2.4529601106</p>
+            <p>14.2793589272,2.3529601106</p>
+          </pts>
+        </line>
+        <line id="51">
+          <mat />
+          <pts>
+            <p>14.2793589272,2.4529601106</p>
+            <p>14.3793589272,2.4529601106</p>
+          </pts>
+        </line>
+        <line id="52">
+          <mat />
+          <pts>
+            <p>14.2793589272,2.4529601106</p>
+            <p>14.2793589272,2.5529601106</p>
+          </pts>
+        </line>
+        <line id="53">
+          <mat />
+          <pts>
+            <p>11.7793589272,2.4529601106</p>
+            <p>11.6793589272,2.4529601106</p>
+          </pts>
+        </line>
+        <line id="54">
+          <mat />
+          <pts>
+            <p>11.7793589272,2.4529601106</p>
+            <p>11.7793589272,2.3529601106</p>
+          </pts>
+        </line>
+        <line id="55">
+          <mat />
+          <pts>
+            <p>11.7793589272,2.4529601106</p>
+            <p>11.8793589272,2.4529601106</p>
+          </pts>
+        </line>
+        <line id="56">
+          <mat />
+          <pts>
+            <p>11.7793589272,2.4529601106</p>
+            <p>11.7793589272,2.5529601106</p>
+          </pts>
+        </line>
+        <line id="57">
+          <mat />
+          <pts>
+            <p>15.2793589272,1.7029601106</p>
+            <p>15.1793589272,1.7029601106</p>
+          </pts>
+        </line>
+        <line id="58">
+          <mat />
+          <pts>
+            <p>15.2793589272,1.7029601106</p>
+            <p>15.2793589272,1.6029601106</p>
+          </pts>
+        </line>
+        <line id="59">
+          <mat />
+          <pts>
+            <p>15.2793589272,1.7029601106</p>
+            <p>15.3793589272,1.7029601106</p>
+          </pts>
+        </line>
+        <line id="60">
+          <mat />
+          <pts>
+            <p>15.2793589272,1.7029601106</p>
+            <p>15.2793589272,1.8029601106</p>
+          </pts>
+        </line>
+        <line id="61">
+          <mat />
+          <pts>
+            <p>15.0793589272,1.7029601106</p>
+            <p>15.0228589272,1.7029601106</p>
+          </pts>
+        </line>
+        <line id="62">
+          <mat />
+          <pts>
+            <p>15.2793589272,1.5029601106</p>
+            <p>15.2793589272,1.4464601106</p>
+          </pts>
+        </line>
+        <line id="63">
+          <mat />
+          <pts>
+            <p>15.4793589272,1.7029601106</p>
+            <p>15.5358589272,1.7029601106</p>
+          </pts>
+        </line>
+        <line id="64">
+          <mat />
+          <pts>
+            <p>15.2793589272,1.9029601106</p>
+            <p>15.2793589272,1.9594601106</p>
+          </pts>
+        </line>
+        <line id="65">
+          <mat />
+          <pts>
+            <p>15.2793589272,4.9529601106</p>
+            <p>15.1793589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="66">
+          <mat />
+          <pts>
+            <p>15.2793589272,4.9529601106</p>
+            <p>15.2793589272,4.8529601106</p>
+          </pts>
+        </line>
+        <line id="67">
+          <mat />
+          <pts>
+            <p>15.2793589272,4.9529601106</p>
+            <p>15.3793589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="68">
+          <mat />
+          <pts>
+            <p>15.2793589272,4.9529601106</p>
+            <p>15.2793589272,5.0529601106</p>
+          </pts>
+        </line>
+        <line id="69">
+          <mat />
+          <pts>
+            <p>15.0793589272,4.9529601106</p>
+            <p>15.0228589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="70">
+          <mat />
+          <pts>
+            <p>15.2793589272,4.7529601106</p>
+            <p>15.2793589272,4.6964601106</p>
+          </pts>
+        </line>
+        <line id="71">
+          <mat />
+          <pts>
+            <p>15.4793589272,4.9529601106</p>
+            <p>15.5358589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="72">
+          <mat />
+          <pts>
+            <p>15.2793589272,5.1529601106</p>
+            <p>15.2793589272,5.2094601106</p>
+          </pts>
+        </line>
+        <line id="73">
+          <mat />
+          <pts>
+            <p>1.0293589272,1.7029601106</p>
+            <p>0.9293589272,1.7029601106</p>
+          </pts>
+        </line>
+        <line id="74">
+          <mat />
+          <pts>
+            <p>1.0293589272,1.7029601106</p>
+            <p>1.0293589272,1.6029601106</p>
+          </pts>
+        </line>
+        <line id="75">
+          <mat />
+          <pts>
+            <p>1.0293589272,1.7029601106</p>
+            <p>1.1293589272,1.7029601106</p>
+          </pts>
+        </line>
+        <line id="76">
+          <mat />
+          <pts>
+            <p>1.0293589272,1.7029601106</p>
+            <p>1.0293589272,1.8029601106</p>
+          </pts>
+        </line>
+        <line id="77">
+          <mat />
+          <pts>
+            <p>0.8293589272,1.7029601106</p>
+            <p>0.7728589272,1.7029601106</p>
+          </pts>
+        </line>
+        <line id="78">
+          <mat />
+          <pts>
+            <p>1.0293589272,1.5029601106</p>
+            <p>1.0293589272,1.4464601106</p>
+          </pts>
+        </line>
+        <line id="79">
+          <mat />
+          <pts>
+            <p>1.2293589272,1.7029601106</p>
+            <p>1.2858589272,1.7029601106</p>
+          </pts>
+        </line>
+        <line id="80">
+          <mat />
+          <pts>
+            <p>1.0293589272,1.9029601106</p>
+            <p>1.0293589272,1.9594601106</p>
+          </pts>
+        </line>
+        <line id="81">
+          <mat />
+          <pts>
+            <p>1.0293589272,4.9529601106</p>
+            <p>0.9293589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="82">
+          <mat />
+          <pts>
+            <p>1.0293589272,4.9529601106</p>
+            <p>1.0293589272,4.8529601106</p>
+          </pts>
+        </line>
+        <line id="83">
+          <mat />
+          <pts>
+            <p>1.0293589272,4.9529601106</p>
+            <p>1.1293589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="84">
+          <mat />
+          <pts>
+            <p>1.0293589272,4.9529601106</p>
+            <p>1.0293589272,5.0529601106</p>
+          </pts>
+        </line>
+        <line id="85">
+          <mat />
+          <pts>
+            <p>0.8293589272,4.9529601106</p>
+            <p>0.7728589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="86">
+          <mat />
+          <pts>
+            <p>1.0293589272,4.7529601106</p>
+            <p>1.0293589272,4.6964601106</p>
+          </pts>
+        </line>
+        <line id="87">
+          <mat />
+          <pts>
+            <p>1.2293589272,4.9529601106</p>
+            <p>1.2858589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="88">
+          <mat />
+          <pts>
+            <p>1.0293589272,5.1529601106</p>
+            <p>1.0293589272,5.2094601106</p>
+          </pts>
+        </line>
+        <line id="89">
+          <mat />
+          <pts>
+            <p>15.7168589272,0.5154601106</p>
+            <p>15.6168589272,0.5154601106</p>
+          </pts>
+        </line>
+        <line id="90">
+          <mat />
+          <pts>
+            <p>15.7168589272,0.5154601106</p>
+            <p>15.7168589272,0.4154601106</p>
+          </pts>
+        </line>
+        <line id="91">
+          <mat />
+          <pts>
+            <p>15.7168589272,0.5154601106</p>
+            <p>15.8168589272,0.5154601106</p>
+          </pts>
+        </line>
+        <line id="92">
+          <mat />
+          <pts>
+            <p>15.7168589272,0.5154601106</p>
+            <p>15.7168589272,0.6154601106</p>
+          </pts>
+        </line>
+        <line id="93">
+          <mat />
+          <pts>
+            <p>0.5918589272,0.5154601106</p>
+            <p>0.4918589272,0.5154601106</p>
+          </pts>
+        </line>
+        <line id="94">
+          <mat />
+          <pts>
+            <p>0.5918589272,0.5154601106</p>
+            <p>0.5918589272,0.4154601106</p>
+          </pts>
+        </line>
+        <line id="95">
+          <mat />
+          <pts>
+            <p>0.5918589272,0.5154601106</p>
+            <p>0.6918589272,0.5154601106</p>
+          </pts>
+        </line>
+        <line id="96">
+          <mat />
+          <pts>
+            <p>0.5918589272,0.5154601106</p>
+            <p>0.5918589272,0.6154601106</p>
+          </pts>
+        </line>
+        <line id="97">
+          <mat />
+          <pts>
+            <p>0.7793589272,5.2029601106</p>
+            <p>0.6793589272,5.2029601106</p>
+          </pts>
+        </line>
+        <line id="98">
+          <mat />
+          <pts>
+            <p>0.7793589272,5.2029601106</p>
+            <p>0.7793589272,5.1029601106</p>
+          </pts>
+        </line>
+        <line id="99">
+          <mat />
+          <pts>
+            <p>0.7793589272,5.2029601106</p>
+            <p>0.8793589272,5.2029601106</p>
+          </pts>
+        </line>
+        <line id="100">
+          <mat />
+          <pts>
+            <p>0.7793589272,5.2029601106</p>
+            <p>0.7793589272,5.3029601106</p>
+          </pts>
+        </line>
+        <line id="101">
+          <mat />
+          <pts>
+            <p>15.5293589272,5.2029601106</p>
+            <p>15.4293589272,5.2029601106</p>
+          </pts>
+        </line>
+        <line id="102">
+          <mat />
+          <pts>
+            <p>15.5293589272,5.2029601106</p>
+            <p>15.5293589272,5.1029601106</p>
+          </pts>
+        </line>
+        <line id="103">
+          <mat />
+          <pts>
+            <p>15.5293589272,5.2029601106</p>
+            <p>15.6293589272,5.2029601106</p>
+          </pts>
+        </line>
+        <line id="104">
+          <mat />
+          <pts>
+            <p>15.5293589272,5.2029601106</p>
+            <p>15.5293589272,5.3029601106</p>
+          </pts>
+        </line>
+        <line id="105">
+          <mat />
+          <pts>
+            <p>2.6543589272,3.8279601106</p>
+            <p>2.5543589272,3.8279601106</p>
+          </pts>
+        </line>
+        <line id="106">
+          <mat />
+          <pts>
+            <p>2.6543589272,3.8279601106</p>
+            <p>2.6543589272,3.7279601106</p>
+          </pts>
+        </line>
+        <line id="107">
+          <mat />
+          <pts>
+            <p>2.6543589272,3.8279601106</p>
+            <p>2.7543589272,3.8279601106</p>
+          </pts>
+        </line>
+        <line id="108">
+          <mat />
+          <pts>
+            <p>2.6543589272,3.8279601106</p>
+            <p>2.6543589272,3.9279601106</p>
+          </pts>
+        </line>
+        <line id="109">
+          <mat />
+          <pts>
+            <p>10.4043589272,3.8279601106</p>
+            <p>10.3043589272,3.8279601106</p>
+          </pts>
+        </line>
+        <line id="110">
+          <mat />
+          <pts>
+            <p>10.4043589272,3.8279601106</p>
+            <p>10.4043589272,3.7279601106</p>
+          </pts>
+        </line>
+        <line id="111">
+          <mat />
+          <pts>
+            <p>10.4043589272,3.8279601106</p>
+            <p>10.5043589272,3.8279601106</p>
+          </pts>
+        </line>
+        <line id="112">
+          <mat />
+          <pts>
+            <p>10.4043589272,3.8279601106</p>
+            <p>10.4043589272,3.9279601106</p>
+          </pts>
+        </line>
+        <line id="113">
+          <mat />
+          <pts>
+            <p>10.4043589272,1.0779601106</p>
+            <p>10.3043589272,1.0779601106</p>
+          </pts>
+        </line>
+        <line id="114">
+          <mat />
+          <pts>
+            <p>10.4043589272,1.0779601106</p>
+            <p>10.4043589272,0.9779601106</p>
+          </pts>
+        </line>
+        <line id="115">
+          <mat />
+          <pts>
+            <p>10.4043589272,1.0779601106</p>
+            <p>10.5043589272,1.0779601106</p>
+          </pts>
+        </line>
+        <line id="116">
+          <mat />
+          <pts>
+            <p>10.4043589272,1.0779601106</p>
+            <p>10.4043589272,1.1779601106</p>
+          </pts>
+        </line>
+        <line id="117">
+          <mat />
+          <pts>
+            <p>2.6543589272,1.0779601106</p>
+            <p>2.5543589272,1.0779601106</p>
+          </pts>
+        </line>
+        <line id="118">
+          <mat />
+          <pts>
+            <p>2.6543589272,1.0779601106</p>
+            <p>2.6543589272,0.9779601106</p>
+          </pts>
+        </line>
+        <line id="119">
+          <mat />
+          <pts>
+            <p>2.6543589272,1.0779601106</p>
+            <p>2.7543589272,1.0779601106</p>
+          </pts>
+        </line>
+        <line id="120">
+          <mat />
+          <pts>
+            <p>2.6543589272,1.0779601106</p>
+            <p>2.6543589272,1.1779601106</p>
+          </pts>
+        </line>
+        <line id="121">
+          <mat />
+          <pts>
+            <p>14.2793589272,4.9529601106</p>
+            <p>14.1793589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="122">
+          <mat />
+          <pts>
+            <p>14.2793589272,4.9529601106</p>
+            <p>14.2793589272,4.8529601106</p>
+          </pts>
+        </line>
+        <line id="123">
+          <mat />
+          <pts>
+            <p>14.2793589272,4.9529601106</p>
+            <p>14.3793589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="124">
+          <mat />
+          <pts>
+            <p>14.2793589272,4.9529601106</p>
+            <p>14.2793589272,5.0529601106</p>
+          </pts>
+        </line>
+        <line id="125">
+          <mat />
+          <pts>
+            <p>11.7793589272,4.9529601106</p>
+            <p>11.6793589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="126">
+          <mat />
+          <pts>
+            <p>11.7793589272,4.9529601106</p>
+            <p>11.7793589272,4.8529601106</p>
+          </pts>
+        </line>
+        <line id="127">
+          <mat />
+          <pts>
+            <p>11.7793589272,4.9529601106</p>
+            <p>11.8793589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="128">
+          <mat />
+          <pts>
+            <p>11.7793589272,4.9529601106</p>
+            <p>11.7793589272,5.0529601106</p>
+          </pts>
+        </line>
+        <line id="129">
+          <mat />
+          <pts>
+            <p>14.2793589272,2.4529601106</p>
+            <p>14.1793589272,2.4529601106</p>
+          </pts>
+        </line>
+        <line id="130">
+          <mat />
+          <pts>
+            <p>14.2793589272,2.4529601106</p>
+            <p>14.2793589272,2.3529601106</p>
+          </pts>
+        </line>
+        <line id="131">
+          <mat />
+          <pts>
+            <p>14.2793589272,2.4529601106</p>
+            <p>14.3793589272,2.4529601106</p>
+          </pts>
+        </line>
+        <line id="132">
+          <mat />
+          <pts>
+            <p>14.2793589272,2.4529601106</p>
+            <p>14.2793589272,2.5529601106</p>
+          </pts>
+        </line>
+        <line id="133">
+          <mat />
+          <pts>
+            <p>11.7793589272,2.4529601106</p>
+            <p>11.6793589272,2.4529601106</p>
+          </pts>
+        </line>
+        <line id="134">
+          <mat />
+          <pts>
+            <p>11.7793589272,2.4529601106</p>
+            <p>11.7793589272,2.3529601106</p>
+          </pts>
+        </line>
+        <line id="135">
+          <mat />
+          <pts>
+            <p>11.7793589272,2.4529601106</p>
+            <p>11.8793589272,2.4529601106</p>
+          </pts>
+        </line>
+        <line id="136">
+          <mat />
+          <pts>
+            <p>11.7793589272,2.4529601106</p>
+            <p>11.7793589272,2.5529601106</p>
+          </pts>
+        </line>
+        <line id="137">
+          <mat />
+          <pts>
+            <p>15.2793589272,1.7029601106</p>
+            <p>15.1793589272,1.7029601106</p>
+          </pts>
+        </line>
+        <line id="138">
+          <mat />
+          <pts>
+            <p>15.2793589272,1.7029601106</p>
+            <p>15.2793589272,1.6029601106</p>
+          </pts>
+        </line>
+        <line id="139">
+          <mat />
+          <pts>
+            <p>15.2793589272,1.7029601106</p>
+            <p>15.3793589272,1.7029601106</p>
+          </pts>
+        </line>
+        <line id="140">
+          <mat />
+          <pts>
+            <p>15.2793589272,1.7029601106</p>
+            <p>15.2793589272,1.8029601106</p>
+          </pts>
+        </line>
+        <line id="141">
+          <mat />
+          <pts>
+            <p>15.0793589272,1.7029601106</p>
+            <p>15.0228589272,1.7029601106</p>
+          </pts>
+        </line>
+        <line id="142">
+          <mat />
+          <pts>
+            <p>15.2793589272,1.5029601106</p>
+            <p>15.2793589272,1.4464601106</p>
+          </pts>
+        </line>
+        <line id="143">
+          <mat />
+          <pts>
+            <p>15.4793589272,1.7029601106</p>
+            <p>15.5358589272,1.7029601106</p>
+          </pts>
+        </line>
+        <line id="144">
+          <mat />
+          <pts>
+            <p>15.2793589272,1.9029601106</p>
+            <p>15.2793589272,1.9594601106</p>
+          </pts>
+        </line>
+        <line id="145">
+          <mat />
+          <pts>
+            <p>15.2793589272,4.9529601106</p>
+            <p>15.1793589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="146">
+          <mat />
+          <pts>
+            <p>15.2793589272,4.9529601106</p>
+            <p>15.2793589272,4.8529601106</p>
+          </pts>
+        </line>
+        <line id="147">
+          <mat />
+          <pts>
+            <p>15.2793589272,4.9529601106</p>
+            <p>15.3793589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="148">
+          <mat />
+          <pts>
+            <p>15.2793589272,4.9529601106</p>
+            <p>15.2793589272,5.0529601106</p>
+          </pts>
+        </line>
+        <line id="149">
+          <mat />
+          <pts>
+            <p>15.0793589272,4.9529601106</p>
+            <p>15.0228589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="150">
+          <mat />
+          <pts>
+            <p>15.2793589272,4.7529601106</p>
+            <p>15.2793589272,4.6964601106</p>
+          </pts>
+        </line>
+        <line id="151">
+          <mat />
+          <pts>
+            <p>15.4793589272,4.9529601106</p>
+            <p>15.5358589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="152">
+          <mat />
+          <pts>
+            <p>15.2793589272,5.1529601106</p>
+            <p>15.2793589272,5.2094601106</p>
+          </pts>
+        </line>
+        <line id="153">
+          <mat />
+          <pts>
+            <p>1.0293589272,1.7029601106</p>
+            <p>0.9293589272,1.7029601106</p>
+          </pts>
+        </line>
+        <line id="154">
+          <mat />
+          <pts>
+            <p>1.0293589272,1.7029601106</p>
+            <p>1.0293589272,1.6029601106</p>
+          </pts>
+        </line>
+        <line id="155">
+          <mat />
+          <pts>
+            <p>1.0293589272,1.7029601106</p>
+            <p>1.1293589272,1.7029601106</p>
+          </pts>
+        </line>
+        <line id="156">
+          <mat />
+          <pts>
+            <p>1.0293589272,1.7029601106</p>
+            <p>1.0293589272,1.8029601106</p>
+          </pts>
+        </line>
+        <line id="157">
+          <mat />
+          <pts>
+            <p>0.8293589272,1.7029601106</p>
+            <p>0.7728589272,1.7029601106</p>
+          </pts>
+        </line>
+        <line id="158">
+          <mat />
+          <pts>
+            <p>1.0293589272,1.5029601106</p>
+            <p>1.0293589272,1.4464601106</p>
+          </pts>
+        </line>
+        <line id="159">
+          <mat />
+          <pts>
+            <p>1.2293589272,1.7029601106</p>
+            <p>1.2858589272,1.7029601106</p>
+          </pts>
+        </line>
+        <line id="160">
+          <mat />
+          <pts>
+            <p>1.0293589272,1.9029601106</p>
+            <p>1.0293589272,1.9594601106</p>
+          </pts>
+        </line>
+        <line id="161">
+          <mat />
+          <pts>
+            <p>1.0293589272,4.9529601106</p>
+            <p>0.9293589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="162">
+          <mat />
+          <pts>
+            <p>1.0293589272,4.9529601106</p>
+            <p>1.0293589272,4.8529601106</p>
+          </pts>
+        </line>
+        <line id="163">
+          <mat />
+          <pts>
+            <p>1.0293589272,4.9529601106</p>
+            <p>1.1293589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="164">
+          <mat />
+          <pts>
+            <p>1.0293589272,4.9529601106</p>
+            <p>1.0293589272,5.0529601106</p>
+          </pts>
+        </line>
+        <line id="165">
+          <mat />
+          <pts>
+            <p>0.8293589272,4.9529601106</p>
+            <p>0.7728589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="166">
+          <mat />
+          <pts>
+            <p>1.0293589272,4.7529601106</p>
+            <p>1.0293589272,4.6964601106</p>
+          </pts>
+        </line>
+        <line id="167">
+          <mat />
+          <pts>
+            <p>1.2293589272,4.9529601106</p>
+            <p>1.2858589272,4.9529601106</p>
+          </pts>
+        </line>
+        <line id="168">
+          <mat />
+          <pts>
+            <p>1.0293589272,5.1529601106</p>
+            <p>1.0293589272,5.2094601106</p>
+          </pts>
+        </line>
+        <line id="169">
+          <mat />
+          <pts>
+            <p>15.7168589272,0.5154601106</p>
+            <p>15.6168589272,0.5154601106</p>
+          </pts>
+        </line>
+        <line id="170">
+          <mat />
+          <pts>
+            <p>15.7168589272,0.5154601106</p>
+            <p>15.7168589272,0.4154601106</p>
+          </pts>
+        </line>
+        <line id="171">
+          <mat />
+          <pts>
+            <p>15.7168589272,0.5154601106</p>
+            <p>15.8168589272,0.5154601106</p>
+          </pts>
+        </line>
+        <line id="172">
+          <mat />
+          <pts>
+            <p>15.7168589272,0.5154601106</p>
+            <p>15.7168589272,0.6154601106</p>
+          </pts>
+        </line>
+        <line id="173">
+          <mat />
+          <pts>
+            <p>0.5918589272,0.5154601106</p>
+            <p>0.4918589272,0.5154601106</p>
+          </pts>
+        </line>
+        <line id="174">
+          <mat />
+          <pts>
+            <p>0.5918589272,0.5154601106</p>
+            <p>0.5918589272,0.4154601106</p>
+          </pts>
+        </line>
+        <line id="175">
+          <mat />
+          <pts>
+            <p>0.5918589272,0.5154601106</p>
+            <p>0.6918589272,0.5154601106</p>
+          </pts>
+        </line>
+        <line id="176">
+          <mat />
+          <pts>
+            <p>0.5918589272,0.5154601106</p>
+            <p>0.5918589272,0.6154601106</p>
+          </pts>
+        </line>
+        <line id="177">
+          <mat />
+          <pts>
+            <p>0.7793589272,5.2029601106</p>
+            <p>0.6793589272,5.2029601106</p>
+          </pts>
+        </line>
+        <line id="178">
+          <mat />
+          <pts>
+            <p>0.7793589272,5.2029601106</p>
+            <p>0.7793589272,5.1029601106</p>
+          </pts>
+        </line>
+        <line id="179">
+          <mat />
+          <pts>
+            <p>0.7793589272,5.2029601106</p>
+            <p>0.8793589272,5.2029601106</p>
+          </pts>
+        </line>
+        <line id="180">
+          <mat />
+          <pts>
+            <p>0.7793589272,5.2029601106</p>
+            <p>0.7793589272,5.3029601106</p>
+          </pts>
+        </line>
+        <line id="181">
+          <mat />
+          <pts>
+            <p>15.5293589272,5.2029601106</p>
+            <p>15.4293589272,5.2029601106</p>
+          </pts>
+        </line>
+        <line id="182">
+          <mat />
+          <pts>
+            <p>15.5293589272,5.2029601106</p>
+            <p>15.5293589272,5.1029601106</p>
+          </pts>
+        </line>
+        <line id="183">
+          <mat />
+          <pts>
+            <p>15.5293589272,5.2029601106</p>
+            <p>15.6293589272,5.2029601106</p>
+          </pts>
+        </line>
+        <line id="184">
+          <mat />
+          <pts>
+            <p>15.5293589272,5.2029601106</p>
+            <p>15.5293589272,5.3029601106</p>
+          </pts>
+        </line>
+        <line id="185">
+          <mat />
+          <pts>
+            <p>2.6543589272,3.8279601106</p>
+            <p>2.5543589272,3.8279601106</p>
+          </pts>
+        </line>
+        <line id="186">
+          <mat />
+          <pts>
+            <p>2.6543589272,3.8279601106</p>
+            <p>2.6543589272,3.7279601106</p>
+          </pts>
+        </line>
+        <line id="187">
+          <mat />
+          <pts>
+            <p>2.6543589272,3.8279601106</p>
+            <p>2.7543589272,3.8279601106</p>
+          </pts>
+        </line>
+        <line id="188">
+          <mat />
+          <pts>
+            <p>2.6543589272,3.8279601106</p>
+            <p>2.6543589272,3.9279601106</p>
+          </pts>
+        </line>
+        <line id="189">
+          <mat />
+          <pts>
+            <p>10.4043589272,3.8279601106</p>
+            <p>10.3043589272,3.8279601106</p>
+          </pts>
+        </line>
+        <line id="190">
+          <mat />
+          <pts>
+            <p>10.4043589272,3.8279601106</p>
+            <p>10.4043589272,3.7279601106</p>
+          </pts>
+        </line>
+        <line id="191">
+          <mat />
+          <pts>
+            <p>10.4043589272,3.8279601106</p>
+            <p>10.5043589272,3.8279601106</p>
+          </pts>
+        </line>
+        <line id="192">
+          <mat />
+          <pts>
+            <p>10.4043589272,3.8279601106</p>
+            <p>10.4043589272,3.9279601106</p>
+          </pts>
+        </line>
+        <line id="193">
+          <mat />
+          <pts>
+            <p>10.4043589272,1.0779601106</p>
+            <p>10.3043589272,1.0779601106</p>
+          </pts>
+        </line>
+        <line id="194">
+          <mat />
+          <pts>
+            <p>10.4043589272,1.0779601106</p>
+            <p>10.4043589272,0.9779601106</p>
+          </pts>
+        </line>
+        <line id="195">
+          <mat />
+          <pts>
+            <p>10.4043589272,1.0779601106</p>
+            <p>10.5043589272,1.0779601106</p>
+          </pts>
+        </line>
+        <line id="196">
+          <mat />
+          <pts>
+            <p>10.4043589272,1.0779601106</p>
+            <p>10.4043589272,1.1779601106</p>
+          </pts>
+        </line>
+        <line id="197">
+          <mat />
+          <pts>
+            <p>2.6543589272,1.0779601106</p>
+            <p>2.5543589272,1.0779601106</p>
+          </pts>
+        </line>
+        <line id="198">
+          <mat />
+          <pts>
+            <p>2.6543589272,1.0779601106</p>
+            <p>2.6543589272,0.9779601106</p>
+          </pts>
+        </line>
+        <line id="199">
+          <mat />
+          <pts>
+            <p>2.6543589272,1.0779601106</p>
+            <p>2.7543589272,1.0779601106</p>
+          </pts>
+        </line>
+        <line id="200">
+          <mat />
+          <pts>
+            <p>2.6543589272,1.0779601106</p>
+            <p>2.6543589272,1.1779601106</p>
+          </pts>
+        </line>
+        <pline id="209" Closed="true">
+          <mat />
+          <pts>
+            <p>15.7793589272,5.2029601106,0</p>
+            <p b="-0.41421356237309503">15.7793589272,0.5154601106,0</p>
+            <p>15.7168589272,0.4529601106,0</p>
+            <p b="-0.41421356237309503">0.5918589272,0.4529601106,0</p>
+            <p>0.5293589272,0.5154601106,0</p>
+            <p b="-0.41421356237309503">0.5293589272,5.2029601106,0</p>
+            <p>0.7793589272,5.4529601106,0</p>
+            <p b="-0.41421356237309503">15.5293589272,5.4529601106,0</p>
+          </pts>
+        </pline>
+        <pline id="214" Closed="true">
+          <mat />
+          <pts>
+            <p>14.2793589272,5.2029601106,0</p>
+            <p b="0.99999999999999989">11.7793589272,5.2029601106,0</p>
+            <p>11.7793589272,4.7029601106,0</p>
+            <p b="0.99999999999999989">14.2793589272,4.7029601106,0</p>
+          </pts>
+        </pline>
+        <pline id="219" Closed="true">
+          <mat />
+          <pts>
+            <p>14.2793589272,2.7029601106,0</p>
+            <p b="0.99999999999999989">11.7793589272,2.7029601106,0</p>
+            <p>11.7793589272,2.2029601106,0</p>
+            <p b="0.99999999999999989">14.2793589272,2.2029601106,0</p>
+          </pts>
+        </pline>
+        <pline id="228" Closed="true">
+          <mat />
+          <pts>
+            <p>10.4043589272,3.9529601106,0</p>
+            <p b="0.41421356237309503">2.6543589272,3.9529601106,0</p>
+            <p>2.5293589272,3.8279601106,0</p>
+            <p b="0.41421356237309503">2.5293589272,1.0779601106,0</p>
+            <p>2.6543589272,0.9529601106,0</p>
+            <p b="0.41421356237309503">10.4043589272,0.9529601106,0</p>
+            <p>10.5293589272,1.0779601106,0</p>
+            <p b="0.41421356237309503">10.5293589272,3.8279601106,0</p>
+          </pts>
+        </pline>
+        <pline id="233" Closed="true">
+          <mat />
+          <pts>
+            <p b="0.99999999999999989">14.2793589272,4.8559601106,0</p>
+            <p>14.2793589272,5.0499601106,0</p>
+            <p b="0.99999999999999989">11.7793589272,5.0499601106,0</p>
+            <p>11.7793589272,4.8559601106,0</p>
+          </pts>
+        </pline>
+        <pline id="238" Closed="true">
+          <mat />
+          <pts>
+            <p>11.7793589272,2.3559601106,0</p>
+            <p b="0.99999999999999989">14.2793589272,2.3559601106,0</p>
+            <p>14.2793589272,2.5499601106,0</p>
+            <p b="0.99999999999999989">11.7793589272,2.5499601106,0</p>
+          </pts>
+        </pline>
+        <text id="239" p1="6.5,4.85,0" Height="1.25" align="center,center" style="bold+italic">
+          <mat />RipMaster</text>
+      </objects>
+    </layer>
+    <layer name="DEFPOINTS" color="255,255,255">
+      <mat />
+      <objects />
+    </layer>
+  </layers>
+  <MachiningOptions>
+    <OutFile>C:\data\ripmaster\ripmater_base.ngc</OutFile>
+    <SplineCurveSteps>12</SplineCurveSteps>
+    <TextCurveSteps>5</TextCurveSteps>
+  </MachiningOptions>
+  <machineops>
+    <mop xsi:type="MOPProfile">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>20</PlungeFeedrate>
+      <CutFeedrate>100</CutFeedrate>
+      <Name>OuterProfile</Name>
+      <ClearancePlane>0.5</ClearancePlane>
+      <primitive>
+        <prim>209</prim>
+      </primitive>
+      <mat />
+      <StockSurface>0</StockSurface>
+      <TargetDepth>-0.375</TargetDepth>
+      <DepthIncrement>1</DepthIncrement>
+      <FinalDepthIncrement>0</FinalDepthIncrement>
+      <CutOrdering>LevelFirst</CutOrdering>
+      <CutWidth>0.0625</CutWidth>
+      <StepOver>0.4</StepOver>
+    </mop>
+    <mop xsi:type="MOPProfile">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>30</PlungeFeedrate>
+      <CutFeedrate>100</CutFeedrate>
+      <Name>InnerPocket</Name>
+      <ClearancePlane>0.5</ClearancePlane>
+      <primitive>
+        <prim>228</prim>
+      </primitive>
+      <mat />
+      <StockSurface>0</StockSurface>
+      <TargetDepth>-0.375</TargetDepth>
+      <DepthIncrement>1</DepthIncrement>
+      <FinalDepthIncrement>0</FinalDepthIncrement>
+      <CutOrdering>LevelFirst</CutOrdering>
+      <CutWidth>0.0625</CutWidth>
+      <StepOver>0.0625</StepOver>
+      <InsideOutside>Inside</InsideOutside>
+    </mop>
+    <mop xsi:type="MOPPocket">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>30</PlungeFeedrate>
+      <CutFeedrate>100</CutFeedrate>
+      <Name>UpperSlot</Name>
+      <ClearancePlane>0.5</ClearancePlane>
+      <primitive>
+        <prim>214</prim>
+      </primitive>
+      <mat />
+      <StockSurface>0</StockSurface>
+      <TargetDepth>-0.25</TargetDepth>
+      <DepthIncrement>1</DepthIncrement>
+      <FinalDepthIncrement>0</FinalDepthIncrement>
+      <CutOrdering>DepthFirst</CutOrdering>
+      <StepOver>0.4</StepOver>
+      <Angle>0</Angle>
+    </mop>
+    <mop xsi:type="MOPPocket">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>30</PlungeFeedrate>
+      <CutFeedrate>100</CutFeedrate>
+      <Name>LowerSlot</Name>
+      <ClearancePlane>0.5</ClearancePlane>
+      <primitive>
+        <prim>219</prim>
+      </primitive>
+      <mat />
+      <StockSurface>0</StockSurface>
+      <TargetDepth>-0.25</TargetDepth>
+      <DepthIncrement>1</DepthIncrement>
+      <FinalDepthIncrement>0</FinalDepthIncrement>
+      <StepOver>0.4</StepOver>
+      <Angle>0</Angle>
+    </mop>
+    <mop xsi:type="MOPPocket">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>30</PlungeFeedrate>
+      <CutFeedrate>100</CutFeedrate>
+      <Name>URHole</Name>
+      <ClearancePlane>0.5</ClearancePlane>
+      <primitive>
+        <prim>18</prim>
+      </primitive>
+      <mat />
+      <StockSurface>0</StockSurface>
+      <TargetDepth>-0.185</TargetDepth>
+      <DepthIncrement>0.185</DepthIncrement>
+      <FinalDepthIncrement>0</FinalDepthIncrement>
+      <StepOver>0.4</StepOver>
+      <Angle>0</Angle>
+    </mop>
+    <mop xsi:type="MOPPocket">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>30</PlungeFeedrate>
+      <CutFeedrate>100</CutFeedrate>
+      <Name>LRHole</Name>
+      <ClearancePlane>0.5</ClearancePlane>
+      <primitive>
+        <prim>8</prim>
+      </primitive>
+      <mat />
+      <StockSurface>0</StockSurface>
+      <TargetDepth>-0.185</TargetDepth>
+      <DepthIncrement>0.185</DepthIncrement>
+      <FinalDepthIncrement>0</FinalDepthIncrement>
+      <StepOver>0.4</StepOver>
+      <Angle>0</Angle>
+    </mop>
+    <mop xsi:type="MOPPocket">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>30</PlungeFeedrate>
+      <CutFeedrate>100</CutFeedrate>
+      <Name>LLHole</Name>
+      <ClearancePlane>0.5</ClearancePlane>
+      <primitive>
+        <prim>20</prim>
+      </primitive>
+      <mat />
+      <StockSurface>0</StockSurface>
+      <TargetDepth>-0.185</TargetDepth>
+      <DepthIncrement>1</DepthIncrement>
+      <FinalDepthIncrement>0</FinalDepthIncrement>
+      <StepOver>0.4</StepOver>
+      <Angle>0</Angle>
+    </mop>
+    <mop xsi:type="MOPPocket">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>30</PlungeFeedrate>
+      <CutFeedrate>100</CutFeedrate>
+      <Name>ULHole</Name>
+      <ClearancePlane>0.5</ClearancePlane>
+      <primitive>
+        <prim>22</prim>
+      </primitive>
+      <mat />
+      <StockSurface>0</StockSurface>
+      <TargetDepth>-0.185</TargetDepth>
+      <DepthIncrement>0.185</DepthIncrement>
+      <FinalDepthIncrement>0</FinalDepthIncrement>
+      <StepOver>0.4</StepOver>
+      <Angle>0</Angle>
+    </mop>
+    <mop xsi:type="MOPPocket">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>30</PlungeFeedrate>
+      <CutFeedrate>100</CutFeedrate>
+      <Name>URInnerSlot</Name>
+      <ClearancePlane>0.5</ClearancePlane>
+      <primitive>
+        <prim>233</prim>
+      </primitive>
+      <mat />
+      <StockSurface>0</StockSurface>
+      <TargetDepth>-0.375</TargetDepth>
+      <DepthIncrement>1</DepthIncrement>
+      <FinalDepthIncrement>0</FinalDepthIncrement>
+      <CutOrdering>DepthFirst</CutOrdering>
+      <StepOver>0.4</StepOver>
+      <Angle>0</Angle>
+    </mop>
+    <mop xsi:type="MOPPocket">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>30</PlungeFeedrate>
+      <CutFeedrate>100</CutFeedrate>
+      <Name>LRInnerSlot</Name>
+      <ClearancePlane>0.5</ClearancePlane>
+      <primitive>
+        <prim>238</prim>
+      </primitive>
+      <mat />
+      <StockSurface>0</StockSurface>
+      <TargetDepth>-0.375</TargetDepth>
+      <DepthIncrement>1</DepthIncrement>
+      <FinalDepthIncrement>0</FinalDepthIncrement>
+      <CutOrdering>DepthFirst</CutOrdering>
+      <StepOver>0.4</StepOver>
+      <Angle>0</Angle>
+    </mop>
+    <mop xsi:type="MOPPocket">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>30</PlungeFeedrate>
+      <CutFeedrate>100</CutFeedrate>
+      <Name>URThruHole</Name>
+      <ClearancePlane>0.5</ClearancePlane>
+      <primitive>
+        <prim>32</prim>
+      </primitive>
+      <mat />
+      <StockSurface>0</StockSurface>
+      <TargetDepth>-0.375</TargetDepth>
+      <DepthIncrement>1</DepthIncrement>
+      <FinalDepthIncrement>0</FinalDepthIncrement>
+      <CutOrdering>DepthFirst</CutOrdering>
+      <StepOver>0.4</StepOver>
+      <Angle>0</Angle>
+    </mop>
+    <mop xsi:type="MOPPocket">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>30</PlungeFeedrate>
+      <CutFeedrate>100</CutFeedrate>
+      <Name>LRThruHole</Name>
+      <ClearancePlane>0.5</ClearancePlane>
+      <primitive>
+        <prim>29</prim>
+      </primitive>
+      <mat />
+      <StockSurface>0</StockSurface>
+      <TargetDepth>-0.375</TargetDepth>
+      <DepthIncrement>1</DepthIncrement>
+      <FinalDepthIncrement>0</FinalDepthIncrement>
+      <CutOrdering>DepthFirst</CutOrdering>
+      <StepOver>0.4</StepOver>
+      <Angle>0</Angle>
+    </mop>
+    <mop xsi:type="MOPPocket">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>30</PlungeFeedrate>
+      <CutFeedrate>100</CutFeedrate>
+      <Name>LLThruHole</Name>
+      <ClearancePlane>0.5</ClearancePlane>
+      <primitive>
+        <prim>31</prim>
+      </primitive>
+      <mat />
+      <StockSurface>0</StockSurface>
+      <TargetDepth>-0.375</TargetDepth>
+      <DepthIncrement>1</DepthIncrement>
+      <FinalDepthIncrement>0</FinalDepthIncrement>
+      <CutOrdering>DepthFirst</CutOrdering>
+      <StepOver>0.4</StepOver>
+      <Angle>0</Angle>
+    </mop>
+    <mop xsi:type="MOPPocket">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>30</PlungeFeedrate>
+      <CutFeedrate>100</CutFeedrate>
+      <Name>ULThruHole</Name>
+      <ClearancePlane>0.5</ClearancePlane>
+      <primitive>
+        <prim>30</prim>
+      </primitive>
+      <mat />
+      <StockSurface>0</StockSurface>
+      <TargetDepth>-0.375</TargetDepth>
+      <DepthIncrement>1</DepthIncrement>
+      <FinalDepthIncrement>0</FinalDepthIncrement>
+      <CutOrdering>DepthFirst</CutOrdering>
+      <StepOver>0.4</StepOver>
+      <Angle>0</Angle>
+    </mop>
+    <mop xsi:type="MOPEngrave">
+      <ToolDiameter>0.015</ToolDiameter>
+      <ToolNumber>1</ToolNumber>
+      <PlungeFeedrate>30</PlungeFeedrate>
+      <CutFeedrate>100</CutFeedrate>
+      <Name>RipMasterLogo</Name>
+      <ClearancePlane>0.5</ClearancePlane>
+      <primitive>
+        <prim>239</prim>
+      </primitive>
+      <mat />
+      <TargetDepth>-0.01</TargetDepth>
+    </mop>
+  </machineops>
+  <ActiveLayer>0</ActiveLayer>
+</CADFile>

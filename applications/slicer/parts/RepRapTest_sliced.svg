@@ -1,0 +1,675 @@
+<?xml version="1.0" standalone="no"?>
+<!--
+    Copyright [2009] [Dave Cowden ( dave.cowden@gmail.com)]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+-->
+<svg contentScriptType="text/ecmascript"
+	baseProfile="full" zoomAndPan="magnify" contentStyleType="text/css"
+	width="550px" height="1680px" onload="init()"
+	preserveAspectRatio="xMidYMid meet"
+	xmlns="http://www.w3.org/2000/svg" version="1.0"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:slice="http://www.reprap.org/slice">
+	<script type="text/ecmascript"><![CDATA[
+//Meta data variables 
+units='mm';
+//End of svg header
+sliceMinX = 0;
+sliceMaxX = 0;
+sliceMinY = 0;
+sliceMaxY = 0;
+sliceMinZ = 0;
+sliceMaxZ = 0;
+
+//Control var's
+currentLayer = 0; //Number of currently viewed layer (zero index)
+javascriptControlBoxX = 510;
+javascriptControlBoxY = 95;
+sliding = false;
+
+//Display var's
+margin = 20;
+scale = 1; //unitScale * zoomScale
+sliceDimensionX = null;
+sliceDimensionY = null;
+sliceDimensionZ = null;
+svgMinWidth = javascriptControlBoxX + 2 * margin; //Width of control box and margins
+textHeight = 22.5;
+unitScale = 3.7; //mm = 1; inch = 25.4
+zoomScale = 1; //Default 1:1 may need smaller scale for large objects
+
+//No javascript control var
+noJavascriptControlBoxY = 110;
+
+var layers = [];
+
+function changeScale(newScale){
+	zoomScale = newScale
+	scale = unitScale * zoomScale
+	viewSingle()
+	setText('scaleNum','1 : ' + 1/zoomScale);
+	if(zoomScale >=1 ) //dont scale line thickness for large display scale 
+		document.getElementById('layerData').setAttributeNS(null,'stroke-width',2/(scale))
+}
+
+function displayLayer(layerNum){
+	if (layerNum >= 0 && layerNum < layers.length) {
+		layers[currentLayer].setAttributeNS(null,'visibility','hidden');
+		layers[layerNum].setAttributeNS(null,'visibility','visible');
+		currentLayer = layerNum;
+		setText('layerNum',currentLayer+1);
+		//Slider
+		if (!sliding) {
+			// 150 = width of sliderbar 14 = width circle
+			x = (150 - 14) / (layers.length - 1) * currentLayer
+			document.getElementById('thumb').setAttributeNS(null,'cx',x + 17)
+		}
+	}
+}
+
+function init(){
+	//Hide no javascript control box
+	document.getElementById('noJavascriptControls').setAttributeNS(null,'visibility','hidden')
+	
+	//Get meta data
+	mD = document.getElementsByTagNameNS('http://www.reprap.org/slice','layers')[0];
+	units = mD.getAttributeNS(null,'units');
+	sliceMinX = mD.getAttribute('minX') * 1;
+	sliceMaxX = mD.getAttribute('maxX') * 1;
+	sliceMinY = mD.getAttribute('minY') * 1;
+	sliceMaxY = mD.getAttribute('maxY') * 1;
+	sliceMinZ = mD.getAttribute('minZ') * 1;
+	sliceMaxZ = mD.getAttribute('maxZ') * 1;
+	
+	//Set Display variables
+	unitScale = units == 'in' ? 96 : 3.7;
+	scale = unitScale * zoomScale;
+	sliceDimensionX = Math.round((sliceMaxX - sliceMinX) * 1000) /1000; //Rounding to 3 decimal places
+	sliceDimensionY = Math.round((sliceMaxY - sliceMinY) * 1000) /1000;
+	sliceDimensionZ = Math.round((sliceMaxZ - sliceMinZ) * 1000) /1000;
+	
+	//Find all groups
+	var allGroups = document.getElementsByTagName('g');
+	
+	//Find only layer groups
+	for ( var i = 0;i<allGroups.length;i++){
+		if ( allGroups[i].id.indexOf('z') == 0 ){
+			layers.push(allGroups[i] );
+		}
+	}
+	
+	//Slider
+	thumb = document.getElementById('thumb');
+	thumb.addEventListener("mousedown", SliderDown, false);
+	thumb.addEventListener("mouseup", SliderUp, false);
+	thumb.addEventListener("mousemove", SliderMove, false);
+	
+	//Control box data
+	setText('layerMax', layers.length)
+	setText('minX', sliceMinX)
+	setText('minX', sliceMinX)
+	setText('minY', sliceMinY)
+	setText('minZ', sliceMinZ)
+	setText('maxX', sliceMaxX)
+	setText('maxY', sliceMaxY)
+	setText('maxZ', sliceMaxZ)
+	setText('dimX', sliceDimensionX)
+	setText('dimY', sliceDimensionY)
+	setText('dimZ', sliceDimensionZ)
+	setText('scaleNum','1 : ' + 1/zoomScale);
+	setText('layerThickness', 'Layer Thickness: ' + mD.getAttribute('layerThickness') + units);
+	
+	changeScale(zoomScale);
+}
+
+function setSVG(width, height) {
+	svgObjs = document.getElementsByTagName('svg');
+	rootSVG = svgObjs[0];
+	rootSVG.setAttributeNS(null,'width',width + 'px')
+	rootSVG.setAttributeNS(null,'height',height + 'px')
+}
+
+function setText(id, str ){
+	e = document.getElementById(id)
+	if ( e != null )
+		e.firstChild.nodeValue = str;
+}
+
+function SliderDown(event){sliding = true;}
+
+function SliderUp(event){sliding = false;}
+
+function SliderMove(event){
+	value = event.clientX - 130
+	thumb = document.getElementById("thumb");
+	if (sliding && value > 6 && value < 144){
+		thumb.setAttribute("cx", 10 + value);
+		zoneWidth = (150 - 14) / (layers.length)
+		newLayer = Math.round((value - 7 - 0.5 * zoneWidth) / zoneWidth)
+		if(newLayer != currentLayer){
+			displayLayer(newLayer)
+		}
+	}
+}
+
+function viewAll(){
+	//Set svg size and view port
+	width = margin + (sliceDimensionX * unitScale) + margin;
+	width = Math.max( width, svgMinWidth );
+	height = layers.length * (margin + sliceDimensionY * unitScale + textHeight) + 3 * margin + textHeight + noJavascriptControlBoxY
+	setSVG(width,height);
+	
+	//move and show all layers 
+	for (var i in layers) {
+		x = margin
+		//y = margin + sliceDimensionY * scale
+		y = (1 * i + 1) * ( margin + sliceDimensionY * unitScale) + i * textHeight
+		layers[i].setAttributeNS(null,'transform','translate(' + x + ', ' + y + ')')
+		transform = 'scale(' + unitScale + ' ' + (unitScale * -1) + ') translate(' + (sliceMinX * -1) + ' ' + (sliceMinY * -1) + ')'
+		layers[i].getElementsByTagName('path')[0].setAttributeNS(null,'transform',transform)
+		layers[i].setAttributeNS(null,'visibility','visible')
+		layers[i].getElementsByTagName('text')[0].setAttributeNS(null,'visibility','visible')
+	}
+	
+	//show control box
+	document.getElementById('javascriptControls').setAttributeNS(null,'visibility','hidden')
+	document.getElementById('noJavascriptControls').setAttributeNS(null,'visibility','visible')
+	x = margin
+	y = layers.length * (margin + sliceDimensionY * unitScale + textHeight) + margin
+	document.getElementById('buttonSingle').setAttributeNS(null,'visibility','visible')
+	document.getElementById('buttonSingle').setAttributeNS(null,'transform','translate('+x+' '+y+')')
+}
+
+function viewSingle(){
+	//Set svg size and view port
+	width = margin + (sliceDimensionX * scale) + margin;
+	width = Math.max( width, svgMinWidth );
+	height = margin + (sliceDimensionY * scale) + margin + javascriptControlBoxY + margin 
+	setSVG(width,height);
+	
+	//move and hide all layers 
+	for (var i in layers) {
+		x = margin
+		y = margin + sliceDimensionY * scale
+		layers[i].setAttributeNS(null,'transform','translate(' + x + ' ' + y + ')')
+		layers[i].setAttributeNS(null,'visibility','hidden')
+		layers[i].getElementsByTagName('text')[0].setAttributeNS(null,'visibility','hidden')
+		transform = 'scale(' + scale + ' ' + (scale * -1) + ') translate(' + (sliceMinX * -1) + ' ' + (sliceMinY * -1) + ')'
+		layers[i].getElementsByTagName('path')[0].setAttributeNS(null,'transform',transform)
+	}
+	
+	//show control box
+	document.getElementById('javascriptControls').setAttributeNS(null,'visibility','visible')
+	document.getElementById('noJavascriptControls').setAttributeNS(null,'visibility','hidden')
+	x = margin
+	y = margin + sliceDimensionY * scale + margin
+	document.getElementById('javascriptControls').setAttributeNS(null,'transform','translate('+x+' '+y+')')
+	document.getElementById('buttonSingle').setAttributeNS(null,'visibility','hidden')
+	
+	//show current layer
+	displayLayer(currentLayer);
+}
+	]]></script>
+	
+	<title>RepRap Test</title>
+	<desc>Test Description</desc>
+	<metadata>
+		<slice:layers id="sliceData" version="0.1" units="mm" layerThickness="0.300" 
+				minX="-0.012" maxX="25.412" 
+				minY="-0.012" maxY="25.412" 
+				minZ="-0.012" maxZ="25.412"/>
+	</metadata>
+	<!--Begin Layer Data   -->
+	<g id="layerData" fill="darkseagreen" stroke="#00F" stroke-width="0.54px" 
+	font-weight="bold" font-family="Arial" font-size="15px">
+<!--Beginning of path section-->
+<!-- transform algorithm
+	unit scale (mm=3.7, in=96)
+	
+	g transform
+		x = margin
+		y = (layer + 1) * ( margin + (slice height * unit scale)) + (layer * 20)
+	
+	text
+		y = text height
+	
+	path transform
+		scale = (unit scale) (-1 * unitscale)
+		translate = (-1 * minX) (-1 * minY)
+-->
+		<g id="z 0.288" transform="translate(20, 103.33)">
+			<text y="15" fill="#000" stroke="none">Layer 2, z 0.288</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 0.588" transform="translate(20, 144.44)">
+			<text y="15" fill="#000" stroke="none">Layer 3, z 0.588</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 0.888" transform="translate(20, 185.55)">
+			<text y="15" fill="#000" stroke="none">Layer 4, z 0.888</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 1.188" transform="translate(20, 226.66)">
+			<text y="15" fill="#000" stroke="none">Layer 5, z 1.188</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 1.488" transform="translate(20, 267.77)">
+			<text y="15" fill="#000" stroke="none">Layer 6, z 1.488</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 1.788" transform="translate(20, 308.88)">
+			<text y="15" fill="#000" stroke="none">Layer 7, z 1.788</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 2.088" transform="translate(20, 349.99)">
+			<text y="15" fill="#000" stroke="none">Layer 8, z 2.088</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 2.388" transform="translate(20, 391.1)">
+			<text y="15" fill="#000" stroke="none">Layer 9, z 2.388</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 2.688" transform="translate(20, 432.21)">
+			<text y="15" fill="#000" stroke="none">Layer 10, z 2.688</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 2.988" transform="translate(20, 473.32)">
+			<text y="15" fill="#000" stroke="none">Layer 11, z 2.988</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 3.288" transform="translate(20, 514.43)">
+			<text y="15" fill="#000" stroke="none">Layer 12, z 3.288</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 3.588" transform="translate(20, 555.54)">
+			<text y="15" fill="#000" stroke="none">Layer 13, z 3.588</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 3.888" transform="translate(20, 596.65)">
+			<text y="15" fill="#000" stroke="none">Layer 14, z 3.888</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 4.188" transform="translate(20, 637.76)">
+			<text y="15" fill="#000" stroke="none">Layer 15, z 4.188</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 4.488" transform="translate(20, 678.87)">
+			<text y="15" fill="#000" stroke="none">Layer 16, z 4.488</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 4.788" transform="translate(20, 719.98)">
+			<text y="15" fill="#000" stroke="none">Layer 17, z 4.788</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 5.088" transform="translate(20, 761.09)">
+			<text y="15" fill="#000" stroke="none">Layer 18, z 5.088</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 5.388" transform="translate(20, 802.2)">
+			<text y="15" fill="#000" stroke="none">Layer 19, z 5.388</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 5.688" transform="translate(20, 843.31)">
+			<text y="15" fill="#000" stroke="none">Layer 20, z 5.688</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 5.988" transform="translate(20, 884.42)">
+			<text y="15" fill="#000" stroke="none">Layer 21, z 5.988</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 6.288" transform="translate(20, 925.53)">
+			<text y="15" fill="#000" stroke="none">Layer 22, z 6.288</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 6.588" transform="translate(20, 966.64)">
+			<text y="15" fill="#000" stroke="none">Layer 23, z 6.588</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 6.888" transform="translate(20, 1007.75)">
+			<text y="15" fill="#000" stroke="none">Layer 24, z 6.888</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 7.188" transform="translate(20, 1048.86)">
+			<text y="15" fill="#000" stroke="none">Layer 25, z 7.188</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 7.488" transform="translate(20, 1089.97)">
+			<text y="15" fill="#000" stroke="none">Layer 26, z 7.488</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 7.788" transform="translate(20, 1131.08)">
+			<text y="15" fill="#000" stroke="none">Layer 27, z 7.788</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 8.088" transform="translate(20, 1172.19)">
+			<text y="15" fill="#000" stroke="none">Layer 28, z 8.088</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 8.388" transform="translate(20, 1213.3)">
+			<text y="15" fill="#000" stroke="none">Layer 29, z 8.388</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 8.688" transform="translate(20, 1254.41)">
+			<text y="15" fill="#000" stroke="none">Layer 30, z 8.688</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.1929 19.2750 L 25.1929 19.2750 L 25.1929 0.0000 L 25.1929 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 8.988" transform="translate(20, 1295.52)">
+			<text y="15" fill="#000" stroke="none">Layer 31, z 8.988</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 24.6733 19.8118 L 24.6733 19.8118 L 24.6733 0.0000 L 24.6733 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 9.288" transform="translate(20, 1336.63)">
+			<text y="15" fill="#000" stroke="none">Layer 32, z 9.288</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 24.1536 20.3486 L 24.1536 20.3486 L 24.1536 0.0000 L 24.1536 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 9.588" transform="translate(20, 1377.74)">
+			<text y="15" fill="#000" stroke="none">Layer 33, z 9.588</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 5.7094 0.0000 L 5.7094 19.0429 L 5.7094 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 23.6340 20.8854 L 23.6340 20.8854 L 23.6340 0.0000 L 23.6340 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 4.4506 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 4.4506 19.0429 L 4.4506 19.0429  Z "/>
+		</g>
+		<g id="z 9.888" transform="translate(20, 1418.85)">
+			<text y="15" fill="#000" stroke="none">Layer 34, z 9.888</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 6.5542 0.0000 L 6.5542 19.0429 L 6.5542 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 23.1144 21.4223 L 23.1144 21.4223 L 23.1144 0.0000 L 23.1144 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 3.6058 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 3.6058 19.0429 L 3.6058 19.0429  Z "/>
+		</g>
+		<g id="z 10.188" transform="translate(20, 1459.96)">
+			<text y="15" fill="#000" stroke="none">Layer 35, z 10.188</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 7.0218 0.0000 L 7.0218 19.0429 L 7.0218 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 22.5948 21.9591 L 22.5948 21.9591 L 22.5948 0.0000 L 22.5948 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 3.1382 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 3.1382 19.0429 L 3.1382 19.0429  Z "/>
+		</g>
+		<g id="z 10.488" transform="translate(20, 1501.07)">
+			<text y="15" fill="#000" stroke="none">Layer 36, z 10.488</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 7.3577 0.0000 L 7.3577 19.0429 L 7.3577 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 22.0752 22.4959 L 22.0752 22.4959 L 22.0752 0.0000 L 22.0752 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 2.8023 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 2.8023 19.0429 L 2.8023 19.0429  Z "/>
+		</g>
+		<g id="z 10.788" transform="translate(20, 1542.18)">
+			<text y="15" fill="#000" stroke="none">Layer 37, z 10.788</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 7.6147 0.0000 L 7.6147 19.0429 L 7.6147 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 21.5556 23.0327 L 21.5556 23.0327 L 21.5556 0.0000 L 21.5556 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 2.5453 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 2.5453 19.0429 L 2.5453 19.0429  Z "/>
+		</g>
+		<g id="z 11.088" transform="translate(20, 1583.29)">
+			<text y="15" fill="#000" stroke="none">Layer 38, z 11.088</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 7.8154 0.0000 L 7.8154 19.0429 L 7.8154 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 21.0360 23.5695 L 21.0360 23.5695 L 21.0360 0.0000 L 21.0360 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 2.3447 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 2.3447 19.0429 L 2.3447 19.0429  Z "/>
+		</g>
+		<g id="z 11.388" transform="translate(20, 1624.4)">
+			<text y="15" fill="#000" stroke="none">Layer 39, z 11.388</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 7.9713 0.0000 L 7.9713 19.0429 L 7.9713 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 20.5163 24.1064 L 20.5163 24.1064 L 20.5163 0.0000 L 20.5163 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 2.1887 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 2.1887 19.0429 L 2.1887 19.0429  Z "/>
+		</g>
+		<g id="z 11.688" transform="translate(20, 1665.51)">
+			<text y="15" fill="#000" stroke="none">Layer 40, z 11.688</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 8.0894 0.0000 L 8.0894 19.0429 L 8.0894 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 19.9967 24.6432 L 19.9967 24.6432 L 19.9967 0.0000 L 19.9967 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 2.0706 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 2.0706 19.0429 L 2.0706 19.0429  Z "/>
+		</g>
+		<g id="z 11.988" transform="translate(20, 1706.62)">
+			<text y="15" fill="#000" stroke="none">Layer 41, z 11.988</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 8.1741 0.0000 L 8.1741 19.0429 L 8.1741 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 19.4771 25.1800 L 19.4771 25.1800 L 19.4771 0.0000 L 19.4771 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 1.9859 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 1.9859 19.0429 L 1.9859 19.0429  Z "/>
+		</g>
+		<g id="z 12.288" transform="translate(20, 1747.73)">
+			<text y="15" fill="#000" stroke="none">Layer 42, z 12.288</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 8.2282 0.0000 L 8.2282 19.0429 L 8.2282 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 18.9575 25.4000 L 18.9575 25.4000 L 18.9575 0.0000 L 18.9575 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 1.9318 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 1.9318 19.0429 L 1.9318 19.0429  Z "/>
+		</g>
+		<g id="z 12.588" transform="translate(20, 1788.84)">
+			<text y="15" fill="#000" stroke="none">Layer 43, z 12.588</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 8.2530 0.0000 L 8.2530 19.0429 L 8.2530 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 18.4379 25.4000 L 18.4379 25.4000 L 18.4379 0.0000 L 18.4379 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 1.9070 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 1.9070 19.0429 L 1.9070 19.0429  Z "/>
+		</g>
+		<g id="z 12.888" transform="translate(20, 1829.95)">
+			<text y="15" fill="#000" stroke="none">Layer 44, z 12.888</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 8.2494 0.0000 L 8.2494 19.0429 L 8.2494 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 18.4447 25.4000 L 18.4447 25.4000 L 18.4447 0.0000 L 18.4447 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 1.9106 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 1.9106 19.0429 L 1.9106 19.0429  Z "/>
+		</g>
+		<g id="z 13.188" transform="translate(20, 1871.06)">
+			<text y="15" fill="#000" stroke="none">Layer 45, z 13.188</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 8.2173 0.0000 L 8.2173 19.0429 L 8.2173 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 18.9643 25.4000 L 18.9643 25.4000 L 18.9643 0.0000 L 18.9643 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 1.9427 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 1.9427 19.0429 L 1.9427 19.0429  Z "/>
+		</g>
+		<g id="z 13.488" transform="translate(20, 1912.17)">
+			<text y="15" fill="#000" stroke="none">Layer 46, z 13.488</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 8.1557 0.0000 L 8.1557 19.0429 L 8.1557 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 19.4840 25.1729 L 19.4840 25.1729 L 19.4840 0.0000 L 19.4840 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 2.0043 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 2.0043 19.0429 L 2.0043 19.0429  Z "/>
+		</g>
+		<g id="z 13.788" transform="translate(20, 1953.28)">
+			<text y="15" fill="#000" stroke="none">Layer 47, z 13.788</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 8.0628 0.0000 L 8.0628 19.0429 L 8.0628 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 20.0036 24.6361 L 20.0036 24.6361 L 20.0036 0.0000 L 20.0036 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 2.0972 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 2.0972 19.0429 L 2.0972 19.0429  Z "/>
+		</g>
+		<g id="z 14.088" transform="translate(20, 1994.39)">
+			<text y="15" fill="#000" stroke="none">Layer 48, z 14.088</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 7.9355 0.0000 L 7.9355 19.0429 L 7.9355 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 20.5232 24.0993 L 20.5232 24.0993 L 20.5232 0.0000 L 20.5232 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 2.2245 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 2.2245 19.0429 L 2.2245 19.0429  Z "/>
+		</g>
+		<g id="z 14.388" transform="translate(20, 2035.5)">
+			<text y="15" fill="#000" stroke="none">Layer 49, z 14.388</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 7.7691 0.0000 L 7.7691 19.0429 L 7.7691 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 21.0428 23.5625 L 21.0428 23.5625 L 21.0428 0.0000 L 21.0428 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 2.3909 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 2.3909 19.0429 L 2.3909 19.0429  Z "/>
+		</g>
+		<g id="z 14.688" transform="translate(20, 2076.61)">
+			<text y="15" fill="#000" stroke="none">Layer 50, z 14.688</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 7.5556 0.0000 L 7.5556 19.0429 L 7.5556 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 21.5624 23.0256 L 21.5624 23.0256 L 21.5624 0.0000 L 21.5624 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 2.6044 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 2.6044 19.0429 L 2.6044 19.0429  Z "/>
+		</g>
+		<g id="z 14.988" transform="translate(20, 2117.72)">
+			<text y="15" fill="#000" stroke="none">Layer 51, z 14.988</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 7.2813 0.0000 L 7.2813 19.0429 L 7.2813 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 22.0820 22.4888 L 22.0820 22.4888 L 22.0820 0.0000 L 22.0820 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 2.8787 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 2.8787 19.0429 L 2.8787 19.0429  Z "/>
+		</g>
+		<g id="z 15.288" transform="translate(20, 2158.83)">
+			<text y="15" fill="#000" stroke="none">Layer 52, z 15.288</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 6.9192 0.0000 L 6.9192 19.0429 L 6.9192 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 22.6017 21.9520 L 22.6017 21.9520 L 22.6017 0.0000 L 22.6017 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 3.2408 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 3.2408 19.0429 L 3.2408 19.0429  Z "/>
+		</g>
+		<g id="z 15.588" transform="translate(20, 2199.94)">
+			<text y="15" fill="#000" stroke="none">Layer 53, z 15.588</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 6.3991 0.0000 L 6.3991 19.0429 L 6.3991 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 23.1213 21.4152 L 23.1213 21.4152 L 23.1213 0.0000 L 23.1213 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z M 3.7609 0.0000 L 0.0000 0.0000 L 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 3.7609 19.0429 L 3.7609 19.0429  Z "/>
+		</g>
+		<g id="z 15.888" transform="translate(20, 2241.05)">
+			<text y="15" fill="#000" stroke="none">Layer 54, z 15.888</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 23.6409 20.8784 L 23.6409 20.8784 L 23.6409 0.0000 L 23.6409 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 16.188" transform="translate(20, 2282.16)">
+			<text y="15" fill="#000" stroke="none">Layer 55, z 16.188</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 24.1605 20.3415 L 24.1605 20.3415 L 24.1605 0.0000 L 24.1605 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 16.488" transform="translate(20, 2323.27)">
+			<text y="15" fill="#000" stroke="none">Layer 56, z 16.488</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 24.6801 19.8047 L 24.6801 19.8047 L 24.6801 0.0000 L 24.6801 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 16.788" transform="translate(20, 2364.38)">
+			<text y="15" fill="#000" stroke="none">Layer 57, z 16.788</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.1997 19.2679 L 25.1997 19.2679 L 25.1997 0.0000 L 25.1997 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 17.088" transform="translate(20, 2405.49)">
+			<text y="15" fill="#000" stroke="none">Layer 58, z 17.088</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 17.388" transform="translate(20, 2446.6)">
+			<text y="15" fill="#000" stroke="none">Layer 59, z 17.388</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 17.688" transform="translate(20, 2487.71)">
+			<text y="15" fill="#000" stroke="none">Layer 60, z 17.688</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 17.988" transform="translate(20, 2528.82)">
+			<text y="15" fill="#000" stroke="none">Layer 61, z 17.988</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 18.288" transform="translate(20, 2569.93)">
+			<text y="15" fill="#000" stroke="none">Layer 62, z 18.288</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 18.588" transform="translate(20, 2611.04)">
+			<text y="15" fill="#000" stroke="none">Layer 63, z 18.588</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 18.888" transform="translate(20, 2652.15)">
+			<text y="15" fill="#000" stroke="none">Layer 64, z 18.888</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 19.188" transform="translate(20, 2693.26)">
+			<text y="15" fill="#000" stroke="none">Layer 65, z 19.188</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 19.488" transform="translate(20, 2734.37)">
+			<text y="15" fill="#000" stroke="none">Layer 66, z 19.488</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 19.788" transform="translate(20, 2775.48)">
+			<text y="15" fill="#000" stroke="none">Layer 67, z 19.788</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 20.088" transform="translate(20, 2816.59)">
+			<text y="15" fill="#000" stroke="none">Layer 68, z 20.088</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 20.388" transform="translate(20, 2857.7)">
+			<text y="15" fill="#000" stroke="none">Layer 69, z 20.388</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 20.688" transform="translate(20, 2898.81)">
+			<text y="15" fill="#000" stroke="none">Layer 70, z 20.688</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 20.988" transform="translate(20, 2939.92)">
+			<text y="15" fill="#000" stroke="none">Layer 71, z 20.988</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 21.288" transform="translate(20, 2981.03)">
+			<text y="15" fill="#000" stroke="none">Layer 72, z 21.288</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 21.588" transform="translate(20, 3022.14)">
+			<text y="15" fill="#000" stroke="none">Layer 73, z 21.588</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 21.888" transform="translate(20, 3063.25)">
+			<text y="15" fill="#000" stroke="none">Layer 74, z 21.888</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 22.188" transform="translate(20, 3104.36)">
+			<text y="15" fill="#000" stroke="none">Layer 75, z 22.188</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 22.488" transform="translate(20, 3145.47)">
+			<text y="15" fill="#000" stroke="none">Layer 76, z 22.488</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 22.788" transform="translate(20, 3186.58)">
+			<text y="15" fill="#000" stroke="none">Layer 77, z 22.788</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 23.088" transform="translate(20, 3227.69)">
+			<text y="15" fill="#000" stroke="none">Layer 78, z 23.088</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 23.388" transform="translate(20, 3268.8)">
+			<text y="15" fill="#000" stroke="none">Layer 79, z 23.388</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 23.688" transform="translate(20, 3309.91)">
+			<text y="15" fill="#000" stroke="none">Layer 80, z 23.688</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 23.988" transform="translate(20, 3351.02)">
+			<text y="15" fill="#000" stroke="none">Layer 81, z 23.988</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 24.288" transform="translate(20, 3392.13)">
+			<text y="15" fill="#000" stroke="none">Layer 82, z 24.288</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 24.588" transform="translate(20, 3433.24)">
+			<text y="15" fill="#000" stroke="none">Layer 83, z 24.588</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 24.888" transform="translate(20, 3474.35)">
+			<text y="15" fill="#000" stroke="none">Layer 84, z 24.888</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+		<g id="z 25.188" transform="translate(20, 3515.46)">
+			<text y="15" fill="#000" stroke="none">Layer 85, z 25.188</text>
+			<path transform="scale(3.7, -3.7) translate(0.0120818335587, 0.0120818335587 )" d="M 0.0000 0.0000 L 0.0000 19.0429 L 0.0000 19.0429 L 12.7000 19.0429 L 12.7000 19.0429 L 12.7000 25.4000 L 12.7000 25.4000 L 19.2642 25.4000 L 19.2642 25.4000 L 25.4000 19.0610 L 25.4000 19.0610 L 25.4000 0.0000 L 25.4000 0.0000  Z M 9.5250 12.7000 L 9.8394 11.3224 L 10.7204 10.2177 L 11.9935 9.6046 L 13.4065 9.6046 L 14.6796 10.2177 L 15.5606 11.3224 L 15.8750 12.7000 L 15.8750 12.7000 L 15.5606 14.0776 L 14.6796 15.1823 L 13.4065 15.7954 L 11.9935 15.7954 L 10.7204 15.1823 L 9.8394 14.0776  Z "/>
+		</g>
+<!--End of path section-->
+	</g>
+	<!--End Layer Data-->
+	
+	<!--Button to change from all to single-->
+	<g font-weight="bold" font-family="Arial" font-size="15px">
+		<text id="buttonSingle" fill="darkslateblue" visibility="hidden" onclick="viewSingle()">[Single View]</text>
+		
+	<!--Control box for single slice layout-->
+		<g id="javascriptControls" visibility="hidden" fill="#000">
+			<rect width="510" height="90" stroke="gray" stroke-width="4px" fill="silver"/>	
+			<g>
+				<path stroke="#000" stroke-width="3" d="M 20 20 h5 l-5 -10 l-5 10 h5 v35 h35 v-5 l10 5 l-10 5 v-5 h-35 z"/>
+				<text x="25" y="20">Y</text>
+				<text x="69" y="60">X</text>
+				<text x="10" y="80" id="buttonAll" onclick="viewAll();" fill="darkslateblue">[Show All]</text>
+			</g>
+			<g transform="translate(100, 20)">
+				<text id="layerMin">1</text>
+				<rect id="slider" x="10" y="-12" width="150" height="14" fill="gray"/>
+				<circle id="thumb" cx="17" cy="-5" r="7" fill="darkslateblue"/>
+				<text x="163" id="layerMax" >5</text>
+				<text y="20" x="0">Layer </text>
+				<text y="20" x="45" id="layerNum">100</text>
+				<text y="20" x="138" onclick="displayLayer(currentLayer-1)" fill="darkslateblue">&lt;</text>
+				<text y="20" x="153" onclick="displayLayer(currentLayer+1)" fill="darkslateblue">&gt;</text>
+				<text y="40" x="0">Scale</text>
+				<text y="40" x="45" id="scaleNum">0.125</text>
+				<text y="40" x="138" onclick="changeScale(zoomScale/2)" fill="darkslateblue">&lt;</text>
+				<text y="40" x="153" onclick="changeScale(zoomScale*2)" fill="darkslateblue">&gt;</text>
+				<text y="60" id="layerThickness" >Layer Thickness: </text>
+			</g>
+			<g transform="translate(290, 0)">
+				<text y="40">X</text>
+				<text y="60">Y</text>
+				<text y="80">Z</text>
+				<text x="20" y="20">Min</text>
+				<text id="minX" x="20" y="40">0.0</text>
+				<text id="minY" x="20" y="60">0.0</text>
+				<text id="minZ" x="20" y="80">0.0</text>
+				<text x="80" y="20">Max</text>
+				<text id="maxX" x="80" y="40">0.0</text>
+				<text id="maxY" x="80" y="60">0.0</text>
+				<text id="maxZ" x="80" y="80">0.0</text>
+				<text x="140" y="20">Dimension</text>
+				<text id="dimX" x="140" y="40">0.0</text>
+				<text id="dimY" x="140" y="60">0.0</text>
+				<text id="dimZ" x="140" y="80">0.0</text>
+			</g>
+		</g>
+	</g>
+	
+	<!--No Javascript Control box   -->
+	<g id="noJavascriptControls" fill="#000" transform="translate(20, 1400)">
+		<rect width="300" height="110" stroke="gray" stroke-width="4px" fill="silver"/>
+		<g transform="translate(10, 0)">
+			<g transform="translate(0, 20)">
+				<text x="120">Min</text>
+				<text x="170">Max</text>
+				<text x="220">Dimension</text>
+				<path stroke="#000" stroke-width="3" d="M 5 40 h5 l-5 -10 l-5 10 h5 v35 h35 v-5 l10 5 l-10 5 v-5 h-35 z"/>
+				<text x="3" y="20" font-weight="bold">Y</text>
+				<text x="60" y="80" font-weight="bold">X</text>
+				<text x="120" y="80" id="layerThicknessNoJavascript">Layer Thickness: 0.300 mm</text>
+			</g>
+			<g transform="translate(100, 40)">
+				<text>X</text>
+				<text id="minXNoJavascript" x="20">-0.012</text>
+				<text id="maxXNoJavascript" x="70">25.412</text>
+				<text id="dimXNoJavascript" x="120">25.424</text>
+			</g>
+			<g transform="translate(100, 60)">
+				<text>Y</text>
+				<text id="minYNoJavascript" x="20">-0.012</text>
+				<text id="maxYNoJavascript" x="70">25.412</text>
+				<text id="dimYNoJavascript" x="120">25.424 </text>
+			</g>
+			<g transform="translate(100, 80)">
+				<text>Z</text>
+				<text id="minZNoJavascript" x="20">-0.012</text>
+				<text id="maxZNoJavascript" x="70">25.412</text>
+				<text id="dimZNoJavascript" x="120">25.424</text>
+			</g>
+		</g>
+	</g>
+	<!--End Controls-->
+	
+</svg>

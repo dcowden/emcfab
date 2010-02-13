@@ -1,7 +1,0 @@
-interrupt
-main
-	GlobalInisafety_interlock
-	checkLatch
-		disable
-		enable
-	initRegisters

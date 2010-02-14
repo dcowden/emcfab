@@ -1,0 +1,271 @@
+Make sure that your auto-properties for subversion include these entries:
+
+
+*.323       = svn:mime-type=text/323; 
+*.3gp       = svn:mime-type=video/3gpp
+*.7z        = svn:mime-type=application/x-7z-compressed
+*.ASM       = svn:mime-type=text/x-asm; 
+*.AVI       = svn:mime-type=video/msvideo
+*.BAT       = svn:mime-type=text/plain; 
+*.BMP       = svn:mime-type=image/bmp
+*.C         = svn:mime-type=text/x-c; ; svn:keywords=Id
+*.CC        = svn:mime-type=text/x-cpp; ; svn:keywords=Id
+*.COM       = svn:mime-type=application/octet-stream
+*.CPP       = svn:mime-type=text/x-cpp; ; svn:keywords=Id
+*.CXX       = svn:mime-type=text/x-cpp; ; svn:keywords=Id
+*.EXE       = svn:mime-type=application/octet-stream
+*.GIF       = svn:mime-type=image/gif
+*.H         = svn:mime-type=text/x-c; ; svn:keywords=Id
+*.HTM       = svn:mime-type=text/html; ; svn:keywords=Id
+*.JAVA      = svn:mime-type=text/x-java; ; svn:keywords=Id
+*.JPG       = svn:mime-type=image/jpeg
+*.PL        = svn:mime-type=text/x-perl; ; svn:keywords=Id; svn:executable
+*.README    = svn:mime-type=text/plain; 
+*.TAR       = svn:mime-type=application/x-tar
+*.Z         = svn:mime-type=application/octet-stream
+*.ZIP       = svn:mime-type=application/zip
+*.ai        = svn:mime-type=application/postscript
+*.aif       = svn:mime-type=audio/aiff
+*.aiff      = svn:mime-type=audio/aiff
+*.arc       = svn:mime-type=application/octet-stream
+*.arj       = svn:mime-type=application/arj
+*.art       = svn:mime-type=image/x-jg
+*.asc       = svn:mime-type=text/plain; 
+*.asf       = svn:mime-type=video/msvideo
+*.asf       = svn:mime-type=video/x-ms-asf
+*.asm       = svn:mime-type=text/x-asm; 
+*.asx       = svn:mime-type=video/x-ms-asf
+*.au        = svn:mime-type=audio/basic
+*.avi       = svn:mime-type=video/avi
+*.bat       = svn:mime-type=text/plain; 
+*.bin       = svn:mime-type=application/octet-stream
+*.bmp       = svn:mime-type=image/bmp
+*.bz        = svn:mime-type=application/x-bzip
+*.bz2       = svn:mime-type=application/x-bzip2
+*.c         = svn:mime-type=text/x-c; ; svn:keywords=Id
+*.c++       = svn:mime-type=text/x-cpp; ; svn:keywords=Id
+*.cc        = svn:mime-type=text/x-cpp; ; svn:keywords=Id
+*.cdr       = svn:mime-type=image/x-coreldraw
+*.cdt       = svn:mime-type=image/x-coreldrawtemplate
+*.cfg       = svn:mime-type=text/plain; ; svn:keywords=Id
+*.cgm       = svn:mime-type=image/cgm
+*.class     = svn:mime-type=application/java
+*.com       = svn:mime-type=application/octet-stream
+*.conf      = svn:mime-type=text/plain; 
+*.cpp       = svn:mime-type=text/x-cpp; ; svn:keywords=Id
+*.cpt       = svn:mime-type=image/x-corelphotopaint
+*.crt       = svn:mime-type=application/x-x509-ca-cert
+*.csh       = svn:mime-type=text/x-csh; ; svn:executable; svn:keywords=Id
+*.csr       = svn:mime-type=applicationn/octet-stream
+*.css       = svn:mime-type=text/css; ; svn:keywords=Id
+*.csv       = svn:mime-type=text/csv; 
+*.cxx       = svn:mime-type=text/x-cpp; ; svn:keywords=Id
+*.deb       = svn:mime-type=application/x-debian-package
+*.dif       = svn:mime-type=video/dv
+*.diff      = svn:mime-type=text/x-diff; 
+*.djv       = svn:mime-type=image/vnd.djvu
+*.djvu      = svn:mime-type=image/vnd.djvu
+*.dl        = svn:mime-type=video/dl
+*.dll       = svn:mime-type=application/octet-stream
+*.dmg       = svn:mime-type=application/octet-stream
+*.doc       = svn:mime-type=application/msword
+*.dot       = svn:mime-type=application/msword
+*.dtd       = svn:mime-type=text/x-dtd; ; svn:keywords=Id
+*.dump      = svn:mime-type=application/octet-stream
+*.dv        = svn:mime-type=video/dv
+*.dvi       = svn:mime-type=application/dvi
+*.dwg       = svn:mime-type=image/vnd.dwg
+*.dxf       = svn:mime-type=image/vnd.dxf
+*.el        = svn:mime-type=text/plain; ; svn:keywords=Id
+*.el        = svn:mime-type=text/x-emacs-lisp; 
+*.eps       = svn:mime-type=application/postscript
+*.exe       = svn:mime-type=application/octet-stream; svn:executable
+*.f         = svn:mime-type=text/x-fortran; 
+*.f77       = svn:mime-type=text/x-fortran; 
+*.f90       = svn:mime-type=text/x-fortran; 
+*.fif       = svn:mime-type=image/fif
+*.flac      = svn:mime-type=audio/x-flac
+*.fli       = svn:mime-type=video/fli
+*.fnt       = svn:mime-type=application/octet-stream
+*.for       = svn:mime-type=text/x-fortran; 
+*.g3        = svn:mime-type=image/g3fax
+*.gif       = svn:mime-type=image/gif
+*.gl        = svn:mime-type=video/gl
+*.gsm       = svn:mime-type=audio/x-gsm
+*.gtar      = svn:mime-type=application/x-gtar
+*.gz        = svn:mime-type=application/x-gzip
+*.gzip      = svn:mime-type=application/x-gzip
+*.h         = svn:mime-type=text/x-c; ; svn:keywords=Id
+*.h++       = svn:mime-type=text/x-cpp; ; svn:keywords=Id
+*.hh        = svn:mime-type=text/x-cpp; ; svn:keywords=Id
+*.hlp       = svn:mime-type=application/x-winhelp
+*.hpp       = svn:mime-type=text/x-cpp; ; svn:keywords=Id
+*.hqx       = svn:mime-type=application/mac-binhex
+*.hs        = svn:mime-type=text/x-haskell; 
+*.htaccess  = svn:mime-type=text/plain; 
+*.htm       = svn:mime-type=text/html; ; svn:keywords=Id
+*.html      = svn:mime-type=text/html; ; svn:keywords=Id
+*.htpasswd  = svn:mime-type=text/plain; 
+*.hxx       = svn:mime-type=text/x-cpp; ; svn:keywords=Id
+*.ico       = svn:mime-type=image/x-icon
+*.idl       = svn:mime-type=text/x-idl; ; svn:keywords=Id
+*.ief       = svn:mime-type=image/ief
+*.in        = svn:mime-type=text/plain; 
+*.inc       = svn:mime-type=text/plain; ; svn:keywords=Id
+*.ini       = svn:mime-type=text/plain; ; svn:keywords=Id
+*.iso       = svn:mime-type=application/x-iso9660-image
+*.jar       = svn:mime-type=application/java-archive
+*.java      = svn:mime-type=text/x-java; ; svn:keywords=Id
+*.jfif      = svn:mime-type=image/jpeg
+*.jng       = svn:mime-type=image/x-jng
+*.jpe       = svn:mime-type=image/jpeg
+*.jpeg      = svn:mime-type=image/jpeg
+*.jpg       = svn:mime-type=image/jpeg
+*.jps       = svn:mime-type=image/x-jps
+*.js        = svn:mime-type=text/x-javascript; ; svn:keywords=Id
+*.key       = svn:mime-type=application/octet-stream
+*.lha       = svn:mime-type=application/x-lha
+*.lsp       = svn:mime-type=text/x-lisp
+*.lzh       = svn:mime-type=application/x-lzh
+*.lzx       = svn:mime-type=application/x-lzx
+*.m1v       = svn:mime-type=video/mpeg
+*.m2a       = svn:mime-type=audio/mpeg
+*.m2v       = svn:mime-type=video/mpeg
+*.m3u       = svn:mime-type=audio/x-mpegurl
+*.m4a       = svn:mime-type=audio/mpeg
+*.mid       = svn:mime-type=audio/midi
+*.midi      = svn:mime-type=audio/midi
+*.mjpg      = svn:mime-type=video/x-motion-jpeg
+*.mng       = svn:mime-type=video/x-mng
+*.mod       = svn:mime-type=audio/x-mod
+*.mov       = svn:mime-type=video/quicktime
+*.movie     = svn:mime-type=video/x-sgi-movie
+*.mp2       = svn:mime-type=audio/mpeg
+*.mp3       = svn:mime-type=audio/mpeg
+*.mp4       = svn:mime-type=video/mp4
+*.mpe       = svn:mime-type=video/mpeg
+*.mpeg      = svn:mime-type=video/mpeg
+*.mpg       = svn:mime-type=video/mpeg
+*.oda       = svn:mime-type=application/oda
+*.ogg       = svn:mime-type=audio/ogg
+*.pas       = svn:mime-type=text/pascal; 
+*.patch     = svn:mime-type=text/x-diff; 
+*.pbm       = svn:mime-type=image/x-portable-bitmap
+*.pcf       = svn:mime-type=application/x-font
+*.pcf.Z     = svn:mime-type=application/x-font
+*.pcl       = svn:mime-type=application/x-pcl
+*.pcm       = svn:mime-type=audio/x-adpcm
+*.pct       = svn:mime-type=image/x-pict
+*.pcx       = svn:mime-type=image/pcx
+*.pdf       = svn:mime-type=application/pdf
+*.pem       = svn:mime-type=text/plain; 
+*.perl      = svn:mime-type=text/x-perl; ; svn:keywords=Id; svn:executable
+*.pgm       = svn:mime-type=image/x-portable-graymap
+*.pgp       = svn:mime-type=application/pgp-signature
+*.php       = svn:mime-type=text/php; ; svn:keywords=Id; svn:executable
+*.php3      = svn:mime-type=text/php; ; svn:keywords=Id
+*.pic       = svn:mime-type=image/pict
+*.pict      = svn:mime-type=image/pict
+*.pl        = svn:mime-type=text/x-perl; ; svn:keywords=Id; svn:executable
+*.pm        = svn:mime-type=text/x-perl; ; svn:keywords=Id
+*.png       = svn:mime-type=image/png
+*.pnm       = svn:mime-type=image/x-portable-anymap
+*.pot       = svn:mime-type=text/plain; 
+*.pov       = svn:mime-type=text/plain; 
+*.ppm       = svn:mime-type=image/x-portable-pixmap
+*.ppc       = svn:mime-type=text/mikro-CProject
+*.pps       = svn:mime-type=application/vnd.ms-powerpoint
+*.ppt       = svn:mime-type=application/vnd.ms-powerpoint
+*.ps        = svn:mime-type=application/postscript
+*.psd       = svn:mime-type=image/x-photoshop
+*.py        = svn:mime-type=text/x-python; ; svn:keywords=Id; svn:executable
+*.pyw       = svn:mime-type=text/x-python; ; svn:keywords=Id
+*.pyx       = svn:mime-type=text/x-python; ; svn:keywords=Id
+*.qif       = svn:mime-type=image/x-quicktime
+*.qt        = svn:mime-type=video/quicktime
+*.r         = svn:mime-type=text/plain; ; svn:keywords=Id
+*.ra        = svn:mime-type=audio/x-realaudio
+*.ram       = svn:mime-type=audio/x-pn-realaudio
+*.rar       = svn:mime-type=application/x-rar-compressed
+*.ras       = svn:mime-type=image/x-cmu-raster
+*.rb        = svn:mime-type=text/x-ruby; ; svn:keywords=Id; svn:executable
+*.rexx      = svn:mime-type=text/x-script.rexx
+*.rgb       = svn:mime-type=image/x-rgb
+*.rm        = svn:mime-type=audio/x-pn-realaudio
+*.rpm       = svn:mime-type=application/x-redhat-package-manager
+*.rss       = svn:mime-type=text/rss+xml
+*.rtf       = svn:mime-type=text/richtext
+*.rv        = svn:mime-type=video/vnd.rn-realvideo
+*.s         = svn:mime-type=text/x-asm; 
+*.s3m       = svn:mime-type=audio/s3m
+*.sd2       = svn:mime-type=audio/x-sd2
+*.sea       = svn:mime-type=application/x-sea
+*.ser       = svn:mime-type=application/java-serialized-object
+*.sgml      = svn:mime-type=text/sgml; ; svn:keywords=Id
+*.sh        = svn:mime-type=text/x-sh; ; svn:executable; svn:keywords=Id
+*.shar      = svn:mime-type=text/x-sh; ; svn:executable
+*.shtml     = svn:mime-type=text/html; ; svn:keywords=Id
+*.sid       = svn:mime-type=audio/prs.sid
+*.sit       = svn:mime-type=application/x-stuffit
+*.sitx      = svn:mime-type=application/x-stuffit
+*.snd       = svn:mime-type=audio/x-adpcm
+*.spl       = svn:mime-type=application/futuresplash
+*.sql       = svn:mime-type=text/plain; ; svn:keywords=Id
+*.svg       = svn:mime-type=image/svg-xml
+*.swf       = svn:mime-type=application/x-shockwave-flash
+*.tab       = svn:mime-type=text/plain; 
+*.tar       = svn:mime-type=application/x-tar
+*.taz       = svn:mime-type=application/x-gtar
+*.tcl       = svn:mime-type=text/x-tcl; ; svn:keywords=Id; svn:executable
+*.text      = svn:mime-type=text/plain; 
+*.tgz       = svn:mime-type=application/x-gzip
+*.tif       = svn:mime-type=image/tiff
+*.tiff      = svn:mime-type=image/tiff
+*.tk        = svn:mime-type=text/x-tcl; ; svn:keywords=Id; svn:executable
+*.tpl       = svn:mime-type=text/plain; ; svn:keywords=Id
+*.tsv       = svn:mime-type=text/tab-separated-values; 
+*.txt       = svn:mime-type=text/plain; 
+*.uu        = svn:mime-type=text/x-uuencode; 
+*.uue       = svn:mime-type=text/x-uuencode; 
+*.voc       = svn:mime-type=audio/voc
+*.vox       = svn:mime-type=audio/voxware
+*.vsd       = svn:mime-type=application/vnd.visio
+*.wav       = svn:mime-type=audio/wav
+*.wax       = svn:mime-type=audio/x-ms-wax
+*.wbmp      = svn:mime-type=image/vnd.wap.wbmp
+*.wm        = svn:mime-type=video/x-ms-wm
+*.wma       = svn:mime-type=audio/x-ms-wma
+*.wmf       = svn:mime-type=image/x-msmetafile
+*.wmv       = svn:mime-type=video/x-ms-wmv
+*.wmx       = svn:mime-type=video/x-ms-wmx
+*.wvx       = svn:mime-type=video/x-ms-wvx
+*.xbm       = svn:mime-type=image/x-xbitmap
+*.xls       = svn:mime-type=application/vnd.ms-excel
+*.xml       = svn:mime-type=text/xml; ; svn:keywords=Id
+*.xpm       = svn:mime-type=image/x-xpixmap
+*.xsl       = svn:mime-type=text/xml; ; svn:keywords=Id
+*.xul       = svn:mime-type=application/vnd.mozilla.xul+xml
+*.xwd       = svn:mime-type=image/x-xwindowdump
+*.z         = svn:mime-type=application/octet-stream
+*.zip       = svn:mime-type=application/zip
+*.zoo       = svn:mime-type=application/octet-stream
+*.SLDPRT    = svn:mime-type=application/octet-stream
+*.SLDAM     = svn:mime-type=application/octet-stream
+*.SLDDRW    = svn:mime-type=application/octet-stream
+*.step      = svn:mime-type=application/STEP
+*.stl       = svn:mime-type=application/SLA
+*.stp       = svn:mime-type=application/STEP
+*.cb        = svn:mime-type=application/CamBam
+*.nc        = svn:mime-type=text/Gcode
+*.ngc       = svn:mime-type=text/Gcode
+*.cnc       = svn:mime-type=text/Gcode
+CHANGES     = svn:mime-type=text/plain; 
+COPYING     = svn:mime-type=text/plain; 
+INSTALL     = svn:mime-type=text/plain; 
+LICENSE     = svn:mime-type=text/plain; 
+MANIFEST.in = svn:mime-type=text/plain; 
+Makefile    = svn:mime-type=text/plain; ; svn:keywords=Id
+README      = svn:mime-type=text/plain; 
+TODO        = svn:mime-type=text/plain; 
+core        = svn:mime-type=application/octet-stream
+

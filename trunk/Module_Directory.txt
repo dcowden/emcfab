@@ -1,0 +1,38 @@
+Project Contents:
+
+\applications			Software
+	\firmware 		Firmware for the various boards
+	\slicer			Software to slice objects and create gcode
+
+\boards				Various pc boards ( Eagle Format )
+	\adapters		Boards that adapt connectors and cables
+	\cncSimpleBreakout	A simple breakout board
+	\cncBreakoutBoard	A breakout board all on on board instead of two
+	\estoplatch		Simple board for handling limit switches
+	\extruder		An extruder controller
+	\generic18f4331		Generic board for pic18f4331 series
+	\heaterControl		Controls a catridge heater with a triac
+	\mag_encoder		Mount an AS5040 for use as a magnetic rotary encoder
+	\max6775Tcouple		Drive a MAX6775 tcouple IC
+	\motorBridge		LM18200 based bi-directional motor bridge
+	\ribbonHeader		Used with cncSimpleBreakout to provide screw terminals
+	\simpleservo		a pic18f2331 based servo board
+	\speedReedout		a speed readout based on an optical interrupt switch
+
+\cadFiles			Various solid models ( most solidworks format )
+	\2mmextruder		Design files for the 2mm filament extruder
+	\machineDesign		design files for the machine i made
+	\test			Test files
+
+\doc				Documentation
+	\appnotes		Application notes for various vendors
+	\calculations		Spreadsheets and tksolver books for various problems
+	\datasheets		datasheets for most devices used
+	\labels			Labels used for boards
+	\patent_references	Patents that were useful for review in this project
+	
+\emcConf			Configuration files for EMC
+
+\misc_projects			Some projects made with this machine
+	\ripmaster		A saw jig for ripping sheet stock
+	

@@ -44,6 +44,7 @@ GCODE_NUMBER_FORMAT = "%0.2f";
 DEFAULT_FEEDRATE = 1.0;
 DEFAULT_DEFLECTION=0.001;
 OMIT_UNCHANGED_AXES=False;
+TOLERANCE=0.0001;
 
 #####
 #utility class instances
@@ -56,6 +57,9 @@ BRepLProp_CurveTool = BRepLProp.BRepLProp_CurveTool();
 #TopExp = TopExp.TopExp()
 #TopExp_Explorer = TopExp.TopExp_Explorer();
 
+
+def printPoint(point):
+	print "x=%0.4f,y=%0.4f,z=%0.4f" % (point.X(), point.Y(), point.Z());
 	
 """
 	State machine for creating gcode.
@@ -64,27 +68,33 @@ BRepLProp_CurveTool = BRepLProp.BRepLProp_CurveTool();
 	
 	Each command returns a list of commands that correspond to
 	the desired action, or an empty list if no action is needed
+	
+	The class also stores the vector of the last motion,
+	so that naive gcode can be removed. ( IE, several motions in the same
+	direction are combined into a single motion )
 
 """
 class GCode_Generator:
 	def __init__(self):
-	
+		
 		self.reset();
 		self.startUp = "G90 ";
+		self.safeHeight = "3";
+		
+	def getResults(self):
+		return self.cmdBuffer;
 	
+	def addCommand(self,command):
+		self.cmdBuffer.append(command);
 	
 	def reset(self):
+		
 		self.currentX=None;
 		self.currentY=None;
 		self.currentZ=None;
-		self.currentFeed=0.0;
-		
-	#set the current position of the machine
-	#without executing a move to get there
-	def setPosition(x,y,z):
-		self.currentX= x;
-		self.currentY=y;
-		self.currentZ=z;
+		self.currentFeed=None;
+		self.cmdBuffer = [];
+		self.lastMove = None;
 		
 	"""
 		Follow an edge. A command will be issued ( if necessary ) to move
@@ -94,7 +104,6 @@ class GCode_Generator:
 		same of the beginning of the next.
 	"""
 	def followEdge(self,edge,feed):
-		cmds = [];
 		range = Brep_Tool.Range(edge);
 		logging.debug( "Edge Bounds:" + str(range) );
 		
@@ -104,40 +113,109 @@ class GCode_Generator:
 		curveType = curve.GetType();
 		
 		logging.debug(  "Edge is a curve of type:" + str(curveType));
+		
+		#get first and last points.
+		firstPoint = gp.gp_Pnt();
+		lastPoint = gp.gp_Pnt();
+		BRepLProp_CurveTool.Value(curve,p1,firstPoint );
+		BRepLProp_CurveTool.Value(curve,p2,lastPoint );	
+
 		if ( curveType == 0 ):
-			pt1 = gp.gp_Pnt();
-			pt2 = gp.gp_Pnt();
-			BRepLProp_CurveTool.Value(curve,p1,pt1 );
-			BRepLProp_CurveTool.Value(curve,p2,pt2 );
+
 			#a line. move to the beginning of the line, then
 			#to the end.
-			cmds.extend( self.movePt(pt1,feed));
-			cmds.extend( self.movePt(pt2,feed));
-			return cmds;
+			self.movePt(firstPoint,feed);
+			self.movePt(lastPoint,feed);
 		
 		if ( curveType == 1 ):
-			return ["G02 Circle Not Implemented"];
+			#a circle.
+			#print "FirstPoint="
+			#printPoint(firstPoint);
+			
+			##print "LastPoint="
+			#printPoint(lastPoint);			
+			circle = curve.Circle();
+			center = circle.Location();
+			
+			axisDir = circle.Axis().Direction(); #need this to determine which way the arc goes			
+			#assume we are essentially in 2d space, so we're looking only at wehter the
+			#axis of the circle is +z or -z
+			zDir = gp.gp().DZ();
+			if zDir.IsEqual(axisDir,TOLERANCE):
+				c = "G03"
+				#print "detected ccw arc";
+			else:
+				#print "detected cw arc";
+				c = "G02";
+			
+			#first, move to the start of the circle. Generally we should already be there
+			self.move(firstPoint.X(),firstPoint.Y(),firstPoint.Z(),feed);
+			
+			
+			#printPoint(center);
+			#TODO: handle incremental coordinates
+			#how do we know whether we want to do a clockwise or counterclockwise arc?
+			self.arc(center.X()-firstPoint.X(),center.Y()-firstPoint.Y(),lastPoint.X(),lastPoint.Y(),lastPoint.Z(),feed,c);
+
 						
 		if ( curveType == 2 ):
 			#an ellipse
-			return ["G02 Ellipse Not Implemented"];	
+			self.addCommand("G02 Ellipse Not Implemented");	
 	
 	#follow the segments in a wire
 	def followWire(self,wire, feed ):
 		logging.debug( "Following Wire:" + str(wire));
 		bwe = BRepTools.BRepTools_WireExplorer(wire);
 		
-		commands = [];
 		while bwe.More():
 			edge = bwe.Current();
-			commands.extend ( self.followEdge(edge,feed) );
+			self.followEdge(edge,feed);
 			bwe.Next();
 		bwe.Clear();
 
-		return commands;
+	"""
+		An arc. cmd is either G02 or G03
+		i and j are the locations of the center of the arc
+		x and y are the endpoints of the arc.
 		
+		Note that other form of g02/g03 arcs are not supported, since they are dangerous for
+		very small arc lengths.
+	"""
+	def arc(self, i= None, j=None, x=None, y=None, z=None, feed=None, cmd="G02" ):
+		
+		#move
+		command = [cmd];
+		#todo: handle incremental coordinates. for now assume absolute coordinates
+		#careful-- i and j are offsets, not coordinates.
+		
+		if i != None and i != 0:
+			command.append( ("I" + GCODE_NUMBER_FORMAT)  % (i ));
+		
+		if j != None and j != 0:
+			command.append( ("J" + GCODE_NUMBER_FORMAT)  % (j ));
+
+		if x != None and x != self.currentX:
+			command.append( ("X" + GCODE_NUMBER_FORMAT)  % (x ));
+			self.currentX = x;
+		if y != None and y != self.currentY:
+			command.append( ("Y" + GCODE_NUMBER_FORMAT)  % (y ));
+			self.currentY = y;
+			
+		if z != None and z != self.currentZ:
+			command.append( ("Z" + GCODE_NUMBER_FORMAT)  % (z ));
+			self.currentZ = z;
+			
+		if feed != None and  feed != self.currentFeed:
+			command.append( ("F" + GCODE_NUMBER_FORMAT)  % (feed ));
+			self.currentFeed = feed;
+			
+
+		self.addCommand( " ".join(command));
+		#naive move tracking doesnt apply to arcs
+		self.lastMove = None;
+	
 	def movePt(self, gp_pt, feed ):
-		return self.move(gp_pt.X(),gp_pt.Y(),gp_pt.Z(),feed);
+		self.move(gp_pt.X(),gp_pt.Y(),gp_pt.Z(),feed);
 	
 	"""
 		return the gcode required to move to the provided point.
@@ -146,15 +224,38 @@ class GCode_Generator:
 	"""
 	def move(self, x = None, y = None, z = None,  feed=None, cmd="G01"):
 
-		if x == None: x = self.lastx
-		if y == None: y = self.lasty
-		if z == None: z = self.lastz
+		if x == None: x = self.currentX
+		if y == None: y = self.currentY
+		if z == None: z = self.currentZ
 		if feed == None: feed = self.currentFeed;
 		
 		#if there is no move at all, return immediately
 		if ( x == self.currentX and y == self.currentY and z == self.currentZ ):
 			logging.debug(  "No move required" );
 			return "";
+
+		#compute direction of the move, to filter out naive moves
+		if  self.currentX != None and self.currentY != None and self.currentZ != None and self.currentFeed != None:
+			#ok we are doing a move, and we know what our current location and feed is
+			#so we can compute a direction
+			currentPoint = gp.gp_Pnt(self.currentX, self.currentY, self.currentZ);
+			newPoint = gp.gp_Pnt(x,y,z);
+			proposedMove = gp.gp_Vec(currentPoint,newPoint);
+			
+			if self.lastMove:
+				#we have a last move. compare this one to see if they are the same direction
+				if ( proposedMove.IsParallel(self.lastMove,TOLERANCE )) and ( self.currentFeed == feed) :
+					#caught a naive move
+					logging.debug("Caught a naive move. Adjusting to remove the extra");
+					#TODO this approach only works with absolute coordinates
+					#in incremental coordinates, we have to adjust the new vector to move the same
+					#as all of the previous moves!
+					self.cmdBuffer.pop();
+					
+			#store this one as the last move
+			self.lastMove = proposedMove;
+		
+		#compare the direction of this move to the previous move.
 		cmds=[]
 		cmds.append(cmd);
 		if x != self.currentX:
@@ -170,17 +271,17 @@ class GCode_Generator:
 			cmds.append(("F" + GCODE_NUMBER_FORMAT) % (feed) );
 			self.currentFeed = feed;	
 			
-		return [" ".join(cmds)];
+		self.addCommand( " ".join(cmds));
 
 		
 	def rapid(self,x = None, y = None, z = None,  feed=None ):
-		return self.move(x,y,z,feed,"G00");
+		self.move(x,y,z,feed,"G00");
 		
 	def start(self):
-		return [self.startUp];
+		self.addCommand(self.startUp);
 		
 	def end(self):
-		return ["M2"];
+		self.addCommand( "M2");
 		
 
 		

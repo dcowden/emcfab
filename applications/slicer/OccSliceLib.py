@@ -76,6 +76,9 @@ import os.path
 import wx
 import logging
 import time
+import traceback
+import Gcode_Lib
+import Topology
 from OCC.Display.wxDisplay import wxViewer3d
 from OCC.Utils.Topology import Topo
 from OCC.ShapeAnalysis import ShapeAnalysis_FreeBounds
@@ -168,8 +171,45 @@ def offsetFace(face,offset):
 	te.Clear();	
 	te.Destroy();
 	
-	bo.Perform(offset,0.0);
+	bo.Perform(offset,0.00001);
+	
 	return bo.Shape();
+
+	
+	
+"""
+	Sort a list of wires, by connecting them into paths if possible.
+	@TODO: note, if this works, it also means that we might be able to use brepAlgo_Section 
+	instead of solid operations.  We were just using solids because we get a compound instead of
+	wires. but if we can figure out how to sort wires into paths, well-- this would work..
+"""
+def sortWires( compound ):
+	sf = ShapeAnalysis_FreeBounds();
+	Topology.dumpTopology(compound);
+	inputwires = TopTools.TopTools_HSequenceOfShape();
+	print "Sorting Wires..."
+	#add all the wires in the compound to the input wires
+	texp = TopExp.TopExp_Explorer();
+	texp.Init(compound,TopAbs.TopAbs_WIRE);
+
+	while ( texp.More() ):
+		wire = ts.Wire(texp.Current());
+		inputwires.Append(wire);
+		texp.Next();
+	
+	#free memory
+	texp.Clear();
+	texp.Destroy();	
+	print "There are ",inputwires.Length()," wires."
+	outputwires = TopTools.TopTools_HSequenceOfShape();
+	print "New list has",outputwires.Length()," wires."
+	#print inputwires.GetHandle()
+	#print outputwires.GetHandle()
+	sf.ConnectWiresToWires(inputwires.GetHandle(),0.0001,False,outputwires.GetHandle() );
+	
+	#for now return the input wires, which seems to work at least
+	return inputwires;
+
 
 """
 	Class that provides easy access to commonly
@@ -287,14 +327,17 @@ class Slicer:
 
 		logging.info("Slicing Object from zMin=%0.3f to zMax=%0.3f" % ( self.zMin, self.zMax )  );
 		self.zRange = abs(self.zMax - self.zMin);
-		uom = self.analyzer.guessUnitOfMeasure();					
+		uom = self.analyzer.guessUnitOfMeasure();
+		if uom == 'mm':
+			#resolution = self._DEFAULT_SLICEHEIGHT_MM;
+			resolution = 2.0;
+		else:
+			resolution = self._DEFAULT_SLICEHEIGHT_IN;
+			
 		#get slice levels
 		if self.sliceHeight == None:
-			if self.numSlices == None:				
-				if uom == 'mm':
-					self.sliceHeight = self._DEFAULT_SLICEHEIGHT_MM;
-				else:
-					self.sliceHeight = self._DEFAULT_SLICEHEIGHT_IN;
+			if self.numSlices == None:
+				self.sliceHeight = resolution;
 				logging.warn( "No Slice Thickness specified. Using Sane Defaults.");
 			else:
 				self.sliceHeight = abs(self.zMax - self.zMin)/self.numSlices;
@@ -307,43 +350,47 @@ class Slicer:
 		#make slices
 		zLevel = self.zMin + self._FIRST_LAYER_OFFSET;
 		layerNo = 1;
+		MAX_OFFSET = 50;
 		t2 = Timer();
 		while zLevel < self.zMax:
 			logging.debug( "Creating Slice %0d, z=%0.3f " % ( layerNo,zLevel));
 			slice = self._makeSlice(self.shape,zLevel);
 			
-			#if a display is set, add it to the display
-			if not self.display == None and not slice == None:
+			if slice != None:
+
+				#for each face, offset curves as far as we can.
+				#if a display is set, add it to the display
+				print "Zlevel=",zLevel,",",len(slice.faces)," faces."
 				for f in slice.faces:
-					if layerNo ==  9:
-						self.display.showShape(f);
-						zf = ts.Face(f);					
-						self.display.showShape(offsetFace(zf,-0.5));
-						self.display.showShape(offsetFace(zf,-1.0));
-						self.display.showShape(offsetFace(zf,-1.5));
-						self.display.showShape(offsetFace(zf,-2));
-						self.display.showShape(offsetFace(zf,-2.5));
-						self.display.showShape(offsetFace(zf,-3));
-						self.display.showShape(offsetFace(zf,-3.5));
-						self.display.showShape(offsetFace(zf,-4));
-						self.display.showShape(offsetFace(zf,-4.5));
-						self.display.showShape(offsetFace(zf,-5));
-						self.display.showShape(offsetFace(zf,-5.5));
-						self.display.showShape(offsetFace(zf,-6));
-						self.display.showShape(offsetFace(zf,-6.5));
-						self.display.showShape(offsetFace(zf,-7));
-						self.display.showShape(offsetFace(zf,-7.5));
-			#compute an estimate of time remaining every 10 or so slices
-			if layerNo % reportInterval == 0:
-				pc = ( zLevel - self.zMin )/   ( self.zMax - self.zMin) * 100;
-				logging.info("%0.0f %% complete." % (pc) );
-				
-			if not slice == None:
-				slice.layerNo = layerNo;
-				slice.zHeight = self.sliceHeight;
-				self.slices.append(slice);
-			else:
-				logging.warn("Null Layer Detected and Skipped at z=" + str(zLevel) );
+					self.display.showShape(f);
+					zf = ts.Face(f);
+					currentOffset = 1;
+					#keep offsetting till we get an error
+					t3=Timer();
+					while currentOffset < MAX_OFFSET:
+						offset = (-1)*resolution*currentOffset;
+						try:							
+							newPath = offsetFace(zf,offset);
+							slice.paths.append(newPath);
+							self.display.showShape(newPath);
+
+							
+						except:
+							traceback.print_exc(file=sys.stdout);
+							print 'error offsetting at offset=',offset
+						currentOffset += 1;
+					#print "Slice Finished",t3.elapsed()
+					#compute an estimate of time remaining every 10 or so slices
+					if reportInterval > 0 and layerNo % reportInterval == 0:
+						pc = ( zLevel - self.zMin )/   ( self.zMax - self.zMin) * 100;
+						logging.info("%0.0f %% complete." % (pc) );
+					
+				if not slice == None:
+					slice.layerNo = layerNo;
+					slice.zHeight = self.sliceHeight;
+					self.slices.append(slice);
+				else:
+					logging.warn("Null Layer Detected and Skipped at z=" + str(zLevel) );
 			zLevel += self.sliceHeight
 			layerNo += 1;
 
@@ -461,6 +508,7 @@ class Slice:
 		logging.debug("Creating New Slice...");
 		self.path = "";
 		self.faces = [];
+		self.paths = [];
 		self.loops=[];
 		self.zLevel=0;
 		self.zHeight = 0;
@@ -559,6 +607,46 @@ class SVGLayer:
 	def yTransform(self):
 		return (self.slice.layerNo + 1 ) * (self.margin + ( self.slice.sliceHeight * self.unitScale )) + ( self.slice.layerNo * 20 );
 
+		
+"""
+	Writes a sliceset to specified file in Gcode format.
+	TODO: this needs to extend a base class, it duplicates a lot of code in SVGExporter
+"""		
+class GcodeExporter ():
+	def __init__(self,sliceSet):
+		self.sliceSet = sliceSet
+		self.title="Untitled";
+		self.description="No Description"
+		self.feedRate = 100;
+		self.units = sliceSet.analyzer.guessUnitOfMeasure();
+		self.NUMBERFORMAT = '%0.3f';
+	
+	def export(self, fileName):
+		slices = self.sliceSet.slices;
+		logging.info("Exporting " + str(len(slices)) + " slices to file'" + fileName + "'...");
+
+		gcodewriter = Gcode_Lib.GCode_Generator();
+		gcodewriter.start();
+		exportedPaths = 0;
+		print "Exporting ",len(slices), " slices."
+		for slice in slices:
+			print "slice has ",len(slice.paths)," paths."
+			for shape in slice.paths:
+				#the shape could be a wire or a compound.				
+				if shape.ShapeType() == TopAbs.TopAbs_WIRE:
+					exportedPaths += 1;
+					gcodewriter.followWire(ts.Wire(shape),self.feedRate);
+				elif shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
+					wireList = sortWires(shape);
+					print "sort Completed, got a list of ",wireList.Length()," wires."
+					for i in range(1,wireList.Length()):
+						exportedPaths += 1;
+						gcodewriter.followWire(ts.Wire(wireList.Value(i)),self.feedRate);
+				else:
+					print "Unknown type of object received in the slice list"
+		commands = gcodewriter.getResults();
+		print "\n".join(commands);
+		print exportedPaths," paths were exported."
 """
     Writes a sliceset to specified file in SVG format.
 """
@@ -692,7 +780,8 @@ def main(filename,sliceThickness):
 		return;
 	
 	#compute output filename
-	outFileName = filename[ : filename.rfind( '.' ) ] + '_sliced.svg'
+	#outFileName = filename[ : filename.rfind( '.' ) ] + '_sliced.svg'
+	outFileName = filename[ : filename.rfind( '.' ) ] + '_sliced.nc'
 	
 	frame = AppFrame(None,filename,20,20)
 	frame.canva.InitDriver()
@@ -719,11 +808,15 @@ def main(filename,sliceThickness):
 	sliceSet.execute()
 	
 	#export to svg
-	sexp = SVGExporter(sliceSet);
-
-	sexp.title="RepRap Test";
-	sexp.description = "Test Description";	
-	sexp.export(outFileName);
+	#sexp = SVGExporter(sliceSet);
+	#sexp.title="RepRap Test";
+	#sexp.description = "Test Description";	
+	#sexp.export(outFileName);
+	
+	#export to gcode
+	gexp = GcodeExporter(sliceSet);
+	gexp.title="Reprap Test";
+	gexp.export(outFileName);
 	
 
 	app.SetTopWindow(frame)

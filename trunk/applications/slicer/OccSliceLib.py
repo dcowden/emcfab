@@ -619,8 +619,16 @@ class SVGLayer:
 def fixWire(wire):
 	sw = ShapeFix_Wire();
 	sw.Load(wire);
-	sw.FixReorder();
-	return sw.Wire();
+	sw.ClosedWireMode = True;
+	sw.FixReorderMode = 1;
+	sw.FixConnectedMode = 1;
+	sw.FixLackingMode = 1;
+	sw.FixGaps3dMode = 1;
+	
+	sw.FixConnectedMode = 1;
+	sw.FixDegeneratedMode = 1;
+	sw.Perform();
+	return sw.WireAPIMake();
 """
 	Writes a sliceset to specified file in Gcode format.
 	TODO: this needs to extend a base class, it duplicates a lot of code in SVGExporter

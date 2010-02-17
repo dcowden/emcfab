@@ -82,6 +82,7 @@ import Topology
 from OCC.Display.wxDisplay import wxViewer3d
 from OCC.Utils.Topology import Topo
 from OCC.ShapeAnalysis import ShapeAnalysis_FreeBounds
+from OCC.ShapeFix import ShapeFix_Wire
 from Cheetah.Template import Template
 from OCC import ShapeFix
 from OCC import BRepBuilderAPI
@@ -168,8 +169,8 @@ def offsetFace(face,offset):
 		if not w.IsSame(ow):
 			bo.AddWire(w);
 		te.Next();
-	te.Clear();	
-	te.Destroy();
+	te.ReInit();
+
 	
 	bo.Perform(offset,0.00001);
 	
@@ -185,7 +186,7 @@ def offsetFace(face,offset):
 """
 def sortWires( compound ):
 	sf = ShapeAnalysis_FreeBounds();
-	Topology.dumpTopology(compound);
+	#Topology.dumpTopology(compound);
 	inputwires = TopTools.TopTools_HSequenceOfShape();
 	print "Sorting Wires..."
 	#add all the wires in the compound to the input wires
@@ -198,8 +199,8 @@ def sortWires( compound ):
 		texp.Next();
 	
 	#free memory
-	texp.Clear();
-	texp.Destroy();	
+	texp.ReInit();
+
 	print "There are ",inputwires.Length()," wires."
 	outputwires = TopTools.TopTools_HSequenceOfShape();
 	print "New list has",outputwires.Length()," wires."
@@ -296,7 +297,6 @@ class Slicer:
 		self.slices=[]
 
 		self.shape = shape;
-				
 		#slicing parameters
 		self.zMin = None;
 		self.zMax = None;
@@ -350,7 +350,7 @@ class Slicer:
 		#make slices
 		zLevel = self.zMin + self._FIRST_LAYER_OFFSET;
 		layerNo = 1;
-		MAX_OFFSET = 50;
+		MAX_OFFSET = 30;
 		t2 = Timer();
 		while zLevel < self.zMax:
 			logging.debug( "Creating Slice %0d, z=%0.3f " % ( layerNo,zLevel));
@@ -371,10 +371,10 @@ class Slicer:
 						offset = (-1)*resolution*currentOffset;
 						try:							
 							newPath = offsetFace(zf,offset);
-							slice.paths.append(newPath);
-							self.display.showShape(newPath);
-
-							
+							#slice.addPath(newPath);
+							if currentOffset % 2 == 0:
+								slice.addPath(newPath);
+								self.display.showShape(newPath);							
 						except:
 							traceback.print_exc(file=sys.stdout);
 							print 'error offsetting at offset=',offset
@@ -396,6 +396,7 @@ class Slicer:
 
 		logging.info("Slicing Complete: " + t.finishedString() );
 		logging.info("Throughput: %0.3f slices/sec" % (layerNo/t.elapsed() ) );
+
 
 	def _makeSlice(self,shapeToSlice,zLevel):
 		s = Slice();
@@ -508,12 +509,16 @@ class Slice:
 		logging.debug("Creating New Slice...");
 		self.path = "";
 		self.faces = [];
-		self.paths = [];
+		self.paths = TopoDS.TopoDS_ListOfShape();
 		self.loops=[];
 		self.zLevel=0;
 		self.zHeight = 0;
 		self.layerNo = 0;
 		self.sliceHeight=0;
+		
+	def addPath(self, pathShape):
+		self.paths.Append(pathShape);
+		print "slice at zlevel",self.zLevel,"  now has ",self.paths.Extent()," paths."
 		
 	def _currentLoop(self):
 		return self.loops[len(self.loops)-1];
@@ -607,7 +612,15 @@ class SVGLayer:
 	def yTransform(self):
 		return (self.slice.layerNo + 1 ) * (self.margin + ( self.slice.sliceHeight * self.unitScale )) + ( self.slice.layerNo * 20 );
 
-		
+
+"""
+   fixes a wire and returns it.
+"""	
+def fixWire(wire):
+	sw = ShapeFix_Wire();
+	sw.Load(wire);
+	sw.FixReorder();
+	return sw.Wire();
 """
 	Writes a sliceset to specified file in Gcode format.
 	TODO: this needs to extend a base class, it duplicates a lot of code in SVGExporter
@@ -630,22 +643,62 @@ class GcodeExporter ():
 		exportedPaths = 0;
 		print "Exporting ",len(slices), " slices."
 		for slice in slices:
-			print "slice has ",len(slice.paths)," paths."
-			for shape in slice.paths:
+			gcodewriter.comment('zLevel' + str(slice.zLevel) );
+			print "slice has ",slice.paths.Extent()," paths."
+			it = TopoDS.TopoDS_ListIteratorOfListOfShape(slice.paths);
+			it.Initialize(slice.paths);
+			print "initiaizeld"
+
+			while it.More():
+				print "there are more"
+				shape = it.Value();
+
+				
+				Topology.dumpTopology(shape);
 				#the shape could be a wire or a compound.				
 				if shape.ShapeType() == TopAbs.TopAbs_WIRE:
+					gcodewriter.comment("begin wire");
 					exportedPaths += 1;
-					gcodewriter.followWire(ts.Wire(shape),self.feedRate);
+					gcodewriter.followWire(fixWire(ts.Wire(shape)),self.feedRate);
+					gcodewriter.comment("end wire");
 				elif shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
-					wireList = sortWires(shape);
-					print "sort Completed, got a list of ",wireList.Length()," wires."
-					for i in range(1,wireList.Length()):
+					gcodewriter.comment("begin compound");
+					print "exorting compound path"
+					texp = TopExp.TopExp_Explorer();
+					texp.Init(shape,TopAbs.TopAbs_WIRE);
+
+					sf = ShapeAnalysis_FreeBounds();
+					inputwires = TopTools.TopTools_HSequenceOfShape();
+					outputwires = TopTools.TopTools_HSequenceOfShape();
+					
+					#add all the wires to a sorter.
+					while ( texp.More() ):
+						wire = ts.Wire(texp.Current());
 						exportedPaths += 1;
-						gcodewriter.followWire(ts.Wire(wireList.Value(i)),self.feedRate);
+						gcodewriter.comment("begin wire");
+						gcodewriter.followWire(fixWire(wire),self.feedRate);
+						gcodewriter.comment("end wire");
+						#inputwires.Append(wire);
+						print "exported wire of compound"
+						texp.Next();
+					gcodewriter.comment("end compound");
+					#now sort them
+					#print "There are ",inputwires.Length()," wires."
+					#sf.ConnectWiresToWires(inputwires.GetHandle(),0.0001,False,outputwires.GetHandle() );
+					#print "New list has",outputwires.Length()," wires."
+					
+					##now follow the wires
+					#for i in range(1,outputwires.Length()):
+					#	gcodewriter.followWire(outputwires.Value(i));
+					
 				else:
 					print "Unknown type of object received in the slice list"
+				it.Next();
+			print "finished loop";
 		commands = gcodewriter.getResults();
-		print "\n".join(commands);
+		f = open(fileName,'w');
+		f.write("\n".join(commands));
+		f.close()
 		print exportedPaths," paths were exported."
 """
     Writes a sliceset to specified file in SVG format.

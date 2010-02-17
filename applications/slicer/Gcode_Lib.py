@@ -56,7 +56,7 @@ BRepLProp_CurveTool = BRepLProp.BRepLProp_CurveTool();
 #TopoDS = TopoDS.TopoDS();
 #TopExp = TopExp.TopExp()
 #TopExp_Explorer = TopExp.TopExp_Explorer();
-
+ts = TopoDS.TopoDS();
 
 def printPoint(point):
 	print "x=%0.4f,y=%0.4f,z=%0.4f" % (point.X(), point.Y(), point.Z());
@@ -87,6 +87,9 @@ class GCode_Generator:
 	def addCommand(self,command):
 		self.cmdBuffer.append(command);
 	
+	def comment(self,cmnt):
+		self.cmdBuffer.append("(" + cmnt + ")");
+		
 	def reset(self):
 		
 		self.currentX=None;
@@ -120,11 +123,11 @@ class GCode_Generator:
 		BRepLProp_CurveTool.Value(curve,p1,firstPoint );
 		BRepLProp_CurveTool.Value(curve,p2,lastPoint );	
 
+		#first, rapid to the beginning, if we are not already there
+		self.movePt(firstPoint,feed,"G00");
+		
 		if ( curveType == 0 ):
 
-			#a line. move to the beginning of the line, then
-			#to the end.
-			self.movePt(firstPoint,feed);
 			self.movePt(lastPoint,feed);
 		
 		if ( curveType == 1 ):
@@ -146,11 +149,7 @@ class GCode_Generator:
 				#print "detected ccw arc";
 			else:
 				#print "detected cw arc";
-				c = "G02";
-			
-			#first, move to the start of the circle. Generally we should already be there
-			self.move(firstPoint.X(),firstPoint.Y(),firstPoint.Z(),feed);
-			
+				c = "G02";			
 			
 			#printPoint(center);
 			#TODO: handle incremental coordinates
@@ -173,6 +172,29 @@ class GCode_Generator:
 			bwe.Next();
 		bwe.Clear();
 
+		
+	#follow a compound
+	def followCompound(self,compound,feed):
+		texp = TopExp.TopExp_Explorer();
+		texp.Init(compound,TopAbs.TopAbs_WIRE);
+
+		while ( texp.More() ):
+			wire = ts.Wire(texp.Current());
+			self.followWire(wire,feed);
+			texp.Next();	
+		texp.ReInit();
+
+	#follow a shape
+	def followShape(self,shape,feed):
+		if shape.ShapeType() == TopAbs.TopAbs_WIRE:
+			self.followWire(ts.Wire(shape),feed);
+		elif shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
+			self.followCompound(ts.Compound(shape),feed);
+		elif shape.ShapeType() == TopAbs.TopAbs_EDGE:
+			self.followEdge(shape,feed);
+		else:
+			print "Cannot follow shape";
+	
 	"""
 		An arc. cmd is either G02 or G03
 		i and j are the locations of the center of the arc
@@ -214,8 +236,8 @@ class GCode_Generator:
 		#naive move tracking doesnt apply to arcs
 		self.lastMove = None;
 	
-	def movePt(self, gp_pt, feed ):
-		self.move(gp_pt.X(),gp_pt.Y(),gp_pt.Z(),feed);
+	def movePt(self, gp_pt, feed,cmd="G01" ):
+		self.move(gp_pt.X(),gp_pt.Y(),gp_pt.Z(),feed,cmd);
 	
 	"""
 		return the gcode required to move to the provided point.

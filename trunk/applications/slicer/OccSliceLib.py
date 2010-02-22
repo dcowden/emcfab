@@ -67,9 +67,6 @@
 """
 
 
-
-from OCC import STEPControl,TopoDS, TopExp, TopAbs,BRep,gp,BRepBuilderAPI,BRepTools,BRepAlgo,BRepBndLib,Bnd,StlAPI,BRepAlgoAPI
-from OCC import BRepGProp,BRepBuilderAPI,BRepPrimAPI,GeomAdaptor,GeomAbs,BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI
 import os
 import sys
 import os.path
@@ -79,18 +76,25 @@ import time
 import traceback
 import Gcode_Lib
 import Topology
+import math
+from OCC import STEPControl,TopoDS, TopExp, TopAbs,BRep,gp
+from OCC import BRepBuilderAPI,BRepTools,BRepAlgo,BRepBndLib,Bnd,StlAPI,BRepAlgoAPI
+from OCC import BRepLProp,BRepGProp,BRepBuilderAPI,BRepPrimAPI,GeomAdaptor,GeomAbs
+from OCC import BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI,BRepAdaptor
+
 from OCC.Display.wxDisplay import wxViewer3d
 from OCC.Utils.Topology import Topo
 from OCC.ShapeAnalysis import ShapeAnalysis_FreeBounds
+from OCC.ShapeAnalysis import ShapeAnalysis_WireOrder
 from OCC.ShapeFix import ShapeFix_Wire
-from Cheetah.Template import Template
+
 from OCC import ShapeFix
 from OCC import BRepBuilderAPI
 from OCC import TopTools
 
 
 ###Logging Configuration
-logging.basicConfig(level=logging.INFO,
+logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
                     stream=sys.stdout)
 
@@ -119,7 +123,13 @@ btool = BRep.BRep_Tool();
 ts = TopoDS.TopoDS();
 topexp = TopExp.TopExp()
 texp = TopExp.TopExp_Explorer();
+BRepLProp_CurveTool = BRepLProp.BRepLProp_CurveTool();
 
+
+#### some constants
+UNITS_MM = "mm";
+UNITS_IN = "in";
+UNITS_UNKNOWN = "units";
 
 """
 	Utility class to provide timing information
@@ -139,6 +149,10 @@ class Timer:
 	def finishedString(self):
 		return "%0.3f sec" % ( self.elapsed() );
 	
+
+def printPoint(point):
+	return "x=%0.4f,y=%0.4f,z=%0.4f" % (point.X(), point.Y(), point.Z());
+
 	
 #to override sometingselected,
 # overrid Viewer3d.    
@@ -154,69 +168,106 @@ class AppFrame(wx.Frame):
   def eraseAll(self):
   		self.canva._display.EraseAll();
 
-def offsetFace(face,offset):
-	#ge the outerer wire
-	ow = brt.OuterWire(face);
-	bo = BRepOffsetAPI.BRepOffsetAPI_MakeOffset();
-	bo.AddWire(ow);
-
-	#now get the other wires
-	te = TopExp.TopExp_Explorer();
-	
-	te.Init(face,TopAbs.TopAbs_WIRE);
-	while te.More():
-		w = ts.Wire(te.Current());
-		if not w.IsSame(ow):
-			bo.AddWire(w);
-		te.Next();
-	te.ReInit();
-
-	
-	bo.Perform(offset,0.00001);
-	
-	return bo.Shape();
-
-	
-	
 """
-	Sort a list of wires, by connecting them into paths if possible.
-	@TODO: note, if this works, it also means that we might be able to use brepAlgo_Section 
-	instead of solid operations.  We were just using solids because we get a compound instead of
-	wires. but if we can figure out how to sort wires into paths, well-- this would work..
+	EdgeWrapper provides additional functions and features
+	for an OCC TopoDS_Edge object
 """
-def sortWires( compound ):
-	sf = ShapeAnalysis_FreeBounds();
-	#Topology.dumpTopology(compound);
-	inputwires = TopTools.TopTools_HSequenceOfShape();
-	print "Sorting Wires..."
-	#add all the wires in the compound to the input wires
-	texp = TopExp.TopExp_Explorer();
-	texp.Init(compound,TopAbs.TopAbs_WIRE);
-
-	while ( texp.More() ):
-		wire = ts.Wire(texp.Current());
-		inputwires.Append(wire);
-		texp.Next();
+class EdgeWrapper:
+	def __init__(self,edge):
+		self.edge = edge;
+		self.reversed = False;
+		
+		#get the first and last points for the underlying curve
+		curve = BRepAdaptor.BRepAdaptor_Curve(edge);		
+		p1 = curve.FirstParameter();
+		p2 = curve.LastParameter();
+		self.curve = curve;
+		self.curveType = curve.GetType();
+		#get first and last points.
+		fP1 = gp.gp_Pnt();
+		fP2 = gp.gp_Pnt();
+		BRepLProp_CurveTool.Value(curve,p1,fP1 );
+		BRepLProp_CurveTool.Value(curve,p2,fP2 );
 	
-	#free memory
-	texp.ReInit();
+		#set up the endpoints for easy access?
+		if edge.Orientation() == TopAbs.TopAbs_REVERSED:
+			self.reversed=True;
+			self.firstPoint = fP2;
+			self.lastPoint = fP1
+		else:
+			self.firstPoint = fP1;
+			self.lastPoint = fP2;
+			
+	def isLine(self):
+		return self.curveType == 0;
+		
+	def isCircle(self):
+		return self.curveType == 1;
+		
+	def __str__(self):
+		if self.isLine():
+			s = "Line:\t";
+		elif self.isCircle():
+			s  = "Circle:\t";
+		else:
+			s = "Curve:\t";
+		return s + printPoint(self.firstPoint) + "-->" + printPoint(self.lastPoint);
 
-	print "There are ",inputwires.Length()," wires."
-	outputwires = TopTools.TopTools_HSequenceOfShape();
-	print "New list has",outputwires.Length()," wires."
-	#print inputwires.GetHandle()
-	#print outputwires.GetHandle()
-	sf.ConnectWiresToWires(inputwires.GetHandle(),0.0001,False,outputwires.GetHandle() );
+"""
+    WireWrapper provides additional functions and features
+	for an OCC TopoDS_Wire object
+"""
+class WireWrapper:
+	def __init__(self,wire):
+		self.wire = wire;
+		
+		#build a list of the edges
+		self.edgeList = [];
+		bwe = BRepTools.BRepTools_WireExplorer(wire);
+		while bwe.More():
+			edge = bwe.Current();
+			self.edgeList.append(EdgeWrapper(edge));
+			bwe.Next();
+		bwe.Clear();		
 	
-	#for now return the input wires, which seems to work at least
-	return inputwires;
+	#sort the wire using ShapeFix to 
+	#connect and re-order them head-to-tail
+	#returns a wire for the constructed wire
+	#or a reference to this object if there was a problem constructing it
+	def getSortedWire(self,precision=0.001):
+	
+		sw = ShapeFix_Wire();
+		sw.Load(self.wire);
+		sw.ClosedWireMode = True;
+		sw.FixReorderMode = 1;
+		sw.FixConnectedMode = 1;
+		sw.FixLackingMode = 1;
+		sw.FixGaps3dMode = 1;
+		sw.FixConnectedMode = 1;
+		sw.FixDegeneratedMode = 1;
 
+		
+		if sw.Perform():
+			#logging.info("WireSorting Was Successful!");
+			return WireWrapper(sw.Wire());	
+		else:
+			#logging.info("WireSorting unsuccessful. returning self.");
+			return self;
 
+	def __str__(self):
+		p = [];
+		p.append("Wire (" + str(len(self.edgeList)) + "  edges ):");
+		for e in self.edgeList:
+			p.append("\t" + str(e) );
+		
+		return "\n".join(p);
+		
+		
 """
 	Class that provides easy access to commonly
 	needed features of a solid shape
 """
-class ShapeAnalyzer:
+class SolidAnalyzer:
 	def __init__(self,shape):
 		self.shape = shape;
 
@@ -275,128 +326,188 @@ class ShapeAnalyzer:
 		dimList = [ abs(self.xMax - self.xMin ), abs(self.yMax - self.yMin ), abs(self.zMax - self.zMin) ];
 		#no real part would likely be bigger than 10 inches on any side
 		if max(dimList) > 10:
-			return "mm";
+			return UNITS_MM;
 	
 		#no real part would likely be smaller than 0.1 mm on all dimensions
 		if min(dimList) < 0.1:
-			return "in";
+			return UNITS_IN;
 			
 		#no real part would have the sum of its dimensions less than about 5mm
 		if sum(dimList) < 10:
-			return "in";
+			return UNITS_IN;
 		
-		return "units";	
+		return UNITS_UNKNOWN;	
 
-
+"""
+	Slicing Parameters Object stores the various options
+	that are selected during slicing.
 	
+	This object is separated out because as these routines
+	become more complex, it is expected that this obejct will grow in size
+"""
+class SliceOptions:
+	def __init__(self):
+	
+		#global options
+		self.zMin = None;
+		self.zMax = None;
+		self.translateToPositiveSpace=False;
+		self.numSlices = None;
+		self.resolution = None;
+		self.sliceHeight = None;
+		self.uom = None;
+		self.DEFAULT_RESOLUTION = { UNITS_MM : 0.3, UNITS_IN : 0.012 };
+		self.FIRST_LAYER_OFFSET = 0.0001;
+		self.DEFAULT_NUMSHELLS = 5;
+
+		#per-slice options
+		self.numShells = self.DEFAULT_NUMSHELLS;
+		
 """
 	a set of slices that together make a part
 """
 class Slicer:
-	def __init__(self,shape):
+	def __init__(self,shape,options):
 		self.slices=[]
-
 		self.shape = shape;
-		#slicing parameters
-		self.zMin = None;
-		self.zMax = None;
+		self.analyzer = SolidAnalyzer(shape);
+		
+		self.options = options;		
+
+		self.saveSliceFaces = True;				
+		self.FIRST_LAYER_OFFSET = 0.00001;
+		
+		#display property if avaialable
 		self.display = None;
-		self.translateToPositiveSpace = False;		
-		self.sliceHeight = None;
-		self.numSlices = None;
-		self.saveSliceFaces = True;
-		self._FIRST_LAYER_OFFSET = 0.0001;
-		self._DEFAULT_SLICEHEIGHT_MM = 0.3;
-		self._DEFAULT_SLICEHEIGHT_IN = 0.012;
-				
-		self.analyzer = ShapeAnalyzer(shape);
+		
+		#use options and actual object to determine unit of measure and other values
+		#unit of measure
+		self.uom = self.analyzer.guessUnitOfMeasure();
+		if options.uom:
+			self.uom = options.uom;
+		
+		#nozzle resolution
+		self.resolution = options.DEFAULT_RESOLUTION.get(self.uom);
+		if options.resolution:
+			self.resolution = options.resolution;
+			
+		#slicing boundaries
+		self.zMin = self.analyzer.zMin;
+		self.zMax = self.analyzer.zMax;
+		
+		if options.zMin and options.zMin > self.zMin:
+			self.zMin = options.zMin;
+			
+		if options.zMax and options.zMax < self.zMax:
+			self.zMax = options.zMax;
+			
+		#slice thickness: default to same as resolution
+		zRange = (self.zMax - self.zMin );
+		self.sliceHeight = self.resolution;
+		self.numSlices = math.floor(zRange/self.sliceHeight);
+		
+		#alter if number of slices or a particular thickness is provided
+		if options.sliceHeight:
+			self.sliceHeight = options.sliceHeight;
+			self.numSlices = math.floor(zRange/self.sliceHeight);
+		elif options.numSlices:
+			self.numSlices = options.numSlices;
+			self.sliceHeight = zRange / self.numSlices;
+					
 		logging.info("Object Loaded. Dimensions are " + self.analyzer.friendlyDimensions());
+		
+	def showShape(self,shape):
+		if self.display:
+			self.display.showShape(shape);
 
 	def execute(self):
 
 		t = Timer();		
 		logging.info("Slicing Started.");
 		
-		if self.zMin == None:
-			self.zMin = self.analyzer.zMin;
-			logging.warn( "No zMin Specified, assuming bottom of object.");
-		
-		if self.zMax ==None:
-			self.zMax = self.analyzer.zMax;
-			logging.warn( "No zMax Specified, assuming top of object.");
-
-		logging.info("Slicing Object from zMin=%0.3f to zMax=%0.3f" % ( self.zMin, self.zMax )  );
-		self.zRange = abs(self.zMax - self.zMin);
-		uom = self.analyzer.guessUnitOfMeasure();
-		if uom == 'mm':
-			#resolution = self._DEFAULT_SLICEHEIGHT_MM;
-			resolution = 2.0;
-		else:
-			resolution = self._DEFAULT_SLICEHEIGHT_IN;
-			
-		#get slice levels
-		if self.sliceHeight == None:
-			if self.numSlices == None:
-				self.sliceHeight = resolution;
-				logging.warn( "No Slice Thickness specified. Using Sane Defaults.");
-			else:
-				self.sliceHeight = abs(self.zMax - self.zMin)/self.numSlices;
-				logging.info( "Computed sliceHeight=%0.3f based on numSlices" % (self.sliceHeight));
-		
-		numSlices = self.zRange / self.sliceHeight;
-		reportInterval = round(numSlices/10);
-		logging.info( "Slice Thickness is %0.3f %s, %0d slices. " % ( self.sliceHeight,uom,numSlices ));
+		reportInterval = round(self.numSlices/10);
+		logging.info( "Slice Thickness is %0.3f %s, %0d slices. " % ( self.sliceHeight,self.uom,self.numSlices ));
 		
 		#make slices
-		zLevel = self.zMin + self._FIRST_LAYER_OFFSET;
-		layerNo = 1;
-		MAX_OFFSET = 30;
+		zLevel = self.zMin + self.FIRST_LAYER_OFFSET;
+		sliceNumber = 1;
 		t2 = Timer();
 		while zLevel < self.zMax:
-			logging.debug( "Creating Slice %0d, z=%0.3f " % ( layerNo,zLevel));
+			logging.info( "Creating Slice %0d, z=%0.3f " % ( sliceNumber,zLevel));
 			slice = self._makeSlice(self.shape,zLevel);
-			
-			if slice != None:
 
-				#for each face, offset curves as far as we can.
-				#if a display is set, add it to the display
-				print "Zlevel=",zLevel,",",len(slice.faces)," faces."
-				for f in slice.faces:
-					self.display.showShape(f);
-					zf = ts.Face(f);
-					currentOffset = 1;
-					#keep offsetting till we get an error
-					t3=Timer();
-					while currentOffset < MAX_OFFSET:
-						offset = (-1)*resolution*currentOffset;
-						try:							
-							newPath = offsetFace(zf,offset);
-							#slice.addPath(newPath);
-							if currentOffset % 2 == 0:
-								slice.addPath(newPath);
-								self.display.showShape(newPath);							
-						except:
-							traceback.print_exc(file=sys.stdout);
-							print 'error offsetting at offset=',offset
-						currentOffset += 1;
-					#print "Slice Finished",t3.elapsed()
-					#compute an estimate of time remaining every 10 or so slices
-					if reportInterval > 0 and layerNo % reportInterval == 0:
-						pc = ( zLevel - self.zMin )/   ( self.zMax - self.zMin) * 100;
-						logging.info("%0.0f %% complete." % (pc) );
-					
-				if not slice == None:
-					slice.layerNo = layerNo;
-					slice.zHeight = self.sliceHeight;
-					self.slices.append(slice);
-				else:
-					logging.warn("Null Layer Detected and Skipped at z=" + str(zLevel) );
+			if slice != None:
+				self.slices.append(slice);
+				#todo: this should probably be componentize: filling is quite complex.
+				self._fillSlice(slice);
 			zLevel += self.sliceHeight
-			layerNo += 1;
+			sliceNumber += 1;
+			
+			#compute an estimate of time remaining every 10 or so slices
+			if reportInterval > 0 and sliceNumber % reportInterval == 0:
+				pc = ( zLevel - self.zMin )/   ( self.zMax - self.zMin) * 100;
+				logging.info("%0.0f %% complete." % (pc) );			
 
 		logging.info("Slicing Complete: " + t.finishedString() );
-		logging.info("Throughput: %0.3f slices/sec" % (layerNo/t.elapsed() ) );
+		logging.info("Throughput: %0.3f slices/sec" % (sliceNumber/t.elapsed() ) );
 
+	#fills a slice with the appropriate toolpaths.
+	#returns: void
+	#a number of wires are added to the slice as paths.
+	def _fillSlice(self,slice):
+	
+		logging.info("Filling Slice at zLevel %0.3f" % slice.zLevel);
+		for f in slice.faces:
+			currentOffset = 1;
+			self.display.showShape(f);
+			t3=Timer();
+			
+
+				
+			while currentOffset < self.options.numShells:
+				offset = (-1)*self.resolution*currentOffset;
+				try:
+
+					#ge the outerer wire
+					#print f;
+					ow = brt.OuterWire(ts.Face(f));
+					bo = BRepOffsetAPI.BRepOffsetAPI_MakeOffset();
+					bo.AddWire(ow);
+
+					#now get the other wires
+					te = TopExp.TopExp_Explorer();
+					
+					te.Init(f,TopAbs.TopAbs_WIRE);
+					while te.More():
+							w = ts.Wire(te.Current());
+							if not w.IsSame(ow):
+									bo.AddWire(w);
+							te.Next();
+					te.ReInit();
+						
+					bo.Perform(offset,0.00001);
+					shape = bo.Shape();
+		
+					if shape.ShapeType() == TopAbs.TopAbs_WIRE:
+						#print "offset result is a wire"
+						wire = ts.Wire(shape);
+						slice.fillWires.append(WireWrapper(wire));
+					elif shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
+						#print "offset result is a compound"
+						texp = TopExp.TopExp_Explorer();
+						texp.Init(shape,TopAbs.TopAbs_WIRE);
+						while ( texp.More() ):
+							wire = ts.Wire(texp.Current());
+							slice.fillWires.append(WireWrapper(wire));
+							texp.Next();
+						texp.ReInit();
+				except:
+					traceback.print_exc(file=sys.stdout);
+					print 'error offsetting at offset=',offset
+				currentOffset += 1;
+
+		logging.info("Filling Complete, Created %d paths." % len(slice.fillWires)  );
+		
 
 	def _makeSlice(self,shapeToSlice,zLevel):
 		s = Slice();
@@ -432,7 +543,7 @@ class Slicer:
 			if self._isAtZLevel(zLevel,face):
 				foundFace = True;
 				logging.debug( "Face is at zlevel" + str(zLevel) );
-				s.addFace(face,self.saveSliceFaces);
+				s.addFace(face);
 			texp.Next();
 		
 		#free memory
@@ -461,47 +572,6 @@ class Slicer:
 
 
 """
-   Manages a set of loops and points
-   a loop is chain of points that end where it begins
-   a slice can be composed of multiple faces.
-"""
-class Loop:
-	def __init__(self):
-		self.points = [];
-		self.pointFormat = "%0.4f %0.4f ";
-		self.tolerance = 0.00001;
-		
-	def addPoint(self,x,y):
-		p = gp.gp_Pnt2d(x,y);
-		self.points.append( p );
-	
-
-	"""
-		Print SVG Path String for a loop.
-		If the end point and the beginning point are the same,
-		the last point is removed and replaced with the SVG path closure, Z
-	"""
-	def svgPathString(self):
-		lastPoint = self.points.pop();		
-		if self.points[0].IsEqual( lastPoint,self.tolerance ):
-			closed = True;
-		else:
-			closed = False;
-			self.points.append(lastPoint);
-		
-		s = "M ";
-		p = self.points[0];
-		s += self.pointFormat % ( p.X(), p.Y() );
-		for p in self.points[1:]:
-			s += "L ";
-			s += self.pointFormat % ( p.X(),p.Y())
-		
-		if closed:
-			s+= " Z";
-		
-		return s;
-		
-"""
 	One slice in a set of slices that make up a part
 """
 class Slice:
@@ -509,272 +579,76 @@ class Slice:
 		logging.debug("Creating New Slice...");
 		self.path = "";
 		self.faces = [];
-		self.paths = TopoDS.TopoDS_ListOfShape();
-		self.loops=[];
+		
+		#actually these are wirewrappers
+		self.fillWires = [];
 		self.zLevel=0;
 		self.zHeight = 0;
 		self.layerNo = 0;
 		self.sliceHeight=0;
-		
-	def addPath(self, pathShape):
-		self.paths.Append(pathShape);
-		print "slice at zlevel",self.zLevel,"  now has ",self.paths.Extent()," paths."
-		
-	def _currentLoop(self):
-		return self.loops[len(self.loops)-1];
-
-	def addFace(self, face ,saveFaceCopy=True):
-
-		if saveFaceCopy:
-			copier = BRepBuilderAPI.BRepBuilderAPI_Copy(face);
-			self.faces.append(copier.Shape());
-			copier.Delete();
-				
-		ow = brt.OuterWire(face);
-		logging.debug(  "Adding OuterWire..." );
-		self.addWire(ow);
-		
-		logging.debug(  "Adding Other Wires..." );
-		#now get the other wires
-		te = TopExp.TopExp_Explorer();
-		
-		te.Init(face,TopAbs.TopAbs_WIRE);
-		while te.More():
-			w = ts.Wire(te.Current());
-			if not w.IsSame(ow):
-				self.addWire(w);
-			te.Next();
-		te.Clear();	
-		te.Destroy();
-		
-	def addWire(self, wire):
-		logging.debug( "Adding Wire:" + str(wire));
-		loop = Loop();
-		self.loops.append(loop);
-		bwe = BRepTools.BRepTools_WireExplorer(wire);
-		while bwe.More():
-			edge = bwe.Current();
-			self.addEdge(edge);
-			bwe.Next();
-		bwe.Clear();
 	
+	def addFace(self, face ):
+		copier = BRepBuilderAPI.BRepBuilderAPI_Copy(face);
+		self.faces.append(copier.Shape());
+		copier.Delete();		
 		
-	def addEdge(self, edge):
-		loop = self._currentLoop();
-		range = btool.Range(edge);
-		logging.debug( "Edge Bounds:" + str(range) );
-		hc= btool.Curve(edge);
-		ad = GeomAdaptor.GeomAdaptor_Curve(hc[0]);
-	
-		#this could be simplified-- QuasiUnformDeflection probably handles a line
-		#correcly anyway?
-		logging.debug(  "Edge is a curve of type:" + str(ad.GetType()));
-		gc = GCPnts.GCPnts_QuasiUniformDeflection(ad,0.1,hc[1],hc[2]);
-		i=1;
-		numPts = gc.NbPoints();
-		logging.debug( "Discretized Curve has" + str(numPts) + " points." );
-		while i<=numPts:
-			if edge.Orientation() == TopAbs.TopAbs_FORWARD:
-				tPt = gc.Value(i);
-			else:
-				tPt = gc.Value(numPts-i+1);
-			i+=1;
-			loop.addPoint(tPt.X(),tPt.Y());
-	
-			
-	def svgPathString(self):
-		s = "";
-		for l in self.loops:
-			s += l.svgPathString();
-			s += " ";
-		return s;
 
-	def __str__(self):
-	    return "Slice: zLevel=" + str(self.zLevel) 
-			
-
-######
-# Decorates a slice to provide extra computations for SVG Presentation.
-# Needed only for SVG display
-######	
-class SVGLayer:
-	def __init__(self,slice,unitScale,numformat):
-		self.slice = slice;
-		self.margin = 20;
-		self.unitScale = unitScale;
-		self.NUMBERFORMAT = numformat;
-	def zLevel(self):
-		return self.NUMBERFORMAT % self.slice.zLevel;
-		
-	def xTransform(self):
-		return self.margin;
-		
-	def yTransform(self):
-		return (self.slice.layerNo + 1 ) * (self.margin + ( self.slice.sliceHeight * self.unitScale )) + ( self.slice.layerNo * 20 );
-
-
-"""
-   fixes a wire and returns it.
-"""	
-def fixWire(wire):
-	sw = ShapeFix_Wire();
-	sw.Load(wire);
-	sw.ClosedWireMode = True;
-	sw.FixReorderMode = 1;
-	sw.FixConnectedMode = 1;
-	sw.FixLackingMode = 1;
-	sw.FixGaps3dMode = 1;
-	
-	sw.FixConnectedMode = 1;
-	sw.FixDegeneratedMode = 1;
-	sw.Perform();
-	return sw.WireAPIMake();
 """
 	Writes a sliceset to specified file in Gcode format.
-	TODO: this needs to extend a base class, it duplicates a lot of code in SVGExporter
+	
+	Accepts a slicer, and exports gcode for the slices that were produced by the slicer.
+	
 """		
 class GcodeExporter ():
-	def __init__(self,sliceSet):
-		self.sliceSet = sliceSet
-		self.title="Untitled";
-		self.description="No Description"
-		self.feedRate = 100;
-		self.units = sliceSet.analyzer.guessUnitOfMeasure();
-		self.NUMBERFORMAT = '%0.3f';
+	def __init__(self):
+
+		self.description="Description";
+		self.feedRate = 100.0;
+		self.numberFormat = "%0.3f";
+		self.verbose =False;
+		self.display = None;
 	
-	def export(self, fileName):
-		slices = self.sliceSet.slices;
+	def export(self, sliceSet, fileName):
+
+		
+		slices = sliceSet.slices;
 		logging.info("Exporting " + str(len(slices)) + " slices to file'" + fileName + "'...");
 
 		gcodewriter = Gcode_Lib.GCode_Generator();
+		gcodewriter.verbose = self.verbose;
+		gcodewriter.numberFormat = self.numberFormat;
 		gcodewriter.start();
+		gcodewriter.comment(self.description);
 		exportedPaths = 0;
-		print "Exporting ",len(slices), " slices."
+		
 		for slice in slices:
 			gcodewriter.comment('zLevel' + str(slice.zLevel) );
-			print "slice has ",slice.paths.Extent()," paths."
-			it = TopoDS.TopoDS_ListIteratorOfListOfShape(slice.paths);
-			it.Initialize(slice.paths);
-			print "initiaizeld"
-
-			while it.More():
-				print "there are more"
-				shape = it.Value();
-
-				
-				Topology.dumpTopology(shape);
-				#the shape could be a wire or a compound.				
-				if shape.ShapeType() == TopAbs.TopAbs_WIRE:
+			logging.info( "zLevel %d, %d paths. " % ( slice.zLevel, len(slice.fillWires)) );
+			
+			#fw is a wirewrapper
+			for fw in slice.fillWires:
+				if self.verbose:
 					gcodewriter.comment("begin wire");
-					exportedPaths += 1;
-					gcodewriter.followWire(fixWire(ts.Wire(shape)),self.feedRate);
-					gcodewriter.comment("end wire");
-				elif shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
-					gcodewriter.comment("begin compound");
-					print "exorting compound path"
-					texp = TopExp.TopExp_Explorer();
-					texp.Init(shape,TopAbs.TopAbs_WIRE);
+				logging.info(">>begin wire");
+				#print "base wire:",str(fw);				
+				sw =fw.getSortedWire();
+				#print "sorted wire:",str(sw);				
+				gcodewriter.followWire(sw,self.feedRate);
+				logging.info(">>end wire");
+				
+				if self.verbose:
+					gcodewriter.comment("end wire");				
 
-					sf = ShapeAnalysis_FreeBounds();
-					inputwires = TopTools.TopTools_HSequenceOfShape();
-					outputwires = TopTools.TopTools_HSequenceOfShape();
+				if self.display:
+					self.display.showShape(sw.wire);
 					
-					#add all the wires to a sorter.
-					while ( texp.More() ):
-						wire = ts.Wire(texp.Current());
-						exportedPaths += 1;
-						gcodewriter.comment("begin wire");
-						gcodewriter.followWire(fixWire(wire),self.feedRate);
-						gcodewriter.comment("end wire");
-						#inputwires.Append(wire);
-						print "exported wire of compound"
-						texp.Next();
-					gcodewriter.comment("end compound");
-					#now sort them
-					#print "There are ",inputwires.Length()," wires."
-					#sf.ConnectWiresToWires(inputwires.GetHandle(),0.0001,False,outputwires.GetHandle() );
-					#print "New list has",outputwires.Length()," wires."
-					
-					##now follow the wires
-					#for i in range(1,outputwires.Length()):
-					#	gcodewriter.followWire(outputwires.Value(i));
-					
-				else:
-					print "Unknown type of object received in the slice list"
-				it.Next();
-			print "finished loop";
+				exportedPaths += 1;
+
 		commands = gcodewriter.getResults();
 		f = open(fileName,'w');
 		f.write("\n".join(commands));
 		f.close()
-		print exportedPaths," paths were exported."
-"""
-    Writes a sliceset to specified file in SVG format.
-"""
-class SVGExporter ( ):
-	def __init__(self,sliceSet):
-		self.sliceSet = sliceSet
-		self.title="Untitled";
-		self.description="No Description"
-		self.unitScale = 3.7;
-		self.units = sliceSet.analyzer.guessUnitOfMeasure();
-		self.NUMBERFORMAT = '%0.3f';
 		
-	def export(self, fileName):
-		#export svg
-		#the list of layers requires a thin layer around the
-		#slices in the slice set, due to the transformations required
-		#for the fancy viewer
-		
-		slices = self.sliceSet.slices;
-		logging.info("Exporting " + str(len(slices)) + " slices to file'" + fileName + "'...");
-		layers = []
-		for s in	self.sliceSet.slices:
-			layers.append( SVGLayer(s,self.unitScale,self.NUMBERFORMAT) );
-				
-		#use a cheetah template to populate the data
-		#unfortunately most numbers must be formatted to particular precision		
-		#most values are redundant from  sliceSet, but are repeated to allow
-		#different formatting without modifying underlying data
-		
-		t = Template(file='svg_template.tmpl');
-		t.sliceSet = self.sliceSet;
-		t.layers = layers;
-		t.units=self.units;
-		t.unitScale = self.unitScale;
-		
-		#adjust precision of the limits to 4 decimals
-		#this converts to a string, but that's ok since we're using it 
-		# to populate a template
-		t.sliceHeight = self.NUMBERFORMAT % t.sliceSet.sliceHeight;
-		t.xMin = self.NUMBERFORMAT % t.sliceSet.analyzer.xMin;
-		t.xMax = self.NUMBERFORMAT % t.sliceSet.analyzer.xMax;
-		t.xRange = self.NUMBERFORMAT % t.sliceSet.analyzer.xDim;
-		t.yMin = self.NUMBERFORMAT % t.sliceSet.analyzer.yMin;
-		t.yMax = self.NUMBERFORMAT % t.sliceSet.analyzer.yMax;
-		t.yRange = self.NUMBERFORMAT % t.sliceSet.analyzer.yDim;
-		t.zMin = self.NUMBERFORMAT % t.sliceSet.analyzer.zMin;
-		t.zMax =	self.NUMBERFORMAT % t.sliceSet.analyzer.zMax;	
-		t.zRange = self.NUMBERFORMAT % t.sliceSet.analyzer.zDim;
-		
-
-
-		#svg specific properties
-		t.xTranslate=(-1)*t.sliceSet.analyzer.xMin
-		t.yTranslate=(-1)*t.sliceSet.analyzer.yMin
-		t.title=self.title
-		t.desc=self.description
-		
-		#put layer dims as nicely formatted numbers
-		t.xMinText = "%0.3f" % t.sliceSet.analyzer.xMin; 
-		t.xMaxText = "%0.3f" % t.sliceSet.analyzer.xMax;
-		t.yMinText = "%0.3f" % t.sliceSet.analyzer.yMin; 
-		t.yMaxText = "%0.3f" % t.sliceSet.analyzer.yMax;
-		t.zMinText = "%0.3f" % t.sliceSet.analyzer.zMin;
-		t.zMaxText = "%0.3f" % t.sliceSet.analyzer.zMax;
-		f = open(fileName,'w');
-		f.write(str(t));
-		f.close()
 
 """
 	Read a shape from Step file
@@ -815,14 +689,12 @@ def readSTLShape(fileName):
 
 def printUsage():
 	print """
-		Usage: OccSliceLib <inputfile: STL or STEP> [sliceThickness]
+		Usage: OccSliceLib <inputfile: STL or STEP> 
 			- inputfile [required] is an STL or STEP file, ending in .stl, .stp, or .step.
-			- sliceThickness [optional] is in the same units as the object, and is optional
-				 defaults to 0.3mm or 0.012 in
 		
 		Creates an SVG output file compatible with skeinforge	, in same directory as inputfile
 	"""
-def main(filename,sliceThickness):
+def main(filename):
 
 	app = wx.PySimpleApp()
 	wx.InitAllImageHandlers()
@@ -851,35 +723,36 @@ def main(filename,sliceThickness):
 	sliceFrame.canva.InitDriver()
 	sliceFrame.canva._display.SetModeWireFrame()
 	sliceFrame.Show(True)
+
+	gcodeFrame = AppFrame(None,"Generated Toolpaths" + filename,420,20)
+	gcodeFrame.canva.InitDriver()
+	gcodeFrame.canva._display.SetModeWireFrame()
+	gcodeFrame.Show(True)	
 	
-	
-	analyzer = ShapeAnalyzer(theSolid);	
+	analyzer = SolidAnalyzer(theSolid);	
 	shape = analyzer.translateToPositiveSpace();
 
 	frame.showShape(shape);	
 	frame.Show(True)			
 
-	#slice it
-	sliceSet = Slicer(shape);
-	sliceSet.display = sliceFrame;	
+	#slicing options: use defaults
+	options = SliceOptions();
+	options.numSlices=8;
+	options.numShells=12;
+	options.resolution=0.3;
 	
-	if not sliceThickness ==None:
-		sliceSet.sliceHeight = float(sliceThickness)
-		
+	#slice it
+	sliceSet = Slicer(shape,options);
+	sliceSet.display = sliceFrame;	
 	sliceSet.execute()
 	
-	#export to svg
-	#sexp = SVGExporter(sliceSet);
-	#sexp.title="RepRap Test";
-	#sexp.description = "Test Description";	
-	#sexp.export(outFileName);
-	
 	#export to gcode
-	gexp = GcodeExporter(sliceSet);
-	gexp.title="Reprap Test";
-	gexp.export(outFileName);
+	gexp = GcodeExporter();
+	gexp.description="Reprap Test";
+	gexp.display = gcodeFrame;
+	gexp.export(sliceSet, outFileName);
+	gexp.verbose = False;
 	
-
 	app.SetTopWindow(frame)
 	app.MainLoop() 
 
@@ -887,12 +760,10 @@ def main(filename,sliceThickness):
 	
 if __name__=='__main__':
 	nargs = len(sys.argv);
-	sliceThickness = None;
+
 	if nargs > 1:
 		filename = sys.argv[1];
-		if nargs > 2:
-			sliceThickness = sys.argv[2];
-		main(filename,sliceThickness);
+		main(filename);
 	else:
 		printUsage();
 		

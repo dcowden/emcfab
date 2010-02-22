@@ -40,7 +40,7 @@ logging.basicConfig(level=logging.INFO,
 	Module Settings
 
 """
-GCODE_NUMBER_FORMAT = "%0.2f";
+DEFAULT_NUMBER_FORMAT = "%0.2f";
 DEFAULT_FEEDRATE = 1.0;
 DEFAULT_DEFLECTION=0.001;
 OMIT_UNCHANGED_AXES=False;
@@ -59,7 +59,7 @@ BRepLProp_CurveTool = BRepLProp.BRepLProp_CurveTool();
 ts = TopoDS.TopoDS();
 
 def printPoint(point):
-	print "x=%0.4f,y=%0.4f,z=%0.4f" % (point.X(), point.Y(), point.Z());
+	return "x=%0.4f,y=%0.4f,z=%0.4f" % (point.X(), point.Y(), point.Z());
 	
 """
 	State machine for creating gcode.
@@ -80,15 +80,22 @@ class GCode_Generator:
 		self.reset();
 		self.startUp = "G90 ";
 		self.safeHeight = "3";
-		
+		self.numberFormat = DEFAULT_NUMBER_FORMAT;
+		self.verbose = False;
 	def getResults(self):
 		return self.cmdBuffer;
 	
 	def addCommand(self,command):
 		self.cmdBuffer.append(command);
 	
+	def debugCurrentPosition(self):
+		if self.currentX and self.currentY and self.currentZ:
+			print "Current Position: X=%0.4f,Y=%0.4f,Z=%0.4f" % (self.currentX, self.currentY, self.currentZ);
+		else:
+			print "Current Position is undefined."
+		
 	def comment(self,cmnt):
-		self.cmdBuffer.append("(" + cmnt + ")");
+		self.addCommand("(" + cmnt + ")");
 		
 	def reset(self):
 		
@@ -98,7 +105,12 @@ class GCode_Generator:
 		self.currentFeed=None;
 		self.cmdBuffer = [];
 		self.lastMove = None;
-		
+	
+	def isPointClose(self,point,tolerance=0.0001):
+		if (self.currentX == None) or (self.currentY == None) or (self.currentZ == None):
+			return False;
+		return (abs(self.currentX - point.X()) < tolerance) and (abs(self.currentY - point.Y()) < tolerance) and (abs(self.currentZ - point.Z()) < tolerance);
+		       
 	"""
 		Follow an edge. A command will be issued ( if necessary ) to move
 		to the beginning of the edge, then to the end along the commanded edge.
@@ -106,44 +118,32 @@ class GCode_Generator:
 		Usually edges will be chained together so that the end of one is the
 		same of the beginning of the next.
 	"""
-	def followEdge(self,edge,feed):
-		range = Brep_Tool.Range(edge);
-		logging.debug( "Edge Bounds:" + str(range) );
+	def followEdge(self,edgeWrapper,feed):
+		print str(edgeWrapper);
+		if self.verbose:
+			self.comment(str(edgeWrapper));
 		
-		curve = BRepAdaptor.BRepAdaptor_Curve(edge);		
-		p1 = curve.FirstParameter();
-		p2 = curve.LastParameter();
-		curveType = curve.GetType();
+		#check to see if we should reverse this edge. Perhaps reversing it will work better.
+		if not self.isPointClose(edgeWrapper.firstPoint,0.001):
+			#print "moving to start."
+			self.movePt(edgeWrapper.firstPoint,feed,"G00");		
+		#else:
+			#print "no move required, already at start."
 		
-		logging.debug(  "Edge is a curve of type:" + str(curveType));
-		
-		#get first and last points.
-		firstPoint = gp.gp_Pnt();
-		lastPoint = gp.gp_Pnt();
-		BRepLProp_CurveTool.Value(curve,p1,firstPoint );
-		BRepLProp_CurveTool.Value(curve,p2,lastPoint );	
-
-		#first, rapid to the beginning, if we are not already there
-		self.movePt(firstPoint,feed,"G00");
-		
-		if ( curveType == 0 ):
-
-			self.movePt(lastPoint,feed);
-		
-		if ( curveType == 1 ):
-			#a circle.
-			#print "FirstPoint="
-			#printPoint(firstPoint);
-			
-			##print "LastPoint="
-			#printPoint(lastPoint);			
-			circle = curve.Circle();
+		if edgeWrapper.isLine():
+			self.movePt(edgeWrapper.lastPoint,feed);
+		elif edgeWrapper.isCircle():
+			circle = edgeWrapper.curve.Circle();
 			center = circle.Location();
 			
 			axisDir = circle.Axis().Direction(); #need this to determine which way the arc goes			
 			#assume we are essentially in 2d space, so we're looking only at wehter the
 			#axis of the circle is +z or -z
 			zDir = gp.gp().DZ();
+			
+			if edgeWrapper.reversed:
+				zDir = zDir.Reversed();
+				
 			if zDir.IsEqual(axisDir,TOLERANCE):
 				c = "G03"
 				#print "detected ccw arc";
@@ -151,49 +151,22 @@ class GCode_Generator:
 				#print "detected cw arc";
 				c = "G02";			
 			
-			#printPoint(center);
 			#TODO: handle incremental coordinates
-			#how do we know whether we want to do a clockwise or counterclockwise arc?
-			self.arc(center.X()-firstPoint.X(),center.Y()-firstPoint.Y(),lastPoint.X(),lastPoint.Y(),lastPoint.Z(),feed,c);
-
-						
-		if ( curveType == 2 ):
-			#an ellipse
-			self.addCommand("G02 Ellipse Not Implemented");	
-	
-	#follow the segments in a wire
-	def followWire(self,wire, feed ):
-		logging.debug( "Following Wire:" + str(wire));
-		bwe = BRepTools.BRepTools_WireExplorer(wire);
-		
-		while bwe.More():
-			edge = bwe.Current();
-			self.followEdge(edge,feed);
-			bwe.Next();
-		bwe.Clear();
-
-		
-	#follow a compound
-	def followCompound(self,compound,feed):
-		texp = TopExp.TopExp_Explorer();
-		texp.Init(compound,TopAbs.TopAbs_WIRE);
-
-		while ( texp.More() ):
-			wire = ts.Wire(texp.Current());
-			self.followWire(wire,feed);
-			texp.Next();	
-		texp.ReInit();
-
-	#follow a shape
-	def followShape(self,shape,feed):
-		if shape.ShapeType() == TopAbs.TopAbs_WIRE:
-			self.followWire(ts.Wire(shape),feed);
-		elif shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
-			self.followCompound(ts.Compound(shape),feed);
-		elif shape.ShapeType() == TopAbs.TopAbs_EDGE:
-			self.followEdge(shape,feed);
+			self.arc(center.X()-edgeWrapper.firstPoint.X(),center.Y()-edgeWrapper.firstPoint.Y(),edgeWrapper.lastPoint.X(),edgeWrapper.lastPoint.Y(),edgeWrapper.lastPoint.Z(),feed,c);
 		else:
-			print "Cannot follow shape";
+			self.addCommand("Curve Type %d Not implemented" % edgeWrapper.curveType );
+		if self.verbose:
+			self.comment("End follow Edge.");
+	
+		
+	#follow the segments in a wire
+	#wire is a WireWrapper object
+	def followWire(self,wireWrapper, feed ):
+		#logging.debug( "Following Wire:" + str(wireWrapper));
+		#bwe = BRepTools.BRepTools_WireExplorer(wireWrapper.wire);
+		
+		for ew in wireWrapper.edgeList:
+			self.followEdge(ew,feed );
 	
 	"""
 		An arc. cmd is either G02 or G03
@@ -211,24 +184,24 @@ class GCode_Generator:
 		#careful-- i and j are offsets, not coordinates.
 		
 		if i != None and i != 0:
-			command.append( ("I" + GCODE_NUMBER_FORMAT)  % (i ));
+			command.append( ("I" + self.numberFormat)  % (i ));
 		
 		if j != None and j != 0:
-			command.append( ("J" + GCODE_NUMBER_FORMAT)  % (j ));
+			command.append( ("J" + self.numberFormat)  % (j ));
 
 		if x != None and x != self.currentX:
-			command.append( ("X" + GCODE_NUMBER_FORMAT)  % (x ));
+			command.append( ("X" + self.numberFormat)  % (x ));
 			self.currentX = x;
 		if y != None and y != self.currentY:
-			command.append( ("Y" + GCODE_NUMBER_FORMAT)  % (y ));
+			command.append( ("Y" + self.numberFormat)  % (y ));
 			self.currentY = y;
 			
 		if z != None and z != self.currentZ:
-			command.append( ("Z" + GCODE_NUMBER_FORMAT)  % (z ));
+			command.append( ("Z" + self.numberFormat)  % (z ));
 			self.currentZ = z;
 			
 		if feed != None and  feed != self.currentFeed:
-			command.append( ("F" + GCODE_NUMBER_FORMAT)  % (feed ));
+			command.append( ("F" + self.numberFormat)  % (feed ));
 			self.currentFeed = feed;
 			
 
@@ -245,7 +218,9 @@ class GCode_Generator:
 	
 	"""
 	def move(self, x = None, y = None, z = None,  feed=None, cmd="G01"):
-
+		
+		#self.debugCurrentPosition();
+		
 		if x == None: x = self.currentX
 		if y == None: y = self.currentY
 		if z == None: z = self.currentZ
@@ -281,19 +256,20 @@ class GCode_Generator:
 		cmds=[]
 		cmds.append(cmd);
 		if x != self.currentX:
-			cmds.append( ("X" + GCODE_NUMBER_FORMAT)  % (x) );
+			cmds.append( ("X" + self.numberFormat)  % (x) );
 			self.currentX = x
 		if y != self.currentY:
-			cmds.append( ("Y" + GCODE_NUMBER_FORMAT)  % (y) );
+			cmds.append( ("Y" + self.numberFormat)  % (y) );
 			self.currentY = y
 		if z != self.currentZ:
-			cmds.append( ("Z" + GCODE_NUMBER_FORMAT)  % (z) );
+			cmds.append( ("Z" + self.numberFormat)  % (z) );
 			self.currentZ = z
 		if feed != self.currentFeed:
-			cmds.append(("F" + GCODE_NUMBER_FORMAT) % (feed) );
+			cmds.append(("F" + self.numberFormat) % (feed) );
 			self.currentFeed = feed;	
 			
 		self.addCommand( " ".join(cmds));
+		#self.debugCurrentPosition();
 
 		
 	def rapid(self,x = None, y = None, z = None,  feed=None ):

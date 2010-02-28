@@ -505,3 +505,98 @@ class Slice:
 			i+=1;
 			loop.addPoint(tPt.X(),tPt.Y());
 	
+"""
+	Testing Methods/Functions
+
+
+"""	
+def fillFaceGrid(face):
+	print "Filling Face Grid..";
+	PRECISION = .1;
+	TOLERANCE = 0.001;
+	grid = fillLib.BooleanGrid(PRECISION);
+	
+	#get the bounds of the face in x-y space
+	box = Bnd.Bnd_Box();
+	b = BRepBndLib.BRepBndLib();
+	b.Add(face,box);
+	
+	bounds = box.Get();
+	xMin = bounds[0];
+	xMax = bounds[3];
+	yMin = bounds[1];
+	yMax = bounds[4];
+	zMin = bounds[2];
+	zMax = bounds[5];
+	print xMin,xMax,yMin,yMax;
+	#assert 1==2
+	t2 = Timer();
+	#for the entire space, crate a grid based on membership on the face.
+	estimatedops = round((xMax-xMin)*(yMax-yMin)/PRECISION/PRECISION)
+	operations=0;
+	print "There should be at most %d pixels." % estimatedops
+	print "Estimated time is %d seconds" % (estimatedops / 2150)
+	cX=xMin;
+	while cX < xMax:
+		cY = yMin;
+		while cY<yMax:
+			#is the point on the face?
+			p = gp.gp_Pnt(cX,cY,zMin);
+			zDir = gp.gp().DZ();
+			#make a zdirection line at point cX,cY
+			#print "computing",cX,cY
+			line = gp.gp_Lin( p, zDir  );
+			isector = IntCurvesFace.IntCurvesFace_ShapeIntersector();
+			isector.Load(face,TOLERANCE);
+			isector.Perform(line,-999,9999);
+			if isector.IsDone() > 0:
+				#print "Line intersects!";
+				grid.setPoint(cX,cY,False);
+			#else:
+				#print "Line does not intersect!";			
+			operations += 1;
+			cY += PRECISION;
+		cX += PRECISION;
+	print "Face Grid Fill Done,", len(grid.pixels)," pixels."
+	print "Performance: %0.4f ops/second." % (  operations/ t2.elapsed() );
+	#print grid.pixels;
+	assert 1==2,"I want to stop here"
+
+	
+"""
+	Create an array of lines that will cover the entire area of a face.
+"""
+def createFillLines(xMin,xMax,yMin,yMax,spacing, zLevel,angle):
+	"angle is the angle from x axis"
+	global mainDisplay;
+	t = Timer();
+	lineDir = gp.gp_Dir( 1,math.cos(math.radians(angle)),zLevel );
+	angleRads = math.radians(angle);
+	xSpacing = spacing / math.cos(angleRads);
+	ySpacing = spacing/ math.sin(angleRads);
+	
+	#make lines in two sets: one set moving positive along the x axis,
+	#one set moving positive along the y axis
+	
+	#todo: this algo makes lines that are bit too long in some cases, but that's ok i think.
+	#todo: it is actually possible to create all of these lines only one time, and then 
+	#re-use them for each slice. the bounding box will not change during slicing
+	lines = [];
+	for xN in frange6(xMin,xMax,xSpacing):
+		p1 = gp.gp_Pnt(xN,yMin,zLevel);
+		p2 = gp.gp_Pnt(xMax, (xMax - xN)* math.tan(angleRads), zLevel);
+		builder = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(p1,p2);
+		builder.Build();
+		#mainDisplay.showShape(builder.Shape());
+		lines.append(builder.Shape() );
+	#dont duplicate the middle one.
+	for yN in frange6(yMin+ySpacing,yMax,ySpacing):
+		p1 = gp.gp_Pnt(xMin,yN,zLevel);
+		p2 = gp.gp_Pnt((yMax - yN)* math.tan(angleRads), yMax, zLevel);
+		builder = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(p1,p2);
+		builder.Build();
+		#mainDisplay.showShape(builder.Shape());		
+		lines.append(builder.Shape() );	
+	
+	print "Create Fillings took %d seconds" % t.elapsed();
+	return lines;	

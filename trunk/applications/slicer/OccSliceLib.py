@@ -74,13 +74,13 @@ import wx
 import logging
 import time
 import traceback
-import Gcode_Lib
-import Topology
+
 import math
+
 from OCC import STEPControl,TopoDS, TopExp, TopAbs,BRep,gp
 from OCC import BRepBuilderAPI,BRepTools,BRepAlgo,BRepBndLib,Bnd,StlAPI,BRepAlgoAPI
-from OCC import BRepLProp,BRepGProp,BRepBuilderAPI,BRepPrimAPI,GeomAdaptor,GeomAbs
-from OCC import BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI,BRepAdaptor
+from OCC import BRepLProp,BRepGProp,BRepBuilderAPI,BRepPrimAPI,GeomAdaptor,GeomAbs,BRepExtrema
+from OCC import BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI,BRepAdaptor,IntCurvesFace
 
 from OCC.Display.wxDisplay import wxViewer3d
 from OCC.Utils.Topology import Topo
@@ -91,6 +91,10 @@ from OCC.ShapeFix import ShapeFix_Wire
 from OCC import ShapeFix
 from OCC import BRepBuilderAPI
 from OCC import TopTools
+from OCC import gce
+#my libraries
+import fillLib
+import Gcode_Lib
 
 
 ###Logging Configuration
@@ -112,7 +116,8 @@ logging.basicConfig(level=logging.DEBUG,
 ##   X sew faces from crappy stl files into single faces somehow
 ##   X remove reference to profile import
 
-
+ 
+mainDisplay = None;
 
 #####
 #utility class instances
@@ -153,6 +158,20 @@ class Timer:
 def printPoint(point):
 	return "x=%0.4f,y=%0.4f,z=%0.4f" % (point.X(), point.Y(), point.Z());
 
+def sortPoints(pointList):
+	"Sorts points by ascending X"
+	pointList.sort(cmp= lambda x,y: cmp(x.X(),y.X()));
+
+def edgeFromTwoPoints(p1,p2):
+	builder = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(p1,p2);
+	builder.Build();			
+	edge = builder.Edge();
+	return edge;
+	
+def make_edge(shape):
+    spline = BRepBuilderAPI_MakeEdge(shape)
+    spline.Build()
+    return spline.Shape()	
 	
 #to override sometingselected,
 # overrid Viewer3d.    
@@ -168,6 +187,30 @@ class AppFrame(wx.Frame):
   def eraseAll(self):
   		self.canva._display.EraseAll();
 
+def frange6(*args):
+    """A float range generator."""
+    start = 0.0
+    step = 1.0
+
+    l = len(args)
+    if l == 1:
+        end = args[0]
+    elif l == 2:
+        start, end = args
+    elif l == 3:
+        start, end, step = args
+        if step == 0.0:
+            raise ValueError, "step must not be zero"
+    else:
+        raise TypeError, "frange expects 1-3 arguments, got %d" % l
+
+    v = start
+    while True:
+        if (step > 0 and v >= end) or (step < 0 and v <= end):
+            raise StopIteration
+        yield v
+        v += step		
+		
 """
 	EdgeWrapper provides additional functions and features
 	for an OCC TopoDS_Edge object
@@ -261,8 +304,10 @@ class WireWrapper:
 			p.append("\t" + str(e) );
 		
 		return "\n".join(p);
-		
-		
+
+
+
+	
 """
 	Class that provides easy access to commonly
 	needed features of a solid shape
@@ -338,6 +383,7 @@ class SolidAnalyzer:
 		
 		return UNITS_UNKNOWN;	
 
+		
 """
 	Slicing Parameters Object stores the various options
 	that are selected during slicing.
@@ -359,7 +405,8 @@ class SliceOptions:
 		self.DEFAULT_RESOLUTION = { UNITS_MM : 0.3, UNITS_IN : 0.012 };
 		self.FIRST_LAYER_OFFSET = 0.0001;
 		self.DEFAULT_NUMSHELLS = 5;
-
+		self.inFillAngle = 30;
+		self.inFillSpacing=1;
 		#per-slice options
 		self.numShells = self.DEFAULT_NUMSHELLS;
 		
@@ -437,9 +484,12 @@ class Slicer:
 			slice = self._makeSlice(self.shape,zLevel);
 
 			if slice != None:
+				#for f in slice.faces:
+				#	self.showShape(f);			
 				self.slices.append(slice);
 				#todo: this should probably be componentize: filling is quite complex.
 				self._fillSlice(slice);
+
 			zLevel += self.sliceHeight
 			sliceNumber += 1;
 			
@@ -451,6 +501,69 @@ class Slicer:
 		logging.info("Slicing Complete: " + t.finishedString() );
 		logging.info("Throughput: %0.3f slices/sec" % (sliceNumber/t.elapsed() ) );
 
+	#take the lastOffsetShape, and compute infill.
+	def _hatchSlice(self,slice,lastOffset):
+		[xMin,xMax,yMin,yMax,zMin,zMax] = slice.getBounds();
+		global mainDisplay;
+
+		wires = [];
+		#compute direction of line
+		lineDir = gp.gp_Dir( 1,math.cos(math.radians(self.options.inFillAngle)),slice.zLevel );
+		angleRads = math.radians(self.options.inFillAngle);
+		xSpacing = self.options.inFillSpacing / math.cos(angleRads);		
+
+		#tan theta = op/adj , adj =op / tan 
+		xStart = ( xMin - (yMax - yMin)/math.tan(angleRads));
+		xStop = xMax;
+		foundPart = False;
+		
+		wireBuilder = BRepBuilderAPI.BRepBuilderAPI_MakeWire ();
+
+		for xN in frange6(xStart,xStop,xSpacing):
+			
+			#make an edge to intersect
+			p1 = gp.gp_Pnt(xN,yMin,slice.zLevel);
+			p2 = gp.gp_Pnt(xMax, (xMax - xN)* math.tan(angleRads), slice.zLevel);
+		
+			edge = edgeFromTwoPoints(p1,p2);
+			
+			#intersect with offset
+			brp = BRepExtrema.BRepExtrema_DistShapeShape();
+			brp.LoadS1(lastOffset);
+			brp.LoadS2(edge );
+			edges = [];
+			if brp.Perform() and brp.Value() < 0.0001:
+				foundPart = True;
+				logging.debug ("Found %d Intersections" % brp.NbSolution());
+				#number of intersections must be even for closed shapes
+				#note that we want to avoid lines that are inside of islands.
+				pointList = [];				
+				i = 1;
+				while i < brp.NbSolution()+1:
+					pointList.append(brp.PointOnShape1(i));
+					i+= 1;
+				
+				#sort the points by ascending X
+				pointList.sort(cmp= lambda x,y: cmp(x.X(),y.X()));
+
+				i = 0;
+				while i< brp.NbSolution():
+					p1 = pointList[i];
+					p2 = pointList[i+1];
+					i += 2;
+					e = edgeFromTwoPoints(p1,p2);
+					edges.append(e);
+					self.showShape(e);
+			else:
+				##print "Could not find intersections.";
+				if foundPart:
+					#print "This edge did not intersect anything, Filling finished since i had already found it before"
+					break;
+
+
+			
+		return wires;
+		
 	#fills a slice with the appropriate toolpaths.
 	#returns: void
 	#a number of wires are added to the slice as paths.
@@ -459,56 +572,77 @@ class Slicer:
 		logging.info("Filling Slice at zLevel %0.3f" % slice.zLevel);
 		for f in slice.faces:
 			currentOffset = 1;
-			self.display.showShape(f);
+			#self.display.showShape(f);
 			t3=Timer();
-			
-
-				
+			lastOffset = None;
 			while currentOffset < self.options.numShells:
-				offset = (-1)*self.resolution*currentOffset;
-				try:
+				offset = (-1)*self.resolution*currentOffset;	
+				#print "Computing Offset.."
+				s = self._offsetFace(f,offset);
+				self.showShape(s);
+				if s:
+					lastOffset = s;					
+					slice.fillWires.extend(self._makeWiresFromOffsetShape(s));
+				currentOffset+=1;
+			#ok now the last shell is available to serve as the boundary for
+			#our hatching also
+			#take the last wire(s) created 
+			print "Hatching Sliced Items.."
+			infillWires = self._hatchSlice(slice,lastOffset);
 
-					#ge the outerer wire
-					#print f;
-					ow = brt.OuterWire(ts.Face(f));
-					bo = BRepOffsetAPI.BRepOffsetAPI_MakeOffset();
-					bo.AddWire(ow);
-
-					#now get the other wires
-					te = TopExp.TopExp_Explorer();
-					
-					te.Init(f,TopAbs.TopAbs_WIRE);
-					while te.More():
-							w = ts.Wire(te.Current());
-							if not w.IsSame(ow):
-									bo.AddWire(w);
-							te.Next();
-					te.ReInit();
-						
-					bo.Perform(offset,0.00001);
-					shape = bo.Shape();
-		
-					if shape.ShapeType() == TopAbs.TopAbs_WIRE:
-						#print "offset result is a wire"
-						wire = ts.Wire(shape);
-						slice.fillWires.append(WireWrapper(wire));
-					elif shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
-						#print "offset result is a compound"
-						texp = TopExp.TopExp_Explorer();
-						texp.Init(shape,TopAbs.TopAbs_WIRE);
-						while ( texp.More() ):
-							wire = ts.Wire(texp.Current());
-							slice.fillWires.append(WireWrapper(wire));
-							texp.Next();
-						texp.ReInit();
-				except:
-					traceback.print_exc(file=sys.stdout);
-					print 'error offsetting at offset=',offset
-				currentOffset += 1;
-
+			slice.fillWires.extend(infillWires );
+			
 		logging.info("Filling Complete, Created %d paths." % len(slice.fillWires)  );
 		
 
+
+		
+	def _makeWiresFromOffsetShape(self,shape):
+		resultWires = [];
+		if shape.ShapeType() == TopAbs.TopAbs_WIRE:
+			#print "offset result is a wire"
+			wire = ts.Wire(shape);
+			resultWires.append(WireWrapper(wire));
+		elif shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
+			#print "offset result is a compound"
+			texp = TopExp.TopExp_Explorer();
+			texp.Init(shape,TopAbs.TopAbs_WIRE);
+			while ( texp.More() ):
+				wire = ts.Wire(texp.Current());
+				resultWires.append(WireWrapper(wire));
+				texp.Next();
+			texp.ReInit();	
+		
+		return resultWires;
+		
+	#offset a face, returning the offset shape
+	def _offsetFace(self,face,offset ):
+		resultWires = [];
+		try:
+
+			ow = brt.OuterWire(face);
+			bo = BRepOffsetAPI.BRepOffsetAPI_MakeOffset();
+			bo.AddWire(ow);
+
+			#now get the other wires
+			te = TopExp.TopExp_Explorer();
+			
+			te.Init(face,TopAbs.TopAbs_WIRE);
+			while te.More():
+					w = ts.Wire(te.Current());
+					if not w.IsSame(ow):
+							bo.AddWire(w);
+					te.Next();
+			te.ReInit();
+				
+			bo.Perform(offset,0.00001);
+			return  bo.Shape();
+		except:
+			traceback.print_exc(file=sys.stdout);
+			print 'error offsetting at offset=',offset		
+	
+		return None;
+		
 	def _makeSlice(self,shapeToSlice,zLevel):
 		s = Slice();
 		
@@ -589,9 +723,25 @@ class Slice:
 	
 	def addFace(self, face ):
 		copier = BRepBuilderAPI.BRepBuilderAPI_Copy(face);
-		self.faces.append(copier.Shape());
-		copier.Delete();		
+		self.faces.append(ts.Face(copier.Shape()));
+		copier.Delete();
 		
+	def getBounds(self):
+		"Get the bounds of all the faces"
+		t = Timer();
+		box = Bnd.Bnd_Box();
+		b = BRepBndLib.BRepBndLib();	
+		for face in self.faces:
+			b.Add(face,box);
+			
+		bounds = box.Get();
+		xMin = bounds[0];
+		xMax = bounds[3];
+		yMin = bounds[1];
+		yMax = bounds[4];
+		zMin = bounds[2];
+		zMax = bounds[5];
+		return [xMin,xMax,yMin,yMax,zMin,zMax];
 
 """
 	Writes a sliceset to specified file in Gcode format.
@@ -695,7 +845,7 @@ def printUsage():
 		Creates an SVG output file compatible with skeinforge	, in same directory as inputfile
 	"""
 def main(filename):
-
+	global mainDisplay;
 	app = wx.PySimpleApp()
 	wx.InitAllImageHandlers()
 	
@@ -723,8 +873,9 @@ def main(filename):
 	sliceFrame.canva.InitDriver()
 	sliceFrame.canva._display.SetModeWireFrame()
 	sliceFrame.Show(True)
-
-	gcodeFrame = AppFrame(None,"Generated Toolpaths" + filename,420,20)
+	mainDisplay = sliceFrame;
+	
+	gcodeFrame = AppFrame(None,"Generated Toolpaths" + filename,820,20)
 	gcodeFrame.canva.InitDriver()
 	gcodeFrame.canva._display.SetModeWireFrame()
 	gcodeFrame.Show(True)	
@@ -737,9 +888,11 @@ def main(filename):
 
 	#slicing options: use defaults
 	options = SliceOptions();
-	options.numSlices=8;
-	options.numShells=12;
+	options.numSlices=5;
+	options.numShells=10;
 	options.resolution=0.3;
+	options.inFillAngle=15;
+	options.inFillSpacing=3;
 	
 	#slice it
 	sliceSet = Slicer(shape,options);
@@ -750,12 +903,11 @@ def main(filename):
 	gexp = GcodeExporter();
 	gexp.description="Reprap Test";
 	gexp.display = gcodeFrame;
-	gexp.export(sliceSet, outFileName);
+	#gexp.export(sliceSet, outFileName);
 	gexp.verbose = False;
 	
 	app.SetTopWindow(frame)
 	app.MainLoop() 
-
 
 	
 if __name__=='__main__':

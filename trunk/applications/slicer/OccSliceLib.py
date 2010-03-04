@@ -77,10 +77,10 @@ import traceback
 
 import math
 
-from OCC import STEPControl,TopoDS, TopExp, TopAbs,BRep,gp
-from OCC import BRepBuilderAPI,BRepTools,BRepAlgo,BRepBndLib,Bnd,StlAPI,BRepAlgoAPI
+from OCC import STEPControl,TopoDS, TopExp, TopAbs,BRep,gp,GeomAbs,GeomAPI
+from OCC import BRepBuilderAPI,BRepTools,BRepAlgo,BRepBndLib,Bnd,StlAPI,BRepAlgoAPI,BRepAdaptor
 from OCC import BRepLProp,BRepGProp,BRepBuilderAPI,BRepPrimAPI,GeomAdaptor,GeomAbs,BRepExtrema
-from OCC import BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI,BRepAdaptor,IntCurvesFace
+from OCC import BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI,BRepAdaptor,IntCurvesFace,Approx,BRepLib
 
 from OCC.Display.wxDisplay import wxViewer3d
 from OCC.Utils.Topology import Topo
@@ -156,7 +156,7 @@ class Timer:
 	
 
 def printPoint(point):
-	return "x=%0.4f,y=%0.4f,z=%0.4f" % (point.X(), point.Y(), point.Z());
+	return "x=%0.2f,y=%0.2f,z=%0.2f" % (point.X(), point.Y(), point.Z());
 
 def sortPoints(pointList):
 	"Sorts points by ascending X"
@@ -167,9 +167,33 @@ def edgeFromTwoPoints(p1,p2):
 	builder.Build();			
 	edge = builder.Edge();
 	return edge;
+
+def edgeFromTwoPointsOnCurve(handleCurve,p1,p2):
+	builder = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(handleCurve, p1,p2);
+	builder.Build();
+	if builder.IsDone():
+		return builder.Edge();
+	else:
+		print "Error building Edge: Error Number " ,builder.Error();
+		return None;
+	
+def findParameterOnCurve(point,handleCurve):
+	gp = GeomAPI.GeomAPI_ProjectPointOnCurve(point,handleCurve);
+	gp.Perform(point);
+	if gp.NbPoints()>0:
+		#print "Projection Success!"
+		return [point, gp.LowerDistanceParameter(),gp.LowerDistance()];
+	else:
+		print "Projection Failed."
+		return None;
+	
+def make_vertex(pnt):
+	s = BRepBuilderAPI.BRepBuilderAPI_MakeVertex(pnt);
+	s.Build();
+	return s.Shape();
 	
 def make_edge(shape):
-    spline = BRepBuilderAPI_MakeEdge(shape)
+    spline = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(shape)
     spline.Build()
     return spline.Shape()	
 	
@@ -210,6 +234,206 @@ def frange6(*args):
             raise StopIteration
         yield v
         v += step		
+
+
+		
+		
+class EdgeFollower:
+	"returns edges in head-to-tail order, based on which edge is closest"
+	"edges are returned so that their orientation is correct"
+	"if a starting point is not defined, the first point of the first"
+	"edge is used"
+	def __init__(self,infillEdges,boundaryEdges):
+		self.infillEdges  = [];
+		self.infillEdges.extend(infillEdges);
+		self.boundaryEdges  = [];
+		self.boundaryEdges.extend(boundaryEdges);
+		self.lastEdgeIsInfill = False;
+		self.lastEdge = None;
+		self.tolerance = 0.0001;
+		self.startPoint = None;
+	
+	def _findClosest(self,edgeList, point):
+		"find an edge with the same start point as this edges end point"
+		"also ensures that the selected edge is oriented correctly"
+		"returns the next edge if none are avaialbe that are coincident"
+
+		if len(edgeList) == 0:
+			return None;
+		
+		#first consider only those that could
+		#be traced without lifting the pen
+		candidates  =[];
+		for edge in edgeList:
+			ew = EdgeWrapper(edge);
+			if point.Distance(ew.lastPoint) < self.tolerance:
+				candidates.append([edge, ts.Edge(edge.Reversed())]);			
+			if  point.Distance(ew.firstPoint ) < self.tolerance:
+				candidates.append([edge, edge]);
+
+		if len(candidates ) == 1:
+			edgeList.remove(candidates[0][0]);
+			return candidates[0][1];
+			
+		if len(candidates) > 0:
+			#get an approximate line from the last edge. The edge could
+			#actually be a curve but this is the basic direction
+			lew = EdgeWrapper(self.lastEdge);
+			lastLine = gce.gce_MakeLin(lew.firstPoint, lew.lastPoint ).Value();
+			
+			highestDistance  = 0;
+			bestEdge = None;
+			originalEdge = None;
+			for e,re  in candidates:
+				d = EdgeWrapper(re).lastPoint.Distance(self.startPoint);
+				if  d > highestDistance:
+					bestEdge = re;
+					originalEdge = e;
+					highestDistance = d;
+			edgeList.remove(originalEdge);
+			return bestEdge;
+		else:
+			#no candidates for a continuous move.
+			print "No Candidates, Choosing next in the list"
+			return edgeList.pop(0);
+					
+	def nextEdge(self):
+		"get the next edge: returns EdgeWrapper for the selected Edge"
+		if not self.lastEdge:
+			e = self.infillEdges.pop();
+			self.lastEdge = e;
+			self.startPoint = EdgeWrapper(e).firstPoint;
+			self.lastEdgeIsInfill=True;
+			print "First Edge",printPoint(EdgeWrapper(e).firstPoint),printPoint(EdgeWrapper(e).lastPoint)
+			return e;
+	
+		sPoint = EdgeWrapper(self.lastEdge).lastPoint;
+		
+		#print "End Point is ",printPoint(sPoint);
+		if self.lastEdgeIsInfill:
+			nE = self._findClosest(self.boundaryEdges ,sPoint);
+		else:
+			#nE = self.infillEdges.pop(0);
+			nE = self._findClosest(self.infillEdges ,sPoint);
+		
+		ee = EdgeWrapper(nE)
+		print "Selected Next Edge is",printPoint(ee.firstPoint),"-->",printPoint(ee.lastPoint);
+		self.lastEdgeIsInfill = not self.lastEdgeIsInfill;
+		self.lastEdge = nE;
+		return nE;
+
+
+	def hasMoreEdges(self):
+		return len(self.infillEdges) > 0;
+
+		
+class MultiWireBuilder:
+	"builds wires, watching each edge to construct"
+	"multiple wires if necessary"
+	def __init__(self):
+		self.wires = [];		
+		self.lastEdge = None;
+		self.tolerance = 0.0001;
+		self.wireBuilder = None;
+		self.startNewWire();
+		
+	def startNewWire(self):	
+		if self.wireBuilder:
+			if self.wireBuilder.IsDone():
+				self.wires.append(self.wireBuilder.Wire());
+			else:
+				print "Warning: Could not Build Wire!"
+		self.wireBuilder = BRepBuilderAPI.BRepBuilderAPI_MakeWire();
+		
+	def addEdge(self,edge):
+		ew = EdgeWrapper(edge);
+		#global mainDisplay;
+		#mainDisplay.showShape(edge);
+		if self.lastEdge:
+			d = self.lastEdge.lastPoint.Distance(ew.firstPoint);
+			if d >= self.tolerance:
+				print "Warning: edge does not match, starting new wire"
+				self.startNewWire();
+		
+		self.wireBuilder.Add(edge);
+	
+	def getResult(self):
+		self.startNewWire();
+		return self.wires;
+	
+		
+class BoundaryManager:
+	"manages a set of boundaries and hatch intersections points"
+	
+	def __init__(self):
+		self.intersectionPoints = {};
+		self.wires = [];
+		self.tolerance = 0.001;
+		self.approxCurves = {};
+		
+	"This would also allow use of the original intersections points in"
+	"construction to imrpove performance"
+	def addIntersectionPoint(self, wire, point):
+	
+		self.intersectionPoints[wire].append(point);
+	
+	def addWire(self, wire):
+		self.wires.append(wire);
+		self.intersectionPoints[wire] = [];
+			
+		#make a parameterized approximation of the wire
+		adaptor = BRepAdaptor.BRepAdaptor_CompCurve (wire);
+		curve = BRepAdaptor.BRepAdaptor_HCompCurve(adaptor);
+		curveHandle = curve.GetHandle();
+
+		#approximate the curve using a tolerance
+		approx = Approx.Approx_Curve3d(curveHandle,0.0001,GeomAbs.GeomAbs_C2,2000,12);
+		if approx.IsDone() and  approx.HasResult():
+			# have the result
+			anApproximatedCurve=approx.Curve();
+			print "Curve is parameterized between %0.5f and %0.5f " % (  anApproximatedCurve.GetObject().FirstParameter(), anApproximatedCurve.GetObject().LastParameter() );
+			self.approxCurves[wire] = anApproximatedCurve;
+			#builder =  BRepLib.BRepLib_MakeEdge(anApproximatedCurve);
+			#self.showShape(builder.Edge());
+		else:
+			print "Failed to create approximation curve."
+			
+	def buildEdges(self):
+		"build all of the available edges on each boundary"
+		edgeList = [];
+		for [wire,curve] in self.approxCurves.iteritems():
+			parameters = [];
+			parameters.append(curve.GetObject().FirstParameter() );
+			for point in  self.intersectionPoints[wire]:
+				a = findParameterOnCurve(point,curve);
+				#todo: check distance also
+				parameters.append(a[1] );
+			parameters.append(curve.GetObject().LastParameter() );
+			parameters.sort();
+
+			lastP = None;
+			for p in parameters:
+				if lastP:
+					edgeList.append ( edgeFromTwoPointsOnCurve(curve,lastP,p ) );
+				lastP = p;
+
+		print "Made %d Boundary Edges from %d wires" % ( len(edgeList),len(self.approxCurves));
+		return edgeList;
+		
+	def makeEdge(self,p1, p2):
+		"make an edge following a boundary as close as possible to the provided points"
+		"the edge will always be along one of the nested curves. It is assumed that p1 and p2 lie on the same curve"		
+		bestDistance = 999999;
+		bestCurve = None;
+		#print "Searching %d wires for a fit for these points." % len(self.approxCurves)
+		for [wire,curve] in self.approxCurves.iteritems():
+			a = findParameterOnCurve(p1,curve);
+			b = findParameterOnCurve(p2,curve);
+			print "Distance from curve is %05.f, %0.5f" % ( a[2], b[2] );
+			return edgeFromTwoPointsOnCurve(curve,a[1],b[1]);
+			
+		print "Could not find a suitable curve. Are the points on any curve?"
+		return None;
 		
 """
 	EdgeWrapper provides additional functions and features
@@ -240,13 +464,13 @@ class EdgeWrapper:
 		else:
 			self.firstPoint = fP1;
 			self.lastPoint = fP2;
-			
+
 	def isLine(self):
 		return self.curveType == 0;
 		
 	def isCircle(self):
 		return self.curveType == 1;
-		
+	
 	def __str__(self):
 		if self.isLine():
 			s = "Line:\t";
@@ -501,8 +725,10 @@ class Slicer:
 		logging.info("Slicing Complete: " + t.finishedString() );
 		logging.info("Throughput: %0.3f slices/sec" % (sliceNumber/t.elapsed() ) );
 
-	#take the lastOffsetShape, and compute infill.
-	def _hatchSlice(self,slice,lastOffset):
+		
+	def _makeHatchLines(self,slice ):
+		"Makes a set of hatch lines that cover all the possible faces"
+		hatchEdges = [];
 		[xMin,xMax,yMin,yMax,zMin,zMax] = slice.getBounds();
 		global mainDisplay;
 
@@ -514,10 +740,7 @@ class Slicer:
 
 		#tan theta = op/adj , adj =op / tan 
 		xStart = ( xMin - (yMax - yMin)/math.tan(angleRads));
-		xStop = xMax;
-		foundPart = False;
-		
-		wireBuilder = BRepBuilderAPI.BRepBuilderAPI_MakeWire ();
+		xStop = xMax;	
 
 		for xN in frange6(xStart,xStop,xSpacing):
 			
@@ -526,44 +749,152 @@ class Slicer:
 			p2 = gp.gp_Pnt(xMax, (xMax - xN)* math.tan(angleRads), slice.zLevel);
 		
 			edge = edgeFromTwoPoints(p1,p2);
-			
-			#intersect with offset
-			brp = BRepExtrema.BRepExtrema_DistShapeShape();
-			brp.LoadS1(lastOffset);
-			brp.LoadS2(edge );
-			edges = [];
-			if brp.Perform() and brp.Value() < 0.0001:
-				foundPart = True;
-				logging.debug ("Found %d Intersections" % brp.NbSolution());
-				#number of intersections must be even for closed shapes
-				#note that we want to avoid lines that are inside of islands.
-				pointList = [];				
-				i = 1;
-				while i < brp.NbSolution()+1:
-					pointList.append(brp.PointOnShape1(i));
-					i+= 1;
-				
-				#sort the points by ascending X
-				pointList.sort(cmp= lambda x,y: cmp(x.X(),y.X()));
-
-				i = 0;
-				while i< brp.NbSolution():
-					p1 = pointList[i];
-					p2 = pointList[i+1];
-					i += 2;
-					e = edgeFromTwoPoints(p1,p2);
-					edges.append(e);
-					self.showShape(e);
-			else:
-				##print "Could not find intersections.";
-				if foundPart:
-					#print "This edge did not intersect anything, Filling finished since i had already found it before"
-					break;
-
-
-			
-		return wires;
+			hatchEdges.append(edge);
 		
+		return hatchEdges;
+		
+	"""
+		hatching algorithm at a high level:
+		* convert wires to approximated curves
+		* make an edge from each wire's curve
+		
+		*PHASE 1: make edges
+		* while there are edges left
+		  * make a hatching edge at next location
+		  * compute intersections, and store by wire
+		  * compute parameter on wire for each point
+		  * make individual hash edges and add to internalEdges list
+		  
+		PHASE 2: make boundary edges
+		  * for each wire
+		     * sort intersection points by parameter
+			 * make an edge for each interval, store in externalEdges collection
+		
+		PHASE 3: join edges
+		   * while there are no more internalEdges:
+		       * start a new wire
+		       * get first edge in internalEdges collection
+			   * find external edge that matches end of this edge
+			   * add this to the wire
+			   * find next internalEdge that matches
+			      if no match, end wire and start new one
+			   continue till all internalEdges are completed.
+			   
+		PHASE 4: fixup
+			sort each resulting wire using ShapeAnalysis_WireFix
+	
+	"""	
+	def _hatchSlice(self,slice,lastOffset):
+		"take the a slice and compute a list of infillWires"
+		
+		#a set of hatch lines that will conver the entire part
+		#self.showShape(lastOffset);
+		hatchEdges = self._makeHatchLines(slice);
+		print "I have %d Hatch Edges" % len(hatchEdges)
+				
+		#approximate each boundary by a parameterized bspine curve
+		boundaryWires = self._makeWiresFromOffsetShape(lastOffset);
+		
+		bm = BoundaryManager();
+		for wire in boundaryWires:
+			#self.showShape(wire);
+			bm.addWire(wire);
+
+		infillEdges = [];
+		boundaryEdges = [];
+		
+		foundPart = False;
+		continueHatching = True;
+		
+		#for each generated hatch, intersect with each boundary
+		for hatchLine in hatchEdges:
+			if not continueHatching:
+				break;
+				
+			hatchLineItersectionPoints = []
+			for boundary in boundaryWires:
+				brp = BRepExtrema.BRepExtrema_DistShapeShape();
+				brp.LoadS1(boundary);
+				brp.LoadS2(hatchLine );
+
+				if brp.Perform() and brp.Value() < 0.001:
+					foundPart = True;
+					#print "Found %d Intersections" % brp.NbSolution();
+					
+					#number of intersections must be even for closed shapes
+					#note that we want to avoid lines that are inside of islands.
+					pointList = [];
+					
+					for k in range(1,brp.NbSolution()+1):
+						hatchLineItersectionPoints.append(brp.PointOnShape1(k));
+						bm.addIntersectionPoint(boundary,brp.PointOnShape1(k));
+				else:
+					#print "No Intersections Found"
+					if foundPart:
+						continueHatching = False;
+						
+			#sort the points by ascending X, add to list of hashEdges
+			hatchLineItersectionPoints.sort(cmp= lambda x,y: cmp(x.X(),y.X()));
+
+			#build infillEdges. We do this here so that we know which order to 
+			#connect them. We are using to our advantage that the hatch line createse
+			#a list of intersection points with increasing x values.
+			i = 0;
+			while i< len(hatchLineItersectionPoints):
+				p1 = hatchLineItersectionPoints[i];
+				p2 = hatchLineItersectionPoints[i+1];
+				i += 2;
+				e = edgeFromTwoPoints(p1,p2);
+				infillEdges.append(e);			
+
+		
+		#for ie in infillEdges:			
+		#	self.showShape(ie);
+		#	self.showShape(make_vertex(EdgeWrapper(ie).firstPoint));
+
+		
+		#follower = EdgeFollower(infillEdges);		
+		#while follower.hasMoreEdges():
+		#	e = follower.nextEdge();
+		#	self.showShape(e);
+		#	self.showShape(make_vertex(EdgeWrapper(e).firstPoint));		
+		#print "Finished Chaining Through Edges."
+		
+		#basically, alternate between an internal and and external edges
+		if len(infillEdges) == 0:
+			print "No Infill Edges Were Created. Returning"
+			return None;
+		print "There are %d infill edges" % ( len(infillEdges));
+		
+		boundaryEdges = bm.buildEdges();		
+		multiWireBuilder = MultiWireBuilder();  #handles starting new wires when needed
+
+		follower = EdgeFollower(infillEdges,boundaryEdges);
+		while follower.hasMoreEdges():
+			self.showShape(follower.nextEdge());
+			time.sleep(.5);
+			#multiWireBuilder.addEdge(follower.nextEdge() );
+					
+		#show boundary points
+		#for point in boundaryIntersections:
+		#	a = BRepBuilderAPI.BRepBuilderAPI_MakeVertex(point);
+		#	self.showShape(a.Vertex() );			
+		
+		#show boundaryEdges
+		#for edge in boundaryEdges:
+		#	self.showShape(edge);
+
+		#for edge in infillEdges:
+		#	self.showShape(edge);
+		#	time.sleep(1);
+			
+		#return None;
+	
+		#show resulting wires
+		for wire in multiWireBuilder.getResult():
+			self.showShape(wire);
+
+			
 	#fills a slice with the appropriate toolpaths.
 	#returns: void
 	#a number of wires are added to the slice as paths.
@@ -578,11 +909,12 @@ class Slicer:
 			while currentOffset < self.options.numShells:
 				offset = (-1)*self.resolution*currentOffset;	
 				#print "Computing Offset.."
-				s = self._offsetFace(f,offset);
-				self.showShape(s);
-				if s:
-					lastOffset = s;					
-					slice.fillWires.extend(self._makeWiresFromOffsetShape(s));
+				lastOffset = self._offsetFace(f,offset);
+				#self.showShape(s);
+				#if s:
+					#sWires = self._makeWiresFromOffsetShape(s);					
+					#slice.fillWires.extend(sWires);
+					#self._experiment(self._makeWiresFromOffsetShape(s));
 				currentOffset+=1;
 			#ok now the last shell is available to serve as the boundary for
 			#our hatching also
@@ -590,26 +922,47 @@ class Slicer:
 			print "Hatching Sliced Items.."
 			infillWires = self._hatchSlice(slice,lastOffset);
 
-			slice.fillWires.extend(infillWires );
+			#slice.fillWires.extend(infillWires );
 			
 		logging.info("Filling Complete, Created %d paths." % len(slice.fillWires)  );
 		
 
 
+	def _makeAdapterCurveFromWire(self,wire):
+		"Makes a single parameterized adapter curve from a wire"
+			
+		#make a parameterized approximation of the wire
+		adaptor = BRepAdaptor.BRepAdaptor_CompCurve (wire);
+		curve = BRepAdaptor.BRepAdaptor_HCompCurve(adaptor);
+		curveHandle = curve.GetHandle();
+		
+		#approximate the curve using a tolerance
+		approx = Approx.Approx_Curve3d(curveHandle,0.001,GeomAbs.GeomAbs_C2,200,12);
+		if approx.IsDone() and  approx.HasResult():
+			# have the result
+			anApproximatedCurve=approx.Curve();
+			print "Curve is parameterized between %0.5f and %0.5f " % (  anApproximatedCurve.GetObject().FirstParameter(), anApproximatedCurve.GetObject().LastParameter() );
+			return anApproximatedCurve;
+			#builder =  BRepLib.BRepLib_MakeEdge(anApproximatedCurve);
+			#self.showShape(builder.Edge());
+		else:
+			print "Failed to create curve."
+			return None;
+		
 		
 	def _makeWiresFromOffsetShape(self,shape):
 		resultWires = [];
 		if shape.ShapeType() == TopAbs.TopAbs_WIRE:
 			#print "offset result is a wire"
 			wire = ts.Wire(shape);
-			resultWires.append(WireWrapper(wire));
+			resultWires.append(wire);
 		elif shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
 			#print "offset result is a compound"
 			texp = TopExp.TopExp_Explorer();
 			texp.Init(shape,TopAbs.TopAbs_WIRE);
 			while ( texp.More() ):
 				wire = ts.Wire(texp.Current());
-				resultWires.append(WireWrapper(wire));
+				resultWires.append(wire);
 				texp.Next();
 			texp.ReInit();	
 		
@@ -888,11 +1241,11 @@ def main(filename):
 
 	#slicing options: use defaults
 	options = SliceOptions();
-	options.numSlices=5;
+	options.numSlices=3;
 	options.numShells=10;
 	options.resolution=0.3;
-	options.inFillAngle=15;
-	options.inFillSpacing=3;
+	options.inFillAngle=45;
+	options.inFillSpacing=1;
 	
 	#slice it
 	sliceSet = Slicer(shape,options);

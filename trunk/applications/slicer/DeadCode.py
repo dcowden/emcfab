@@ -600,3 +600,137 @@ def createFillLines(xMin,xMax,yMin,yMax,spacing, zLevel,angle):
 	
 	print "Create Fillings took %d seconds" % t.elapsed();
 	return lines;	
+	
+	
+	
+"""
+   Older Hatching Code
+
+"""
+		
+		boundaryEdgeParameters = []; #list of lists: each entry is a parameter list that matches the edge
+		for curve in boundaryCurves:
+			parameters = [];
+			boundaryEdgeParameters.append(parameters);
+			for point in boundaryIntersections:
+				j+=1;
+				a = findParameterOnCurve(point,curve); #returns [point, parameter ] tuple
+				if  a != None:
+					parameters.append(a);
+		
+			parameters.sort(cmp= lambda x,y: cmp(x[1],y[1])); #sort by parameter
+			
+		print "Computed %d projections in %0.5f seconds" % (  j, t.elapsed() );
+
+		#now loop through and build boundary edges
+		boundaryEdges = [];
+
+		for k in range(0,len(boundaryCurves)):
+			curve = boundaryCurves[k];
+			params  = boundaryEdgeParameters[k]; #boundaryCurves and boundaryEdgeParameters are the same length
+			
+			for pN in range(1,len(params)):
+				p2 = params[pN][1];
+				#print p2;
+				p1 = params[pN-1][1];
+				edge = edgeFromTwoPointsOnCurve(curve,p1,p2);
+				if edge:
+					boundaryEdges.append( edge);
+
+			#also create one edge from the last point to the start point
+			#boundaryEdges.append(edgeFromTwoPointsOnCurve(curve,params[0][1],params[len(params)-1][1]));
+		print "Created %d Boundary Edges." % len(boundaryEdges);
+
+		
+class EdgeFollower:
+	"returns edges in head-to-tail order, based on which edge is closest"
+	"edges are returned so that their orientation is correct"
+	"if a starting point is not defined, the first point of the first"
+	"edge is used"
+	def __init__(self,allEdges,startingPoint=None):
+		self.edges  = [];
+		self.startingPoint = startingPoint;
+		self.edges.extend( allEdges );	
+		self.lastEdge = None;
+		
+		if startingPoint:
+			self.startingPoint = startingPoint;
+		else:
+			if len(allEdges) > 0:
+				self.startingPoint = EdgeWrapper(allEdges[0]).firstPoint;
+			else:
+				self.startingPoint = None;
+		
+	def _findClosest(self,point):
+		"find the edge having a point closest to the provided point"
+		"also ensures that the selected edge is oriented correctly"
+		if len(self.edges) == 0:
+			return None;
+			
+		bestDistance = None;
+		bestEdge = None;
+		bestEdgeReversed = False;
+		for edge in self.edges:
+			ew = EdgeWrapper(edge);
+			#initialize the first time through
+			if bestDistance == None:
+				bestDistance = point.Distance(ew.firstPoint);
+				bestEdge = edge;
+			
+			d = point.Distance(ew.firstPoint);
+			if d < bestDistance:
+				bestDistance = d;
+				bestEdge = edge;
+				bestEdgeReversed = False;
+				
+			d = point.Distance(ew.lastPoint);	
+			if d < bestDistance:
+				bestDistance = d;
+				bestEdge = edge;
+				bestEdgeReversed = True;
+		
+		self.edges.remove(bestEdge);
+		if bestEdgeReversed:
+			print "Found a match but edge must be reversed."
+			return ts.Edge(bestEdge.Reversed());
+		else:
+			print "Found a match"
+			return bestEdge;
+					
+	def nextEdge(self):
+		"get the next edge: returns EdgeWrapper for the selected Edge"
+		return self.edges.pop(0);
+		
+		if self.lastEdge:
+			ew = EdgeWrapper(self.lastEdge);
+			closest = self._findClosest(ew.lastPoint);
+		else:
+			closest = self._findClosest(self.startingPoint);
+		self.lastEdge = closest;
+		return closest;
+
+	def hasMoreEdges(self):
+		return len(self.edges) > 0;
+
+		bestDistance = None;
+		bestEdge = None;
+		bestEdgeReversed = False;
+		for edge in edgeList:
+			ew = EdgeWrapper(edge);
+			#initialize the first time through
+			if bestDistance == None:
+				bestDistance = point.Distance(ew.firstPoint);
+				bestEdge = edge;
+			
+			d = point.Distance(ew.firstPoint);
+			if d < bestDistance:
+				bestDistance = d;
+				bestEdge = edge;
+				bestEdgeReversed = False;
+				
+			d = point.Distance(ew.lastPoint);	
+			if d < bestDistance:
+				bestDistance = d;
+				bestEdge = edge;
+				bestEdgeReversed = True;		
+		

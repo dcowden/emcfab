@@ -99,9 +99,13 @@ import Topology
 
 ###Logging Configuration
 logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)s %(message)s',
+                    format='%(asctime)s [%(funcName)s] %(levelname)s %(message)s',
                     stream=sys.stdout)
 
+log = logging.getLogger('slicer');
+log.setLevel(logging.INFO);
+
+					
 ##
 ##  TODO:
 ##   X change pathmanager to allow other formats and easy structure access
@@ -168,8 +172,8 @@ def edgeFromTwoPoints(p1,p2):
 	if builder.IsDone():
 		return builder.Edge();
 	else:
-		print "Error Number %d Building Edge" % builder.Error();
-		print "Tried To Build Edge",printPoint(p1),"-->",printPoint(p2);
+		log.error( "Error Number %d Building Edge" % builder.Error());
+		log.error ("Tried To Build Edge",printPoint(p1),"-->",printPoint(p2));
 		return None;
 
 def edgeFromTwoPointsOnCurve(handleCurve,p1,p2):
@@ -178,17 +182,17 @@ def edgeFromTwoPointsOnCurve(handleCurve,p1,p2):
 	if builder.IsDone():
 		return builder.Edge();
 	else:
-		print "Error building Edge: Error Number " ,builder.Error();
+		log.error( "Error building Edge: Error Number " ,builder.Error());
 		return None;
 	
 def findParameterOnCurve(point,handleCurve):
 	gp = GeomAPI.GeomAPI_ProjectPointOnCurve(point,handleCurve);
 	gp.Perform(point);
 	if gp.NbPoints()>0:
-		#print "Projection Success!"
+		log.debug( "Projection Success!" );
 		return [point, gp.LowerDistanceParameter(),gp.LowerDistance()];
 	else:
-		print "Projection Failed."
+		log.error( "Projection Failed.");
 		return None;
 	
 def make_vertex(pnt):
@@ -286,25 +290,25 @@ class EdgeFollower:
 				EdgeWrapper(y).firstPoint.Distance(self.referencePoint))		);			
 			
 			self.lastEdgeIsInfill=True;
-			#print "First Edge",printPoint(EdgeWrapper(e).firstPoint),printPoint(EdgeWrapper(e).lastPoint)
+			log.debug( "First Edge",printPoint(EdgeWrapper(e).firstPoint),printPoint(EdgeWrapper(e).lastPoint));
 			return e;
 			
 		sPoint = EdgeWrapper(self.lastEdge).lastPoint;
 		newEdge = None;
 		
 		if self.lastEdgeIsInfill:
-			#print "we are looking for a boundary edge"
+			log.debug(  "we are looking for a boundary edge" );
 			candidates = self._findEdgesSharingPoint(self.boundaryEdges,sPoint);
 			if len(candidates) == 1:
-				#print "only one match, so return him"
+				log.debug(  "only one match, so return him" );
 				self.boundaryEdges.remove(candidates[0][0]);
 				self.lastEdgeIsInfill = False;
 				newEdge = candidates[0][1]
 			elif len(candidates) == 0:
-				#print "no boundary edges, so find a new starting infill edge"				
+				log.debug(  "no boundary edges, so find a new starting infill edge" );
 				newEdge = self.infillEdges.pop();
 			else:
-				#print "several candidates. pick the one whos endpoint is further away from the reference"
+				log.debug(  "several candidates. pick the one whos endpoint is further away from the reference");
 				candidates.sort(cmp = lambda x,y: cmp (
 					EdgeWrapper(x[1]).lastPoint.Distance(self.referencePoint),
 					EdgeWrapper(y[1]).lastPoint.Distance(self.referencePoint) )  );
@@ -312,19 +316,19 @@ class EdgeFollower:
 				self.lastEdgeIsInfill = False;
 				newEdge = candidates[0][1];
 		else:
-			#print "we are looking for an infill edge"
+			log.debug( "we are looking for an infill edge" );
 			candidates = self._findEdgesSharingPoint(self.infillEdges,sPoint);
 			if len(candidates) == 0:
-				#print "no infill edges found matching this boundary. Select another Infill Edge"
+				log.debug( "no infill edges found matching this boundary. Select another Infill Edge" );
 				self.lastEdgeIsInfill = True;
 				newEdge = self.infillEdges.pop();
 			elif len(candidates) == 1:
-				#print "only one choice"
+				log.debug( "only one choice" );
 				self.lastEdgeIsInfill = True;
 				self.infillEdges.remove(candidates[0][0]);
 				newEdge = candidates[0][1];
 			else:
-				#print "several to choose from. return closest to reference point"
+				log.debug("several to choose from. return closest to reference point" );
 				candidates.sort(cmp = lambda x,y: cmp (
 					EdgeWrapper(x[1]).lastPoint.Distance(self.referencePoint),
 					EdgeWrapper(y[1]).lastPoint.Distance(self.referencePoint) ) );
@@ -355,7 +359,7 @@ class MultiWireBuilder:
 			if self.wireBuilder.IsDone():
 				self.wires.append(self.wireBuilder.Wire());
 			else:
-				print "Warning: Could not Build Wire!"
+				log.warn("Warning: Could not Build Wire!" );
 		self.wireBuilder = BRepBuilderAPI.BRepBuilderAPI_MakeWire();
 		
 	def addEdge(self,edge):
@@ -365,7 +369,7 @@ class MultiWireBuilder:
 		if self.lastEdge:
 			d = self.lastEdge.lastPoint.Distance(ew.firstPoint);
 			if d >= self.tolerance:
-				print "Warning: edge does not match, starting new wire"
+				log.warn( "Warning: edge does not match, starting new wire" );
 				self.startNewWire();
 		
 		self.wireBuilder.Add(edge);
@@ -404,12 +408,12 @@ class BoundaryManager:
 		if approx.IsDone() and  approx.HasResult():
 			# have the result
 			anApproximatedCurve=approx.Curve();
-			print "Curve is parameterized between %0.5f and %0.5f " % (  anApproximatedCurve.GetObject().FirstParameter(), anApproximatedCurve.GetObject().LastParameter() );
+			log.debug( "Curve is parameterized between %0.5f and %0.5f " % (  anApproximatedCurve.GetObject().FirstParameter(), anApproximatedCurve.GetObject().LastParameter() ));
 			self.approxCurves[wire] = anApproximatedCurve;
 			#builder =  BRepLib.BRepLib_MakeEdge(anApproximatedCurve);
 			#self.showShape(builder.Edge());
 		else:
-			print "Failed to create approximation curve."
+			log.warn( "Failed to create approximation curve." );
 			
 	def buildEdges(self):
 		"build all of the available edges on each boundary"
@@ -430,7 +434,7 @@ class BoundaryManager:
 					edgeList.append ( edgeFromTwoPointsOnCurve(curve,lastP,p ) );
 				lastP = p;
 
-		print "Made %d Boundary Edges from %d wires" % ( len(edgeList),len(self.approxCurves));
+		log.debug( "Made %d Boundary Edges from %d wires" % ( len(edgeList),len(self.approxCurves)));
 		return edgeList;
 		
 	def makeEdge(self,p1, p2):
@@ -438,7 +442,7 @@ class BoundaryManager:
 		"the edge will always be along one of the nested curves. It is assumed that p1 and p2 lie on the same curve"		
 		bestDistance = 999999;
 		bestCurve = None;
-		#print "Searching %d wires for a fit for these points." % len(self.approxCurves)
+		log.debug( "Searching %d wires for a fit for these points." % len(self.approxCurves));
 		for [wire,curve] in self.approxCurves.iteritems():
 			a = findParameterOnCurve(p1,curve);
 			b = findParameterOnCurve(p2,curve);
@@ -528,10 +532,10 @@ class WireWrapper:
 
 		
 		if sw.Perform():
-			#logging.info("WireSorting Was Successful!");
+			#log.info("WireSorting Was Successful!");
 			return WireWrapper(sw.Wire());	
 		else:
-			#logging.info("WireSorting unsuccessful. returning self.");
+			#log.info("WireSorting unsuccessful. returning self.");
 			return self;
 
 	def __str__(self):
@@ -583,7 +587,7 @@ class SolidAnalyzer:
 	def translateToPositiveSpace(self):
 
 		if self.xMin < 0 or self.yMin < 0 or self.zMin < 0:
-			logging.debug("Shape appears to be in negative space. Translating...");
+			log.debug("Shape appears to be in negative space. Translating...");
 			
 			x = abs(self.xMin);
 			y = abs(self.yMin);
@@ -592,12 +596,12 @@ class SolidAnalyzer:
 			p2 = gp.gp_Pnt(x,y,z);
 			xform = gp.gp_Trsf();
 			xform.SetTranslation(p1,p2);
-			logging.info("Translating shape by x=%0.3f,y=%0.3f,z=%0.3f" % ( x, y, z ));
+			log.info("Translating shape by x=%0.3f,y=%0.3f,z=%0.3f" % ( x, y, z ));
 			bt = BRepBuilderAPI.BRepBuilderAPI_Transform(xform);
 			bt.Perform(self.shape,False);
 			return bt.Shape();
 		else:
-			logging.debug("Translation is not required. Returning existing shape");
+			log.debug("Translation is not required. Returning existing shape");
 	
 	"""
 	  Given a list of dimenions, guess the unit of measure.
@@ -699,7 +703,7 @@ class Slicer:
 			self.numSlices = options.numSlices;
 			self.sliceHeight = zRange / self.numSlices;
 					
-		logging.info("Object Loaded. Dimensions are " + self.analyzer.friendlyDimensions());
+		log.info("Object Loaded. Dimensions are " + self.analyzer.friendlyDimensions());
 		
 	def showShape(self,shape):
 		if self.display:
@@ -708,22 +712,22 @@ class Slicer:
 	def execute(self):
 
 		t = Timer();		
-		logging.info("Slicing Started.");
+		log.info("Slicing Started.");
 		
 		reportInterval = round(self.numSlices/10);
-		logging.info( "Slice Thickness is %0.3f %s, %0d slices. " % ( self.sliceHeight,self.uom,self.numSlices ));
+		log.info( "Slice Thickness is %0.3f %s, %0d slices. " % ( self.sliceHeight,self.uom,self.numSlices ));
 		
 		#make slices
 		zLevel = self.zMin + self.FIRST_LAYER_OFFSET;
 		sliceNumber = 1;
 		t2 = Timer();
 		while zLevel < self.zMax:
-			logging.info( "Creating Slice %0d, z=%0.3f " % ( sliceNumber,zLevel));
+			log.info( "Creating Slice %0d, z=%0.3f " % ( sliceNumber,zLevel));
 			slice = self._makeSlice(self.shape,zLevel);
 
 			if slice != None:
-				#for f in slice.faces:
-				#	self.showShape(f);			
+				for f in slice.faces:
+					self.showShape(f);			
 				self.slices.append(slice);
 				#todo: this should probably be componentize: filling is quite complex.
 				self._fillSlice(slice);
@@ -734,10 +738,10 @@ class Slicer:
 			#compute an estimate of time remaining every 10 or so slices
 			if reportInterval > 0 and sliceNumber % reportInterval == 0:
 				pc = ( zLevel - self.zMin )/   ( self.zMax - self.zMin) * 100;
-				logging.info("%0.0f %% complete." % (pc) );			
+				log.info("%0.0f %% complete." % (pc) );			
 
-		logging.info("Slicing Complete: " + t.finishedString() );
-		logging.info("Throughput: %0.3f slices/sec" % (sliceNumber/t.elapsed() ) );
+		log.info("Slicing Complete: " + t.finishedString() );
+		log.info("Throughput: %0.3f slices/sec" % (sliceNumber/t.elapsed() ) );
 
 		
 	def _makeHatchLines(self,shape ):
@@ -781,11 +785,11 @@ class Slicer:
 		
 	def _hatchSlice(self,slice,lastOffset):
 		"take the a slice and compute a list of infillWires"
-		print "Hatching Face...."
+		log.debug( "Hatching Face...." );
 		#a set of hatch lines that will conver the entire part
 		#self.showShape(lastOffset);
 		hatchEdges = self._makeHatchLines(lastOffset);
-		print "I have %d Hatch Edges" % len(hatchEdges)
+		log.debug( "I have %d Hatch Edges" % len(hatchEdges));
 				
 		#approximate each boundary by a parameterized bspine curve
 		boundaryWires = self._makeWiresFromOffsetShape(lastOffset);
@@ -811,13 +815,13 @@ class Slicer:
 			if not continueHatching:
 				break;
 			else:
-				print "Moving to next Hatch Line"
+				log.debug( "Moving to next Hatch Line");
 			hatchLineItersectionPoints = []
-			print "There are %d boundary wires" % boundaryWires.Length();
+			log.debug( "There are %d boundary wires" % boundaryWires.Length());
 			#for boundary in boundaryWires:
 			for i in range(1,boundaryWires.Length()+1):
 				boundary = ts.Wire(boundaryWires.Value(i));
-				print "Processing New Wire."
+				log.debug("Wire start");
 				#self.showShape(boundary);
 				#time.sleep(.5);
 				brp = BRepExtrema.BRepExtrema_DistShapeShape();
@@ -827,7 +831,7 @@ class Slicer:
 
 				if brp.Perform() and brp.Value() < 0.001:
 					foundPart = True;
-					print "Found %d Intersections" % brp.NbSolution();
+					#print "Found %d Intersections" % brp.NbSolution();
 					
 					#number of intersections must be even for closed shapes
 					#note that we want to avoid lines that are inside of islands.
@@ -838,9 +842,9 @@ class Slicer:
 						bm.addIntersectionPoint(boundary,brp.PointOnShape1(k));
 
 					for x in hatchLineItersectionPoints:
-						print printPoint(x);
+						log.debug( printPoint(x));
 				else:
-					print "No Intersections Found"
+					log.debug( "No Intersections Found");
 			
 			if len(hatchLineItersectionPoints) == 0 and foundPart:
 				continueHatching = False;
@@ -881,18 +885,18 @@ class Slicer:
 		
 		#basically, alternate between an internal and and external edges
 		if len(infillEdges) == 0:
-			print "No Infill Edges Were Created. Returning"
+			log.debug( "No Infill Edges Were Created. Returning" );
 			return None;
-		print "There are %d infill edges" % ( len(infillEdges));
+		log.debug( "There are %d infill edges" % ( len(infillEdges)));
 		
 		boundaryEdges = bm.buildEdges();		
 		multiWireBuilder = MultiWireBuilder();  #handles starting new wires when needed
 
 		follower = EdgeFollower(infillEdges,boundaryEdges);
 		while follower.hasMoreEdges():
-			self.showShape(follower.nextEdge());
+			#self.showShape(follower.nextEdge());
 			#time.sleep(.1);
-			#multiWireBuilder.addEdge(follower.nextEdge() );
+			multiWireBuilder.addEdge(follower.nextEdge() );
 					
 		#show boundary points
 		#for point in boundaryIntersections:
@@ -919,7 +923,7 @@ class Slicer:
 	#a number of wires are added to the slice as paths.
 	def _fillSlice(self,slice):
 	
-		logging.info("Filling Slice at zLevel %0.3f" % slice.zLevel);
+		log.info("Filling Slice at zLevel %0.3f" % slice.zLevel);
 		for f in slice.faces:
 			currentOffset = 1;
 			#self.display.showShape(f);
@@ -936,18 +940,18 @@ class Slicer:
 					#self._experiment(self._makeWiresFromOffsetShape(s));
 				currentOffset+=1;
 				#make it clear on display how the last set looks.
-				if currentOffset < self.options.numShells:
-					self.showShape(lastOffset);
+				#if currentOffset < self.options.numShells:
+				#	self.showShape(lastOffset);
 					
 			#ok now the last shell is available to serve as the boundary for
 			#our hatching also
 			#take the last wire(s) created 
-			print "Hatching Sliced Items.."
+			log.debug( "Hatching Sliced Items..");
 			infillWires = self._hatchSlice(slice,lastOffset);
 
 			#slice.fillWires.extend(infillWires );
 			
-		logging.info("Filling Complete, Created %d paths." % len(slice.fillWires)  );
+		log.info("Filling Complete, Created %d paths." % len(slice.fillWires)  );
 		
 
 
@@ -964,12 +968,12 @@ class Slicer:
 		if approx.IsDone() and  approx.HasResult():
 			# have the result
 			anApproximatedCurve=approx.Curve();
-			print "Curve is parameterized between %0.5f and %0.5f " % (  anApproximatedCurve.GetObject().FirstParameter(), anApproximatedCurve.GetObject().LastParameter() );
+			log.debug( "Curve is parameterized between %0.5f and %0.5f " % (  anApproximatedCurve.GetObject().FirstParameter(), anApproximatedCurve.GetObject().LastParameter() ));
 			return anApproximatedCurve;
 			#builder =  BRepLib.BRepLib_MakeEdge(anApproximatedCurve);
 			#self.showShape(builder.Edge());
 		else:
-			print "Failed to create curve."
+			loggin.warn( "Failed to create curve." );
 			return None;
 		
 		
@@ -977,12 +981,12 @@ class Slicer:
 		#resultWires = [];
 		resultWires = TopTools.TopTools_HSequenceOfShape();
 		if shape.ShapeType() == TopAbs.TopAbs_WIRE:
-			print "offset result is a wire"
+			log.debug( "offset result is a wire" );
 			wire = ts.Wire(shape);
 			#resultWires.append(wire);
 			resultWires.Append(wire);
 		elif shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
-			print "offset result is a compound"
+			log.debug( "offset result is a compound");
 
 			bb = TopExp.TopExp_Explorer();
 			bb.Init(shape,TopAbs.TopAbs_WIRE);
@@ -1059,7 +1063,7 @@ class Slicer:
 			face = ts.Face(texp.Current());
 			if self._isAtZLevel(zLevel,face):
 				foundFace = True;
-				logging.debug( "Face is at zlevel" + str(zLevel) );
+				log.debug( "Face is at zlevel" + str(zLevel) );
 				s.addFace(face);
 			texp.Next();
 		
@@ -1070,7 +1074,7 @@ class Slicer:
 		texp.Destroy();
 			
 		if not foundFace:
-			logging.warn("No faces found after slicing at zLevel " + str(zLevel) + " !. Skipping This layer completely");
+			log.warn("No faces found after slicing at zLevel " + str(zLevel) + " !. Skipping This layer completely");
 			return None;
 		else:				
 			return s;		
@@ -1093,7 +1097,7 @@ class Slicer:
 """
 class Slice:
 	def __init__(self):
-		logging.debug("Creating New Slice...");
+		log.debug("Creating New Slice...");
 		self.path = "";
 		self.faces = [];
 		
@@ -1145,7 +1149,7 @@ class GcodeExporter ():
 
 		
 		slices = sliceSet.slices;
-		logging.info("Exporting " + str(len(slices)) + " slices to file'" + fileName + "'...");
+		log.info("Exporting " + str(len(slices)) + " slices to file'" + fileName + "'...");
 
 		gcodewriter = Gcode_Lib.GCode_Generator();
 		gcodewriter.verbose = self.verbose;
@@ -1156,18 +1160,18 @@ class GcodeExporter ():
 		
 		for slice in slices:
 			gcodewriter.comment('zLevel' + str(slice.zLevel) );
-			logging.info( "zLevel %d, %d paths. " % ( slice.zLevel, len(slice.fillWires)) );
+			log.info( "zLevel %d, %d paths. " % ( slice.zLevel, len(slice.fillWires)) );
 			
 			#fw is a wirewrapper
 			for fw in slice.fillWires:
 				if self.verbose:
 					gcodewriter.comment("begin wire");
-				logging.info(">>begin wire");
+				log.info(">>begin wire");
 				#print "base wire:",str(fw);				
 				sw =fw.getSortedWire();
 				#print "sorted wire:",str(sw);				
 				gcodewriter.followWire(sw,self.feedRate);
-				logging.info(">>end wire");
+				log.info(">>end wire");
 				
 				if self.verbose:
 					gcodewriter.comment("end wire");				
@@ -1187,35 +1191,35 @@ class GcodeExporter ():
 	Read a shape from Step file
 """
 def readStepShape(fileName):
-	logging.info("Reading STEP file:'" + fileName + "'...");
+	log.info("Reading STEP file:'" + fileName + "'...");
 	stepReader = STEPControl.STEPControl_Reader();
 	stepReader.ReadFile(fileName);
 	
 	numItems = stepReader.NbRootsForTransfer();
 	numTranslated = stepReader.TransferRoots();
-	logging.info("Read " + str(numTranslated) + " from File.");
+	log.info("Read " + str(numTranslated) + " from File.");
 	shape = stepReader.OneShape();
-	logging.info("Done.");
+	log.info("Done.");
 	return shape;
 
 def readSTLShape(fileName):
 	ts = TopoDS.TopoDS();
 
-	logging.info("Reading STL:'" + fileName + "'...");
+	log.info("Reading STL:'" + fileName + "'...");
 	#read stl file
 	shape = TopoDS.TopoDS_Shape()
 	stl_reader = StlAPI.StlAPI_Reader()
 	stl_reader.Read(shape,fileName)
-	logging.info("Fixing holes and degenerated Meshes...");
+	log.info("Fixing holes and degenerated Meshes...");
 	sf = ShapeFix.ShapeFix_Shape(shape);
 	sf.Perform();
 	fixedShape = sf.Shape();
-	logging.info("Making Solid from the Shell...");
+	log.info("Making Solid from the Shell...");
 	#bb = BRepBuilderAPI.BRepBuilderAPI_MakeSolid(ts.Shell(fixedShape));
 	#bb.Build();
 	bb = ShapeFix.ShapeFix_Solid();
 	return bb.SolidFromShell(ts.Shell(fixedShape));
-	logging.info("Done.");
+	log.info("Done.");
 	return bb.Solid();
 
 
@@ -1271,11 +1275,11 @@ def main(filename):
 
 	#slicing options: use defaults
 	options = SliceOptions();
-	options.numSlices=4;
-	options.numShells=8;
+	#options.numSlices=4;
+	options.numShells=6;
 	options.resolution=0.3;
 	options.inFillAngle=45;
-	options.inFillSpacing=2;
+	options.inFillSpacing=1;
 	
 	#slice it
 	sliceSet = Slicer(shape,options);

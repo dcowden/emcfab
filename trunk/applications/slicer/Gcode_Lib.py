@@ -25,11 +25,9 @@ import logging
 import time
 import math
 
-###Logging Configuration
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s %(levelname)s %(message)s',
-                    stream=sys.stdout)
-					
+
+log = logging.getLogger('gcode-lib');
+log.setLevel(logging.DEBUG);					
 ###
 ### TODO:
 ###   consider G90 and G91 ( incremental and absolute modes )
@@ -162,7 +160,7 @@ class GCode_Generator:
 	#follow the segments in a wire
 	#wire is a WireWrapper object
 	def followWire(self,wireWrapper, feed ):
-		#logging.debug( "Following Wire:" + str(wireWrapper));
+		#log.debug( "Following Wire:" + str(wireWrapper));
 		#bwe = BRepTools.BRepTools_WireExplorer(wireWrapper.wire);
 		
 		for ew in wireWrapper.edgeList:
@@ -228,7 +226,7 @@ class GCode_Generator:
 		
 		#if there is no move at all, return immediately
 		if ( x == self.currentX and y == self.currentY and z == self.currentZ ):
-			logging.debug(  "No move required" );
+			log.debug(  "No move required" );
 			return "";
 
 		#compute direction of the move, to filter out naive moves
@@ -243,7 +241,7 @@ class GCode_Generator:
 				#we have a last move. compare this one to see if they are the same direction
 				if ( proposedMove.IsParallel(self.lastMove,TOLERANCE )) and ( self.currentFeed == feed) :
 					#caught a naive move
-					logging.debug("Caught a naive move. Adjusting to remove the extra");
+					log.debug("Caught a naive move. Adjusting to remove the extra");
 					#TODO this approach only works with absolute coordinates
 					#in incremental coordinates, we have to adjust the new vector to move the same
 					#as all of the previous moves!

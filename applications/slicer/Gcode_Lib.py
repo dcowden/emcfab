@@ -27,7 +27,7 @@ import math
 
 
 log = logging.getLogger('gcode-lib');
-log.setLevel(logging.DEBUG);					
+log.setLevel(logging.WARN);					
 ###
 ### TODO:
 ###   consider G90 and G91 ( incremental and absolute modes )
@@ -42,7 +42,7 @@ DEFAULT_NUMBER_FORMAT = "%0.2f";
 DEFAULT_FEEDRATE = 1.0;
 DEFAULT_DEFLECTION=0.001;
 OMIT_UNCHANGED_AXES=False;
-TOLERANCE=0.0001;
+TOLERANCE=0.00001;
 
 #####
 #utility class instances
@@ -56,6 +56,12 @@ BRepLProp_CurveTool = BRepLProp.BRepLProp_CurveTool();
 #TopExp_Explorer = TopExp.TopExp_Explorer();
 ts = TopoDS.TopoDS();
 
+def close(x,y):
+	if x == None or y == None:
+		return False;
+	
+	return abs(x - y ) < TOLERANCE;
+	
 def printPoint(point):
 	return "x=%0.4f,y=%0.4f,z=%0.4f" % (point.X(), point.Y(), point.Z());
 	
@@ -117,12 +123,12 @@ class GCode_Generator:
 		same of the beginning of the next.
 	"""
 	def followEdge(self,edgeWrapper,feed):
-		print str(edgeWrapper);
+		#print str(edgeWrapper);
 		if self.verbose:
-			self.comment(str(edgeWrapper));
+			self.comment("Follow: " + str(edgeWrapper));
 		
 		#check to see if we should reverse this edge. Perhaps reversing it will work better.
-		if not self.isPointClose(edgeWrapper.firstPoint,0.001):
+		if not self.isPointClose(edgeWrapper.firstPoint,0.005):
 			#print "moving to start."
 			self.movePt(edgeWrapper.firstPoint,feed,"G00");		
 		#else:
@@ -152,18 +158,37 @@ class GCode_Generator:
 			#TODO: handle incremental coordinates
 			self.arc(center.X()-edgeWrapper.firstPoint.X(),center.Y()-edgeWrapper.firstPoint.Y(),edgeWrapper.lastPoint.X(),edgeWrapper.lastPoint.Y(),edgeWrapper.lastPoint.Z(),feed,c);
 		else:
-			self.addCommand("Curve Type %d Not implemented" % edgeWrapper.curveType );
-		if self.verbose:
-			self.comment("End follow Edge.");
-	
+			edge = edgeWrapper.edge;
+			range = Brep_Tool.Range(edge);
+			log.debug( "Edge Bounds:" + str(range) );
+			hc= Brep_Tool.Curve(edge);
+			ad = GeomAdaptor.GeomAdaptor_Curve(hc[0]);
+			log.debug(  "Edge is a curve of type:" + str(ad.GetType()));
+			
+			p1 = hc[1];
+			p2 = hc[2];
+			gc = GCPnts.GCPnts_QuasiUniformDeflection(ad,0.001,p1,p2);
+			i=1;
+			numPts = gc.NbPoints();
+			log.debug( "Discretized Curve has" + str(numPts) + " points." );
+			while i<=numPts:
+				if edge.Orientation() == TopAbs.TopAbs_FORWARD:
+					tPt = gc.Value(i);
+				else:
+					tPt = gc.Value(numPts-i+1);
+				i+=1;
+				self.movePt(tPt,feed);
+			
+			#last point is the end
+			self.movePt(edgeWrapper.lastPoint,feed);
 		
 	#follow the segments in a wire
 	#wire is a WireWrapper object
 	def followWire(self,wireWrapper, feed ):
 		#log.debug( "Following Wire:" + str(wireWrapper));
 		#bwe = BRepTools.BRepTools_WireExplorer(wireWrapper.wire);
-		
-		for ew in wireWrapper.edgeList:
+		wr = wireWrapper.getSortedWire() ;
+		for ew in wr.edgeList:
 			self.followEdge(ew,feed );
 	
 	"""
@@ -187,14 +212,14 @@ class GCode_Generator:
 		if j != None and j != 0:
 			command.append( ("J" + self.numberFormat)  % (j ));
 
-		if x != None and x != self.currentX:
+		if x != None and not close(x , self.currentX):
 			command.append( ("X" + self.numberFormat)  % (x ));
 			self.currentX = x;
-		if y != None and y != self.currentY:
+		if y != None and not close(y , self.currentY):
 			command.append( ("Y" + self.numberFormat)  % (y ));
 			self.currentY = y;
 			
-		if z != None and z != self.currentZ:
+		if z != None and not close(z , self.currentZ):
 			command.append( ("Z" + self.numberFormat)  % (z ));
 			self.currentZ = z;
 			
@@ -207,6 +232,14 @@ class GCode_Generator:
 		#naive move tracking doesnt apply to arcs
 		self.lastMove = None;
 	
+	def removeLastNonCommentMove(self):
+		"removes statements up to the last non-comment move. Used for naive move tracking"
+		removedCommand = False;
+		while not removedCommand and len(self.cmdBuffer) > 0:
+			a = self.cmdBuffer.pop();
+			if not a.startswith('('):
+				return;
+		
 	def movePt(self, gp_pt, feed,cmd="G01" ):
 		self.move(gp_pt.X(),gp_pt.Y(),gp_pt.Z(),feed,cmd);
 	
@@ -224,8 +257,12 @@ class GCode_Generator:
 		if z == None: z = self.currentZ
 		if feed == None: feed = self.currentFeed;
 		
+		#rapids reset naive move tracking
+		if cmd != 'G01':
+			self.lastMove = None;
+	
 		#if there is no move at all, return immediately
-		if ( x == self.currentX and y == self.currentY and z == self.currentZ ):
+		if ( close(x , self.currentX ) and close(y ,self.currentY)  and close(z , self.currentZ) ):
 			log.debug(  "No move required" );
 			return "";
 
@@ -245,7 +282,9 @@ class GCode_Generator:
 					#TODO this approach only works with absolute coordinates
 					#in incremental coordinates, we have to adjust the new vector to move the same
 					#as all of the previous moves!
-					self.cmdBuffer.pop();
+					self.removeLastNonCommentMove();
+					#self.comment("Removed Move");
+					#remove last non-comment move
 					
 			#store this one as the last move
 			self.lastMove = proposedMove;
@@ -253,13 +292,13 @@ class GCode_Generator:
 		#compare the direction of this move to the previous move.
 		cmds=[]
 		cmds.append(cmd);
-		if x != self.currentX:
+		if not close(x, self.currentX):
 			cmds.append( ("X" + self.numberFormat)  % (x) );
 			self.currentX = x
-		if y != self.currentY:
+		if not close(y , self.currentY):
 			cmds.append( ("Y" + self.numberFormat)  % (y) );
 			self.currentY = y
-		if z != self.currentZ:
+		if not close( z, self.currentZ):
 			cmds.append( ("Z" + self.numberFormat)  % (z) );
 			self.currentZ = z
 		if feed != self.currentFeed:

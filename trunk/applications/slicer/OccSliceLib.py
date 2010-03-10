@@ -91,11 +91,11 @@ from OCC.ShapeFix import ShapeFix_Wire
 from OCC import ShapeFix
 from OCC import BRepBuilderAPI
 from OCC import TopTools
+
 from OCC import gce
 #my libraries
-import fillLib
 import Gcode_Lib
-import Topology
+
 
 ###Logging Configuration
 logging.basicConfig(level=logging.DEBUG,
@@ -103,7 +103,7 @@ logging.basicConfig(level=logging.DEBUG,
                     stream=sys.stdout)
 
 log = logging.getLogger('slicer');
-log.setLevel(logging.INFO);
+log.setLevel(logging.WARN);
 
 					
 ##
@@ -122,6 +122,7 @@ log.setLevel(logging.INFO);
 
  
 mainDisplay = None;
+debugDisplay=None;
 
 #####
 #utility class instances
@@ -158,9 +159,23 @@ class Timer:
 	def finishedString(self):
 		return "%0.3f sec" % ( self.elapsed() );
 	
+def debugShape(shape):
+	global debugDisplay;
+	if debugDisplay:
+		debugDisplay.showShape(shape);
 
+def hideDebugDisplay():
+	global debugDisplay;
+	if debugDisplay:
+		debugDisplay.Hide();
+
+def showDebugDisplay():
+	global debugDisplay;
+	if debugDisplay:
+		debugDisplay.Show(True);
+		
 def printPoint(point):
-	return "x=%0.2f,y=%0.2f,z=%0.2f" % (point.X(), point.Y(), point.Z());
+	return "x=%0.3f,y=%0.3f,z=%0.3f" % (point.X(), point.Y(), point.Z());
 
 def sortPoints(pointList):
 	"Sorts points by ascending X"
@@ -199,6 +214,29 @@ def make_vertex(pnt):
 	s = BRepBuilderAPI.BRepBuilderAPI_MakeVertex(pnt);
 	s.Build();
 	return s.Shape();
+
+def cast(shape,type):
+	if type == TopAbs.TopAbs_WIRE:
+		return ts.Wire(shape);
+	elif type == TopAbs.TopAbs_EDGE:
+		return ts.Edge(shape);
+	elif type == TopAbs.TopAbs_VERTEX:
+		return ts.Vertex(shape);
+	elif type == TopAbs.TopAbs_SOLID:
+		return ts.Solid(shape);
+	elif type == TopAbs.TopAbs_FACE:
+		return ts.Face(shape);
+	elif type == TopAbs.TopAbs_SHELL:
+		return ts.Shell(shape);
+	elif type == TopAbs.TopAbs_COMPOUND:
+		return ts.Compound(shape);
+	return shape;
+	
+def listFromHSequenceOfShape(seq, castToType):
+	newList = [];
+	for i in range(1,seq.Length()+1):
+		newList.append(cast(seq.Value(i),castToType));
+	return newList;
 	
 def make_edge(shape):
     spline = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(shape)
@@ -249,8 +287,7 @@ def frange6(*args):
 class EdgeFollower:
 	"returns edges in head-to-tail order, based on which edge is closest"
 	"edges are returned so that their orientation is correct"
-	"if a starting point is not defined, the first point of the first"
-	"edge is used"
+	"this is the core for the hatching algorithm"
 	def __init__(self,infillEdges,boundaryEdges):
 	
 		self.infillEdges  = [];
@@ -350,30 +387,36 @@ class MultiWireBuilder:
 	def __init__(self):
 		self.wires = [];		
 		self.lastEdge = None;
-		self.tolerance = 0.0001;
+		self.tolerance = 0.001;
 		self.wireBuilder = None;
 		self.startNewWire();
 		
 	def startNewWire(self):	
 		if self.wireBuilder:
 			if self.wireBuilder.IsDone():
+				#debugShape(self.wireBuilder.Wire());
 				self.wires.append(self.wireBuilder.Wire());
 			else:
-				log.warn("Warning: Could not Build Wire!" );
+				raise Exception,"Could Not Build New Wire, Error # %d" % self.wireBuilder.Error();
 		self.wireBuilder = BRepBuilderAPI.BRepBuilderAPI_MakeWire();
+		self.lastEdge = None;
 		
 	def addEdge(self,edge):
 		ew = EdgeWrapper(edge);
-		#global mainDisplay;
-		#mainDisplay.showShape(edge);
+		
+		#debugShape(edge);
+		log.debug ("Adding Edge:" + str(ew) );
+		#time.sleep(1);
 		if self.lastEdge:
-			d = self.lastEdge.lastPoint.Distance(ew.firstPoint);
+			d = ew.firstPoint.Distance(EdgeWrapper(self.lastEdge).lastPoint);
 			if d >= self.tolerance:
 				log.warn( "Warning: edge does not match, starting new wire" );
 				self.startNewWire();
 		
+		self.lastEdge = edge;
 		self.wireBuilder.Add(edge);
-	
+		if  not self.wireBuilder.IsDone():
+			raise Exception,"Edge could not be added, Error %d" % self.wireBuilder.Error();
 	def getResult(self):
 		self.startNewWire();
 		return self.wires;
@@ -385,13 +428,11 @@ class BoundaryManager:
 	def __init__(self):
 		self.intersectionPoints = {};
 		self.wires = [];
-		self.tolerance = 0.001;
+		self.tolerance = 0.00001;
 		self.approxCurves = {};
 		
-	"This would also allow use of the original intersections points in"
-	"construction to imrpove performance"
 	def addIntersectionPoint(self, wire, point):
-	
+		"adds an intersection point for the specified wire"
 		self.intersectionPoints[wire].append(point);
 	
 	def addWire(self, wire):
@@ -404,7 +445,7 @@ class BoundaryManager:
 		curveHandle = curve.GetHandle();
 
 		#approximate the curve using a tolerance
-		approx = Approx.Approx_Curve3d(curveHandle,0.0001,GeomAbs.GeomAbs_C2,2000,12);
+		approx = Approx.Approx_Curve3d(curveHandle,self.tolerance,GeomAbs.GeomAbs_C2,2000,12);
 		if approx.IsDone() and  approx.HasResult():
 			# have the result
 			anApproximatedCurve=approx.Curve();
@@ -446,7 +487,7 @@ class BoundaryManager:
 		for [wire,curve] in self.approxCurves.iteritems():
 			a = findParameterOnCurve(p1,curve);
 			b = findParameterOnCurve(p2,curve);
-			print "Distance from curve is %05.f, %0.5f" % ( a[2], b[2] );
+			#print "Distance from curve is %05.f, %0.5f" % ( a[2], b[2] );
 			return edgeFromTwoPointsOnCurve(curve,a[1],b[1]);
 			
 		print "Could not find a suitable curve. Are the points on any curve?"
@@ -545,9 +586,6 @@ class WireWrapper:
 			p.append("\t" + str(e) );
 		
 		return "\n".join(p);
-
-
-
 	
 """
 	Class that provides easy access to commonly
@@ -647,7 +685,7 @@ class SliceOptions:
 		self.FIRST_LAYER_OFFSET = 0.0001;
 		self.DEFAULT_NUMSHELLS = 5;
 		self.inFillAngle = 30;
-		self.hatchPadding = 0.05; # a percentage
+		self.hatchPadding = 0.15; # a percentage
 		self.inFillSpacing=1;
 		#per-slice options
 		self.numShells = self.DEFAULT_NUMSHELLS;
@@ -657,6 +695,7 @@ class SliceOptions:
 """
 class Slicer:
 	def __init__(self,shape,options):
+		"initialize the object"
 		self.slices=[]
 		self.shape = shape;
 		self.analyzer = SolidAnalyzer(shape);
@@ -710,7 +749,7 @@ class Slicer:
 			self.display.showShape(shape);
 
 	def execute(self):
-
+		"slices the object with the settings supplied in the options property"
 		t = Timer();		
 		log.info("Slicing Started.");
 		
@@ -722,7 +761,7 @@ class Slicer:
 		sliceNumber = 1;
 		t2 = Timer();
 		while zLevel < self.zMax:
-			log.info( "Creating Slice %0d, z=%0.3f " % ( sliceNumber,zLevel));
+			log.warn( "Creating Slice %0d, z=%0.3f " % ( sliceNumber,zLevel));
 			slice = self._makeSlice(self.shape,zLevel);
 
 			if slice != None:
@@ -738,15 +777,17 @@ class Slicer:
 			#compute an estimate of time remaining every 10 or so slices
 			if reportInterval > 0 and sliceNumber % reportInterval == 0:
 				pc = ( zLevel - self.zMin )/   ( self.zMax - self.zMin) * 100;
-				log.info("%0.0f %% complete." % (pc) );			
+				log.warn("%0.0f %% complete." % (pc) );			
 
-		log.info("Slicing Complete: " + t.finishedString() );
-		log.info("Throughput: %0.3f slices/sec" % (sliceNumber/t.elapsed() ) );
+		log.warn("Slicing Complete: " + t.finishedString() );
+		log.warn("Throughput: %0.3f slices/sec" % (sliceNumber/t.elapsed() ) );
 
 		
 	def _makeHatchLines(self,shape ):
 		"Makes a set of hatch lines that cover the specified shape"
 		hatchEdges = [];
+		
+		#debugShape(shape);
 		
 		box = Bnd.Bnd_Box();
 		b = BRepBndLib.BRepBndLib();
@@ -778,7 +819,7 @@ class Slicer:
 			p2 = gp.gp_Pnt(xMax, (xMax - xN)* math.tan(angleRads) + yMin, zMin);
 		
 			edge = edgeFromTwoPoints(p1,p2);
-			#self.showShape(edge);
+			#debugShape(edge);
 			hatchEdges.append(edge);
 		
 		return hatchEdges;
@@ -794,8 +835,6 @@ class Slicer:
 		#approximate each boundary by a parameterized bspine curve
 		boundaryWires = self._makeWiresFromOffsetShape(lastOffset);
 		
-		#WTF!!! the result is two copies of the same wire, yet lastOffset
-		#is clearly a compound of two separate wires!
 		#self.showShape(lastOffset);
 		bm = BoundaryManager();
 		#for wire in boundaryWires:
@@ -807,7 +846,7 @@ class Slicer:
 		infillEdges = [];
 		boundaryEdges = [];
 		
-		foundPart = False;
+		boundariesFound = {};
 		continueHatching = True;
 		
 		#for each generated hatch, intersect with each boundary
@@ -822,15 +861,16 @@ class Slicer:
 			for i in range(1,boundaryWires.Length()+1):
 				boundary = ts.Wire(boundaryWires.Value(i));
 				log.debug("Wire start");
-				#self.showShape(boundary);
+				#debugShape(boundary);
 				#time.sleep(.5);
 				brp = BRepExtrema.BRepExtrema_DistShapeShape();
-				#self.showShape(hatchLine);
+				#debugShape(hatchLine);
+				#time.sleep(1);
 				brp.LoadS1(boundary);
 				brp.LoadS2(hatchLine );
 
 				if brp.Perform() and brp.Value() < 0.001:
-					foundPart = True;
+					boundariesFound[boundary] = True;
 					#print "Found %d Intersections" % brp.NbSolution();
 					
 					#number of intersections must be even for closed shapes
@@ -846,7 +886,7 @@ class Slicer:
 				else:
 					log.debug( "No Intersections Found");
 			
-			if len(hatchLineItersectionPoints) == 0 and foundPart:
+			if len(hatchLineItersectionPoints) == 0 and (len(boundariesFound) ==  boundaryWires.Length()):
 				continueHatching = False;
 			
 			#sort the points by ascending X, add to list of hashEdges
@@ -890,14 +930,27 @@ class Slicer:
 		log.debug( "There are %d infill edges" % ( len(infillEdges)));
 		
 		boundaryEdges = bm.buildEdges();		
-		multiWireBuilder = MultiWireBuilder();  #handles starting new wires when needed
+		#multiWireBuilder = MultiWireBuilder();  #handles starting new wires when needed
 
 		follower = EdgeFollower(infillEdges,boundaryEdges);
+		
+		#build wires from the edges
+		edgeList  = TopTools.TopTools_HSequenceOfShape();
+		edgeList = [];
 		while follower.hasMoreEdges():
-			#self.showShape(follower.nextEdge());
-			#time.sleep(.1);
-			multiWireBuilder.addEdge(follower.nextEdge() );
-					
+			edgeList.append(follower.nextEdge() );
+		
+		#TODO: because of some tolerance issue, i cannot seem to build a wire out
+		#of these edges. but that's ok, there's really no reason why we cannot just use a 
+		#sequence of edges instead
+		#log.info("Building Wires from % Edges..." %  edges.Length() );
+		#wireBuilder.ConnectEdgesToWires(edges.GetHandle(),0.01,True,resultWires.GetHandle() );
+		#log.info ("Finished: Created %d wires" % resultWires.Length() );
+		
+		log.info("Finished Following hatching.");
+		return edgeList;
+		#return listFromHSequenceOfShape( resultWires, TopAbs.TopAbs_WIRE);
+		
 		#show boundary points
 		#for point in boundaryIntersections:
 		#	a = BRepBuilderAPI.BRepBuilderAPI_MakeVertex(point);
@@ -925,35 +978,62 @@ class Slicer:
 	
 		log.info("Filling Slice at zLevel %0.3f" % slice.zLevel);
 		for f in slice.faces:
-			currentOffset = 1;
+			numShells = 0;
 			#self.display.showShape(f);
 			t3=Timer();
-			lastOffset = None;
-			while currentOffset < self.options.numShells :
-				offset = (-1)*self.resolution*currentOffset;	
+			shells = [];
+			
+			#attempt to create the number of shells requested by the user, plus two additional:
+				#one additional for any hatch infill required, and one past tha
+				# on past that to make sure there are no interferences
+				
+			#regardless, the last successfully created offset is used for hatch infill
+			
+			while numShells < self.options.numShells+1 :
+				offset = (-1)*self.resolution*numShells;	
 				#print "Computing Offset.."
-				lastOffset = self._offsetFace(f,offset);
-
-				#if s:
-					#sWires = self._makeWiresFromOffsetShape(s);					
-					#slice.fillWires.extend(sWires);
-					#self._experiment(self._makeWiresFromOffsetShape(s));
-				currentOffset+=1;
-				#make it clear on display how the last set looks.
-				#if currentOffset < self.options.numShells:
-				#	self.showShape(lastOffset);
+				try:
+					lastOffset = self._offsetFace(f,offset);
+					sa = SolidAnalyzer(lastOffset);
 					
-			#ok now the last shell is available to serve as the boundary for
-			#our hatching also
-			#take the last wire(s) created 
-			log.debug( "Hatching Sliced Items..");
-			infillWires = self._hatchSlice(slice,lastOffset);
-
-			#slice.fillWires.extend(infillWires );
+					if min([sa.xDim,sa.yDim]) < ( self.options.resolution ):
+						log.warn("Resulting Shape is too small to produce. Skipping this shell.");
+						raise Exception,"Resulting Shape is too small to produce."
+					else:
+						shells.append(lastOffset);
+				except Exception as e:					
+					break;
+				numShells+=1;
+			
+			#completed
+			if numShells < self.options.numShells:
+				log.warn(("Could only create %d of the requested %d shells:") % (numShells, self.options.numShells ));
+			
+			#the last shell is for hatch rather than infill.
+			#if it was possible to create the last shell, that means it is large enough to fill
+			lastShell = shells.pop();
+			
+			#add shells to the slice
+			for s in shells:
+				slice.fillWires.extend(
+					listFromHSequenceOfShape(
+						self._makeWiresFromOffsetShape(s),TopAbs.TopAbs_WIRE));
+			
+			#use last shell for hatching
+			infillEdges = self._hatchSlice(slice,lastShell);
+			slice.fillEdges.extend(infillEdges);
 			
 		log.info("Filling Complete, Created %d paths." % len(slice.fillWires)  );
 		
+		#to show all of the resulting paths for the slice, turn this on
 
+		#for w in slice.fillWires:
+		#	debugShape(w);
+		
+		#for e in slice.fillEdges:
+		#	#print str(EdgeWrapper(e));
+		#	debugShape(e);
+		
 
 	def _makeAdapterCurveFromWire(self,wire):
 		"Makes a single parameterized adapter curve from a wire"
@@ -981,12 +1061,12 @@ class Slicer:
 		#resultWires = [];
 		resultWires = TopTools.TopTools_HSequenceOfShape();
 		if shape.ShapeType() == TopAbs.TopAbs_WIRE:
-			log.debug( "offset result is a wire" );
+			log.info( "offset result is a wire" );
 			wire = ts.Wire(shape);
 			#resultWires.append(wire);
 			resultWires.Append(wire);
 		elif shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
-			log.debug( "offset result is a compound");
+			log.info( "offset result is a compound");
 
 			bb = TopExp.TopExp_Explorer();
 			bb.Init(shape,TopAbs.TopAbs_WIRE);
@@ -995,7 +1075,7 @@ class Slicer:
 							
 				#resultWires.append(w);
 				resultWires.Append(w);#
-				#self.showShape(wire);
+				#debugShape(w);
 				bb.Next();
 			
 			bb.ReInit();	
@@ -1005,31 +1085,27 @@ class Slicer:
 	#offset a face, returning the offset shape
 	def _offsetFace(self,face,offset ):
 		resultWires = [];
-		try:
+		ow = brt.OuterWire(face);
+		bo = BRepOffsetAPI.BRepOffsetAPI_MakeOffset();
+		bo.AddWire(ow);
 
-			ow = brt.OuterWire(face);
-			bo = BRepOffsetAPI.BRepOffsetAPI_MakeOffset();
-			bo.AddWire(ow);
-
-			#now get the other wires
-			te = TopExp.TopExp_Explorer();
-			
-			te.Init(face,TopAbs.TopAbs_WIRE);
-			while te.More():
-					w = ts.Wire(te.Current());
-					if not w.IsSame(ow):
-							bo.AddWire(w);
-					te.Next();
-			te.ReInit();
-				
-			bo.Perform(offset,0.00001);
-			return  bo.Shape();
-		except:
-			traceback.print_exc(file=sys.stdout);
-			print 'error offsetting at offset=',offset		
-	
-		return None;
+		#now get the other wires
+		te = TopExp.TopExp_Explorer();
 		
+		te.Init(face,TopAbs.TopAbs_WIRE);
+		while te.More():
+				w = ts.Wire(te.Current());
+				if not w.IsSame(ow):
+						bo.AddWire(w);
+				te.Next();
+		te.ReInit();
+			
+		bo.Perform(offset,0.00001);
+		if  not bo.IsDone():
+			raise Exception, "Offset Was Not Successful.";
+		else:
+			return  bo.Shape();
+			
 	def _makeSlice(self,shapeToSlice,zLevel):
 		s = Slice();
 		
@@ -1103,6 +1179,7 @@ class Slice:
 		
 		#actually these are wirewrappers
 		self.fillWires = [];
+		self.fillEdges = [];
 		self.zLevel=0;
 		self.zHeight = 0;
 		self.layerNo = 0;
@@ -1131,9 +1208,10 @@ class Slice:
 		return [xMin,xMax,yMin,yMax,zMin,zMax];
 
 """
-	Writes a sliceset to specified file in Gcode format.
-	
+	Writes a sliceset to specified file in Gcode format.	
 	Accepts a slicer, and exports gcode for the slices that were produced by the slicer.
+	The slicer has already sliced and filled each layer. This class simply converts
+	these toolpaths to Gcode
 	
 """		
 class GcodeExporter ():
@@ -1146,46 +1224,58 @@ class GcodeExporter ():
 		self.display = None;
 	
 	def export(self, sliceSet, fileName):
-
 		
 		slices = sliceSet.slices;
+		msg = "Exporting " + str(len(slices)) + " slices to file'" + fileName + "'...";
 		log.info("Exporting " + str(len(slices)) + " slices to file'" + fileName + "'...");
-
+		print msg;
+		
 		gcodewriter = Gcode_Lib.GCode_Generator();
 		gcodewriter.verbose = self.verbose;
 		gcodewriter.numberFormat = self.numberFormat;
 		gcodewriter.start();
 		gcodewriter.comment(self.description);
 		exportedPaths = 0;
-		
+
 		for slice in slices:
+			print "zLevel %0.5f ...." % slice.zLevel,
 			gcodewriter.comment('zLevel' + str(slice.zLevel) );
-			log.info( "zLevel %d, %d paths. " % ( slice.zLevel, len(slice.fillWires)) );
 			
-			#fw is a wirewrapper
+			log.info( "zLevel %d, %d offset paths,%d fill edges " % ( slice.zLevel, len(slice.fillWires), len(slice.fillEdges) ));
+			gcodewriter.comment("offsets");
 			for fw in slice.fillWires:
 				if self.verbose:
 					gcodewriter.comment("begin wire");
 				log.info(">>begin wire");
 				#print "base wire:",str(fw);				
-				sw =fw.getSortedWire();
+				#sw =fw.getSortedWire();
 				#print "sorted wire:",str(sw);				
-				gcodewriter.followWire(sw,self.feedRate);
+				gcodewriter.followWire(WireWrapper(fw),self.feedRate);
 				log.info(">>end wire");
 				
 				if self.verbose:
 					gcodewriter.comment("end wire");				
 
-				if self.display:
-					self.display.showShape(sw.wire);
+				#if self.display:
+				#	self.display.showShape(fw);
 					
 				exportedPaths += 1;
 
+
+			gcodewriter.comment("infill");				
+			for e in slice.fillEdges:
+				if self.verbose:
+					gcodewriter.comment("begin edge");
+				gcodewriter.followEdge(EdgeWrapper(e),self.feedRate);				
+				if self.verbose:
+					gcodewriter.comment("end edge");
+				exportedPaths += 1;
+			print "[Done]"
 		commands = gcodewriter.getResults();
 		f = open(fileName,'w');
 		f.write("\n".join(commands));
 		f.close()
-		
+		print "Gcode Export Complete."
 
 """
 	Read a shape from Step file
@@ -1215,8 +1305,6 @@ def readSTLShape(fileName):
 	sf.Perform();
 	fixedShape = sf.Shape();
 	log.info("Making Solid from the Shell...");
-	#bb = BRepBuilderAPI.BRepBuilderAPI_MakeSolid(ts.Shell(fixedShape));
-	#bb.Build();
 	bb = ShapeFix.ShapeFix_Solid();
 	return bb.SolidFromShell(ts.Shell(fixedShape));
 	log.info("Done.");
@@ -1232,7 +1320,10 @@ def printUsage():
 		Creates an SVG output file compatible with skeinforge	, in same directory as inputfile
 	"""
 def main(filename):
+
 	global mainDisplay;
+	global debugDisplay;
+
 	app = wx.PySimpleApp()
 	wx.InitAllImageHandlers()
 	
@@ -1266,6 +1357,13 @@ def main(filename):
 	gcodeFrame.canva.InitDriver()
 	gcodeFrame.canva._display.SetModeWireFrame()
 	gcodeFrame.Show(True)	
+
+
+	debugDisplay = AppFrame(None,"Debug Display",1220,20)
+	debugDisplay.canva.InitDriver()
+	debugDisplay.canva._display.SetModeWireFrame()
+	debugDisplay.Show(True)	
+
 	
 	analyzer = SolidAnalyzer(theSolid);	
 	shape = analyzer.translateToPositiveSpace();
@@ -1275,24 +1373,30 @@ def main(filename):
 
 	#slicing options: use defaults
 	options = SliceOptions();
-	#options.numSlices=4;
-	options.numShells=6;
+	#options.numSlices=1;
+	options.numShells=2;
 	options.resolution=0.3;
 	options.inFillAngle=45;
-	options.inFillSpacing=1;
+	options.inFillSpacing=0.6;
+	#options.zMin=12.7
+	#options.zMax=13
 	
 	#slice it
-	sliceSet = Slicer(shape,options);
-	sliceSet.display = sliceFrame;	
-	sliceSet.execute()
-	
-	#export to gcode
-	gexp = GcodeExporter();
-	gexp.description="Reprap Test";
-	gexp.display = gcodeFrame;
-	#gexp.export(sliceSet, outFileName);
-	gexp.verbose = False;
-	
+	try:
+		sliceSet = Slicer(shape,options);
+		sliceSet.display = sliceFrame;	
+		sliceSet.execute()
+		
+		#export to gcode
+		gexp = GcodeExporter();
+		gexp.description="Reprap Test";
+		gexp.display = gcodeFrame;
+		gexp.export(sliceSet, outFileName);
+		gexp.verbose = True;
+	except:
+		traceback.print_exc(file=sys.stdout);
+		log.critical( 'Slicing Terminated.');	
+		
 	app.SetTopWindow(frame)
 	app.MainLoop() 
 

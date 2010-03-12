@@ -76,6 +76,7 @@ import time
 import traceback
 
 import math
+import itertools
 
 from OCC import STEPControl,TopoDS, TopExp, TopAbs,BRep,gp,GeomAbs,GeomAPI
 from OCC import BRepBuilderAPI,BRepTools,BRepAlgo,BRepBndLib,Bnd,StlAPI,BRepAlgoAPI,BRepAdaptor
@@ -103,7 +104,7 @@ logging.basicConfig(level=logging.DEBUG,
                     stream=sys.stdout)
 
 log = logging.getLogger('slicer');
-log.setLevel(logging.WARN);
+log.setLevel(logging.INFO);
 
 					
 ##
@@ -120,7 +121,15 @@ log.setLevel(logging.WARN);
 ##   X sew faces from crappy stl files into single faces somehow
 ##   X remove reference to profile import
 
+"""
+	##
+	##  Performance Improvement Ideas
+	## 
+    Compute slice boundaries once instead of per layer
+	Generate gcode as you go instead of storing in memory
+	 
  
+"""
 mainDisplay = None;
 debugDisplay=None;
 
@@ -181,6 +190,101 @@ def sortPoints(pointList):
 	"Sorts points by ascending X"
 	pointList.sort(cmp= lambda x,y: cmp(x.X(),y.X()));
 
+def pointsFromWire(wire,spacing):
+	"Makes a single parameterized adapter curve from a wire"	
+
+	points = [];
+	#make a parameterized approximation of the wire
+	adaptor = BRepAdaptor.BRepAdaptor_CompCurve (wire);
+	gc = GCPnts.GCPnts_UniformAbscissa(adaptor,spacing,0.0001);
+	
+	if gc.IsDone():
+		log.info("Computed %d Points Successfully for the wire." % gc.NbPoints() );
+		for i in range(1,gc.NbPoints()):
+			points.append(adaptor.Value(gc.Parameter(i)));
+
+	#workaround: for some odd reason periodic curves do not honor the start and the end
+	#so work around by removing the last point if it is too close to the first one
+	if points[0].Distance(points[len(points)-1]) < spacing:
+		points.pop();
+		log.warn("Correcing for GCPnts periodic curve bug");
+		
+	return points;
+	
+		
+def makeWiresFromOffsetShape(shape):
+	#resultWires = [];
+	resultWires = TopTools.TopTools_HSequenceOfShape();
+	if shape.ShapeType() == TopAbs.TopAbs_WIRE:
+		log.info( "offset result is a wire" );
+		wire = ts.Wire(shape);
+		#resultWires.append(wire);
+		resultWires.Append(wire);
+	elif shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
+		log.info( "offset result is a compound");
+
+		bb = TopExp.TopExp_Explorer();
+		bb.Init(shape,TopAbs.TopAbs_WIRE);
+		while bb.More():
+			w = ts.Wire(bb.Current());
+						
+			#resultWires.append(w);
+			resultWires.Append(w);#
+			#debugShape(w);
+			bb.Next();
+		
+		bb.ReInit();	
+	
+	return resultWires;	
+
+
+def checkMinimumDistanceForOffset(offset,resolution):
+	"check an offset shape to make sure that it does not overlap too closely"
+	"this consists of making sure that none of the wires are too close to each other"
+	"and that no individual wires have edges too close together"
+	#approximate each boundary by a parameterized bspine curve
+	log.info ("Checking this offset for minimum distances");
+
+	te = TopExp.TopExp_Explorer();
+	resultWires = TopTools.TopTools_HSequenceOfShape();
+	te.Init(offset,TopAbs.TopAbs_WIRE);
+	
+	allPoints = [];
+	while te.More():
+			w = ts.Wire(te.Current());
+			resultWires.Append(w);
+			allPoints.extend( pointsFromWire(w,resolution*2));
+			te.Next();
+	te.ReInit();
+	
+	#for p in allPoints:
+	#	debugShape(make_vertex(p));
+		
+	log.info("There are %d wires, and %d points" % (resultWires.Length(), len(allPoints) ));
+	
+	#cool trick here: list all permutations of these points
+	for (p1,p2) in list(itertools.combinations(allPoints,2)):
+		d = p1.Distance(p2);
+		if d < resolution:
+			log.warn("Distance %0.5f is less than expected value" % d );
+			return False;
+		#else:
+			#log.info("Computed distance = %0.5f" % d );
+			
+	return True;
+
+	
+	
+def minimumDistanceBetweenShapes(shape1, shape2):
+	"returns minimum distance bewteen two shapes"
+	bre= BRepExtrema.BRepExtrema_DistShapeShape(shape1,shape2);
+	log.debug("Computing Minimum Distance");
+	if bre.Perform():
+		return bre.Value();
+	else:
+		return 200;
+	
+	
 def edgeFromTwoPoints(p1,p2):
 	builder = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(p1,p2);
 	builder.Build();
@@ -765,8 +869,8 @@ class Slicer:
 			slice = self._makeSlice(self.shape,zLevel);
 
 			if slice != None:
-				for f in slice.faces:
-					self.showShape(f);			
+				#for f in slice.faces:
+				#	self.showShape(f);			
 				self.slices.append(slice);
 				#todo: this should probably be componentize: filling is quite complex.
 				self._fillSlice(slice);
@@ -783,7 +887,7 @@ class Slicer:
 		log.warn("Throughput: %0.3f slices/sec" % (sliceNumber/t.elapsed() ) );
 
 		
-	def _makeHatchLines(self,shape ):
+	def _makeHatchLines(self,shape ,zLevel):
 		"Makes a set of hatch lines that cover the specified shape"
 		hatchEdges = [];
 		
@@ -793,7 +897,7 @@ class Slicer:
 		b = BRepBndLib.BRepBndLib();
 		b.Add(shape,box);
 		[xMin, yMin , zMin, xMax,yMax,zMax  ] = box.Get();	
-		
+
 		#add some space to make sure we are outside the boundaries
 		xMin = xMin * ( 1-  self.options.hatchPadding);
 		yMin = yMin * ( 1- self.options.hatchPadding );		 
@@ -804,7 +908,7 @@ class Slicer:
 
 		wires = [];
 		#compute direction of line
-		lineDir = gp.gp_Dir( 1,math.cos(math.radians(self.options.inFillAngle)),zMin );
+		lineDir = gp.gp_Dir( 1,math.cos(math.radians(self.options.inFillAngle)),zLevel );
 		angleRads = math.radians(self.options.inFillAngle);
 		xSpacing = self.options.inFillSpacing / math.sin(angleRads);		
 
@@ -815,8 +919,8 @@ class Slicer:
 		for xN in frange6(xStart,xStop,xSpacing):
 			
 			#make an edge to intersect
-			p1 = gp.gp_Pnt(xN,yMin,zMin);
-			p2 = gp.gp_Pnt(xMax, (xMax - xN)* math.tan(angleRads) + yMin, zMin);
+			p1 = gp.gp_Pnt(xN,yMin,zLevel);
+			p2 = gp.gp_Pnt(xMax, (xMax - xN)* math.tan(angleRads) + yMin, zLevel);
 		
 			edge = edgeFromTwoPoints(p1,p2);
 			#debugShape(edge);
@@ -827,13 +931,14 @@ class Slicer:
 	def _hatchSlice(self,slice,lastOffset):
 		"take the a slice and compute a list of infillWires"
 		log.debug( "Hatching Face...." );
+		#debugShape(lastOffset);
 		#a set of hatch lines that will conver the entire part
 		#self.showShape(lastOffset);
-		hatchEdges = self._makeHatchLines(lastOffset);
+		hatchEdges = self._makeHatchLines(lastOffset,slice.zLevel);
 		log.debug( "I have %d Hatch Edges" % len(hatchEdges));
 				
 		#approximate each boundary by a parameterized bspine curve
-		boundaryWires = self._makeWiresFromOffsetShape(lastOffset);
+		boundaryWires = makeWiresFromOffsetShape(lastOffset);
 		
 		#self.showShape(lastOffset);
 		bm = BoundaryManager();
@@ -871,7 +976,6 @@ class Slicer:
 
 				if brp.Perform() and brp.Value() < 0.001:
 					boundariesFound[boundary] = True;
-					#print "Found %d Intersections" % brp.NbSolution();
 					
 					#number of intersections must be even for closed shapes
 					#note that we want to avoid lines that are inside of islands.
@@ -910,19 +1014,7 @@ class Slicer:
 				if e:
 					infillEdges.append(e);			
 
-		
-		#for ie in infillEdges:			
-		#	self.showShape(ie);
-		#	self.showShape(make_vertex(EdgeWrapper(ie).firstPoint));
-
-		
-		#follower = EdgeFollower(infillEdges);		
-		#while follower.hasMoreEdges():
-		#	e = follower.nextEdge();
-		#	self.showShape(e);
-		#	self.showShape(make_vertex(EdgeWrapper(e).firstPoint));		
-		#print "Finished Chaining Through Edges."
-		
+			
 		#basically, alternate between an internal and and external edges
 		if len(infillEdges) == 0:
 			log.debug( "No Infill Edges Were Created. Returning" );
@@ -930,7 +1022,6 @@ class Slicer:
 		log.debug( "There are %d infill edges" % ( len(infillEdges)));
 		
 		boundaryEdges = bm.buildEdges();		
-		#multiWireBuilder = MultiWireBuilder();  #handles starting new wires when needed
 
 		follower = EdgeFollower(infillEdges,boundaryEdges);
 		
@@ -949,26 +1040,6 @@ class Slicer:
 		
 		log.info("Finished Following hatching.");
 		return edgeList;
-		#return listFromHSequenceOfShape( resultWires, TopAbs.TopAbs_WIRE);
-		
-		#show boundary points
-		#for point in boundaryIntersections:
-		#	a = BRepBuilderAPI.BRepBuilderAPI_MakeVertex(point);
-		#	self.showShape(a.Vertex() );			
-		
-		#show boundaryEdges
-		#for edge in boundaryEdges:
-		#	self.showShape(edge);
-
-		#for edge in infillEdges:
-		#	self.showShape(edge);
-		#	time.sleep(1);
-			
-		#return None;
-	
-		#show resulting wires
-		#for wire in multiWireBuilder.getResult():
-		#	self.showShape(wire);
 
 			
 	#fills a slice with the appropriate toolpaths.
@@ -988,21 +1059,40 @@ class Slicer:
 				# on past that to make sure there are no interferences
 				
 			#regardless, the last successfully created offset is used for hatch infill
-			
+			lastOffset = None;
 			while numShells < self.options.numShells+1 :
 				offset = (-1)*self.resolution*numShells;	
-				#print "Computing Offset.."
 				try:
-					lastOffset = self._offsetFace(f,offset);
-					sa = SolidAnalyzer(lastOffset);
-					
-					if min([sa.xDim,sa.yDim]) < ( self.options.resolution ):
+					print "Offsetting at zlevel %0.3f" % slice.zLevel
+					newOffset = self._offsetFace(f,offset);
+					if lastOffset:
+						#minDistance = minimumDistanceBetweenShapes(newOffset,lastOffset);
+						#log.warn("Minimum Distance = %0.4f" % minDistance );
+						#debugShape(newOffset);
+						#if ( minDistance + 0.001 )< self.options.resolution :
+						#	log.warn("Shell is within %0.7f of last shell, but resolution is %0.7f. Aborting."  % ( minDistance, self.options.resolution ));
+						#	time.sleep(5);
+						#	break;
+						t = Timer();
+						r = checkMinimumDistanceForOffset(newOffset,self.options.resolution);
+						
+						log.warn("Finished checking offset dims. %0.2f elapsed." % t.elapsed() );
+						if not r:
+							log.warn("Shell is too close to other shells.");
+							#time.sleep(5);
+							break;
+							
+					sa = SolidAnalyzer(newOffset);
+					if min([sa.xDim,sa.yDim]) < ( self.resolution ):
 						log.warn("Resulting Shape is too small to produce. Skipping this shell.");
 						raise Exception,"Resulting Shape is too small to produce."
-					else:
-						shells.append(lastOffset);
-				except Exception as e:					
-					break;
+
+					lastOffset = newOffset
+					shells.append(newOffset);
+					log.info('Created Shell Successfully.');
+				except Exception as e:
+					log.warn(e.args);
+					#raise e;
 				numShells+=1;
 			
 			#completed
@@ -1017,9 +1107,10 @@ class Slicer:
 			for s in shells:
 				slice.fillWires.extend(
 					listFromHSequenceOfShape(
-						self._makeWiresFromOffsetShape(s),TopAbs.TopAbs_WIRE));
+						makeWiresFromOffsetShape(s),TopAbs.TopAbs_WIRE));
 			
 			#use last shell for hatching
+			#debugShape(lastShell);
 			infillEdges = self._hatchSlice(slice,lastShell);
 			slice.fillEdges.extend(infillEdges);
 			
@@ -1056,31 +1147,7 @@ class Slicer:
 			loggin.warn( "Failed to create curve." );
 			return None;
 		
-		
-	def _makeWiresFromOffsetShape(self,shape):
-		#resultWires = [];
-		resultWires = TopTools.TopTools_HSequenceOfShape();
-		if shape.ShapeType() == TopAbs.TopAbs_WIRE:
-			log.info( "offset result is a wire" );
-			wire = ts.Wire(shape);
-			#resultWires.append(wire);
-			resultWires.Append(wire);
-		elif shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
-			log.info( "offset result is a compound");
 
-			bb = TopExp.TopExp_Explorer();
-			bb.Init(shape,TopAbs.TopAbs_WIRE);
-			while bb.More():
-				w = ts.Wire(bb.Current());
-							
-				#resultWires.append(w);
-				resultWires.Append(w);#
-				#debugShape(w);
-				bb.Next();
-			
-			bb.ReInit();	
-		
-		return resultWires;
 		
 	#offset a face, returning the offset shape
 	def _offsetFace(self,face,offset ):
@@ -1373,13 +1440,13 @@ def main(filename):
 
 	#slicing options: use defaults
 	options = SliceOptions();
-	#options.numSlices=1;
-	options.numShells=2;
+	#options.numSlices=2;
+	options.numShells=6;
 	options.resolution=0.3;
 	options.inFillAngle=45;
-	options.inFillSpacing=0.6;
-	#options.zMin=12.7
-	#options.zMax=13
+	options.inFillSpacing=0.3;
+	options.zMin=11
+	options.zMax=11.3
 	
 	#slice it
 	try:

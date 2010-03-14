@@ -1,3 +1,54 @@
+"export a slicer into svg files"
+class SVGExporter():
+	def __init__(self,slicer):
+		self.slicer = slicer;
+		self.title="Untitled";
+		self.description="No Description"
+		self.unitScale = 3.7;
+		self.units = sliceSet.analyzer.guessUnitOfMeasure();
+		self.NUMBERFORMAT = '%0.3f';		
+
+	def export(self, fileName):
+		slices = self.slicer.slices;
+		logging.info("Exporting " + str(len(slices)) + " slices to file'" + fileName + "'...");
+		layers = []
+		
+		#for each slice, print the paths
+		for s in	self.sliceSet.slices:
+			layers.append( SVGLayer(s,self.unitScale,self.NUMBERFORMAT) );
+	
+	
+	
+"decorates a slice to provide extra computations"
+class SVGLayer:
+	def __init__(self,slice,unitScale):
+		self.slice = slice;
+		self.margin = 20;
+		self.unitScale = unitScale;
+		self.NUMBERFORMAT = '%0.3f';
+		
+	def zLevel(self):
+		return self.NUMBERFORMAT % self.slice.zLevel;
+		
+	def xTransform(self):
+		return self.margin;
+		
+	def yTransform(self):
+		return (self.slice.layerNo + 1 ) * (self.margin + ( self.slice.sliceHeight * self.unitScale )) + ( self.slice.layerNo * 20 );
+
+	def getSVGPath(self):
+		"compute the path based on the wires and fill edges"
+		"""
+				<g id="z $zLevel" transform="translate($xTransform, $yTransform)">
+					<text y="15" fill="\#000" stroke="none">Layer $layerNo, z $zLevel</text>
+					<path transform="scale($unitScale, -$unitScale) translate($xTranslate, $yTranslate )" d="$path"/>
+				</g>
+		"""
+		
+	
+
+"template for output svg. It is pretty long"
+topSection = """
 <?xml version="1.0" standalone="no"?>
 <!--
     Copyright [2009] [Dave Cowden ( dave.cowden@gmail.com)]
@@ -224,7 +275,7 @@ function viewSingle(){
 	]]></script>
 	
 	<title>$title</title>
-	<desc>$desc</desc>
+	<desc>$description</desc>
 	<metadata>
 		<slice:layers id="sliceData" version="0.1" units="$units" layerThickness="$sliceHeight" 
 				minX="$xMin" maxX="$xMax" 
@@ -249,12 +300,16 @@ function viewSingle(){
 		scale = (unit scale) (-1 * unitscale)
 		translate = (-1 * minX) (-1 * minY)
 -->
-		#for $layer in $layers
-		<g id="z $layer.zLevel" transform="translate($layer.xTransform, $layer.yTransform)">
-			<text y="15" fill="\#000" stroke="none">Layer $layer.slice.layerNo, z $layer.zLevel</text>
-			<path transform="scale($unitScale, -$unitScale) translate($xTranslate, $yTranslate )" d="$layer.svgPathString()"/>
+"""
+
+pathSection= """
+		<g id="z $zLevel" transform="translate($xTransform, $yTransform)">
+			<text y="15" fill="\#000" stroke="none">Layer $layerNo, z $zLevel</text>
+			<path transform="scale($unitScale, -$unitScale) translate($xTranslate, $yTranslate )" d="$path"/>
 		</g>
-		#end for
+"""
+
+bottomSection="""
 <!--End of path section-->
 	</g>
 	<!--End Layer Data-->
@@ -343,3 +398,4 @@ function viewSingle(){
 	<!--End Controls-->
 	
 </svg>
+"""

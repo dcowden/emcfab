@@ -1,3 +1,4 @@
+topSection = """
 <?xml version="1.0" standalone="no"?>
 <!--
     Copyright [2009] [Dave Cowden ( dave.cowden@gmail.com)]
@@ -224,7 +225,7 @@ function viewSingle(){
 	]]></script>
 	
 	<title>$title</title>
-	<desc>$desc</desc>
+	<desc>$description</desc>
 	<metadata>
 		<slice:layers id="sliceData" version="0.1" units="$units" layerThickness="$sliceHeight" 
 				minX="$xMin" maxX="$xMax" 
@@ -249,12 +250,16 @@ function viewSingle(){
 		scale = (unit scale) (-1 * unitscale)
 		translate = (-1 * minX) (-1 * minY)
 -->
-		#for $layer in $layers
+"""
+
+pathSection= """
 		<g id="z $layer.zLevel" transform="translate($layer.xTransform, $layer.yTransform)">
 			<text y="15" fill="\#000" stroke="none">Layer $layer.slice.layerNo, z $layer.zLevel</text>
 			<path transform="scale($unitScale, -$unitScale) translate($xTranslate, $yTranslate )" d="$layer.svgPathString()"/>
 		</g>
-		#end for
+"""
+
+bottomSection="""
 <!--End of path section-->
 	</g>
 	<!--End Layer Data-->
@@ -343,3 +348,4 @@ function viewSingle(){
 	<!--End Controls-->
 	
 </svg>
+"""

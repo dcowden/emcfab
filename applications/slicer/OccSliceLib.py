@@ -96,7 +96,8 @@ from OCC import TopTools
 from OCC import gce
 #my libraries
 import Gcode_Lib
-
+import cProfile
+import pstats
 
 ###Logging Configuration
 logging.basicConfig(level=logging.DEBUG,
@@ -104,7 +105,7 @@ logging.basicConfig(level=logging.DEBUG,
                     stream=sys.stdout)
 
 log = logging.getLogger('slicer');
-log.setLevel(logging.INFO);
+log.setLevel(logging.WARNING);
 
 					
 ##
@@ -207,7 +208,7 @@ def pointsFromWire(wire,spacing):
 	#so work around by removing the last point if it is too close to the first one
 	if points[0].Distance(points[len(points)-1]) < spacing:
 		points.pop();
-		log.warn("Correcing for GCPnts periodic curve bug");
+		log.info("Correcing for GCPnts periodic curve bug");
 		
 	return points;
 	
@@ -1063,7 +1064,7 @@ class Slicer:
 			while numShells < self.options.numShells+1 :
 				offset = (-1)*self.resolution*numShells;	
 				try:
-					print "Offsetting at zlevel %0.3f" % slice.zLevel
+					#print "Offsetting at zlevel %0.3f" % slice.zLevel
 					newOffset = self._offsetFace(f,offset);
 					if lastOffset:
 						#minDistance = minimumDistanceBetweenShapes(newOffset,lastOffset);
@@ -1076,7 +1077,7 @@ class Slicer:
 						t = Timer();
 						r = checkMinimumDistanceForOffset(newOffset,self.options.resolution);
 						
-						log.warn("Finished checking offset dims. %0.2f elapsed." % t.elapsed() );
+						log.info("Finished checking offset dims. %0.2f elapsed." % t.elapsed() );
 						if not r:
 							log.warn("Shell is too close to other shells.");
 							#time.sleep(5);
@@ -1237,26 +1238,39 @@ class Slicer:
 
 """
 	One slice in a set of slices that make up a part
+	A slice typically has one or more faces, one or more
+	outer boundaries, and other infill paths
+
 """
 class Slice:
 	def __init__(self):
 		log.debug("Creating New Slice...");
 		self.path = "";
-		self.faces = [];
 		
 		#actually these are wirewrappers
 		self.fillWires = [];
 		self.fillEdges = [];
+		self.boundaryWires = [];
 		self.zLevel=0;
 		self.zHeight = 0;
 		self.layerNo = 0;
 		self.sliceHeight=0;
 	
+	def addBoundaryWire(self,wire):
+		self.boundaryWires.append(wire);
+		
+	def addFillWire(self,wire):
+		self.fillWires.append(wire);
+		
+	def addFillEdge(self,edge):
+		self.fillEdges.append(edge);
+	
+	"TODO: Do we really need this?"
 	def addFace(self, face ):
 		copier = BRepBuilderAPI.BRepBuilderAPI_Copy(face);
 		self.faces.append(ts.Face(copier.Shape()));
 		copier.Delete();
-		
+	
 	def getBounds(self):
 		"Get the bounds of all the faces"
 		t = Timer();
@@ -1274,6 +1288,17 @@ class Slice:
 		zMax = bounds[5];
 		return [xMin,xMax,yMin,yMax,zMin,zMax];
 
+	def 	listMoves(self):
+		"generate a list of moves that will render this slice."
+		
+	def _movesForWire(self,wire):
+	
+	def _movesForEdge(self,edge):
+	
+		
+
+		
+	
 """
 	Writes a sliceset to specified file in Gcode format.	
 	Accepts a slicer, and exports gcode for the slices that were produced by the slicer.
@@ -1344,6 +1369,137 @@ class GcodeExporter ():
 		f.close()
 		print "Gcode Export Complete."
 
+######
+# Decorates a slice to provide extra computations for SVG Presentation.
+# Needed only for SVG display
+######	
+class SVGLayer:
+	def __init__(self,slice,unitScale,numformat):
+		self.slice = slice;
+		self.margin = 20;
+		self.unitScale = unitScale;
+		self.NUMBERFORMAT = numformat;
+	def zLevel(self):
+		return self.NUMBERFORMAT % self.slice.zLevel;
+		
+	def xTransform(self):
+		return self.margin;
+		
+	def yTransform(self):
+		return (self.slice.layerNo + 1 ) * (self.margin + ( self.slice.sliceHeight * self.unitScale )) + ( self.slice.layerNo * 20 );
+		
+	def svgPathString(self):
+		"return svg path string for a slice"
+
+"""
+    Writes a sliceset to specified file in SVG format.
+"""
+class SVGExporter ( ):
+	def __init__(self,sliceSet):
+		self.sliceSet = sliceSet
+		self.title="Untitled";
+		self.description="No Description"
+		self.unitScale = 3.7;
+		self.units = sliceSet.analyzer.guessUnitOfMeasure();
+		self.NUMBERFORMAT = '%0.3f';
+		
+	def export(self, fileName):
+		#export svg
+		#the list of layers requires a thin layer around the
+		#slices in the slice set, due to the transformations required
+		#for the fancy viewer
+		
+		slices = self.sliceSet.slices;
+		logging.info("Exporting " + str(len(slices)) + " slices to file'" + fileName + "'...");
+		layers = []
+		for s in	self.sliceSet.slices:
+			layers.append( SVGLayer(s,self.unitScale,self.NUMBERFORMAT) );
+				
+		#use a cheetah template to populate the data
+		#unfortunately most numbers must be formatted to particular precision		
+		#most values are redundant from  sliceSet, but are repeated to allow
+		#different formatting without modifying underlying data
+		
+		t = Template(file='svg_template.tmpl');
+		t.sliceSet = self.sliceSet;
+		t.layers = layers;
+		t.units=self.units;
+		t.unitScale = self.unitScale;
+		
+		#adjust precision of the limits to 4 decimals
+		#this converts to a string, but that's ok since we're using it 
+		# to populate a template
+		t.sliceHeight = self.NUMBERFORMAT % t.sliceSet.sliceHeight;
+		t.xMin = self.NUMBERFORMAT % t.sliceSet.analyzer.xMin;
+		t.xMax = self.NUMBERFORMAT % t.sliceSet.analyzer.xMax;
+		t.xRange = self.NUMBERFORMAT % t.sliceSet.analyzer.xDim;
+		t.yMin = self.NUMBERFORMAT % t.sliceSet.analyzer.yMin;
+		t.yMax = self.NUMBERFORMAT % t.sliceSet.analyzer.yMax;
+		t.yRange = self.NUMBERFORMAT % t.sliceSet.analyzer.yDim;
+		t.zMin = self.NUMBERFORMAT % t.sliceSet.analyzer.zMin;
+		t.zMax =	self.NUMBERFORMAT % t.sliceSet.analyzer.zMax;	
+		t.zRange = self.NUMBERFORMAT % t.sliceSet.analyzer.zDim;
+		
+
+
+		#svg specific properties
+		t.xTranslate=(-1)*t.sliceSet.analyzer.xMin
+		t.yTranslate=(-1)*t.sliceSet.analyzer.yMin
+		t.title=self.title
+		t.desc=self.description
+		
+		#put layer dims as nicely formatted numbers
+		t.xMinText = "%0.3f" % t.sliceSet.analyzer.xMin; 
+		t.xMaxText = "%0.3f" % t.sliceSet.analyzer.xMax;
+		t.yMinText = "%0.3f" % t.sliceSet.analyzer.yMin; 
+		t.yMaxText = "%0.3f" % t.sliceSet.analyzer.yMax;
+		t.zMinText = "%0.3f" % t.sliceSet.analyzer.zMin;
+		t.zMaxText = "%0.3f" % t.sliceSet.analyzer.zMax;
+		f = open(fileName,'w');
+		f.write(str(t));
+		f.close()		
+
+"""
+   Manages a set of loops and points
+   a loop is chain of points that end where it begins
+   a slice can be composed of multiple faces.
+"""
+class Loop:
+	def __init__(self):
+		self.points = [];
+		self.pointFormat = "%0.4f %0.4f ";
+		self.tolerance = 0.00001;
+		
+	def addPoint(self,x,y):
+		p = gp.gp_Pnt2d(x,y);
+		self.points.append( p );
+	
+
+	"""
+		Print SVG Path String for a loop.
+		If the end point and the beginning point are the same,
+		the last point is removed and replaced with the SVG path closure, Z
+	"""
+	def svgPathString(self):
+		lastPoint = self.points.pop();		
+		if self.points[0].IsEqual( lastPoint,self.tolerance ):
+			closed = True;
+		else:
+			closed = False;
+			self.points.append(lastPoint);
+		
+		s = "M ";
+		p = self.points[0];
+		s += self.pointFormat % ( p.X(), p.Y() );
+		for p in self.points[1:]:
+			s += "L ";
+			s += self.pointFormat % ( p.X(),p.Y())
+		
+		if closed:
+			s+= " Z";
+		
+		return s;
+		
 """
 	Read a shape from Step file
 """
@@ -1445,21 +1601,26 @@ def main(filename):
 	options.resolution=0.3;
 	options.inFillAngle=45;
 	options.inFillSpacing=0.3;
-	options.zMin=11
-	options.zMax=11.3
+	options.zMin=1
+	options.zMax=7
 	
 	#slice it
 	try:
 		sliceSet = Slicer(shape,options);
 		sliceSet.display = sliceFrame;	
-		sliceSet.execute()
+		#sliceSet.execute()
 		
 		#export to gcode
-		gexp = GcodeExporter();
-		gexp.description="Reprap Test";
-		gexp.display = gcodeFrame;
-		gexp.export(sliceSet, outFileName);
-		gexp.verbose = True;
+		#gexp = GcodeExporter();
+		#gexp.description="Reprap Test";
+		#gexp.display = gcodeFrame;
+		#gexp.export(sliceSet, outFileName);
+		#gexp.verbose = True;
+		cProfile.runctx('sliceSet.execute()', globals(), locals(), filename="slicer.prof")	;			
+		
+		p = pstats.Stats('slicer.prof')
+		p.sort_stats('time')
+		p.print_stats(0.1);
 	except:
 		traceback.print_exc(file=sys.stdout);
 		log.critical( 'Slicing Terminated.');	
@@ -1473,6 +1634,7 @@ if __name__=='__main__':
 
 	if nargs > 1:
 		filename = sys.argv[1];
+		
 		main(filename);
 	else:
 		printUsage();

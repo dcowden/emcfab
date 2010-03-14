@@ -48,7 +48,7 @@ class Edge:
 	def isLine(self):
 		return self.curve.GetType() == GeomAbs.GeomAbs_Line;
 	
-	def isArc(self):
+	def isCircle(self):
 		return self.curve.GetType() == GeomAbs.GeomAbs_Circle;
 	
 	def discretePoints(self,deflection):
@@ -82,7 +82,7 @@ class Wire():
 		
 	def edges(self):
 		"a generator for edges"
-		bwe = BRepTools.BRepTools_WireExplorer(wire);
+		bwe = BRepTools.BRepTools_WireExplorer(self.wire);
 		while bwe.More():
 			edge = bwe.Current();
 			yield edge;

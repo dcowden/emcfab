@@ -80,7 +80,7 @@ class ShapeFollower():
 		self.pendingLinearMove = None;
 		self.tolerance = 0.0001;
 		self.approximatedCurveDeflection = 0.01;
-		self.useArcs = False;
+		self.useArcs = useArcs;
 		
 	
 	def isClose(self,point):
@@ -174,12 +174,14 @@ class ShapeFollower():
 			else:
 				log.debug("Must Move to first point, running any previous move.");
 				t= self._fetchPendingMove();
+				p = None;
 				if t:
+					p = t.toPoint;
 					yield t;
 				
 				log.debug("Moving to First Point of Edge");
 				self.currentPoint = ew.firstPoint;
-				yield LinearMove(t.toPoint,ew.firstPoint,False);
+				yield LinearMove(p,ew.firstPoint,False);
 				
 		if ew.isLine():
 			"the last move was a line, and this one is too."
@@ -200,7 +202,8 @@ class ShapeFollower():
 			if t:
 				yield t;
 
-			if ew.isCircle() and useArcs:
+			if ew.isCircle() and self.useArcs:
+				log.warn("Curve is a Circle");
 				circle = ew.curve.Circle();
 				center = circle.Location();
 
@@ -211,15 +214,16 @@ class ShapeFollower():
 				ccw = zDir.IsEqual(axisDir,self.tolerance);
 				if ew.reversed:
 					zDir = zDir.Reversed();
-				
+				self.currentPoint = ew.lastPoint;
 				yield ArcMove(ew.lastPoint,center,ccw);				
 			else:
+				log.warn("Curve is not a line or a circle");
 				"a curve, or a circle we'll approximate"
 				lastPoint = None;
 				for p in ew.discretePoints(self.approximatedCurveDeflection):
 					yield LinearMove(lastPoint,p,True);
 					lastPoint = p;
-
+				self.currentPoint = lastPoint;
 		#flush any last remaining move
 		if finish:
 			t= self._fetchPendingMove();
@@ -227,15 +231,29 @@ class ShapeFollower():
 				yield t;	
 				
 
-def testMoves(edgeList):
+def testMoves(shapeList):
 	"returns the number of moves in the list provided"
 	moves = [];
 	f = ShapeFollower(True);
-	for move in f.follow(edgeList):
+	for move in f.follow(shapeList):
 		print move;
 		moves.append(move);		
 	return len(moves);
-	
+
+def makeTestWire():
+    circle2 = gp.gp_Circ(gp.gp_Ax2(gp.gp_Pnt(40,40,2),gp.gp_Dir(0,0,1)),10)
+    Edge4 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(circle2,gp.gp_Pnt(40,50,2),gp.gp_Pnt(50,40,2)).Edge()
+    ExistingWire2 = BRepBuilderAPI.BRepBuilderAPI_MakeWire(Edge4).Wire()
+    P1 = gp.gp_Pnt(50,40,2)
+    P2 = gp.gp_Pnt(80,40,2) #5,204,0
+    Edge5 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(P1,P2).Edge()
+    MW = BRepBuilderAPI.BRepBuilderAPI_MakeWire()
+    MW.Add(Edge5)
+    MW.Add(ExistingWire2)
+
+    if MW.IsDone():
+	WhiteWire = MW.Wire()
+	return WhiteWire;	
 if __name__=='__main__':
 	"PathExport: A Module for Navigating Wires, Edges, and Shapes"
 	print "Running Test Cases..."
@@ -258,5 +276,14 @@ if __name__=='__main__':
 	#  MoveTo 2,2
 	#  LineTo 3,2.2
 	assert testMoves([edge1,edge3]) == 4,"Should be four moves"
+	print "[OK]"
+	
+	print "Arcs And Lines",
+	wire = makeTestWire();
+	#the correct answer is:
+	#  Moveto 40,50
+	#  ArcTo  50,40 with center 40,40, ccw direction
+	#  LineTo 80,40
+	assert testMoves([wire]) == 3,"Should be 20 moves?"
 	print "[OK]"
 	

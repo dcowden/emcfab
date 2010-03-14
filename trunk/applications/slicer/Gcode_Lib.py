@@ -24,7 +24,8 @@ import os.path
 import logging
 import time
 import math
-
+import svgTemplate
+from string import Template
 
 log = logging.getLogger('gcode-lib');
 log.setLevel(logging.WARN);					
@@ -78,20 +79,19 @@ def printPoint(point):
 	direction are combined into a single motion )
 
 """
-class GCode_Generator:
-	def __init__(self):
-		
+class PathGenerator:
+	def __init__(self,generator):
+		self.generator = generator;
 		self.reset();
 		self.startUp = "G90 ";
 		self.safeHeight = "3";
 		self.numberFormat = DEFAULT_NUMBER_FORMAT;
 		self.verbose = False;
+		self.useArcs = False;
+		
 	def getResults(self):
-		return self.cmdBuffer;
-	
-	def addCommand(self,command):
-		self.cmdBuffer.append(command);
-	
+		return generator.results();
+		
 	def debugCurrentPosition(self):
 		if self.currentX and self.currentY and self.currentZ:
 			print "Current Position: X=%0.4f,Y=%0.4f,Z=%0.4f" % (self.currentX, self.currentY, self.currentZ);
@@ -99,15 +99,13 @@ class GCode_Generator:
 			print "Current Position is undefined."
 		
 	def comment(self,cmnt):
-		self.addCommand("(" + cmnt + ")");
+		generator.comment(cmnt);
 		
 	def reset(self):
 		
 		self.currentX=None;
 		self.currentY=None;
 		self.currentZ=None;
-		self.currentFeed=None;
-		self.cmdBuffer = [];
 		self.lastMove = None;
 	
 	def isPointClose(self,point,tolerance=0.0001):
@@ -125,18 +123,17 @@ class GCode_Generator:
 	def followEdge(self,edgeWrapper,feed):
 		#print str(edgeWrapper);
 		if self.verbose:
-			self.comment("Follow: " + str(edgeWrapper));
+			generator.comment("Follow: " + str(edgeWrapper));
 		
 		#check to see if we should reverse this edge. Perhaps reversing it will work better.
 		if not self.isPointClose(edgeWrapper.firstPoint,0.005):
 			#print "moving to start."
-			self.movePt(edgeWrapper.firstPoint,feed,"G00");		
-		#else:
-			#print "no move required, already at start."
+			generator.moveTo(edgeWrapper.firstPoint,feed,"G00");		
 		
 		if edgeWrapper.isLine():
-			self.movePt(edgeWrapper.lastPoint,feed);
-		elif edgeWrapper.isCircle():
+			generator.lineTo(edgeWrapper.lastPoint,feed);
+			
+		elif edgeWrapper.isCircle() and useArcs:
 			circle = edgeWrapper.curve.Circle();
 			center = circle.Location();
 			
@@ -147,16 +144,13 @@ class GCode_Generator:
 			
 			if edgeWrapper.reversed:
 				zDir = zDir.Reversed();
-				
-			if zDir.IsEqual(axisDir,TOLERANCE):
-				c = "G03"
-				#print "detected ccw arc";
-			else:
-				#print "detected cw arc";
-				c = "G02";			
-			
+						
 			#TODO: handle incremental coordinates
-			self.arc(center.X()-edgeWrapper.firstPoint.X(),center.Y()-edgeWrapper.firstPoint.Y(),edgeWrapper.lastPoint.X(),edgeWrapper.lastPoint.Y(),edgeWrapper.lastPoint.Z(),feed,c);
+			generator.arc(center.X()-edgeWrapper.firstPoint.X(),center.Y()-edgeWrapper.firstPoint.Y(),
+				edgeWrapper.lastPoint.X(),edgeWrapper.lastPoint.Y(),
+				edgeWrapper.lastPoint.Z(),zDir.IsEqual(axisDir,TOLERANCE));
+			self.lastMove = None;
+			
 		else:
 			edge = edgeWrapper.edge;
 			range = Brep_Tool.Range(edge);
@@ -177,10 +171,10 @@ class GCode_Generator:
 				else:
 					tPt = gc.Value(numPts-i+1);
 				i+=1;
-				self.movePt(tPt,feed);
+				generator.movePt(tPt,feed);
 			
 			#last point is the end
-			self.movePt(edgeWrapper.lastPoint,feed);
+			generator.lineTo(edgeWrapper.lastPoint);
 		
 	#follow the segments in a wire
 	#wire is a WireWrapper object
@@ -190,48 +184,7 @@ class GCode_Generator:
 		wr = wireWrapper.getSortedWire() ;
 		for ew in wr.edgeList:
 			self.followEdge(ew,feed );
-	
-	"""
-		An arc. cmd is either G02 or G03
-		i and j are the locations of the center of the arc
-		x and y are the endpoints of the arc.
 		
-		Note that other form of g02/g03 arcs are not supported, since they are dangerous for
-		very small arc lengths.
-	"""
-	def arc(self, i= None, j=None, x=None, y=None, z=None, feed=None, cmd="G02" ):
-		
-		#move
-		command = [cmd];
-		#todo: handle incremental coordinates. for now assume absolute coordinates
-		#careful-- i and j are offsets, not coordinates.
-		
-		if i != None and i != 0:
-			command.append( ("I" + self.numberFormat)  % (i ));
-		
-		if j != None and j != 0:
-			command.append( ("J" + self.numberFormat)  % (j ));
-
-		if x != None and not close(x , self.currentX):
-			command.append( ("X" + self.numberFormat)  % (x ));
-			self.currentX = x;
-		if y != None and not close(y , self.currentY):
-			command.append( ("Y" + self.numberFormat)  % (y ));
-			self.currentY = y;
-			
-		if z != None and not close(z , self.currentZ):
-			command.append( ("Z" + self.numberFormat)  % (z ));
-			self.currentZ = z;
-			
-		if feed != None and  feed != self.currentFeed:
-			command.append( ("F" + self.numberFormat)  % (feed ));
-			self.currentFeed = feed;
-			
-
-		self.addCommand( " ".join(command));
-		#naive move tracking doesnt apply to arcs
-		self.lastMove = None;
-	
 	def removeLastNonCommentMove(self):
 		"removes statements up to the last non-comment move. Used for naive move tracking"
 		removedCommand = False;
@@ -240,9 +193,6 @@ class GCode_Generator:
 			if not a.startswith('('):
 				return;
 		
-	def movePt(self, gp_pt, feed,cmd="G01" ):
-		self.move(gp_pt.X(),gp_pt.Y(),gp_pt.Z(),feed,cmd);
-	
 	"""
 		return the gcode required to move to the provided point.
 		If no gcode is required, "" is returned instead
@@ -250,7 +200,6 @@ class GCode_Generator:
 	"""
 	def move(self, x = None, y = None, z = None,  feed=None, cmd="G01"):
 		
-		#self.debugCurrentPosition();
 		
 		if x == None: x = self.currentX
 		if y == None: y = self.currentY
@@ -308,16 +257,154 @@ class GCode_Generator:
 		self.addCommand( " ".join(cmds));
 		#self.debugCurrentPosition();
 
-		
-	def rapid(self,x = None, y = None, z = None,  feed=None ):
-		self.move(x,y,z,feed,"G00");
-		
-	def start(self):
-		self.addCommand(self.startUp);
-		
-	def end(self):
-		self.addCommand( "M2");
-		
+"makes gcode toolpaths"
+class GCodePathGenerator:
+	def __init__(self,feedRate,zLevel):
+		self.LINE = "X%0.4f Y%0.4f Z%0.4f F%0.4f ";
+		self.ARC = "I%0.4f J%04.F X%0.4f Y%0.4f Z%0.4f F%0.4f ";
+		self.paths = [];	
+		self.feedRate = feedRate;
 
+	def startLayer(self,zLevel):
+		return;
+	
+	def endLayer(self):
+		return;
 		
+	def startObject(self,sliceSet):
+		self.paths.append("G90");
+		
+	def endObject(self):
+		self.paths.append( "M2");
+		
+	def comment(self,msg):
+		self.paths.append("(" + msg + ")");
+		
+	def moveTo(self,x,y,z):
+		self.paths.append("G00 " + self.LINE %( x, y,z,self.feedRate ));
+	
+	def lineTo(self,x,y,z):
+		self.paths.append("G01 " + self.LINE %( x, y,z,self.feedRate ));
+	
+	def arcTo(self,centerX,centerY, x,y,z,ccw ):
+		if ccw:
+			c = "G02 ";
+		else:
+			c = "G03 ";
+		self.paths.append(c +self.ARC % ( centerX,centerY,x,y,z,self.feedRate) );
+	def results(self):
+		return self.paths.join("\n");			
+		
+		
+"makes an svg file containing the layers "
+class SVGPathGenerator:
+	def __init__(self):
+		#initialize stuff here
+		self.pointFormat = "%0.4f %0.4f ";
+		self.paths = [];
+		
+	def startObject(self,sliceSet):
+		self.sliceSet = sliceSet
+		self.title="Untitled";
+		self.description="No Description"
+		self.unitScale = 3.7;
+		self.units = sliceSet.analyzer.guessUnitOfMeasure();
+		self.NUMBERFORMAT = "%0.4f";
+		self.layers = [];
+		
+	def comment(self,msg):
+		return;
+	
+	def startLayer(self,slice):
+		layer = SVGLayer(slice,self.unitScale ,self.NUMBERFORMAT);
+		self.layers.append(layer);
+		self.currentLayer = layer;
+		
+	def endLayer(self);
+		return;
+		
+	def moveTo(self,x,y,z):
+		self.currentLayer.paths.append("M " + self.pointFormat %( x, y) );
+	
+	def lineTo(self,x,y,z):
+		self.currentLayer.paths.append("L " + self.pointFormat % (x, y) );
+	
+	def arcTo(self,centerX,centerY, x,y,z,ccw ):
+		return;
+		
+	def endObject(self):
+		return;
+		
+	def results(self):
+		
+		top = Template(svgTemplate.topSection);
+		layer = Template(svgTemplate.pathSection);
+		bottom = Template(svgTemplate.bottomSection);
+		
+		#build the top and bottom portion of the document
+		p = {}:
+		p['unitScale'] = self.unitScale;
+		p['units'] = self.units;
+		p['description'] = self.description;
+		p['title']=self.title;
+		p['sliceHeight'] = self.NUMBERFORMAT % self.sliceSet.sliceHeight;
+		p['xMin'] = self.NUMBERFORMAT % self.sliceSet.analyzer.xMin;
+		p['xMax'] = self.NUMBERFORMAT % self.sliceSet.analyzer.xMax;
+		p['xRange'] = self.NUMBERFORMAT % self.sliceSet.analyzer.xDim;
+		p['yMin'] = self.NUMBERFORMAT % self.sliceSet.analyzer.yMin;
+		p['yMax'] = self.NUMBERFORMAT % self.sliceSet.analyzer.yMax;
+		p['yRange'] = self.NUMBERFORMAT % self.sliceSet.analyzer.yDim;
+		p['zMin'] = self.NUMBERFORMAT % self.sliceSet.analyzer.zMin;
+		p['zMax'] =	self.NUMBERFORMAT % self.sliceSet.analyzer.zMax;	
+		p['zRange'] = self.NUMBERFORMAT % self.sliceSet.analyzer.zDim;
+		
+		#svg specific properties
+		p['xTranslate']=(-1)*self.sliceSet.analyzer.xMin
+		p['yTranslate']=(-1)*self.sliceSet.analyzer.yMin
+		
+		#put layer dims as nicely formatted numbers
+		p['xMinText'] = self.NUMBERFORMAT % self.sliceSet.analyzer.xMin; 
+		p['xMaxText'] = "self.NUMBERFORMAT % self.sliceSet.analyzer.xMax;
+		p['yMinText'] = self.NUMBERFORMAT % self.sliceSet.analyzer.yMin; 
+		p['yMaxText'] = self.NUMBERFORMAT % self.sliceSet.analyzer.yMax;
+		p['zMinText'] = self.NUMBERFORMAT % self.sliceSet.analyzer.zMin;
+		p['zMaxText'] = self.NUMBERFORMAT % self.sliceSet.analyzer.zMax;
+		
+		resultDoc = top.substitute(p);
+		
+		for layer in self.layers:
+			p['zLevel'] = layer.zLevel();
+			p['layerNo'] = layer.slice.layerNo;
+			p['xTransform'] = layer.xTransform();
+			p['yTransform'] = layer.yTransform();
+			p['path'] = layer.path();
+			resultDoc += layer.subsitute(p);
+
+		resultDoc += bottom.substitute(p);
+		return resultDoc;
+		
+######
+# Decorates a slice to provide extra computations for SVG Presentation.
+# Needed only for SVG display
+######	
+class SVGLayer:
+	def __init__(self,slice,unitScale,numformat):
+		self.slice = slice;
+		self.margin = 20;
+		self.unitScale = unitScale;
+		self.NUMBERFORMAT = numformat;
+		self.paths = [];
+		
+	def zLevel(self):
+		return self.NUMBERFORMAT % self.slice.zLevel;
+		
+	def xTransform(self):
+		return self.margin;
+		
+	def yTransform(self):
+		return (self.slice.layerNo + 1 ) * (self.margin + ( self.slice.sliceHeight * self.unitScale )) + ( self.slice.layerNo * 20 );
+		
+	def path(self):
+		return self.paths.join("");
+	
 	

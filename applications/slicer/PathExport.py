@@ -11,10 +11,9 @@
 
 import os
 import sys,logging
-from OCC import TopoDS, TopExp, TopAbs,BRep,gp,GeomAbs,GeomAPI,BRepBuilderAPI
+from OCC import TopoDS, TopExp, TopAbs,BRep,gp,Geom,GeomAbs,GeomAPI,BRepBuilderAPI
 
 import Wrappers
-import Utils
 
 topoDS = TopoDS.TopoDS();
 
@@ -41,9 +40,9 @@ class LinearMove:
 	
 	def __str__(self):
 		if self.draw:
-			s = "DrawTo:";
+			s = "DrawTo: ";
 		else:
-			s = "MoveTo:";
+			s = "MoveTo: ";
 		return s + str(Wrappers.Point(self.toPoint));
 		
 """
@@ -57,7 +56,11 @@ class ArcMove():
 		self.ccw = ccw;
 
 	def __str__(self):
-		return "ArcMove: ccw=" + str(self.ccw) + ", centerPoint=" + str(Wrappers.Point(self.centerPoint)) + ", toPoint = " + str(Wrappers.Point(self.endPoint));		
+		if self.ccw:
+			s = "CCW ArcTo: ";
+		else:
+			s = "CW ArcTo: ";
+		return s + str(Wrappers.Point(self.endPoint)) + ", center=" + str(Wrappers.Point(self.centerPoint)) ;		
 		
 """
   Follows edges and wires, generating 
@@ -73,7 +76,7 @@ class ArcMove():
   * follow lists of edges, wires, and shapes in the order provided
   * abstract moves into structures for other libs to use ( svg and gcode )
 """	
-class ShapeFollower():
+class ShapeDraw():
 	def __init__(self,useArcs):
 		"useArcs determines if we should generate ArcMoves or not"
 		self.currentPoint = None;
@@ -203,7 +206,7 @@ class ShapeFollower():
 				yield t;
 
 			if ew.isCircle() and self.useArcs:
-				log.warn("Curve is a Circle");
+				log.debug("Curve is a Circle");
 				circle = ew.curve.Circle();
 				center = circle.Location();
 
@@ -217,13 +220,23 @@ class ShapeFollower():
 				self.currentPoint = ew.lastPoint;
 				yield ArcMove(ew.lastPoint,center,ccw);				
 			else:
-				log.warn("Curve is not a line or a circle");
+				log.debug("Curve is not a line or a circle");
 				"a curve, or a circle we'll approximate"
+				#the generated points might include the beginning of the curve,
+				#so test for that, but only for the first point
+				firstP = True;
 				lastPoint = None;
 				for p in ew.discretePoints(self.approximatedCurveDeflection):
+					#check the first generated point for a duplicate
+					if firstP and self.isClose(p):
+						firstP = False;
+						continue;
+					
 					yield LinearMove(lastPoint,p,True);
 					lastPoint = p;
+
 				self.currentPoint = lastPoint;
+				
 		#flush any last remaining move
 		if finish:
 			t= self._fetchPendingMove();
@@ -231,12 +244,13 @@ class ShapeFollower():
 				yield t;	
 				
 
-def testMoves(shapeList):
+def testMoves(shapeList,useArcs=True):
 	"returns the number of moves in the list provided"
 	moves = [];
-	f = ShapeFollower(True);
+	f = ShapeDraw(useArcs);
+	f.approximatedCurveDeflection = 0.1;
 	for move in f.follow(shapeList):
-		print move;
+		print "\t",move;
 		moves.append(move);		
 	return len(moves);
 
@@ -254,14 +268,16 @@ def makeTestWire():
     if MW.IsDone():
 	WhiteWire = MW.Wire()
 	return WhiteWire;	
+	
+	
 if __name__=='__main__':
 	"PathExport: A Module for Navigating Wires, Edges, and Shapes"
 	print "Running Test Cases..."
 	
-	print "Connected Edges",
-	edge1 = Utils.edgeFromTwoPoints(gp.gp_Pnt(0,0,0),gp.gp_Pnt(1,1,0));
-	edge2 = Utils.edgeFromTwoPoints(gp.gp_Pnt(1,1,0),gp.gp_Pnt(2,2,0));
-	edge3 = Utils.edgeFromTwoPoints(gp.gp_Pnt(2,2,0),gp.gp_Pnt(3,2.2,0));
+	print "Connected Edges"
+	edge1 = Wrappers.edgeFromTwoPoints(gp.gp_Pnt(0,0,0),gp.gp_Pnt(1,1,0));
+	edge2 = Wrappers.edgeFromTwoPoints(gp.gp_Pnt(1,1,0),gp.gp_Pnt(2,2,0));
+	edge3 = Wrappers.edgeFromTwoPoints(gp.gp_Pnt(2,2,0),gp.gp_Pnt(3,2.2,0));
 	#the correct answer is:
 	# MoveTo 0,0
 	# DrawTo 2,2
@@ -269,7 +285,7 @@ if __name__=='__main__':
 	assert testMoves([edge1,edge2,edge3]) == 3,"There should be Thee Moves"
 	print "[OK]"
 	
-	print "Disconnected Edges",
+	print "Disconnected Edges"
 	#the correct answer is:
 	#  MoveTo 0,0
 	#  Lineto 1,1
@@ -278,7 +294,7 @@ if __name__=='__main__':
 	assert testMoves([edge1,edge3]) == 4,"Should be four moves"
 	print "[OK]"
 	
-	print "Arcs And Lines",
+	print "Arcs And Lines"
 	wire = makeTestWire();
 	#the correct answer is:
 	#  Moveto 40,50
@@ -286,4 +302,10 @@ if __name__=='__main__':
 	#  LineTo 80,40
 	assert testMoves([wire]) == 3,"Should be 20 moves?"
 	print "[OK]"
+	
+	print "Arcs and Lines-- No Arcs"
+	# should MoveTo 40,50
+	# draw to 50,40 in a lot of little moves
+	# draw to 80,40 in one move
+	assert testMoves([wire],False) > 10,"Should be lots of moves"
 	

@@ -733,4 +733,312 @@ class EdgeFollower:
 				bestDistance = d;
 				bestEdge = edge;
 				bestEdgeReversed = True;		
+	
+class MultiWireBuilder:
+	"builds wires, watching each edge to construct"
+	"multiple wires if necessary"
+	def __init__(self):
+		self.wires = [];		
+		self.lastEdge = None;
+		self.tolerance = 0.001;
+		self.wireBuilder = None;
+		self.startNewWire();
 		
+	def startNewWire(self):	
+		if self.wireBuilder:
+			if self.wireBuilder.IsDone():
+				#debugShape(self.wireBuilder.Wire());
+				self.wires.append(self.wireBuilder.Wire());
+			else:
+				raise Exception,"Could Not Build New Wire, Error # %d" % self.wireBuilder.Error();
+		self.wireBuilder = BRepBuilderAPI.BRepBuilderAPI_MakeWire();
+		self.lastEdge = None;
+		
+	def addEdge(self,edge):
+		ew = EdgeWrapper(edge);
+		
+		#debugShape(edge);
+		log.debug ("Adding Edge:" + str(ew) );
+		#time.sleep(1);
+		if self.lastEdge:
+			d = ew.firstPoint.Distance(EdgeWrapper(self.lastEdge).lastPoint);
+			if d >= self.tolerance:
+				log.warn( "Warning: edge does not match, starting new wire" );
+				self.startNewWire();
+		
+		self.lastEdge = edge;
+		self.wireBuilder.Add(edge);
+		if  not self.wireBuilder.IsDone():
+			raise Exception,"Edge could not be added, Error %d" % self.wireBuilder.Error();
+	def getResult(self):
+		self.startNewWire();
+		return self.wires;
+"""
+	EdgeWrapper provides additional functions and features
+	for an OCC TopoDS_Edge object
+"""
+class EdgeWrapper:
+	def __init__(self,edge):
+		self.edge = edge;
+		self.reversed = False;
+		
+		#get the first and last points for the underlying curve
+		curve = BRepAdaptor.BRepAdaptor_Curve(edge);		
+		p1 = curve.FirstParameter();
+		p2 = curve.LastParameter();
+		self.curve = curve;
+		self.curveType = curve.GetType();
+		#get first and last points.
+		fP1 = gp.gp_Pnt();
+		fP2 = gp.gp_Pnt();
+		BRepLProp_CurveTool.Value(curve,p1,fP1 );
+		BRepLProp_CurveTool.Value(curve,p2,fP2 );
+	
+		#set up the endpoints for easy access?
+		if edge.Orientation() == TopAbs.TopAbs_REVERSED:
+			self.reversed=True;
+			self.firstPoint = fP2;
+			self.lastPoint = fP1
+		else:
+			self.firstPoint = fP1;
+			self.lastPoint = fP2;
+
+	def isLine(self):
+		return self.curveType == 0;
+		
+	def isCircle(self):
+		return self.curveType == 1;
+	
+	def __str__(self):
+		if self.isLine():
+			s = "Line:\t";
+		elif self.isCircle():
+			s  = "Circle:\t";
+		else:
+			s = "Curve:\t";
+		return s + printPoint(self.firstPoint) + "-->" + printPoint(self.lastPoint);
+
+"""
+    WireWrapper provides additional functions and features
+	for an OCC TopoDS_Wire object
+"""
+class WireWrapper:
+	def __init__(self,wire):
+		self.wire = wire;
+		
+		#build a list of the edges
+		self.edgeList = [];
+		bwe = BRepTools.BRepTools_WireExplorer(wire);
+		while bwe.More():
+			edge = bwe.Current();
+			self.edgeList.append(EdgeWrapper(edge));
+			bwe.Next();
+		bwe.Clear();		
+	
+	#sort the wire using ShapeFix to 
+	#connect and re-order them head-to-tail
+	#returns a wire for the constructed wire
+	#or a reference to this object if there was a problem constructing it
+	def getSortedWire(self,precision=0.001):
+	
+		sw = ShapeFix_Wire();
+		sw.Load(self.wire);
+		sw.ClosedWireMode = True;
+		sw.FixReorderMode = 1;
+		sw.FixConnectedMode = 1;
+		sw.FixLackingMode = 1;
+		sw.FixGaps3dMode = 1;
+		sw.FixConnectedMode = 1;
+		sw.FixDegeneratedMode = 1;
+
+		
+		if sw.Perform():
+			#log.info("WireSorting Was Successful!");
+			return WireWrapper(sw.Wire());	
+		else:
+			#log.info("WireSorting unsuccessful. returning self.");
+			return self;
+
+	def __str__(self):
+		p = [];
+		p.append("Wire (" + str(len(self.edgeList)) + "  edges ):");
+		for e in self.edgeList:
+			p.append("\t" + str(e) );
+		
+		return "\n".join(p);
+		
+		
+"""
+   Manages a set of loops and points
+   a loop is chain of points that end where it begins
+   a slice can be composed of multiple faces.
+"""
+class Loop:
+	def __init__(self):
+		self.points = [];
+		self.pointFormat = "%0.4f %0.4f ";
+		self.tolerance = 0.00001;
+		
+	def addPoint(self,x,y):
+		p = gp.gp_Pnt2d(x,y);
+		self.points.append( p );
+	
+
+	"""
+		Print SVG Path String for a loop.
+		If the end point and the beginning point are the same,
+		the last point is removed and replaced with the SVG path closure, Z
+	"""
+	def svgPathString(self):
+		lastPoint = self.points.pop();		
+		if self.points[0].IsEqual( lastPoint,self.tolerance ):
+			closed = True;
+		else:
+			closed = False;
+			self.points.append(lastPoint);
+		
+		s = "M ";
+		p = self.points[0];
+		s += self.pointFormat % ( p.X(), p.Y() );
+		for p in self.points[1:]:
+			s += "L ";
+			s += self.pointFormat % ( p.X(),p.Y())
+		
+		if closed:
+			s+= " Z";
+		
+		return s;
+
+		
+		"""
+    Writes a sliceset to specified file in SVG format.
+"""
+class SVGExporter ( ):
+	def __init__(self,sliceSet):
+		self.sliceSet = sliceSet
+		self.title="Untitled";
+		self.description="No Description"
+		self.unitScale = 3.7;
+		self.units = sliceSet.analyzer.guessUnitOfMeasure();
+		self.NUMBERFORMAT = '%0.3f';
+		
+	def export(self, fileName):
+		#export svg
+		#the list of layers requires a thin layer around the
+		#slices in the slice set, due to the transformations required
+		#for the fancy viewer
+		
+		slices = self.sliceSet.slices;
+		logging.info("Exporting " + str(len(slices)) + " slices to file'" + fileName + "'...");
+		layers = []
+		for s in	self.sliceSet.slices:
+			layers.append( SVGLayer(s,self.unitScale,self.NUMBERFORMAT) );
+				
+		#use a cheetah template to populate the data
+		#unfortunately most numbers must be formatted to particular precision		
+		#most values are redundant from  sliceSet, but are repeated to allow
+		#different formatting without modifying underlying data
+		
+		t = Template(file='svg_template.tmpl');
+		t.sliceSet = self.sliceSet;
+		t.layers = layers;
+		t.units=self.units;
+		t.unitScale = self.unitScale;
+		
+		#adjust precision of the limits to 4 decimals
+		#this converts to a string, but that's ok since we're using it 
+		# to populate a template
+		t.sliceHeight = self.NUMBERFORMAT % t.sliceSet.sliceHeight;
+		t.xMin = self.NUMBERFORMAT % t.sliceSet.analyzer.xMin;
+		t.xMax = self.NUMBERFORMAT % t.sliceSet.analyzer.xMax;
+		t.xRange = self.NUMBERFORMAT % t.sliceSet.analyzer.xDim;
+		t.yMin = self.NUMBERFORMAT % t.sliceSet.analyzer.yMin;
+		t.yMax = self.NUMBERFORMAT % t.sliceSet.analyzer.yMax;
+		t.yRange = self.NUMBERFORMAT % t.sliceSet.analyzer.yDim;
+		t.zMin = self.NUMBERFORMAT % t.sliceSet.analyzer.zMin;
+		t.zMax =	self.NUMBERFORMAT % t.sliceSet.analyzer.zMax;	
+		t.zRange = self.NUMBERFORMAT % t.sliceSet.analyzer.zDim;
+		
+
+
+		#svg specific properties
+		t.xTranslate=(-1)*t.sliceSet.analyzer.xMin
+		t.yTranslate=(-1)*t.sliceSet.analyzer.yMin
+		t.title=self.title
+		t.desc=self.description
+		
+		#put layer dims as nicely formatted numbers
+		t.xMinText = "%0.3f" % t.sliceSet.analyzer.xMin; 
+		t.xMaxText = "%0.3f" % t.sliceSet.analyzer.xMax;
+		t.yMinText = "%0.3f" % t.sliceSet.analyzer.yMin; 
+		t.yMaxText = "%0.3f" % t.sliceSet.analyzer.yMax;
+		t.zMinText = "%0.3f" % t.sliceSet.analyzer.zMin;
+		t.zMaxText = "%0.3f" % t.sliceSet.analyzer.zMax;
+		f = open(fileName,'w');
+		f.write(str(t));
+		f.close()		
+
+
+	def _makeAdapterCurveFromWire(self,wire):
+		"Makes a single parameterized adapter curve from a wire"
+			
+		#make a parameterized approximation of the wire
+		adaptor = BRepAdaptor.BRepAdaptor_CompCurve (wire);
+		curve = BRepAdaptor.BRepAdaptor_HCompCurve(adaptor);
+		curveHandle = curve.GetHandle();
+		
+		#approximate the curve using a tolerance
+		approx = Approx.Approx_Curve3d(curveHandle,0.001,GeomAbs.GeomAbs_C2,200,12);
+		if approx.IsDone() and  approx.HasResult():
+			# have the result
+			anApproximatedCurve=approx.Curve();
+			log.debug( "Curve is parameterized between %0.5f and %0.5f " % (  anApproximatedCurve.GetObject().FirstParameter(), anApproximatedCurve.GetObject().LastParameter() ));
+			return anApproximatedCurve;
+			#builder =  BRepLib.BRepLib_MakeEdge(anApproximatedCurve);
+			#self.showShape(builder.Edge());
+		else:
+			loggin.warn( "Failed to create curve." );
+			return None;	
+	
+def minimumDistanceBetweenShapes(shape1, shape2):
+	"returns minimum distance bewteen two shapes"
+	bre= BRepExtrema.BRepExtrema_DistShapeShape(shape1,shape2);
+	log.debug("Computing Minimum Distance");
+	if bre.Perform():
+		return bre.Value();
+	else:
+		return 200;
+
+		
+def _makeAdapterCurveFromWire(self,wire):
+	"Makes a single parameterized adapter curve from a wire"
+		
+	#make a parameterized approximation of the wire
+	adaptor = BRepAdaptor.BRepAdaptor_CompCurve (wire);
+	curve = BRepAdaptor.BRepAdaptor_HCompCurve(adaptor);
+	curveHandle = curve.GetHandle();
+	
+	#approximate the curve using a tolerance
+	approx = Approx.Approx_Curve3d(curveHandle,0.001,GeomAbs.GeomAbs_C2,200,12);
+	if approx.IsDone() and  approx.HasResult():
+		# have the result
+		anApproximatedCurve=approx.Curve();
+		log.debug( "Curve is parameterized between %0.5f and %0.5f " % (  anApproximatedCurve.GetObject().FirstParameter(), anApproximatedCurve.GetObject().LastParameter() ));
+		return anApproximatedCurve;
+		#builder =  BRepLib.BRepLib_MakeEdge(anApproximatedCurve);
+		#self.showShape(builder.Edge());
+	else:
+		loggin.warn( "Failed to create curve." );
+		return None;		
+		
+	
+#def make_edge(shape):
+#    spline = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(shape)
+#    spline.Build()
+#    return spline.Shape()	
+	
+#to override sometingselected,
+# overrid Viewer3d.    
+# def Select(self,X,Y):
+#
+#		

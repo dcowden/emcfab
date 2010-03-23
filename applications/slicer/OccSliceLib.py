@@ -75,6 +75,8 @@ import logging
 import time
 import traceback
 
+
+
 import math
 import itertools
 
@@ -93,10 +95,15 @@ from OCC import ShapeFix
 from OCC import BRepBuilderAPI
 from OCC import TopTools
 
+from OCC import SMESH 
+from OCC import StdMeshers 
+from OCC import MeshVS 
+
 from OCC import gce
 #my libraries
 #import Gcode_Lib
 from Wrappers import *
+import hatchLib
 
 import cProfile
 import pstats
@@ -107,7 +114,7 @@ logging.basicConfig(level=logging.DEBUG,
                     stream=sys.stdout)
 
 log = logging.getLogger('slicer');
-log.setLevel(logging.INFO);
+log.setLevel(logging.DEBUG);
 
 					
 ##
@@ -197,30 +204,7 @@ def pointsFromWire(wire,spacing):
 	return points;
 	
 		
-def makeWiresFromOffsetShape(shape):
-	"get all the wires from the offset shape"
-	resultWires = TopTools.TopTools_HSequenceOfShape();
-	if shape.ShapeType() == TopAbs.TopAbs_WIRE:
-		log.info( "offset result is a wire" );
-		wire = ts.Wire(shape);
-		#resultWires.append(wire);
-		resultWires.Append(wire);
-	elif shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
-		log.info( "offset result is a compound");
 
-		bb = TopExp.TopExp_Explorer();
-		bb.Init(shape,TopAbs.TopAbs_WIRE);
-		while bb.More():
-			w = ts.Wire(bb.Current());
-						
-			#resultWires.append(w);
-			resultWires.Append(w);#
-			#debugShape(w);
-			bb.Next();
-		
-		bb.ReInit();	
-	
-	return resultWires;	
 
 
 def checkMinimumDistanceForOffset(offset,resolution):
@@ -273,177 +257,7 @@ class AppFrame(wx.Frame):
   def eraseAll(self):
   		self.canva._display.EraseAll();
 	
-		
-class EdgeFollower:
-	"returns edges in head-to-tail order, based on which edge is closest"
-	"edges are returned so that their orientation is correct"
-	"this is the core for the hatching algorithm"
-	def __init__(self,infillEdges,boundaryEdges):
 	
-		self.infillEdges  = [];
-		self.infillEdges.extend(infillEdges);
-		
-		self.boundaryEdges  = [];
-		self.boundaryEdges.extend(boundaryEdges);
-		
-		self.lastEdgeIsInfill = False;
-		self.lastEdge = None;
-		self.tolerance = 0.0001;
-		self.referencePoint = None;
-
-
-	def _findEdgesSharingPoint(self,edgeList,point):
-		"find all edges for which one end matches the specified point"
-		"the returned tuples order the edge so its first point matches the supplied point"
-		candidates  =[];
-		for edge in edgeList:
-			ew = Edge(edge);
-			if point.Distance(ew.lastPoint) < self.tolerance:
-				candidates.append([edge, ts.Edge(edge.Reversed())]);			
-			if  point.Distance(ew.firstPoint ) < self.tolerance:
-				candidates.append([edge, edge]);
-		return candidates;
-	
-	def nextEdge(self):
-		"get the next edge: returns Edge for the selected Edge"
-		if not self.lastEdge:		
-			e = self.infillEdges.pop();
-			self.lastEdge = e;
-			self.referencePoint = Edge(e).firstPoint;
-			
-			#sort infillEdges in ascending distance from the reference Point
-			self.infillEdges.sort(cmp= lambda x,y: cmp(   
-				Edge(x).firstPoint.Distance(self.referencePoint),
-				Edge(y).firstPoint.Distance(self.referencePoint))		);			
-			
-			self.lastEdgeIsInfill=True;
-			ew = Edge(e);
-			log.debug( "First Edge",str(Point(ew.firstPoint)),str(Point(ew.lastPoint)));
-			return e;
-			
-		sPoint = Edge(self.lastEdge).lastPoint;
-		newEdge = None;
-		
-		if self.lastEdgeIsInfill:
-			log.debug(  "we are looking for a boundary edge" );
-			candidates = self._findEdgesSharingPoint(self.boundaryEdges,sPoint);
-			if len(candidates) == 1:
-				log.debug(  "only one match, so return him" );
-				self.boundaryEdges.remove(candidates[0][0]);
-				self.lastEdgeIsInfill = False;
-				newEdge = candidates[0][1]
-			elif len(candidates) == 0:
-				log.debug(  "no boundary edges, so find a new starting infill edge" );
-				newEdge = self.infillEdges.pop();
-			else:
-				log.debug(  "several candidates. pick the one whos endpoint is further away from the reference");
-				candidates.sort(cmp = lambda x,y: cmp (
-					Edge(x[1]).lastPoint.Distance(self.referencePoint),
-					Edge(y[1]).lastPoint.Distance(self.referencePoint) )  );
-				self.boundaryEdges.remove(candidates[0][0]);
-				self.lastEdgeIsInfill = False;
-				newEdge = candidates[0][1];
-		else:
-			log.debug( "we are looking for an infill edge" );
-			candidates = self._findEdgesSharingPoint(self.infillEdges,sPoint);
-			if len(candidates) == 0:
-				log.debug( "no infill edges found matching this boundary. Select another Infill Edge" );
-				self.lastEdgeIsInfill = True;
-				newEdge = self.infillEdges.pop();
-			elif len(candidates) == 1:
-				log.debug( "only one choice" );
-				self.lastEdgeIsInfill = True;
-				self.infillEdges.remove(candidates[0][0]);
-				newEdge = candidates[0][1];
-			else:
-				log.debug("several to choose from. return closest to reference point" );
-				candidates.sort(cmp = lambda x,y: cmp (
-					Edge(x[1]).lastPoint.Distance(self.referencePoint),
-					Edge(y[1]).lastPoint.Distance(self.referencePoint) ) );
-				candidates.reverse();
-				self.infillEdges.remove(candidates[0][0]);
-				self.lastEdgeIsInfill = True;
-				newEdge = candidates[0][1];				
-		
-		self.lastEdge = newEdge;
-		return newEdge;
-		
-	def hasMoreEdges(self):
-		return len(self.infillEdges) > 0;
-
-
-		
-class BoundaryManager:
-	"manages a set of boundaries and hatch intersections points"
-	
-	def __init__(self):
-		self.intersectionPoints = {};
-		self.wires = [];
-		self.tolerance = 0.00001;
-		self.approxCurves = {};
-		
-	def addIntersectionPoint(self, wire, point):
-		"adds an intersection point for the specified wire"
-		self.intersectionPoints[wire].append(point);
-	
-	def addWire(self, wire):
-		self.wires.append(wire);
-		self.intersectionPoints[wire] = [];
-			
-		#make a parameterized approximation of the wire
-		adaptor = BRepAdaptor.BRepAdaptor_CompCurve (wire);
-		curve = BRepAdaptor.BRepAdaptor_HCompCurve(adaptor);
-		curveHandle = curve.GetHandle();
-
-		#approximate the curve using a tolerance
-		approx = Approx.Approx_Curve3d(curveHandle,self.tolerance,GeomAbs.GeomAbs_C2,2000,12);
-		if approx.IsDone() and  approx.HasResult():
-			# have the result
-			anApproximatedCurve=approx.Curve();
-			log.debug( "Curve is parameterized between %0.5f and %0.5f " % (  anApproximatedCurve.GetObject().FirstParameter(), anApproximatedCurve.GetObject().LastParameter() ));
-			self.approxCurves[wire] = anApproximatedCurve;
-			#builder =  BRepLib.BRepLib_MakeEdge(anApproximatedCurve);
-			#self.showShape(builder.Edge());
-		else:
-			log.warn( "Failed to create approximation curve." );
-			
-	def buildEdges(self):
-		"build all of the available edges on each boundary"
-		edgeList = [];
-		for [wire,curve] in self.approxCurves.iteritems():
-			parameters = [];
-			parameters.append(curve.GetObject().FirstParameter() );
-			for point in  self.intersectionPoints[wire]:
-				a = findParameterOnCurve(point,curve);
-				#todo: check distance also
-				parameters.append(a[1] );
-			parameters.append(curve.GetObject().LastParameter() );
-			parameters.sort();
-
-			lastP = None;
-			for p in parameters:
-				if lastP:
-					edgeList.append ( edgeFromTwoPointsOnCurve(curve,lastP,p ) );
-				lastP = p;
-
-		log.debug( "Made %d Boundary Edges from %d wires" % ( len(edgeList),len(self.approxCurves)));
-		return edgeList;
-		
-	def makeEdge(self,p1, p2):
-		"make an edge following a boundary as close as possible to the provided points"
-		"the edge will always be along one of the nested curves. It is assumed that p1 and p2 lie on the same curve"		
-		bestDistance = 999999;
-		bestCurve = None;
-		log.debug( "Searching %d wires for a fit for these points." % len(self.approxCurves));
-		for [wire,curve] in self.approxCurves.iteritems():
-			a = findParameterOnCurve(p1,curve);
-			b = findParameterOnCurve(p2,curve);
-			#print "Distance from curve is %05.f, %0.5f" % ( a[2], b[2] );
-			return edgeFromTwoPointsOnCurve(curve,a[1],b[1]);
-			
-		print "Could not find a suitable curve. Are the points on any curve?"
-		return None;
-			
 """
 	Class that provides easy access to commonly
 	needed features of a solid shape
@@ -639,164 +453,6 @@ class Slicer:
 		log.warn("Slicing Complete: " + t.finishedString() );
 		log.warn("Throughput: %0.3f slices/sec" % (sliceNumber/t.elapsed() ) );
 
-		
-	def _makeHatchLines(self,shape ,zLevel):
-		"Makes a set of hatch lines that cover the specified shape"
-		hatchEdges = [];
-		
-		#debugShape(shape);
-		
-		box = Bnd.Bnd_Box();
-		b = BRepBndLib.BRepBndLib();
-		b.Add(shape,box);
-		[xMin, yMin , zMin, xMax,yMax,zMax  ] = box.Get();	
-		#print 'bounds are',xMin,yMin,xMax,yMax
-		#add some space to make sure we are outside the boundaries
-
-		xMin = xMin - ( self.options.resolution);
-		yMin = yMin - ( self.options.resolution);		 
-		xMax = xMax + (self.options.resolution );
-		yMax = yMax + (self.options.resolution) ;
-
-		global mainDisplay;
-
-		wires = [];
-		#compute direction of line
-		lineDir = gp.gp_Dir( 1,math.cos(math.radians(self.options.inFillAngle)),zLevel );
-		angleRads = math.radians(self.options.inFillAngle);
-		xSpacing = self.options.inFillSpacing / math.sin(angleRads);		
-
-		#tan theta = op/adj , adj =op / tan 
-		xStart = ( xMin - (yMax - yMin)/math.tan(angleRads));
-		xStop = xMax;	
-
-		for xN in frange6(xStart,xStop,xSpacing):
-			
-			#make an edge to intersect
-			p1 = gp.gp_Pnt(xN,yMin,zLevel);
-			p2 = gp.gp_Pnt(xMax, (xMax - xN)* math.tan(angleRads) + yMin, zLevel);
-		
-			edge = edgeFromTwoPoints(p1,p2);
-			#debugShape(edge);
-			hatchEdges.append(edge);
-		
-		return hatchEdges;
-		
-	def _hatchSlice(self,slice,lastOffset):
-		"take the a slice and compute a list of infillWires"
-		log.debug( "Hatching Face...." );
-		#debugShape(lastOffset);
-		#a set of hatch lines that will conver the entire part
-		#self.showShape(lastOffset);
-		hatchEdges = self._makeHatchLines(lastOffset,slice.zLevel);
-		log.debug( "I have %d Hatch Edges" % len(hatchEdges));
-				
-		#approximate each boundary by a parameterized bspine curve
-		boundaryWires = makeWiresFromOffsetShape(lastOffset);
-		
-		#self.showShape(lastOffset);
-		bm = BoundaryManager();
-		#for wire in boundaryWires:
-		for i in range(1,boundaryWires.Length()+1):
-			wire = ts.Wire(boundaryWires.Value(i));
-			#self.showShape(wire);
-			bm.addWire(wire);
-
-		infillEdges = [];
-		boundaryEdges = [];
-		
-		boundariesFound = {};
-		continueHatching = True;
-		
-		#for each generated hatch, intersect with each boundary
-		for hatchLine in hatchEdges:
-			if not continueHatching:
-				break;
-			else:
-				log.debug( "Moving to next Hatch Line");
-			hatchLineItersectionPoints = []
-			log.debug( "There are %d boundary wires" % boundaryWires.Length());
-			#for boundary in boundaryWires:
-			for i in range(1,boundaryWires.Length()+1):
-				boundary = ts.Wire(boundaryWires.Value(i));
-				log.debug("Wire start");
-				#debugShape(boundary);
-				#time.sleep(.5);
-				brp = BRepExtrema.BRepExtrema_DistShapeShape();
-				#debugShape(hatchLine);
-				#time.sleep(.2);
-				brp.LoadS1(boundary);
-				brp.LoadS2(hatchLine );
-
-				if brp.Perform() and brp.Value() < 0.001:
-					boundariesFound[boundary] = True;
-					
-					#number of intersections must be even for closed shapes
-					#note that we want to avoid lines that are inside of islands.
-					pointList = [];
-
-					for k in range(1,brp.NbSolution()+1):
-						hatchLineItersectionPoints.append(brp.PointOnShape1(k));
-						bm.addIntersectionPoint(boundary,brp.PointOnShape1(k));
-
-					for x in hatchLineItersectionPoints:
-						log.debug( str(Point(x)));
-				else:
-					log.debug( "No Intersections Found");
-			
-			if len(hatchLineItersectionPoints) == 0 and (len(boundariesFound) ==  boundaryWires.Length()):
-				continueHatching = False;
-			
-			#sort the points by ascending X, add to list of hashEdges
-			hatchLineItersectionPoints.sort(cmp= lambda x,y: cmp(x.X(),y.X()));
-
-			#HACK: dont know how to handle intersections at vertices or
-			#tangent lines. for now, just ignore completely these.
-			if len(hatchLineItersectionPoints) % 2 == 1:
-				print "Detected Odd Number of intersection points. This is ignored for now."
-				continue;
-			#build infillEdges. We do this here so that we know which order to 
-			#connect them. We are using to our advantage that the hatch line createse
-			#a list of intersection points with increasing x values.
-			i = 0;
-			while i< len(hatchLineItersectionPoints):
-				p1 = hatchLineItersectionPoints[i];
-				p2 = hatchLineItersectionPoints[i+1];
-				i += 2;
-				
-				e = edgeFromTwoPoints(p1,p2);
-				if e:
-					infillEdges.append(e);			
-
-			
-		#basically, alternate between an internal and and external edges
-		if len(infillEdges) == 0:
-			log.debug( "No Infill Edges Were Created. Returning" );
-			return None;
-		log.debug( "There are %d infill edges" % ( len(infillEdges)));
-		
-		boundaryEdges = bm.buildEdges();		
-
-		follower = EdgeFollower(infillEdges,boundaryEdges);
-		
-		#build wires from the edges
-		edgeList  = TopTools.TopTools_HSequenceOfShape();
-		edgeList = [];
-		
-		while follower.hasMoreEdges():
-			e = follower.nextEdge();
-			#debugShape(e);
-			edgeList.append(e );
-
-		#TODO: because of some tolerance issue, i cannot seem to build a wire out
-		#of these edges. but that's ok, there's really no reason why we cannot just use a 
-		#sequence of edges instead
-		#log.info("Building Wires from % Edges..." %  edges.Length() );
-		#wireBuilder.ConnectEdgesToWires(edges.GetHandle(),0.01,True,resultWires.GetHandle() );
-		#log.info ("Finished: Created %d wires" % resultWires.Length() );
-		
-		log.info("Finished Following hatching.");
-		return edgeList;
 
 			
 	#fills a slice with the appropriate toolpaths.
@@ -860,11 +516,11 @@ class Slicer:
 			infillEdges = self._hatchSlice(slice,lastShell);
 			slice.fillEdges.extend(infillEdges);
 			
-			for w in slice.fillWires:
-				debugShape(w);
+			#for w in slice.fillWires:
+			#	debugShape(w);
 			
-			for e in slice.fillEdges:
-				debugShape(e);
+			#for e in slice.fillEdges:
+			#	debugShape(e);
 				
 		
 		log.info("Filling Complete, Created %d paths." % len(slice.fillWires)  );
@@ -896,6 +552,7 @@ class Slicer:
 			return  bo.Shape();
 			
 	def _makeSlice(self,shapeToSlice,zLevel):
+		global mainDisplay;
 		s = Slice();
 		
 		#change if layers are variable thickness
@@ -930,6 +587,9 @@ class Slicer:
 				foundFace = True;
 				log.debug( "Face is at zlevel" + str(zLevel) );
 				s.addFace(face);
+				m = mesh(face);
+				display_mesh(mainDisplay,m);
+				#time.sleep(10);
 			texp.Next();
 		
 		#free memory
@@ -1199,8 +859,8 @@ def main(filename):
 	options.numShells=6;
 	options.resolution=0.3;
 	options.inFillAngle=45;
-	options.inFillSpacing=.3;
-	options.zMin=3
+	options.inFillSpacing=1;
+	options.zMin=1
 	options.zMax=7
 	
 	#slice it
@@ -1217,9 +877,9 @@ def main(filename):
 		#gexp.verbose = True;
 		#cProfile.runctx('sliceSet.execute()', globals(), locals(), filename="slicer.prof")	;			
 		
-		#p = pstats.Stats('slicer.prof')
-		#p.sort_stats('time')
-		#p.print_stats(0.1);
+		p = pstats.Stats('slicer.prof')
+		p.sort_stats('time')
+		p.print_stats(0.2);
 	except:
 		traceback.print_exc(file=sys.stdout);
 		log.critical( 'Slicing Terminated.');	
@@ -1227,6 +887,59 @@ def main(filename):
 	app.SetTopWindow(frame)
 	app.MainLoop() 
 
+def mesh(shape,event=None):
+
+    # Create the Mesh
+    aMeshGen = SMESH.SMESH_Gen()
+    aMesh = aMeshGen.CreateMesh(0,True)
+    # 1D
+    an1DHypothesis = StdMeshers.StdMeshers_Arithmetic1D(0,0,aMeshGen)#discretization of the wire
+    #an1DHypothesis.SetLength(0.1);
+    an1DHypothesis.SetLength(0.5,False) #the smallest distance between 2 points
+    an1DHypothesis.SetLength(2.,True) 	
+    #an1DHypothesis.SetLength(0.5,False) #the smallest distance between 2 points
+    #an1DHypothesis.SetLength(1.0,True) # the longest distance between 2 points
+    #an1DHypothesis.SetDeflection(0.5);
+    #an1DHypothessis.SetLength(0.5);
+    #an1DAlgo = StdMeshers.StdMeshers_Regular_1D(1,0,aMeshGen) # interpolation
+    an1DAlgo = StdMeshers.StdMeshers_Regular_1D(1,0,aMeshGen);
+    # 2D
+    #a2dHypothseis = StdMeshers.StdMeshers_TrianglePreference(2,0,aMeshGen) #define the boundary
+    a2dHypothseis = StdMeshers.StdMeshers_QuadranglePreference(2,0,aMeshGen) #define the boundary	
+    a2dAlgo = StdMeshers.StdMeshers_Quadrangle_2D(3,0,aMeshGen)
+    #a2dAlgo = StdMeshers.StdMeshers_MEFISTO_2D(3,0,aMeshGen)	
+    #a2dAlgo = StdMeshers.StdMeshers_ProjectionSource2D(3,0,aMeshGen)
+    #a2dAlgo = StdMeshers.StdMeshers_Projection_2D(3,0,aMeshGen)	
+    #a2dAlgo = StdMeshers.StdMeshers_UseExisting_2D(3,0,aMeshGen)
+
+    #Calculate mesh
+    aMesh.ShapeToMesh(shape)
+    #Assign hyptothesis to mesh
+    aMesh.AddHypothesis(shape,0)
+    aMesh.AddHypothesis(shape,1)
+    aMesh.AddHypothesis(shape,2)
+    aMesh.AddHypothesis(shape,3)
+    #Compute the data
+    aMeshGen.Compute(aMesh,aMesh.GetShapeToMesh())
+    return aMesh;
+	
+def display_mesh(display, the_mesh):
+    # First, erase all
+    #display.EraseAll()
+    # then redisplay the shape
+    #display.showShape(aShape)
+    # then the mesh
+    aDS = SMESH.SMESH_MeshVSLink(the_mesh)
+    aMeshVS = MeshVS.MeshVS_Mesh(True)
+    DMF = 1 # to wrap!
+    MeshVS_BP_Mesh       =  5 # To wrap!
+    aPrsBuilder = MeshVS.MeshVS_MeshPrsBuilder(aMeshVS.GetHandle(),DMF,aDS.GetHandle(),0,MeshVS_BP_Mesh)
+    aMeshVS.SetDataSource(aDS.GetHandle())
+    aMeshVS.AddBuilder(aPrsBuilder.GetHandle(),True)
+    #Create the graphic window and display the mesh
+    context = display.canva._display.Context
+    context.Display(aMeshVS.GetHandle())
+    context.Deactivate(aMeshVS.GetHandle())	
 	
 if __name__=='__main__':
 	nargs = len(sys.argv);

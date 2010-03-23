@@ -1042,3 +1042,153 @@ def _makeAdapterCurveFromWire(self,wire):
 # def Select(self,X,Y):
 #
 #		
+
+	def _hatchSlice(self,slice,lastOffset):
+		"take the a slice and compute a list of infillWires"
+		log.debug( "Hatching Face...." );
+		#debugShape(lastOffset);
+		#a set of hatch lines that will conver the entire part
+		#self.showShape(lastOffset);
+		hatchEdges = self._makeHatchLines(lastOffset,slice.zLevel);
+		log.debug( "I have %d Hatch Edges" % len(hatchEdges));
+				
+		#approximate each boundary by a parameterized bspine curve
+		boundaryWires = makeWiresFromOffsetShape(lastOffset);
+		
+		#self.showShape(lastOffset);
+		#bm = BoundaryManager();
+		#for wire in boundaryWires:
+		boundaryIntersections = [];
+		#for i in range(1,boundaryWires.Length()+1):
+		#	wire = ts.Wire(boundaryWires.Value(i));
+			#self.showShape(wire);
+			#bm.addWire(wire);
+		#	boundaries.append( hatchLib.SegmentedBoundary(
+
+		infillEdges = [];
+		boundaryEdges = [];
+		
+		continueHatching = True;
+		reverseEdgeDirection = False;
+		boundariesFound = {};
+		#for each generated hatch, intersect with each boundary
+		for hatchLine in hatchEdges:
+			if not continueHatching:
+				break;
+			else:
+				log.debug( "Moving to next Hatch Line");
+				
+			hatchLineItersectionNodes = [] #all the intersecitons for this single hatchLine
+			
+			log.debug( "There are %d boundary wires" % boundaryWires.Length());
+			#for boundary in boundaryWires:
+			for i in range(1,boundaryWires.Length()+1):
+				boundary = ts.Wire(boundaryWires.Value(i));
+				log.debug("Wire start");
+				#debugShape(boundary);
+				#time.sleep(.5);
+				brp = BRepExtrema.BRepExtrema_DistShapeShape();
+				#debugShape(hatchLine);
+				#time.sleep(.2);
+				brp.LoadS1(boundary);
+				brp.LoadS2(hatchLine );
+
+				if brp.Perform() and brp.Value() < 0.001:
+					boundariesFound[boundary] = True;
+					
+					#number of intersections must be even for closed shapes
+					#note that we want to avoid lines that are inside of islands.
+					pointList = [];
+
+					for k in range(1,brp.NbSolution()+1):
+						hatchLineItersectionNodes.append(hatchLib.Node(brp.PointOnShape1(k)));
+						#bm.addIntersectionPoint(boundary,brp.PointOnShape1(k));
+
+					for x in hatchLineItersectionNodes:
+						log.debug( str(x));
+				else:
+					log.debug( "No Intersections Found");
+			
+				#finished with this boundary.
+				#build a segmented boundary so we can track all of those points
+				boundaryIntersections.append( 
+					hatchLib.SegmentedBoundary(boundary,hatchLineItersectionNodes  );
+			
+			#end for each boundary
+			
+			if len(hatchLineItersectionNodes) == 0 and (len(boundariesFound) ==  boundaryWires.Length()):
+				continueHatching = False;
+			
+			#sort the points by ascending X, add to list of hashEdges
+			hatchLineItersectionNodes.sort(cmp= lambda x,y: cmp(x.X(),y.X()));
+			
+			#reverse them every other time so that we can follow them in the right order
+			#if reverseEdgeDirection:
+			#	hatchLineItersectionPoints.reverse();
+			#reverseEdgeDirection = not reverseEdgeDirection;
+				
+			#HACK: dont know how to handle intersections at vertices or
+			#tangent lines. for now, just ignore completely these.
+			if len(hatchLineItersectionNodes) % 2 == 1:
+				print "Detected Odd Number of intersection points. This is ignored for now."
+				continue;
+				
+			#build infillEdges. We do this here so that we know which order to 
+			#connect them. We are using to our advantage that the hatch line createse
+			#a list of intersection points with increasing x values.
+			#we will use lightweight edges to keep math to a minimum
+			i = 0;
+			while i< len(hatchLineItersectionNodes):
+				p1 = hatchLineItersectionNodes[i];
+				p2 = hatchLineItersectionNodes[i+1];
+				i += 2;
+				
+				e = hatchLib.NodeEdge(p1,p2);
+				if e:
+					#debugShape(e);
+					#time.sleep(1);
+					#debugShape(make_vertex(p1));
+					#debugShape(make_vertex(p2));
+					infillEdges.append(e);			
+					
+		#basically, alternate between an internal and and external edges
+		if len(infillEdges) == 0:
+			log.debug( "No Infill Edges Were Created. Returning" );
+			return None;
+		log.debug( "There are %d infill edges" % ( len(infillEdges)));
+
+		
+		#infill edges is a list of infill Node Edges
+		#boundaryIntersections is a list of SegementedBoundaries, having linked lists of nodes
+		#both the edges and the SegmentedBoundaries are composed of Node objects, which allow
+		#fast lookup of the points as we traverse through the schema
+		
+		
+		#at this point we have a list of edges, sorted in the correct order
+		#to traverse. We need to follow them, but alternately follow a boundary
+		#edge to connect them together.
+		for e in bm.linkEdges(infillEdges):
+			debugShape(e);
+			#time.sleep(.5);
+		#boundaryEdges = bm.buildEdges();		
+
+		#follower = EdgeFollower(infillEdges,boundaryEdges);
+		
+		#build wires from the edges
+		#edgeList  = TopTools.TopTools_HSequenceOfShape();
+		#edgeList = [];
+		
+		#while follower.hasMoreEdges():
+		#	e = follower.nextEdge();
+			#debugShape(e);
+		#	edgeList.append(e );
+
+		#TODO: because of some tolerance issue, i cannot seem to build a wire out
+		#of these edges. but that's ok, there's really no reason why we cannot just use a 
+		#sequence of edges instead
+		#log.info("Building Wires from % Edges..." %  edges.Length() );
+		#wireBuilder.ConnectEdgesToWires(edges.GetHandle(),0.01,True,resultWires.GetHandle() );
+		#log.info ("Finished: Created %d wires" % resultWires.Length() );
+		
+		log.info("Finished Following hatching.");
+		return edgeList;

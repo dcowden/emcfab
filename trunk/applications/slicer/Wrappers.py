@@ -4,7 +4,7 @@
  and behave more pythonically
  
 """
-from OCC import BRep,gp,GeomAbs,GeomAPI,GCPnts,TopoDS,BRepTools,GeomAdaptor,TopAbs
+from OCC import BRep,gp,GeomAbs,GeomAPI,GCPnts,TopoDS,BRepTools,GeomAdaptor,TopAbs,TopTools
 from OCC import BRepGProp,BRepLProp, BRepBuilderAPI,BRepPrimAPI,GeomAdaptor,GeomAbs,BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI,BRepAdaptor
 import time,os,sys,string,logging;
 brepTool = BRep.BRep_Tool();
@@ -84,16 +84,59 @@ def edgeFromTwoPoints(p1,p2):
 	else:
 		return None;
 		
-def findParameterOnCurve(point,handleCurve):
+def findParameterOnCurve(point,handleCurve,tolerance):
 	"return the closest parameter on the curve for the provided point"
+	"returns none if a point is not within tolerance"
+	#TODO: Extrema.Extrema_ExtPC will project a point onto an Adaptor_3d Curve
+	#so we do not have to approximate with a bspline
+	#BrepAdaptor.BrepAdaptor_CompCurve.Trim() will return a trimmed curve between two parameters
+	#E1CLib can project points on elementary curves (lines and conics )
 	gp = GeomAPI.GeomAPI_ProjectPointOnCurve(point,handleCurve);
 	gp.Perform(point);
 	if gp.NbPoints()>0:
-		log.debug( "Projection Success!" );
+		#log.debug( "Projection Success!" );
 		return [point, gp.LowerDistanceParameter(),gp.LowerDistance()];
 	else:
-		log.error( "Projection Failed.");
+		#log.error( "Projection Failed.");
 		return None;
+
+		
+def findPointOnCurve(point,handleCurve,tolerance):
+	"return the closest parameter on the curve for the provided point"
+	"returns none if a point is not within tolerance"
+	gp = GeomAPI.GeomAPI_ProjectPointOnCurve(point,handleCurve);
+	gp.Perform(point);
+	if gp.NbPoints()>0 and gp.LowerDistance() <= tolerance:
+		#log.debug( "Projection Success!" );
+		return [gp.LowerDistanceParameter(),gp.NearestPoint()];
+	else:
+		#log.warn( "Projection Failed.");
+		return None;
+
+def makeWiresFromOffsetShape(shape):
+	"get all the wires from the offset shape"
+	resultWires = TopTools.TopTools_HSequenceOfShape();
+	if shape.ShapeType() == TopAbs.TopAbs_WIRE:
+		log.info( "offset result is a wire" );
+		wire = topoDS.Wire(shape);
+		#resultWires.append(wire);
+		resultWires.Append(wire);
+	elif shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
+		log.info( "offset result is a compound");
+
+		bb = TopExp.TopExp_Explorer();
+		bb.Init(shape,TopAbs.TopAbs_WIRE);
+		while bb.More():
+			w = topoDS.Wire(bb.Current());
+						
+			#resultWires.append(w);
+			resultWires.Append(w);#
+			#debugShape(w);
+			bb.Next();
+		
+		bb.ReInit();	
+	
+	return resultWires;	
 		
 def edgeFromTwoPointsOnCurve(handleCurve,p1,p2):
 	"make an edge from a curve and two parameters"
@@ -102,7 +145,7 @@ def edgeFromTwoPointsOnCurve(handleCurve,p1,p2):
 	if builder.IsDone():
 		return builder.Edge();
 	else:
-		log.error( "Error building Edge: Error Number " ,builder.Error());
+		log.error( "Error building Edge: Error Number %d" % builder.Error());
 		return None;
 		
 def cast(shape,type):

@@ -95,16 +95,13 @@ from OCC import ShapeFix
 from OCC import BRepBuilderAPI
 from OCC import TopTools
 
-from OCC import SMESH 
-from OCC import StdMeshers 
-from OCC import MeshVS 
 
 from OCC import gce
 #my libraries
 #import Gcode_Lib
 from Wrappers import *
 import hatchLib
-
+import TestDisplay
 import cProfile
 import pstats
 
@@ -140,8 +137,6 @@ log.setLevel(logging.DEBUG);
 	 
  
 """
-mainDisplay = None;
-debugDisplay=None;
 
 #####
 #utility class instances
@@ -161,21 +156,6 @@ UNITS_IN = "in";
 UNITS_UNKNOWN = "units";
 
 	
-def debugShape(shape):
-	global debugDisplay;
-	if debugDisplay:
-		debugDisplay.showShape(shape);
-
-def hideDebugDisplay():
-	global debugDisplay;
-	if debugDisplay:
-		debugDisplay.Hide();
-
-def showDebugDisplay():
-	global debugDisplay;
-	if debugDisplay:
-		debugDisplay.Show(True);
-
 
 def sortPoints(pointList):
 	"Sorts points by ascending X"
@@ -203,9 +183,6 @@ def pointsFromWire(wire,spacing):
 		
 	return points;
 	
-		
-
-
 
 def checkMinimumDistanceForOffset(offset,resolution):
 	"PERFORMANCE INTENSIVE!!!!"
@@ -229,10 +206,7 @@ def checkMinimumDistanceForOffset(offset,resolution):
 			#	allPoints.append(p);
 			te.Next();
 	te.ReInit();
-	
-	#for p in allPoints:
-	#	debugShape(make_vertex(p));
-		
+			
 	log.info("There are %d wires, and %d points" % (resultWires.Length(), len(allPoints) ));
 	
 	#cool trick here: list all permutations of these points
@@ -246,17 +220,6 @@ def checkMinimumDistanceForOffset(offset,resolution):
 			#log.info("Computed distance = %0.5f" % d );
 			
 	return True;
-
-
-class AppFrame(wx.Frame):
-  def __init__(self, parent,title,x,y):
-      wx.Frame.__init__(self, parent=parent, id=-1, title=title, pos=(x,y),style=wx.DEFAULT_FRAME_STYLE,size = (400,300))
-      self.canva = wxViewer3d(self);
-  def showShape(self,shape):
-		self.canva._display.DisplayShape(shape)
-  def eraseAll(self):
-  		self.canva._display.EraseAll();
-	
 	
 """
 	Class that provides easy access to commonly
@@ -376,8 +339,6 @@ class Slicer:
 		self.saveSliceFaces = True;				
 		self.FIRST_LAYER_OFFSET = 0.00001;
 		
-		#display property if avaialable
-		self.display = None;
 		
 		#use options and actual object to determine unit of measure and other values
 		#unit of measure
@@ -414,10 +375,7 @@ class Slicer:
 			self.sliceHeight = zRange / self.numSlices;
 					
 		log.info("Object Loaded. Dimensions are " + self.analyzer.friendlyDimensions());
-		
-	def showShape(self,shape):
-		if self.display:
-			self.display.showShape(shape);
+
 
 	def execute(self):
 		"slices the object with the settings supplied in the options property"
@@ -435,9 +393,7 @@ class Slicer:
 			log.warn( "Creating Slice %0d, z=%0.3f " % ( sliceNumber,zLevel));
 			slice = self._makeSlice(self.shape,zLevel);
 
-			if slice != None:
-				#for f in slice.faces:
-				#	self.showShape(f);			
+			if slice != None:		
 				self.slices.append(slice);
 				#todo: this should probably be componentize: filling is quite complex.
 				self._fillSlice(slice);
@@ -482,13 +438,8 @@ class Slicer:
 							log.warn("Shell is too close to other shells.");
 							break;
 							
-					#sa = SolidAnalyzer(newOffset);
-					#if min([sa.xDim,sa.yDim]) < ( self.resolution ):
-					#	log.warn("Resulting Shape is too small to produce. Skipping this shell.");
-					#	#raise Exception,"Resulting Shape is too small to produce."
-					#	break;
 					lastOffset = newOffset
-					#debugShape(newOffset);
+					#TestDisplay.display.showShape(newOffset);
 					shells.append(newOffset);
 					log.info('Created Shell Successfully.');
 				except Exception as e:
@@ -513,16 +464,15 @@ class Slicer:
 			
 			#use last shell for hatching
 			#debugShape(lastShell);
-			infillEdges = self._hatchSlice(slice,lastShell);
-			slice.fillEdges.extend(infillEdges);
+			h = hatchLib.Hatcher(
+					listFromHSequenceOfShape(makeWiresFromOffsetShape(lastShell),TopAbs.TopAbs_WIRE),
+					slice.zLevel,self.options.inFillSpacing,
+					self.options.inFillAngle );
 			
-			#for w in slice.fillWires:
-			#	debugShape(w);
-			
-			#for e in slice.fillEdges:
-			#	debugShape(e);
-				
-		
+			h.hatch();
+			for e in h.edges():
+				slice.fillEdges.append(e);
+					
 		log.info("Filling Complete, Created %d paths." % len(slice.fillWires)  );
 
 
@@ -587,9 +537,6 @@ class Slicer:
 				foundFace = True;
 				log.debug( "Face is at zlevel" + str(zLevel) );
 				s.addFace(face);
-				m = mesh(face);
-				display_mesh(mainDisplay,m);
-				#time.sleep(10);
 			texp.Next();
 		
 		#free memory
@@ -660,103 +607,7 @@ class Slice:
 		zMin = bounds[2];
 		zMax = bounds[5];
 		return [xMin,xMax,yMin,yMax,zMin,zMax];
-
-	
 		
-
-		
-	
-"""
-	Writes a sliceset to specified file in Gcode format.	
-	Accepts a slicer, and exports gcode for the slices that were produced by the slicer.
-	The slicer has already sliced and filled each layer. This class simply converts
-	these toolpaths to Gcode
-	
-"""		
-class GcodeExporter ():
-	def __init__(self):
-
-		self.description="Description";
-		self.feedRate = 100.0;
-		self.numberFormat = "%0.3f";
-		self.verbose =False;
-		self.display = None;
-	
-	def export(self, sliceSet, fileName):
-		
-		slices = sliceSet.slices;
-		msg = "Exporting " + str(len(slices)) + " slices to file'" + fileName + "'...";
-		log.info("Exporting " + str(len(slices)) + " slices to file'" + fileName + "'...");
-		print msg;
-		
-		gcodewriter = Gcode_Lib.GCode_Generator();
-		gcodewriter.verbose = self.verbose;
-		gcodewriter.numberFormat = self.numberFormat;
-		gcodewriter.start();
-		gcodewriter.comment(self.description);
-		exportedPaths = 0;
-
-		for slice in slices:
-			print "zLevel %0.5f ...." % slice.zLevel,
-			gcodewriter.comment('zLevel' + str(slice.zLevel) );
-			
-			log.info( "zLevel %d, %d offset paths,%d fill edges " % ( slice.zLevel, len(slice.fillWires), len(slice.fillEdges) ));
-			gcodewriter.comment("offsets");
-			for fw in slice.fillWires:
-				if self.verbose:
-					gcodewriter.comment("begin wire");
-				log.info(">>begin wire");
-				#print "base wire:",str(fw);				
-				#sw =fw.getSortedWire();
-				#print "sorted wire:",str(sw);				
-				gcodewriter.followWire(Wire(fw),self.feedRate);
-				log.info(">>end wire");
-				
-				if self.verbose:
-					gcodewriter.comment("end wire");				
-
-				#if self.display:
-				#	self.display.showShape(fw);
-					
-				exportedPaths += 1;
-
-
-			gcodewriter.comment("infill");				
-			for e in slice.fillEdges:
-				if self.verbose:
-					gcodewriter.comment("begin edge");
-				gcodewriter.followEdge(Edge(e),self.feedRate);				
-				if self.verbose:
-					gcodewriter.comment("end edge");
-				exportedPaths += 1;
-			print "[Done]"
-		commands = gcodewriter.getResults();
-		f = open(fileName,'w');
-		f.write("\n".join(commands));
-		f.close()
-		print "Gcode Export Complete."
-
-######
-# Decorates a slice to provide extra computations for SVG Presentation.
-# Needed only for SVG display
-######	
-class SVGLayer:
-	def __init__(self,slice,unitScale,numformat):
-		self.slice = slice;
-		self.margin = 20;
-		self.unitScale = unitScale;
-		self.NUMBERFORMAT = numformat;
-	def zLevel(self):
-		return self.NUMBERFORMAT % self.slice.zLevel;
-		
-	def xTransform(self):
-		return self.margin;
-		
-	def yTransform(self):
-		return (self.slice.layerNo + 1 ) * (self.margin + ( self.slice.sliceHeight * self.unitScale )) + ( self.slice.layerNo * 20 );
-		
-	def svgPathString(self):
-		"return svg path string for a slice"
 
 		
 """
@@ -801,13 +652,17 @@ def printUsage():
 		
 		Creates an SVG output file compatible with skeinforge	, in same directory as inputfile
 	"""
+
+def showSlices(slicer):
+	"show slices on the debug display"
+	for s in slicer.slices:
+		for w in s.fillWires:
+			TestDisplay.display.showShape(w);
+		for e in s.fillEdges:
+			TestDisplay.display.showShape(e);
+
 def main(filename):
 
-	global mainDisplay;
-	global debugDisplay;
-
-	app = wx.PySimpleApp()
-	wx.InitAllImageHandlers()
 	
 	ok = False;
 	if filename.lower().endswith('stl'):
@@ -826,36 +681,13 @@ def main(filename):
 	#outFileName = filename[ : filename.rfind( '.' ) ] + '_sliced.svg'
 	outFileName = filename[ : filename.rfind( '.' ) ] + '_sliced.nc'
 	
-	frame = AppFrame(None,filename,20,20)
-	frame.canva.InitDriver()
-
-	sliceFrame = AppFrame(None,"Slices of " + filename,420,20)
-	sliceFrame.canva.InitDriver()
-	sliceFrame.canva._display.SetModeWireFrame()
-	sliceFrame.Show(True)
-	mainDisplay = sliceFrame;
-	
-	gcodeFrame = AppFrame(None,"Generated Toolpaths" + filename,820,20)
-	gcodeFrame.canva.InitDriver()
-	gcodeFrame.canva._display.SetModeWireFrame()
-	gcodeFrame.Show(True)	
-
-
-	debugDisplay = AppFrame(None,"Debug Display",1220,20)
-	debugDisplay.canva.InitDriver()
-	debugDisplay.canva._display.SetModeWireFrame()
-	debugDisplay.Show(True)	
-
-	
 	analyzer = SolidAnalyzer(theSolid);	
 	shape = analyzer.translateToPositiveSpace();
-
-	frame.showShape(shape);	
-	frame.Show(True)			
+		
 
 	#slicing options: use defaults
 	options = SliceOptions();
-	options.numSlices=1;
+	#options.numSlices=1;
 	options.numShells=6;
 	options.resolution=0.3;
 	options.inFillAngle=45;
@@ -866,80 +698,20 @@ def main(filename):
 	#slice it
 	try:
 		sliceSet = Slicer(shape,options);
-		sliceSet.display = sliceFrame;	
 		sliceSet.execute()
 		
-		#export to gcode
-		#gexp = GcodeExporter();
-		#gexp.description="Reprap Test";
-		#gexp.display = gcodeFrame;
-		#gexp.export(sliceSet, outFileName);
-		#gexp.verbose = True;
-		#cProfile.runctx('sliceSet.execute()', globals(), locals(), filename="slicer.prof")	;			
+		#showSlices(sliceSet);
 		
-		p = pstats.Stats('slicer.prof')
-		p.sort_stats('time')
-		p.print_stats(0.2);
+		cProfile.runctx('sliceSet.execute()', globals(), locals(), filename="slicer.prof")	;			
+		
+		#p = pstats.Stats('slicer.prof')
+		#p.sort_stats('time')
+		#p.print_stats(0.2);
 	except:
 		traceback.print_exc(file=sys.stdout);
 		log.critical( 'Slicing Terminated.');	
 		
-	app.SetTopWindow(frame)
-	app.MainLoop() 
-
-def mesh(shape,event=None):
-
-    # Create the Mesh
-    aMeshGen = SMESH.SMESH_Gen()
-    aMesh = aMeshGen.CreateMesh(0,True)
-    # 1D
-    an1DHypothesis = StdMeshers.StdMeshers_Arithmetic1D(0,0,aMeshGen)#discretization of the wire
-    #an1DHypothesis.SetLength(0.1);
-    an1DHypothesis.SetLength(0.5,False) #the smallest distance between 2 points
-    an1DHypothesis.SetLength(2.,True) 	
-    #an1DHypothesis.SetLength(0.5,False) #the smallest distance between 2 points
-    #an1DHypothesis.SetLength(1.0,True) # the longest distance between 2 points
-    #an1DHypothesis.SetDeflection(0.5);
-    #an1DHypothessis.SetLength(0.5);
-    #an1DAlgo = StdMeshers.StdMeshers_Regular_1D(1,0,aMeshGen) # interpolation
-    an1DAlgo = StdMeshers.StdMeshers_Regular_1D(1,0,aMeshGen);
-    # 2D
-    #a2dHypothseis = StdMeshers.StdMeshers_TrianglePreference(2,0,aMeshGen) #define the boundary
-    a2dHypothseis = StdMeshers.StdMeshers_QuadranglePreference(2,0,aMeshGen) #define the boundary	
-    a2dAlgo = StdMeshers.StdMeshers_Quadrangle_2D(3,0,aMeshGen)
-    #a2dAlgo = StdMeshers.StdMeshers_MEFISTO_2D(3,0,aMeshGen)	
-    #a2dAlgo = StdMeshers.StdMeshers_ProjectionSource2D(3,0,aMeshGen)
-    #a2dAlgo = StdMeshers.StdMeshers_Projection_2D(3,0,aMeshGen)	
-    #a2dAlgo = StdMeshers.StdMeshers_UseExisting_2D(3,0,aMeshGen)
-
-    #Calculate mesh
-    aMesh.ShapeToMesh(shape)
-    #Assign hyptothesis to mesh
-    aMesh.AddHypothesis(shape,0)
-    aMesh.AddHypothesis(shape,1)
-    aMesh.AddHypothesis(shape,2)
-    aMesh.AddHypothesis(shape,3)
-    #Compute the data
-    aMeshGen.Compute(aMesh,aMesh.GetShapeToMesh())
-    return aMesh;
-	
-def display_mesh(display, the_mesh):
-    # First, erase all
-    #display.EraseAll()
-    # then redisplay the shape
-    #display.showShape(aShape)
-    # then the mesh
-    aDS = SMESH.SMESH_MeshVSLink(the_mesh)
-    aMeshVS = MeshVS.MeshVS_Mesh(True)
-    DMF = 1 # to wrap!
-    MeshVS_BP_Mesh       =  5 # To wrap!
-    aPrsBuilder = MeshVS.MeshVS_MeshPrsBuilder(aMeshVS.GetHandle(),DMF,aDS.GetHandle(),0,MeshVS_BP_Mesh)
-    aMeshVS.SetDataSource(aDS.GetHandle())
-    aMeshVS.AddBuilder(aPrsBuilder.GetHandle(),True)
-    #Create the graphic window and display the mesh
-    context = display.canva._display.Context
-    context.Display(aMeshVS.GetHandle())
-    context.Deactivate(aMeshVS.GetHandle())	
+	#TestDisplay.display.run();
 	
 if __name__=='__main__':
 	nargs = len(sys.argv);

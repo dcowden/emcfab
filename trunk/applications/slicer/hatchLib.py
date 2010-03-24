@@ -33,7 +33,7 @@ logging.basicConfig(level=logging.DEBUG,
                     stream=sys.stdout)
 
 log = logging.getLogger('hatchLib');
-log.setLevel(logging.DEBUG);
+log.setLevel(logging.INFO);
 
 
 ts = TopoDS.TopoDS();
@@ -60,7 +60,7 @@ class Node:
 	
 	def canMovePrev(self):
 		"can we travel on the boundary to a node that would allow infill?"
-		return self.prevNode and (not self.prevNode.used) and self.nextNode.infillNode ;
+		return self.prevNode and (not self.prevNode.used) and self.prevNode.infillNode ;
 	
 	def canMoveInfill(self):
 		return self.infillNode and (not self.infillNode.used);
@@ -105,13 +105,11 @@ class SegmentedBoundary:
 	"a boundary with a number of nodes along the boundary."
 	def __init__(self,wire,intersectionNodes):
 		log.debug("SegementedBoundary : %d nodes." % len(intersectionNodes ) );
-		#intersectionPoints are Nodes not gp_Pnts
-		#but they have nothing filled in except a point.
 		
 		self.wire = wire;
 		
 		self.tolerance = 0.000001;
-		self.tolerance2 = 0.0001;
+
 		self.nodes = set();
 		
 		#make a parameterized approximation of the wire
@@ -119,17 +117,6 @@ class SegmentedBoundary:
 		#the trouble is that this means that i cannot retain any real circles or splines, and instead
 		#have to turn everything into line segments!
 		self.curve  = BRepAdaptor.BRepAdaptor_CompCurve (wire);
-		
-		#experiment with this curve a bit
-		#print self.curve.NbIntervals(GeomAbs.GeomAbs_C0);
-		#print self.curve.NbIntervals(GeomAbs.GeomAbs_C1);
-		#print self.curve.NbIntervals(GeomAbs.GeomAbs_C2);
-		#print self.curve.IsClosed();
-		#print self.curve.IsPeriodic();
-		#print self.curve.FirstParameter();
-		#print self.curve.LastParameter();
-		edge = None;
-		#print self.curve.Edge(2.0,edge);
 		hc = BRepAdaptor.BRepAdaptor_HCompCurve(self.curve);
 		curveHandle = hc.GetHandle();
 
@@ -140,6 +127,8 @@ class SegmentedBoundary:
 			# have the result
 			anApproximatedCurve=approx.Curve();
 			log.debug( "Curve is parameterized between %0.5f and %0.5f " % (  anApproximatedCurve.GetObject().FirstParameter(), anApproximatedCurve.GetObject().LastParameter() ));
+			#anApproximatedCurve.GetObject().SetPeriodic();
+			#log.debug( "Curve Periodic ="  + str(anApproximatedCurve.GetObject().IsPeriodic() ));
 			self.approxCurve  = anApproximatedCurve;
 		else:
 			log.warn( "Failed to create approximation curve." );
@@ -162,28 +151,35 @@ class SegmentedBoundary:
 			node.parameter = param;
 			self.nodes.add(node);
 
+		sortedNodes= self._parameterSortedNodes();	
+		#TODO this woorked, but connecting edges across the seams
+		#of a parameterized curve didnt work
+		#wrapIndex = WrapAroundIndex(len(sortedNodes));
+		#for i in range(0,len(sortedNodes)):
+		#	#these are safe-- the boundaries are 'wrapped around'
+		#	prevNode = sortedNodes[wrapIndex.index(i-1)];
+		#	thisNode = sortedNodes[wrapIndex.index(i)];
+		#	nextNode = sortedNodes[wrapIndex.index(i+1)];
+			
+		#	thisNode.nextNode = nextNode;
+		#	thisNode.prevNode = prevNode;
 
-		#sort the points by ascending parameter
-		#returns tuples of (point,param) in ascending param order
-		sortedNodes= self._parameterSortedNodes();
-		
-		#configure each node to have references to its prior and next siblings
-		#each node needs to be connected via an edge
-		#to its neighbors on each side
-		#each p = (Node )
-		#this way the end is joined to the beginning. 
-		#THIS IS ONLY APPROPRIATE IF THE UNDERLYING CURVE IS CLOSED
-		
-		wrapIndex = WrapAroundIndex(len(sortedNodes));
 		for i in range(0,len(sortedNodes)):
 			#these are safe-- the boundaries are 'wrapped around'
-			prevNode = sortedNodes[wrapIndex.index(i-1)];
-			thisNode = sortedNodes[wrapIndex.index(i)];
-			nextNode = sortedNodes[wrapIndex.index(i+1)];
+			if (i-1) >= 0:
+				prevNode = sortedNodes[(i-1)];
+			else:
+				prevNode = None;
 			
+			if ( i+1) < (len(sortedNodes)  ):
+				nextNode = sortedNodes[(i+1)];
+			else:
+				nextNode = None;
+				
+			thisNode = sortedNodes[i];
 			thisNode.nextNode = nextNode;
 			thisNode.prevNode = prevNode;
-			
+		
 
 	@staticmethod
 	def edgeBetweenNodes(startNode, endNode):
@@ -257,6 +253,7 @@ class Hatcher:
 		segmentedBoundaries = [];
 		
 		for boundary in self.boundaryWires:
+			#TestDisplay.display.showShape(boundary);
 			boundaryIntersections[boundary] = [];
 		boundariesFound = {};
 		#intersect each line with each boundary
@@ -323,8 +320,8 @@ class Hatcher:
 		log.info("Found %d intersection Nodes" % len(self.allIntersectionNodes ));
 		log.info("Finished Hatching.");
 		
-		for n in self.allIntersectionNodes:
-			print (str(n));
+		#for n in self.allIntersectionNodes:
+		#	print (str(n));
 
 	def edges(self):
 		log.debug("Following Node Map...");
@@ -337,7 +334,7 @@ class Hatcher:
 		while ( len(nodesLeft) > 0):
 		
 			currentNode.used = True;
-			TestDisplay.display.showShape(Wrappers.make_vertex(currentNode.point));
+			#TestDisplay.display.showShape(Wrappers.make_vertex(currentNode.point));
 			if findingInfillEdge:
 				log.debug("looking for an infill edge..");
 				#find an infill edge
@@ -372,7 +369,7 @@ class Hatcher:
 					else:
 						log.debug("prev node is available for a move, using that one");
 						#TestDisplay.display.showShape(Wrappers.make_vertex(currentNode.prevNode.point));
-						print str(currentNode);
+						#print str(currentNode);
 						yield SegmentedBoundary.edgeBetweenNodes(currentNode,currentNode.prevNode);
 						currentNode = currentNode.prevNode;
 						
@@ -408,11 +405,11 @@ class Hatcher:
 		lineDir = gp.gp_Dir( 1,math.cos(math.radians(self.infillAngle)),self.zLevel );
 		angleRads = math.radians(self.infillAngle);
 		xSpacing = self.infillSpacing / math.sin(angleRads);		
-
+		
 		#tan theta = op/adj , adj =op / tan 
 		xStart = ( xMin - (yMax - yMin)/math.tan(angleRads));
 		xStop = xMax;	
-
+		log.debug("xspacing = %0.2f, start = %0.2f, stop= %0.2f" %( xSpacing ,xStart, xStop) );
 		for xN in Wrappers.frange6(xStart,xStop,xSpacing):
 			
 			#make an edge to intersect
@@ -488,13 +485,13 @@ if __name__=='__main__':
 	#d.showShape(w);
 	#TestDisplay.display.eraseAll();
 	#hatch it
-	h  = Hatcher([w2,w],0,0.3,45);
+	h  = Hatcher([w2,w],0,0.1,45);
 	h.hatch();
 	#time.sleep(40);
 	for e in h.edges():
 		if e:
 			TestDisplay.display.showShape(e);
-		time.sleep(.5);
+		#time.sleep(.5);
 	TestDisplay.display.run();
 
 	

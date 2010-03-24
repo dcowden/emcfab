@@ -27,21 +27,6 @@ class AppFrame(wx.Frame):
   def run(self):
 	self.app.MainLoop();
 
-def makeTestWire():
-    circle2 = gp.gp_Circ(gp.gp_Ax2(gp.gp_Pnt(40,40,2),gp.gp_Dir(0,0,1)),10)
-    Edge4 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(circle2,gp.gp_Pnt(40,50,2),gp.gp_Pnt(50,40,2)).Edge()
-    ExistingWire2 = BRepBuilderAPI.BRepBuilderAPI_MakeWire(Edge4).Wire()
-    P1 = gp.gp_Pnt(50,40,2)
-    P2 = gp.gp_Pnt(80,40,2) #5,204,0
-    Edge5 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(P1,P2).Edge()
-    MW = BRepBuilderAPI.BRepBuilderAPI_MakeWire()
-    MW.Add(Edge5)
-    MW.Add(ExistingWire2)
-
-    if MW.IsDone():
-	WhiteWire = MW.Wire()
-	return WhiteWire;	
-
 
 app = wx.PySimpleApp()
 wx.InitAllImageHandlers()

@@ -1173,6 +1173,7 @@ def _makeAdapterCurveFromWire(self,wire):
 		#boundaryEdges = bm.buildEdges();		
 
 		#follower = EdgeFollower(infillEdges,boundaryEdges);
+
 		
 		#build wires from the edges
 		#edgeList  = TopTools.TopTools_HSequenceOfShape();
@@ -1192,3 +1193,152 @@ def _makeAdapterCurveFromWire(self,wire):
 		
 		log.info("Finished Following hatching.");
 		return edgeList;
+
+		
+		
+		"""
+	Writes a sliceset to specified file in Gcode format.	
+	Accepts a slicer, and exports gcode for the slices that were produced by the slicer.
+	The slicer has already sliced and filled each layer. This class simply converts
+	these toolpaths to Gcode
+	
+"""		
+class GcodeExporter ():
+	def __init__(self):
+
+		self.description="Description";
+		self.feedRate = 100.0;
+		self.numberFormat = "%0.3f";
+		self.verbose =False;
+		self.display = None;
+	
+	def export(self, sliceSet, fileName):
+		
+		slices = sliceSet.slices;
+		msg = "Exporting " + str(len(slices)) + " slices to file'" + fileName + "'...";
+		log.info("Exporting " + str(len(slices)) + " slices to file'" + fileName + "'...");
+		print msg;
+		
+		gcodewriter = Gcode_Lib.GCode_Generator();
+		gcodewriter.verbose = self.verbose;
+		gcodewriter.numberFormat = self.numberFormat;
+		gcodewriter.start();
+		gcodewriter.comment(self.description);
+		exportedPaths = 0;
+
+		for slice in slices:
+			print "zLevel %0.5f ...." % slice.zLevel,
+			gcodewriter.comment('zLevel' + str(slice.zLevel) );
+			
+			log.info( "zLevel %d, %d offset paths,%d fill edges " % ( slice.zLevel, len(slice.fillWires), len(slice.fillEdges) ));
+			gcodewriter.comment("offsets");
+			for fw in slice.fillWires:
+				if self.verbose:
+					gcodewriter.comment("begin wire");
+				log.info(">>begin wire");
+				#print "base wire:",str(fw);				
+				#sw =fw.getSortedWire();
+				#print "sorted wire:",str(sw);				
+				gcodewriter.followWire(Wire(fw),self.feedRate);
+				log.info(">>end wire");
+				
+				if self.verbose:
+					gcodewriter.comment("end wire");				
+
+				#if self.display:
+				#	self.display.showShape(fw);
+					
+				exportedPaths += 1;
+
+
+			gcodewriter.comment("infill");				
+			for e in slice.fillEdges:
+				if self.verbose:
+					gcodewriter.comment("begin edge");
+				gcodewriter.followEdge(Edge(e),self.feedRate);				
+				if self.verbose:
+					gcodewriter.comment("end edge");
+				exportedPaths += 1;
+			print "[Done]"
+		commands = gcodewriter.getResults();
+		f = open(fileName,'w');
+		f.write("\n".join(commands));
+		f.close()
+		print "Gcode Export Complete."
+	
+
+######
+# Decorates a slice to provide extra computations for SVG Presentation.
+# Needed only for SVG display
+######	
+class SVGLayer:
+	def __init__(self,slice,unitScale,numformat):
+		self.slice = slice;
+		self.margin = 20;
+		self.unitScale = unitScale;
+		self.NUMBERFORMAT = numformat;
+	def zLevel(self):
+		return self.NUMBERFORMAT % self.slice.zLevel;
+		
+	def xTransform(self):
+		return self.margin;
+		
+	def yTransform(self):
+		return (self.slice.layerNo + 1 ) * (self.margin + ( self.slice.sliceHeight * self.unitScale )) + ( self.slice.layerNo * 20 );
+		
+	def svgPathString(self):
+		"return svg path string for a slice"
+
+def mesh(shape,event=None):
+
+    # Create the Mesh
+    aMeshGen = SMESH.SMESH_Gen()
+    aMesh = aMeshGen.CreateMesh(0,True)
+    # 1D
+    an1DHypothesis = StdMeshers.StdMeshers_Arithmetic1D(0,0,aMeshGen)#discretization of the wire
+    #an1DHypothesis.SetLength(0.1);
+    an1DHypothesis.SetLength(0.5,False) #the smallest distance between 2 points
+    an1DHypothesis.SetLength(2.,True) 	
+    #an1DHypothesis.SetLength(0.5,False) #the smallest distance between 2 points
+    #an1DHypothesis.SetLength(1.0,True) # the longest distance between 2 points
+    #an1DHypothesis.SetDeflection(0.5);
+    #an1DHypothessis.SetLength(0.5);
+    #an1DAlgo = StdMeshers.StdMeshers_Regular_1D(1,0,aMeshGen) # interpolation
+    an1DAlgo = StdMeshers.StdMeshers_Regular_1D(1,0,aMeshGen);
+    # 2D
+    #a2dHypothseis = StdMeshers.StdMeshers_TrianglePreference(2,0,aMeshGen) #define the boundary
+    a2dHypothseis = StdMeshers.StdMeshers_QuadranglePreference(2,0,aMeshGen) #define the boundary	
+    a2dAlgo = StdMeshers.StdMeshers_Quadrangle_2D(3,0,aMeshGen)
+    #a2dAlgo = StdMeshers.StdMeshers_MEFISTO_2D(3,0,aMeshGen)	
+    #a2dAlgo = StdMeshers.StdMeshers_ProjectionSource2D(3,0,aMeshGen)
+    #a2dAlgo = StdMeshers.StdMeshers_Projection_2D(3,0,aMeshGen)	
+    #a2dAlgo = StdMeshers.StdMeshers_UseExisting_2D(3,0,aMeshGen)
+
+    #Calculate mesh
+    aMesh.ShapeToMesh(shape)
+    #Assign hyptothesis to mesh
+    aMesh.AddHypothesis(shape,0)
+    aMesh.AddHypothesis(shape,1)
+    aMesh.AddHypothesis(shape,2)
+    aMesh.AddHypothesis(shape,3)
+    #Compute the data
+    aMeshGen.Compute(aMesh,aMesh.GetShapeToMesh())
+    return aMesh;
+	
+def display_mesh(display, the_mesh):
+    # First, erase all
+    #display.EraseAll()
+    # then redisplay the shape
+    #display.showShape(aShape)
+    # then the mesh
+    aDS = SMESH.SMESH_MeshVSLink(the_mesh)
+    aMeshVS = MeshVS.MeshVS_Mesh(True)
+    DMF = 1 # to wrap!
+    MeshVS_BP_Mesh       =  5 # To wrap!
+    aPrsBuilder = MeshVS.MeshVS_MeshPrsBuilder(aMeshVS.GetHandle(),DMF,aDS.GetHandle(),0,MeshVS_BP_Mesh)
+    aMeshVS.SetDataSource(aDS.GetHandle())
+    aMeshVS.AddBuilder(aPrsBuilder.GetHandle(),True)
+    #Create the graphic window and display the mesh
+    context = display.canva._display.Context
+    context.Display(aMeshVS.GetHandle())
+    context.Deactivate(aMeshVS.GetHandle())	

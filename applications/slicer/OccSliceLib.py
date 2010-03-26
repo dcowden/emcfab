@@ -111,23 +111,20 @@ logging.basicConfig(level=logging.DEBUG,
                     stream=sys.stdout)
 
 log = logging.getLogger('slicer');
-log.setLevel(logging.DEBUG);
+log.setLevel(logging.WARN);
 
 					
-##
-##  TODO:
-##   X change pathmanager to allow other formats and easy structure access
-##   X use builtin wxDisplay
-##   X change naming of slice() to something else
-##   X recognize .stp in addition to .step
-##   X install guide
-##   X remove unneed dumpTopology and shapeDescription
-##     add 2d per-slice view on select of slice
-##   X add ability to easily select slice thickness
-##     add separate display for original object and slices
-##   X sew faces from crappy stl files into single faces somehow
-##   X remove reference to profile import
 
+# todo list:
+#   Improve performance
+#      	2d instead of 3d
+#  		section instead of cut
+#		better overlapping checks
+#		compute bounding boc just once
+#	thin feature checks
+#   alternate hatch fill direction
+#   stop using memory by generating as we go
+#
 """
 	##
 	##  Performance Improvement Ideas
@@ -425,32 +422,52 @@ class Slicer:
 			#attempt to create the number of shells requested by the user, plus one additional for infill
 			#regardless, the last successfully created offset is used for hatch infill
 			lastOffset = None;
-			while numShells < self.options.numShells+1 :
-				offset = (-1)*self.resolution*numShells;	
+
+			#compute one offset for the outer boundary. This is required.If we cannot
+			#compute it, we should throw an error
+			currentOffset =  (-1) * self.resolution / 2;
+			lastOffset = self._offsetFace(f, currentOffset);
+			if lastOffset:
+				shells.append(lastOffset);
+			else:
+				log.error("Cannot compute a single offset. Filling Failed");
+				return;
+			
+			#compute one more offset for filling. If this cannot be computed, again,
+			#return
+			currentOffset -= self.resolution;
+			lastOffset = self._offsetFace(f, currentOffset);
+			if lastOffset:
+				shells.append(lastOffset);
+			else:
+				log.error("Cannot compute a second offset for filling.");
+				return;
+			
+			numShells = 0;
+			for i in range(2,self.options.numExtraShells):
+				currentOffset -= self.resolution;
+
 				try:
 					#print "Offsetting at zlevel %0.3f" % slice.zLevel
-					newOffset = self._offsetFace(f,offset);
-					if lastOffset:
-						t = Timer();
+					newOffset = self._offsetFace(f,currentOffset);
+					if newOffset:
 						r = checkMinimumDistanceForOffset(newOffset,self.options.resolution);						
-						log.info("Finished checking offset dims. %0.2f elapsed." % t.elapsed() );
 						if not r:
 							log.warn("Shell is too close to other shells.");
 							break;
 							
-					lastOffset = newOffset
 					#TestDisplay.display.showShape(newOffset);
 					shells.append(newOffset);
-					log.info('Created Shell Successfully.');
+					numShells+=1;
 				except Exception as e:
 					traceback.print_exc(file=sys.stdout);
 					log.warn(e.args);
 					#raise e;
-				numShells+=1;
+
 			
 			#completed
-			if numShells < self.options.numShells:
-				log.warn(("Could only create %d of the requested %d shells:") % (numShells, self.options.numShells ));
+			if numShells < self.options.numExtraShells:
+				log.warn(("Could only create %d of the requested %d shells:") % (numShells, self.options.numExtraShells ));
 			
 			#the last shell is for hatch rather than infill.
 			#if it was possible to create the last shell, that means it is large enough to fill
@@ -467,7 +484,8 @@ class Slicer:
 			h = hatchLib.Hatcher(
 					listFromHSequenceOfShape(makeWiresFromOffsetShape(lastShell),TopAbs.TopAbs_WIRE),
 					slice.zLevel,self.options.inFillSpacing,
-					self.options.inFillAngle );
+					self.options.inFillAngle,
+					[ self.analyzer.xMin,self.analyzer.yMin, self.analyzer.xMax, self.analyzer.yMax]);
 			
 			h.hatch();
 			for e in h.edges():
@@ -688,30 +706,31 @@ def main(filename):
 	#slicing options: use defaults
 	options = SliceOptions();
 	#options.numSlices=1;
-	options.numShells=6;
+	options.numExtraShells=6;
 	options.resolution=0.3;
 	options.inFillAngle=45;
-	options.inFillSpacing=1;
-	options.zMin=1
-	options.zMax=7
+	options.inFillSpacing=.3;
+	options.zMin=10.8
+	options.zMax=12
 	
 	#slice it
 	try:
 		sliceSet = Slicer(shape,options);
 		sliceSet.execute()
 		
-		#showSlices(sliceSet);
+		showSlices(sliceSet);
 		
-		cProfile.runctx('sliceSet.execute()', globals(), locals(), filename="slicer.prof")	;			
+		#cProfile.runctx('sliceSet.execute()', globals(), locals(), filename="slicer.prof")	;			
 		
 		#p = pstats.Stats('slicer.prof')
 		#p.sort_stats('time')
 		#p.print_stats(0.2);
 	except:
+		TestDisplay.display.showShapes(sliceSet.slices.pop().faces );
 		traceback.print_exc(file=sys.stdout);
 		log.critical( 'Slicing Terminated.');	
 		
-	#TestDisplay.display.run();
+	TestDisplay.display.run();
 	
 if __name__=='__main__':
 	nargs = len(sys.argv);

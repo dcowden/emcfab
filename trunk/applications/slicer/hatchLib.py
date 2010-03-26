@@ -227,11 +227,11 @@ class SegmentedBoundary:
 class Hatcher:
 	"class that accepts a shape and produces a set of edges from it"
 	"usage: Hatcher(...) then hatch() then edges()"
-	def __init__(self,wireList,zLevel,infillSpacing,infillAngle):
+	def __init__(self,wireList,zLevel,infillSpacing,infillAngle,bounds):
 	
 		#self.boundaryWires = Wrappers.makeWiresFromOffsetShape(shape);
 		self.boundaryWires = wireList;
-		
+		self.bounds = bounds;
 		self.zLevel = zLevel;
 		self.HATCH_PADDING = 1; #TODO, should be based on unit of measure
 		self.infillSpacing = infillSpacing
@@ -268,6 +268,8 @@ class Hatcher:
 			foundBoundary = False;
 
 			interSections = [];	#list of intersections for just this single hatch line	
+			
+			#Geom2dAPI_InterCurveCurve is the 2-d equivalent, which would be much faster
 			
 			for boundary in self.boundaryWires:
 				brp = BRepExtrema.BRepExtrema_DistShapeShape();
@@ -326,14 +328,21 @@ class Hatcher:
 	def edges(self):
 		log.debug("Following Node Map...");
 		
-		nodesLeft = Hatcher.findUnTracedNodes(self.allIntersectionNodes );
 		
+		nodesLeft = Hatcher.findUnTracedNodes(self.allIntersectionNodes );
+		numNodesLeft = len(nodesLeft);
+		
+		if numNodesLeft == 0:
+			log.warn("No Intersection Nodes were found!");
+			return;
+			
 		currentNode = nodesLeft[0];
 		findingInfillEdge = True; #used to alternate between boundary and infill edges
 		
-		while ( len(nodesLeft) > 0):
+		while ( numNodesLeft > 0):
 		
 			currentNode.used = True;
+			numNodesLeft -= 1;
 			#TestDisplay.display.showShape(Wrappers.make_vertex(currentNode.point));
 			if findingInfillEdge:
 				log.debug("looking for an infill edge..");
@@ -349,7 +358,7 @@ class Hatcher:
 				else:
 					log.debug("current node does not have an infill path available, finding a new starting node ");
 					#must find a new infill edge		
-					currentNode = Hatcher.findFirstInfillNode(nodesLeft);
+					currentNode = self.findFirstInfillNode();
 
 			else:
 				log.debug("looking for a boundary edge..");
@@ -357,7 +366,7 @@ class Hatcher:
 				if not currentNode.canMoveOnBoundary():
 					log.debug("current node does not have any boundary nodes available, selecting new infill node");
 					#need to select a new infill Edge
-					currentNode = Hatcher.findFirstInfillNode(nodesLeft);
+					currentNode = self.findFirstInfillNode();
 
 				else:
 					#can move either way, choose the next one
@@ -376,7 +385,7 @@ class Hatcher:
 				findingInfillEdge = True;
 					
 		
-			nodesLeft = Hatcher.findUnTracedNodes(self.allIntersectionNodes );
+			#nodesLeft = Hatcher.findUnTracedNodes(self.allIntersectionNodes );
 
 		#done-- no nodes left
 		log.debug("No More Nodes Left.");
@@ -387,19 +396,19 @@ class Hatcher:
 		
 		hatchEdges = [];
 		
-		box = Bnd.Bnd_Box();
-		b = BRepBndLib.BRepBndLib();
+		#box = Bnd.Bnd_Box();
+		#b = BRepBndLib.BRepBndLib();
 
-		for w in self.boundaryWires:
-			b.Add(w,box);
-		[xMin, yMin , zMin, xMax,yMax,zMax  ] = box.Get();	
+		#for w in self.boundaryWires:
+		#	b.Add(w,box);
+		#[xMin, yMin , zMin, xMax,yMax,zMax  ] = box.Get();	
 		#print 'bounds are',xMin,yMin,xMax,yMax
 		#add some space to make sure we are outside the boundaries
 
-		xMin = xMin - ( self.HATCH_PADDING);
-		yMin = yMin - ( self.HATCH_PADDING);		 
-		xMax = xMax + (self.HATCH_PADDING);
-		yMax = yMax + (self.HATCH_PADDING) ;
+		xMin = self.bounds[0] - ( self.HATCH_PADDING);
+		yMin = self.bounds[1] - ( self.HATCH_PADDING);		 
+		xMax = self.bounds[2] + (self.HATCH_PADDING);
+		yMax = self.bounds[3] + (self.HATCH_PADDING) ;
 
 		#compute direction of line
 		lineDir = gp.gp_Dir( 1,math.cos(math.radians(self.infillAngle)),self.zLevel );
@@ -433,12 +442,13 @@ class Hatcher:
 			if not n.used:
 				un.append(n);
 		return un;
-	@staticmethod
-	def findFirstInfillNode(listOfNodes):
+
+	def findFirstInfillNode(self):
 		"find the first node that can be part of an infill edge"
-		for n in listOfNodes:
+		for n in self.allIntersectionNodes:
 			if n.infillNode and (not n.used) :
 				return n;
+				
 	@staticmethod
 	def linearEdgeBetweenNodes(startNode,endNode):
 		"make a linear edge from two points "

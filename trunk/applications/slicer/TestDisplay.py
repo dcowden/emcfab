@@ -22,6 +22,10 @@ class AppFrame(wx.Frame):
       self.app = app;
   def showShape(self,shape):
 		self.canva._display.DisplayShape(shape)
+  def showShapes(self,listOfShape):
+		for s in listOfShape:
+			self.canva._display.DisplayShape(s);
+			
   def eraseAll(self):
   		self.canva._display.EraseAll();
   def run(self):

@@ -105,13 +105,10 @@ import TestDisplay
 import cProfile
 import pstats
 
-###Logging Configuration
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s [%(funcName)s] %(levelname)s %(message)s',
-                    stream=sys.stdout)
+
 
 log = logging.getLogger('slicer');
-log.setLevel(logging.WARN);
+
 
 					
 
@@ -317,10 +314,8 @@ class SliceOptions:
 		self.DEFAULT_NUMSHELLS = 5;
 		self.inFillAngle = 30;
 		self.hatchPadding = 0.15; # a percentage
-		self.inFillSpacing=1;
-		#per-slice options
-		self.numShells = self.DEFAULT_NUMSHELLS;
-		
+		self.inFillSpacing=1;	
+	
 """
 	a set of slices that together make a part
 """
@@ -330,7 +325,7 @@ class Slicer:
 		self.slices=[]
 		self.shape = shape;
 		self.analyzer = SolidAnalyzer(shape);
-		
+		self.hatchReversed = False;
 		self.options = options;		
 
 		self.saveSliceFaces = True;				
@@ -385,6 +380,7 @@ class Slicer:
 		#make slices
 		zLevel = self.zMin + self.FIRST_LAYER_OFFSET;
 		sliceNumber = 1;
+
 		t2 = Timer();
 		while zLevel < self.zMax:
 			log.warn( "Creating Slice %0d, z=%0.3f " % ( sliceNumber,zLevel));
@@ -395,9 +391,11 @@ class Slicer:
 				#todo: this should probably be componentize: filling is quite complex.
 				self._fillSlice(slice);
 
+				
 			zLevel += self.sliceHeight
 			sliceNumber += 1;
 			
+			log.warn("Slice %d : %d paths" % (sliceNumber,  len(slice.fillWires) + len(slice.fillEdges) ));
 			#compute an estimate of time remaining every 10 or so slices
 			if reportInterval > 0 and sliceNumber % reportInterval == 0:
 				pc = ( zLevel - self.zMin )/   ( self.zMax - self.zMin) * 100;
@@ -484,14 +482,16 @@ class Slicer:
 			h = hatchLib.Hatcher(
 					listFromHSequenceOfShape(makeWiresFromOffsetShape(lastShell),TopAbs.TopAbs_WIRE),
 					slice.zLevel,self.options.inFillSpacing,
-					self.options.inFillAngle,
+					self.hatchReversed ,
 					[ self.analyzer.xMin,self.analyzer.yMin, self.analyzer.xMax, self.analyzer.yMax]);
 			
+		
 			h.hatch();
 			for e in h.edges():
 				slice.fillEdges.append(e);
-					
-		log.info("Filling Complete, Created %d paths." % len(slice.fillWires)  );
+		
+		self.hatchReversed = not self.hatchReversed;		
+		log.warn("Filling Complete, Created %d paths." % len(slice.fillWires)  );
 
 
 		
@@ -705,13 +705,12 @@ def main(filename):
 
 	#slicing options: use defaults
 	options = SliceOptions();
-	#options.numSlices=1;
-	options.numExtraShells=6;
-	options.resolution=0.3;
-	options.inFillAngle=45;
-	options.inFillSpacing=.3;
-	options.zMin=10.8
-	options.zMax=12
+	options.numSlices=2;
+	options.numExtraShells=3;
+	options.resolution=.3;
+	options.inFillSpacing=1.;
+	#options.zMin=10. 
+	#options.zMax=12
 	
 	#slice it
 	try:
@@ -733,6 +732,11 @@ def main(filename):
 	TestDisplay.display.run();
 	
 if __name__=='__main__':
+
+	###Logging Configuration
+	logging.basicConfig(level=logging.WARN,
+						format='%(asctime)s [%(funcName)s] %(levelname)s %(message)s',
+						stream=sys.stdout)
 	nargs = len(sys.argv);
 
 	if nargs > 1:

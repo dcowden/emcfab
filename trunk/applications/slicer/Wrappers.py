@@ -15,7 +15,6 @@ topoDS = TopoDS.TopoDS();
 #brt = BRepTools.BRepTools();
 
 log = logging.getLogger('Wrapper');
-log.setLevel(logging.INFO);
 
 """
 	Utility class to provide timing information

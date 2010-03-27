@@ -27,14 +27,9 @@ from OCC import TopoDS
 import Wrappers
 import TestDisplay
 
-###Logging Configuration
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s [%(funcName)s] %(levelname)s %(message)s',
-                    stream=sys.stdout)
+
 
 log = logging.getLogger('hatchLib');
-log.setLevel(logging.INFO);
-
 
 ts = TopoDS.TopoDS();
 
@@ -227,7 +222,7 @@ class SegmentedBoundary:
 class Hatcher:
 	"class that accepts a shape and produces a set of edges from it"
 	"usage: Hatcher(...) then hatch() then edges()"
-	def __init__(self,wireList,zLevel,infillSpacing,infillAngle,bounds):
+	def __init__(self,wireList,zLevel,infillSpacing,reverse,bounds):
 	
 		#self.boundaryWires = Wrappers.makeWiresFromOffsetShape(shape);
 		self.boundaryWires = wireList;
@@ -235,7 +230,7 @@ class Hatcher:
 		self.zLevel = zLevel;
 		self.HATCH_PADDING = 1; #TODO, should be based on unit of measure
 		self.infillSpacing = infillSpacing
-		self.infillAngle = infillAngle
+		self.reverse = reverse
 		self.allIntersectionNodes = [];
 
 		
@@ -395,43 +390,84 @@ class Hatcher:
 		log.debug("Making Hatch Lines...");
 		
 		hatchEdges = [];
-		
-		#box = Bnd.Bnd_Box();
-		#b = BRepBndLib.BRepBndLib();
-
-		#for w in self.boundaryWires:
-		#	b.Add(w,box);
-		#[xMin, yMin , zMin, xMax,yMax,zMax  ] = box.Get();	
-		#print 'bounds are',xMin,yMin,xMax,yMax
-		#add some space to make sure we are outside the boundaries
-
+		#this algo is a simple one that simply does 45 degree hatching
 		xMin = self.bounds[0] - ( self.HATCH_PADDING);
 		yMin = self.bounds[1] - ( self.HATCH_PADDING);		 
 		xMax = self.bounds[2] + (self.HATCH_PADDING);
 		yMax = self.bounds[3] + (self.HATCH_PADDING) ;
+		dX = xMax  - xMin;
+		dY = yMax - yMin;
+		maxP = 1.414 * max(dX,dY); # the diagonal of the square. this is our indexing parameter
 
-		#compute direction of line
-		lineDir = gp.gp_Dir( 1,math.cos(math.radians(self.infillAngle)),self.zLevel );
-		angleRads = math.radians(self.infillAngle);
-		xSpacing = self.infillSpacing / math.sin(angleRads);		
 		
-		#tan theta = op/adj , adj =op / tan 
-		xStart = ( xMin - (yMax - yMin)/math.tan(angleRads));
-		xStop = xMax;	
-		log.debug("xspacing = %0.2f, start = %0.2f, stop= %0.2f" %( xSpacing ,xStart, xStop) );
-		for xN in Wrappers.frange6(xStart,xStop,xSpacing):
-			
+		for p in Wrappers.frange6(0,maxP,self.infillSpacing):				
 			#make an edge to intersect
-			p1 = gp.gp_Pnt(xN,yMin,self.zLevel);
-			p2 = gp.gp_Pnt(xMax, (xMax - xN)* math.tan(angleRads) + yMin, self.zLevel);
-		
+			dl = p * 1.414 #length of a side
+			if self.reverse:
+				#travelling lower left to upper right
+				p1 = gp.gp_Pnt(xMin ,yMin + dl,self.zLevel);
+				p2 = gp.gp_Pnt(xMin + dl,yMin, self.zLevel);			
+			else:
+				#upper left to lower right
+				p1 = gp.gp_Pnt(xMin,yMax - dl,self.zLevel);
+				p2 = gp.gp_Pnt(xMin + dl,yMax,self.zLevel );
+
 			edge = Wrappers.edgeFromTwoPoints(p1,p2);
 			#TestDisplay.display.showShape(edge);
-			hatchEdges.append(edge);
+			if edge:
+				hatchEdges.append(edge);			
+		
+		
+		"""
+		    The below algo could be modified, but what is the point?
+			most everyone will want 45 degrees, and that's ea
+			
+			
+		#compute direction of line
+		lineDir = gp.gp_Dir( 1,math.cos(math.radians(self.infillAngle)),self.zLevel );
+		
+		#disable built-in setting
+		angleRads = math.radians(45.0);
+		xSpacing = self.infillSpacing / math.sin(angleRads);		
+		xStart = xMin - ( xMax  - xMin );
+		xStop = xMax;
+		#tan theta = op/adj , adj =op / tan 
+
+		
+		if self.infillAngle == 90:
+			raise Exception, "90 Degree Hatching is not supported"
+			
+		if self.infillAngle < 90:
+			xStart = ( xMin - (yMax - yMin)/math.tan(angleRads));
+			xStop = xMax;			
+			log.warn("xspacing = %0.2f, start = %0.2f, stop= %0.2f" %( xSpacing ,xStart, xStop) );
+			for xN in Wrappers.frange6(xStart,xStop,xSpacing):
+				
+				#make an edge to intersect
+				p1 = gp.gp_Pnt(xN,yMin,self.zLevel);
+				p2 = gp.gp_Pnt(xMax, (xMax - xN)* math.tan(angleRads) + yMin, self.zLevel);
+			
+				edge = Wrappers.edgeFromTwoPoints(p1,p2);
+				#TestDisplay.display.showShape(edge);
+				hatchEdges.append(edge);			
+		else:
+			xStart = xMin;
+			xStop = ( xMin - (yMax - yMin)/math.tan(angleRads));
+			log.warn("xspacing = %0.2f, start = %0.2f, stop= %0.2f" %( xSpacing ,xStart, xStop) );
+			for xN in Wrappers.frange6(xStart,xStop,xSpacing):
+				
+				#make an edge to intersect
+				p1 = gp.gp_Pnt(xMin, ( xN -xMax )* math.tan(angleRads) + yMin, self.zLevel);
+				p2 = gp.gp_Pnt(xN,yMin,self.zLevel);
+				
+			
+				edge = Wrappers.edgeFromTwoPoints(p1,p2);
+				TestDisplay.display.showShape(edge);
+				hatchEdges.append(edge);
+		"""
 		
 		return hatchEdges;		
 		
-
 	
 	@staticmethod
 	def findUnTracedNodes(listOfNodes):
@@ -484,9 +520,13 @@ def makeCircleWire():
 	mw = BRepBuilderAPI.BRepBuilderAPI_MakeWire();
 	mw.Add(e1);
 	return mw.Wire();
+
 if __name__=='__main__':
 
-	
+	###Logging Configuration
+	logging.basicConfig(level=logging.DEBUG,
+						format='%(asctime)s [%(funcName)s] %(levelname)s %(message)s',
+						stream=sys.stdout)	
 	w = makeSquareWire();
 	w2=makeCircleWire();
 	#TestDisplay.display.showShape(w2);
@@ -495,7 +535,7 @@ if __name__=='__main__':
 	#d.showShape(w);
 	#TestDisplay.display.eraseAll();
 	#hatch it
-	h  = Hatcher([w2,w],0,0.1,45);
+	h  = Hatcher([w2,w],0,0.1,False,[ 0,0,10,10] );
 	h.hatch();
 	#time.sleep(40);
 	for e in h.edges():

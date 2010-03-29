@@ -104,7 +104,7 @@ import hatchLib
 import TestDisplay
 import cProfile
 import pstats
-
+import GcodeExporter
 
 
 log = logging.getLogger('slicer');
@@ -705,10 +705,10 @@ def main(filename):
 
 	#slicing options: use defaults
 	options = SliceOptions();
-	options.numSlices=2;
+	options.numSlices=1;
 	options.numExtraShells=3;
 	options.resolution=.3;
-	options.inFillSpacing=1.;
+	options.inFillSpacing=5.;
 	#options.zMin=10. 
 	#options.zMax=12
 	
@@ -718,6 +718,30 @@ def main(filename):
 		sliceSet.execute()
 		
 		showSlices(sliceSet);
+		
+		#export gcode
+		ge = GcodeExporter.GcodeExporter();
+		ge.incremental = False;
+		ge.useArcs = True;
+		
+		
+		f = open('test.nc','w');
+		
+		for c in ge.header():
+			f.write(c);
+		
+		for s in sliceSet.slices:
+			f.write(ge.comment("Slice Number %d" % s.layerNo ));
+			
+			f.write(ge.comment("FillWires"));
+			for gc in ge.gcode(s.fillWires):				
+				f.write(gc);
+			f.write(ge.comment("InfillEdges"));
+			for gc in ge.gcode(s.fillEdges):
+				f.write(gc);
+		
+		f.close();
+		
 		
 		#cProfile.runctx('sliceSet.execute()', globals(), locals(), filename="slicer.prof")	;			
 		

@@ -495,31 +495,6 @@ class Hatcher:
 		else:
 			return None;	
 
-def makeSquareWire():
-	"this is a square"
-	p1 = gp.gp_Pnt(0,0,0);
-	p2 = gp.gp_Pnt(5,0,0);
-	p3 = gp.gp_Pnt(5,5,0);
-	p4 = gp.gp_Pnt(0,5,0);
-	e1 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(p1,p2).Edge();
-	e2 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(p2,p3).Edge();
-	e3 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(p3,p4).Edge();
-	e4 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(p4,p1).Edge();
-	mw = BRepBuilderAPI.BRepBuilderAPI_MakeWire();
-	mw.Add(e1);
-	mw.Add(e2);
-	mw.Add(e3);
-	mw.Add(e4);
-	return mw.Wire();
-
-def makeCircleWire():
-	"designed to be include inside the square to simulate an island"
-	
-	circle = gp.gp_Circ(gp.gp_Ax2(gp.gp_Pnt(2,2,0),gp.gp().DZ()),1);
-	e1 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(circle).Edge();
-	mw = BRepBuilderAPI.BRepBuilderAPI_MakeWire();
-	mw.Add(e1);
-	return mw.Wire();
 
 if __name__=='__main__':
 
@@ -527,8 +502,8 @@ if __name__=='__main__':
 	logging.basicConfig(level=logging.DEBUG,
 						format='%(asctime)s [%(funcName)s] %(levelname)s %(message)s',
 						stream=sys.stdout)	
-	w = makeSquareWire();
-	w2=makeCircleWire();
+	w = TestDisplay.makeSquareWire();
+	w2=TestDisplay.makeCircleWire();
 	#TestDisplay.display.showShape(w2);
 	#TestDisplay.display.showShape(w);
 	

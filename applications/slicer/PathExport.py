@@ -14,30 +14,47 @@ import sys,logging
 from OCC import TopoDS, TopExp, TopAbs,BRep,gp,Geom,GeomAbs,GeomAPI,BRepBuilderAPI
 
 import Wrappers
-
+import TestDisplay
 topoDS = TopoDS.TopoDS();
 
-###Logging Configuration
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s [%(funcName)s] %(levelname)s %(message)s',
-                    stream=sys.stdout)
 
-log = logging.getLogger('slicer');
-log.setLevel(logging.WARNING);
 
+log = logging.getLogger('PathExport');
+
+
+"""
+	A Move of some kind
+"""
+class Move:
+	def __init__(self,fromPoint,toPoint):
+	
+		if fromPoint == None:
+			fromPoint = gp.gp_Pnt(0,0,0);
+			
+		self.fromPoint = fromPoint;
+		self.toPoint = toPoint;
+		self.dir = gp.gp_Vec(fromPoint,toPoint);
+		
+	def vector(self):
+		"returns a vector for this move. if fromPoint is empty, assumes the origin"
+		return [ self.toPoint.X(), self.toPoint.Y(), self.toPoint.Z() ];
+	
+	def distance(self):
+		"returns a triple that represents the distance the move is on each axis"
+		return [  self.toPoint.X() - self.fromPoint.X(), 
+				  self.toPoint.Y() - self.fromPoint.Y(),
+				  self.toPoint.Z() - self.fromPoint.Z() ];
 """
 	A Linear move to a particular point
 	The move may have the pen down or not
 	
 	FromPoint can be null if there is no defined current point
 """
-class LinearMove:
+class LinearMove(Move):
 	def __init__(self, fromPoint, toPoint,draw=True):
-		self.toPoint = toPoint;
+		Move.__init__(self,fromPoint,toPoint);
 		self.draw = draw;
-		if fromPoint:
-			self.dir = gp.gp_Vec(fromPoint,toPoint);
-	
+
 	def __str__(self):
 		if self.draw:
 			s = "DrawTo: ";
@@ -47,12 +64,12 @@ class LinearMove:
 		
 """
     A move in an arc to another point.
-	Arc moves have an endpoint, a center poitn, and are clockwise or counterclockwise
+	Arc moves have an endpoint, a center point, and are clockwise or counterclockwise
 """
-class ArcMove():
-	def __init__(self,endPoint,centerPoint,ccw):
+class ArcMove(Move):
+	def __init__(self,fromPoint,toPoint,centerPoint,ccw):
+		Move.__init__(self,fromPoint,toPoint);
 		self.centerPoint = centerPoint;
-		self.endPoint = endPoint;
 		self.ccw = ccw;
 
 	def __str__(self):
@@ -60,8 +77,8 @@ class ArcMove():
 			s = "CCW ArcTo: ";
 		else:
 			s = "CW ArcTo: ";
-		return s + str(Wrappers.Point(self.endPoint)) + ", center=" + str(Wrappers.Point(self.centerPoint)) ;		
-		
+		return s + str(Wrappers.Point(self.toPoint)) + ", center=" + str(Wrappers.Point(self.centerPoint)) ;		
+
 """
   Follows edges and wires, generating 
   a series of moves to allow converting them
@@ -77,12 +94,12 @@ class ArcMove():
   * abstract moves into structures for other libs to use ( svg and gcode )
 """	
 class ShapeDraw():
-	def __init__(self,useArcs):
+	def __init__(self,useArcs,curveDeflection ):
 		"useArcs determines if we should generate ArcMoves or not"
 		self.currentPoint = None;
 		self.pendingLinearMove = None;
 		self.tolerance = 0.0001;
-		self.approximatedCurveDeflection = 0.01;
+		self.approximatedCurveDeflection = curveDeflection;
 		self.useArcs = useArcs;
 		
 	
@@ -214,11 +231,12 @@ class ShapeDraw():
 				#assume we are essentially in 2d space, so we're looking only at wehter the
 				#axis of the circle is +z or -z
 				zDir = gp.gp().DZ();
-				ccw = zDir.IsEqual(axisDir,self.tolerance);
+				
 				if ew.reversed:
 					zDir = zDir.Reversed();
+				ccw = zDir.IsEqual(axisDir,self.tolerance);	
 				self.currentPoint = ew.lastPoint;
-				yield ArcMove(ew.lastPoint,center,ccw);				
+				yield ArcMove(ew.firstPoint, ew.lastPoint,center,ccw);				
 			else:
 				log.debug("Curve is not a line or a circle");
 				"a curve, or a circle we'll approximate"
@@ -247,8 +265,7 @@ class ShapeDraw():
 def testMoves(shapeList,useArcs=True):
 	"returns the number of moves in the list provided"
 	moves = [];
-	f = ShapeDraw(useArcs);
-	f.approximatedCurveDeflection = 0.1;
+	f = ShapeDraw(useArcs,0.01);
 	for move in f.follow(shapeList):
 		print "\t",move;
 		moves.append(move);		
@@ -271,6 +288,11 @@ def makeTestWire():
 	
 	
 if __name__=='__main__':
+
+	###Logging Configuration
+	logging.basicConfig(level=logging.DEBUG,
+						format='%(asctime)s [%(funcName)s] %(levelname)s %(message)s',
+						stream=sys.stdout)
 	"PathExport: A Module for Navigating Wires, Edges, and Shapes"
 	print "Running Test Cases..."
 	
@@ -300,7 +322,7 @@ if __name__=='__main__':
 	#  Moveto 40,50
 	#  ArcTo  50,40 with center 40,40, ccw direction
 	#  LineTo 80,40
-	assert testMoves([wire]) == 3,"Should be 20 moves?"
+	assert testMoves([wire]) == 3,"Should be 3 moves?"
 	print "[OK]"
 	
 	print "Arcs and Lines-- No Arcs"
@@ -308,4 +330,7 @@ if __name__=='__main__':
 	# draw to 50,40 in a lot of little moves
 	# draw to 80,40 in one move
 	assert testMoves([wire],False) > 10,"Should be lots of moves"
+	
+	print "Square Wire"
+	assert testMoves([TestDisplay.makeSquareWire()],False) > 3;
 	

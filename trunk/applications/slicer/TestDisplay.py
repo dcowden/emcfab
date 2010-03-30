@@ -14,6 +14,7 @@ from OCC import BRepLProp,BRepGProp,BRepBuilderAPI,BRepPrimAPI,GeomAdaptor,GeomA
 from OCC import BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI,BRepAdaptor,IntCurvesFace,Approx,BRepLib
 from OCC.Display.wxDisplay import wxViewer3d
 
+import Wrappers
 
 class AppFrame(wx.Frame):
   def __init__(self, parent,title,x,y,app):
@@ -48,6 +49,21 @@ def makeSquareWire():
 	mw.Add(e4);
 	return mw.Wire();
 
+def makeReversedWire():
+	"this is a square"
+	p1 = gp.gp_Pnt(.5,.5,0);
+	p2 = gp.gp_Pnt(1,4,0);
+	p3 = gp.gp_Pnt(2,4,0);
+	e1 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(p1,p2).Edge();
+	e2 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(p3,p2).Edge();
+	e2.Reverse();
+	e3 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(p3,p1).Edge();
+	mw = BRepBuilderAPI.BRepBuilderAPI_MakeWire();
+	mw.Add(e1);
+	mw.Add(e2);
+	mw.Add(e3);
+	return mw.Wire();	
+	
 def makeCircleWire():
 	"designed to be include inside the square to simulate an island"
 	
@@ -57,6 +73,21 @@ def makeCircleWire():
 	mw.Add(e1);
 	return mw.Wire();	
 
+def makeEdgeIndicator(edge):
+	"makes an indicator showing which way the edge goes"
+	ew = Wrappers.Edge(edge);
+	fp = ew.firstParameter;
+	lp = ew.lastParameter;
+	
+	if ew.reversed:
+		p = fp + (( lp - fp ) * 4 / 5 );
+		print "Edge is reversed!"
+	else:
+		p = fp + ((lp - fp) /5 );
+	midPnt = ew.curve.Value(p);
+	return Wrappers.make_vertex(midPnt);
+
+	
 app = wx.PySimpleApp()
 wx.InitAllImageHandlers()
 display = AppFrame(None,"Test Debug Display",1220,20,app)

@@ -487,7 +487,12 @@ class Slicer:
 			
 		
 			h.hatch();
+			i = 0;
 			for e in h.edges():
+				i += 1;
+				TestDisplay.display.showShape(e);
+				TestDisplay.display.showShape(TestDisplay.makeEdgeIndicator(e));
+				#time.sleep(5);
 				slice.fillEdges.append(e);
 		
 		self.hatchReversed = not self.hatchReversed;		
@@ -730,13 +735,14 @@ def main(filename):
 		for c in ge.header():
 			f.write(c);
 		
+		
 		for s in sliceSet.slices:
 			f.write(ge.comment("Slice Number %d" % s.layerNo ));
-			
-			f.write(ge.comment("FillWires"));
-			for gc in ge.gcode(s.fillWires):				
-				f.write(gc);
-			f.write(ge.comment("InfillEdges"));
+			log.warn("SLICE NUMBER %d" % s.layerNo );
+			#f.write(ge.comment("FillWires"));
+			#for gc in ge.gcode(s.fillWires):				
+			#	f.write(gc);
+			#f.write(ge.comment("InfillEdges"));
 			for gc in ge.gcode(s.fillEdges):
 				f.write(gc);
 		
@@ -749,7 +755,7 @@ def main(filename):
 		#p.sort_stats('time')
 		#p.print_stats(0.2);
 	except:
-		TestDisplay.display.showShapes(sliceSet.slices.pop().faces );
+		#TestDisplay.display.showShapes(sliceSet.slices.pop().faces );
 		traceback.print_exc(file=sys.stdout);
 		log.critical( 'Slicing Terminated.');	
 		
@@ -758,7 +764,7 @@ def main(filename):
 if __name__=='__main__':
 
 	###Logging Configuration
-	logging.basicConfig(level=logging.WARN,
+	logging.basicConfig(level=logging.INFO,
 						format='%(asctime)s [%(funcName)s] %(levelname)s %(message)s',
 						stream=sys.stdout)
 	nargs = len(sys.argv);

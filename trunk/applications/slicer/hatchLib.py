@@ -182,11 +182,27 @@ class SegmentedBoundary:
 		if startNode.boundary  != endNode.boundary:
 			raise ValueError,"Start Node and End Node are not on the same boundary"
 			
-		log.debug("Building Edge from parameter %0.2f to %0.2f" % ( startNode.parameter, endNode.parameter) );	
-		builder =BRepBuilderAPI.BRepBuilderAPI_MakeEdge(startNode.boundary.approxCurve, startNode.parameter,endNode.parameter);
+		
+		sP = startNode.parameter;
+		eP = endNode.parameter;
+		log.warn("Building Edge from parameter %0.2f to %0.2f" % ( startNode.parameter, endNode.parameter) );
+		if sP > eP:
+			print "reversing parameters"
+			builder =BRepBuilderAPI.BRepBuilderAPI_MakeEdge(startNode.boundary.approxCurve, eP,sP);
+		else:
+			builder =BRepBuilderAPI.BRepBuilderAPI_MakeEdge(startNode.boundary.approxCurve, sP,eP);
+			
 		builder.Build();
 		if builder.IsDone():
-			return builder.Edge();
+			e = builder.Edge();
+			
+			if sP > eP:
+				print" reversing edge."
+				e .Reverse();
+			
+			print "finished making edge."
+			print "Orientation = ",e.Orientation()
+			return e;
 		else:
 			log.error( "Error building Edge: Error Number %d" % builder.Error());
 			return None;
@@ -378,9 +394,6 @@ class Hatcher:
 						currentNode = currentNode.prevNode;
 						
 				findingInfillEdge = True;
-					
-		
-			#nodesLeft = Hatcher.findUnTracedNodes(self.allIntersectionNodes );
 
 		#done-- no nodes left
 		log.debug("No More Nodes Left.");

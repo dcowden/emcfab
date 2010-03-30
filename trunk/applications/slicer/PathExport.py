@@ -98,7 +98,7 @@ class ShapeDraw():
 		"useArcs determines if we should generate ArcMoves or not"
 		self.currentPoint = None;
 		self.pendingLinearMove = None;
-		self.tolerance = 0.0001;
+		self.tolerance = 0.001;
 		self.approximatedCurveDeflection = curveDeflection;
 		self.useArcs = useArcs;
 		
@@ -211,7 +211,7 @@ class ShapeDraw():
 			if self.pendingLinearMove:				
 				if  not self.pendingLinearMove.dir.IsParallel(thisMoveDir,self.tolerance):
 					"this move is parallel to the last one, so replace with this one"
-					log.debug("Move is redundant, replacing with this one.");
+					log.warning("Move is redundant, replacing with this one.");
 					yield self.pendingLinearMove;
 
 			log.debug("Saving Move as Pending.");
@@ -220,6 +220,7 @@ class ShapeDraw():
 		else:
 			t= self._fetchPendingMove();
 			if t:
+				log.debug("Flushing a pending linear move...");
 				yield t;
 
 			if ew.isCircle() and self.useArcs:
@@ -290,7 +291,7 @@ def makeTestWire():
 if __name__=='__main__':
 
 	###Logging Configuration
-	logging.basicConfig(level=logging.DEBUG,
+	logging.basicConfig(level=logging.WARN,
 						format='%(asctime)s [%(funcName)s] %(levelname)s %(message)s',
 						stream=sys.stdout)
 	"PathExport: A Module for Navigating Wires, Edges, and Shapes"

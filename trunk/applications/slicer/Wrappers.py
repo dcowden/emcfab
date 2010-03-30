@@ -191,11 +191,11 @@ class Edge:
 
 		#compute the first and last points, which are very commonly used		
 		if edge.Orientation() == TopAbs.TopAbs_FORWARD:
-			self.reversed = True;
+			self.reversed = False;
 			self.firstPoint = p1;
 			self.lastPoint = p2;
 		else:
-			self.reversed = False;
+			self.reversed = True;
 			self.firstPoint = p2;
 			self.lastPoint = p1;
 		
@@ -208,14 +208,14 @@ class Edge:
 	def discretePoints(self,deflection):
 		"a generator for all the points on the edge, in forward order"
 		gc = GCPnts.GCPnts_QuasiUniformDeflection(self.curve,deflection,self.firstParameter,self.lastParameter);
-		
+		print "Making Dicrete Points!"
 		i = 1;
 		numPts = gc.NbPoints();
 		while i<=numPts:
-			#if self.reversed:
-			#	yield gc.Value(numPts-i+1);
-			#else:
-			yield gc.Value(i);
+			if self.reversed:
+				yield gc.Value(numPts-i+1);
+			else:
+				yield gc.Value(i);
 			i+=1;
 			
 	def __str__(self):

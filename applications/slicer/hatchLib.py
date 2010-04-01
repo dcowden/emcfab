@@ -106,6 +106,14 @@ class SegmentedBoundary:
 		self.tolerance = 0.000001;
 
 		self.nodes = set();
+		self.edges = [];
+		
+		#build a map of the edges
+		#we'll use this to build edges between nodes later on
+		wr = Wrappers.Wire(wire);
+		for e in wr.edges():
+			self.edges.append(e);
+		
 		
 		#make a parameterized approximation of the wire
 		#TODO: why do i have to approximate the curve instead of just using the curve itself?

@@ -475,12 +475,12 @@ class Slicer:
 			for s in shells:
 				slice.fillWires.extend(
 					listFromHSequenceOfShape(
-						makeWiresFromOffsetShape(s),TopAbs.TopAbs_WIRE));
+						makeWiresFromOffsetShape(s)));
 			
 			#use last shell for hatching
 			#debugShape(lastShell);
 			h = hatchLib.Hatcher(
-					listFromHSequenceOfShape(makeWiresFromOffsetShape(lastShell),TopAbs.TopAbs_WIRE),
+					listFromHSequenceOfShape(makeWiresFromOffsetShape(lastShell)),
 					slice.zLevel,self.options.inFillSpacing,
 					self.hatchReversed ,
 					[ self.analyzer.xMin,self.analyzer.yMin, self.analyzer.xMax, self.analyzer.yMax]);

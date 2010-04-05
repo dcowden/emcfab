@@ -67,11 +67,11 @@ def make_vertex(pnt):
 	s.Build();
 	return s.Shape();
 
-def listFromHSequenceOfShape(seq, castToType):
+def listFromHSequenceOfShape(seq):
 	"return a list from a sequence o shape"
 	newList = [];
 	for i in range(1,seq.Length()+1):
-		newList.append(cast(seq.Value(i),castToType));
+		newList.append(cast(seq.Value(i)));
 	return newList;
 	
 def edgeFromTwoPoints(p1,p2):
@@ -151,10 +151,25 @@ def wireFromEdges(edgeList):
 def edgeFromTwoPointsOnCurve(handleCurve,p1,p2):
 	"make an edge from a curve and two parameters"
 	log.debug("Making Edge from Parameters %0.2f, %0.2f" %( p1, p2) );
+	
+	#this logic appears backwards, but it produces the right result! Why?
+	if p1 < p2:
+		log.info("Parameters are inverted, so we'll reverse the resulting edge");
+		rev = True;
+	else:
+		rev = False;
+
 	builder = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(handleCurve, p1,p2);
 	builder.Build();
 	if builder.IsDone():
-		return builder.Edge();
+		e = builder.Edge();
+		#if e.Orientation() != TopAbs.TopAbs_FORWARD:
+			#OCC docs say that passing in reversed parameters will create a reversed edge, but this appears not
+			#to ever be the case.
+		#	print "Created a reversed Edge!";
+		if rev:
+			e.Reverse();
+		return e;
 	else:
 		log.error( "Error building Edge: Error Number %d" % builder.Error());
 		raise ValueError,"Error building Edge: Error Number %d" % builder.Error();
@@ -218,7 +233,20 @@ class Edge:
 	
 	def trimmedEdge(self,parameter1, parameter2):
 		"make a trimmed edge based on a start and end parameter on the same curve"
-		return edgeFromTwoPointsOnCurve(self.handleCurve, parameter1, parameter2 );
+		#if parameter1 > parameter2:
+		#	p1 = parameter1;
+		#	p2 = parameter2;
+		#	rev = False;
+		#else:
+		#	p1 = parameter2;
+		#	p2 = parameter1;
+		#	rev = True;
+		e = edgeFromTwoPointsOnCurve(self.handleCurve, parameter1, parameter2 );
+		e.Reverse();
+		#if rev:
+		#	e.Reverse();
+			
+		return e;
 		
 	def isCircle(self):
 		return self.curve.GetType() == GeomAbs.GeomAbs_Circle;

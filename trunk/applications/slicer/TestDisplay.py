@@ -96,10 +96,9 @@ def makeEdgeIndicator(edge):
 	lp = ew.lastParameter;
 	
 	if ew.reversed:
-		p = fp + (( lp - fp ) * 4 / 5 );
-		print "Edge is reversed!"
+		p = fp + (( lp - fp ) * 1 / 5 );
 	else:
-		p = fp + ((lp - fp) /5 );
+		p = fp + ((lp - fp) * 4 /5 );
 	midPnt = ew.curve.Value(p);
 	return Wrappers.make_vertex(midPnt);
 

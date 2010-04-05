@@ -120,11 +120,12 @@ class Node:
 
 def findNextInfillNode(node):
 	"finds the next infill node in either direction"
-	n = findNextInfillNodeForward(node.nextNode);
+	n = findNextInfillNodeForward(node.nextNode,[node]);
 	if n:
 		return n;
-		
-	n = findNextInfillNodeBackward(node.prevNode);
+	log.debug("could not find next node");
+	
+	n = findNextInfillNodeBackward(node.prevNode,[node]);
 	if n:
 		return n;
 	
@@ -132,6 +133,7 @@ def findNextInfillNode(node):
 	
 def findNextInfillNodeForward(node,path=[]):
 	"finds the next infill node in the forward direction, starting with supplied node"
+
 	path = path +[node];
 	if node.used:
 		return None;
@@ -139,25 +141,25 @@ def findNextInfillNodeForward(node,path=[]):
 	if node.vertex:
 		log.debug("node is a vertex, deferring");
 		if node.nextNode:
-			return  findNextInfillNodeForward(node.nextNode,path);
+			return findNextInfillNodeForward(node.nextNode,path);
 	else:
 		if node.canMoveInfill():
-			return path + [node];
+			return path ;
 			
 	return None;		
 
 def findNextInfillNodeBackward(node,path=[]):
 	"finds the next infill node in the forward direction, starting with supplied node"
-	if node.used:
-		return None;
+	path = path +[node];
 		
 	if node.vertex:
 		log.debug("node is a vertex, deferring");
-		if node.nextNode:
+		if node.prevNode:
 			return  findNextInfillNodeBackward(node.prevNode,path);
+
 	else:
 		if node.canMoveInfill():
-			return path + [node];
+			return path;
 			
 	return None;	
 
@@ -224,7 +226,6 @@ class SegmentedBoundary:
 			be = BoundaryEdge(e);
 			self.edges.append(be);
 			h = hashE(e);
-			print "Found Edge %d " % h;
 			self.edgeHashMap[be.id] = be;
 
 		
@@ -279,8 +280,6 @@ class SegmentedBoundary:
 			firstNode.prevNode = node;
 			node.nextNode = firstNode;
 			
-						
-		print self.edgeHashMap;
 		#pause();
 		
 		
@@ -303,10 +302,13 @@ class SegmentedBoundary:
 		newNode.prevEdge = be;
 		newNode.nextEdge = be;
 			
-		be.middleNodes.append(newNode);		
+		be.middleNodes.append(newNode);	
+		#choice of paramOnPrevEdge or paramOnNextEdge is arbirary: these nodes
+		#are all Intersections on the same edge, so paramOnPrevEdge always= paramOnNextEdge 
 		be.middleNodes.sort(cmp= lambda x,y: cmp(x.paramOnPrevEdge,y.paramOnPrevEdge));
 		
-		if be.edgeWrapper.edge.Orientation() != TopAbs.TopAbs_FORWARD:
+		#check the parameters to make sure to sort the middle nodes correctly
+		if be.endNode.paramOnPrevEdge < be.startNode.paramOnNextEdge:
 			be.middleNodes.reverse();
 	
 		#now link the nodes together
@@ -326,12 +328,12 @@ class SegmentedBoundary:
 		#search the node graph. if a vertex is encountered, it means we'll have to add an edge
 		pathToNextInfill = findNextInfillNode(startNode);
 		
-		log.debug("Path has %d Nodes In it" % len(pathToNextInfill) );
-		
 		if pathToNextInfill == None:
 			log.warn("Could not find valid path to the next infill");
 			return None;
 			
+		log.debug("Path has %d Nodes In it" % len(pathToNextInfill) );
+		assert len(pathToNextInfill ) >1,"Expected a Path with at least two nodes"		
 		edgesToReturn = [];
 		
 		#ok we have a path, starting with startNode and ending
@@ -340,9 +342,8 @@ class SegmentedBoundary:
 		
 		for (startNode,endNode) in ntuples(pathToNextInfill,2,False):  #iterate over the list in pairs of nodes
 			log.debug("Start Node:" + str(startNode));
-			log.debug("End Node:" + str(endNode));
-			
-			assert startNode.nextEdge == endNode.prevEdge, "These nodes should be on either side of the same edge"
+			log.debug("End Node:" + str(endNode));			
+			#assert startNode.nextEdge == endNode.prevEdge, "These nodes should be on either side of the same edge"
 			
 			currentEdge = startNode.nextEdge;
 			edgesToReturn.append(currentEdge.edgeWrapper.trimmedEdge(startNode.paramOnNextEdge,endNode.paramOnPrevEdge) );
@@ -354,73 +355,6 @@ class SegmentedBoundary:
 		lastNode = pathToNextInfill.pop();
 		return  [edgesToReturn,lastNode];
 		
-	"""
-	def edgesBetweenNodes(self,startNode, endNode ):
-		
-			builds a wire between the two nodes.
-			the wire will consist of one edge if the two nodes
-			are on the same edge. but if they are on different edges,
-			the wire will contain all of the segments inbetween
-			all of the nodes used as a part of the wire ( vertex or not ) will be marked used so they are not used again.
-			THIS ALGORITHM assumes that the edges in the wire are oriented correctly, head to tail
-		
-
-		assert endNode.boundary == self,"Expected to get an endNode on my boundary";
-		
-		if startNode.edge == endNode.edge:
-			log.debug("Nodes are on the same edge. Returning a single trimmed edge");
-			log.debug("Making Edge between parameters %0.2f and %0.2f on EdgeID %d" % (startNode.edgeParameter, endNode.edgeParameter, hashE(startNode.edge)) );
-			ew = Wrappers.Edge(startNode.edge);
-			return  [ew.trimmedEdge(startNode.edgeParameter,endNode.edgeParameter)];
-		
-		log.debug("nodes are on different edges. need to find the best path");
-
-		edgesToReturn = []; #the edges that will become our wire
-		log.debug("Finding Path between edges %d and %d " % (hashE(startNode.edge), hashE(endNode.edge) ));
-		path = self.edgeGraph.find_shortest_path(hashE(startNode.edge), hashE(endNode.edge));		
-		log.debug("Shortest Path Contains %d segments" % len(path ) );
-		
-		#the list includes the start and end edges. there are intermediate 
-		#edges if the list is bigger than two
-		print path;
-		print self.edgeHashMap;
-		#get the portion of the first edge
-		#then determine if we are going along the wire or backwards
-		ew1 = Wrappers.Edge(startNode.edge);
-		ew2 = Wrappers.Edge(self.edgeHashMap[path[1]].edge );
-		
-		if ew1.lastPoint.Distance(ew2.firstPoint) < self.tolerance:
-			log.debug("Edges are aligned with the wire");
-			movingPositive= True;
-			edgesToReturn.append( ew1.trimmedEdge(startNode.edgeParameter,ew1.lastParameter));
-		else:
-			log.debug("Edges are reversed from the wire");
-			movingPositive=False;
-			edgesToReturn.append( ew1.trimmedEdge(startNode.edgeParameter,ew1.firstParameter));
-		
-		#get intermediate edges
-		for i in range(1,len(path)-1): #executes only for edges in between first and last
-			edge = self.edgeHashMap(path[i]).edge;
-			if not movingPositive:
-				edge = Wrappers.cast( edge.Reversed());
-			edgesToReturn.append(edge);
-			
-			#mark these nodes used. the other nodes are marked as used by the hatch algo
-			[n1,n2] = self.nodesByEdge[hashE(edge)];
-			n1.used = True;
-			n2.used = True;
-			
-		#get the portion of the last edge
-		ew1 = Wrappers.Edge(endNode.edge);
-		
-		if movingPositive:
-			edgesToReturn.append( ew1.trimmedEdge(ew1.firstParameter, endNode.edgeParameter));
-		else:
-			edgesToReturn.append( ew1.trimmedEdge(ew1.lastParameter, endNode.edgeParameter));
-
-		log.debug("Path Contains %d edges." % len(edgesToReturn) );
-		return  edgesToReturn;
-	"""
 
 class Hatcher:
 	"class that accepts a shape and produces a set of edges from it"
@@ -518,9 +452,9 @@ class Hatcher:
 			#add to the global list
 			self.allIntersectionNodes .extend(interSections);
 
-		for n in self.allIntersectionNodes:
-			print n;
-			TestDisplay.display.showShape(Wrappers.make_vertex(n.point));
+		#for n in self.allIntersectionNodes:
+		#	print n;
+		#	TestDisplay.display.showShape(Wrappers.make_vertex(n.point));
 		log.info("Finished Hatching.");
 		
 
@@ -540,7 +474,7 @@ class Hatcher:
 		
 			currentNode.used = True;
 			numNodesLeft -= 1;
-			#TestDisplay.display.showShape(Wrappers.make_vertex(currentNode.point));
+
 			if findingInfillEdge:
 				log.debug("looking for an infill edge..");
 				#find an infill edge
@@ -687,7 +621,7 @@ def checkBoundary(sb):
 if __name__=='__main__':
 
 	###Logging Configuration
-	logging.basicConfig(level=logging.DEBUG,
+	logging.basicConfig(level=logging.WARN,
 						format='%(asctime)s [%(funcName)s] %(levelname)s %(message)s',
 						stream=sys.stdout)	
 	print "******************************"
@@ -721,17 +655,21 @@ if __name__=='__main__':
 	print "OK"
 	
 	
-	pause();
+	#pause();
 	#d.showShape(w);
 	#TestDisplay.display.eraseAll();
 	#hatch it
-	h  = Hatcher([w2,w],0,2,False,[ 0,0,10,10] );
+	t = Wrappers.Timer();
+	h  = Hatcher([w2,w],0,.2,True,[ 0,0,10,10] );
 	h.hatch();
 	#time.sleep(40);
+
 	for e in h.edges():
+		pass;
 		TestDisplay.display.showShape(e);
-			
-		time.sleep(1);
+		TestDisplay.display.showShape(TestDisplay.makeEdgeIndicator(e));
+		#time.sleep(1);
+	print "Hatching Finished in %0.2f secs" % t.elapsed();
 	TestDisplay.display.run();
 
 	

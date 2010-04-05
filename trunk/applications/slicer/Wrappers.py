@@ -136,18 +136,31 @@ def makeWiresFromOffsetShape(shape):
 		bb.ReInit();	
 	
 	return resultWires;	
+
+def wireFromEdges(edgeList):
+	"TODO: might need to use sortwires to make sure it is i nthe right order"
+	mw = BRepBuilderAPI.BRepBuilderAPI_MakeWire();
+	for e in edgeList:
+		mw.Add(e);
 		
+	if mw.IsDone():
+		return mw.Wire();
+	else:
+		raise ValueError,"Error %d Building Wire" % mw.Error();
+	
 def edgeFromTwoPointsOnCurve(handleCurve,p1,p2):
 	"make an edge from a curve and two parameters"
+	log.debug("Making Edge from Parameters %0.2f, %0.2f" %( p1, p2) );
 	builder = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(handleCurve, p1,p2);
 	builder.Build();
 	if builder.IsDone():
 		return builder.Edge();
 	else:
 		log.error( "Error building Edge: Error Number %d" % builder.Error());
-		return None;
+		raise ValueError,"Error building Edge: Error Number %d" % builder.Error();
 		
-def cast(shape,type):
+def cast(shape):
+	type = shape.ShapeType();
 	"cast a shape as its correct type"
 	if type == TopAbs.TopAbs_WIRE:
 		return topoDS.Wire(shape);
@@ -181,8 +194,9 @@ class Point:
 class Edge:
 	def __init__(self,edge):
 		self.edge = edge;		
-		hc = brepTool.Curve(edge);		
+		hc = brepTool.Curve(edge);
 		self.curve = GeomAdaptor.GeomAdaptor_Curve(hc[0]); 
+		self.handleCurve  = hc[0];
 		self.firstParameter = hc[1];
 		self.lastParameter = hc[2];		
 		
@@ -202,6 +216,10 @@ class Edge:
 	def isLine(self):
 		return self.curve.GetType() == GeomAbs.GeomAbs_Line;
 	
+	def trimmedEdge(self,parameter1, parameter2):
+		"make a trimmed edge based on a start and end parameter on the same curve"
+		return edgeFromTwoPointsOnCurve(self.handleCurve, parameter1, parameter2 );
+		
 	def isCircle(self):
 		return self.curve.GetType() == GeomAbs.GeomAbs_Circle;
 	
@@ -236,13 +254,23 @@ class Wire():
 		
 	def edges(self):
 		"a generator for edges"
-		bwe = BRepTools.BRepTools_WireExplorer(self.wire);
-		while bwe.More():
-			edge = bwe.Current();
-			yield edge;
-			bwe.Next();
-		bwe.Clear();
-	
+		#bwe = BRepTools.BRepTools_WireExplorer(self.wire);
+		#while bwe.More():
+		#	edge = bwe.Current();
+		#	yield edge;
+		#	bwe.Next();
+		#bwe.Clear();
+		#bwe.ReInit();
+		
+		bb = TopExp.TopExp_Explorer();
+		bb.Init(self.wire,TopAbs.TopAbs_EDGE);
+		while bb.More():
+			e = topoDS.Edge(bb.Current());
+			yield e;	
+			bb.Next();
+		
+		bb.ReInit();		
+		
 	def discretePoints(self,deflection):
 		"discrete points for all of a wire"
 		for e in self.edges():
@@ -252,3 +280,50 @@ class Wire():
 if __name__=='__main__':
 	print "Basic Wrappers and Utilities Module"
 	print "No Test Cases Yet";
+
+"""
+	Creates a graph of connected nodes.
+	This is a very simple algorithm. If it gets more complex,
+	we should look at python-graph
+"""
+class Graph():
+	def __init__(self):
+		self.graph = {};
+	
+	def addPath(self,fromNode,toNode):
+		if not self.graph.has_key(fromNode):
+			self.graph[fromNode] = [];
+		
+		self.graph[fromNode].append(toNode);
+	
+	"""
+		find the shortest path between nodes according to a graph.
+	"""
+	def find_shortest_path(self, start, end, path=[]):
+		path = path + [start]
+		if start == end:
+			return path
+		if not self.graph.has_key(start):
+			return None
+		shortest = None
+		for node in self.graph[start]:
+			if node not in path:
+				newpath = self.find_shortest_path( node, end, path)
+				if newpath:
+					if not shortest or len(newpath) < len(shortest):
+						shortest = newpath
+		return shortest		
+
+	def find_all_paths(self, start, end, path=[]):
+		path = path + [start]
+		if start == end:
+			return [path]
+		if not self.graph.has_key(start):
+			return []
+		paths = []
+		for node in self.graph[start]:
+			if node not in path:
+				newpaths = self.find_all_paths( node, end, path)
+				for newpath in newpaths:
+					paths.append(newpath)
+		return paths	

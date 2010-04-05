@@ -21,9 +21,10 @@ from OCC import BRepExtrema
 from OCC import Geom
 from OCC import BRepBndLib 
 from OCC import Bnd;
+from OCC import BRep;
 from OCC import TopTools
 from OCC import TopoDS
-
+from OCC import TopAbs
 import Wrappers
 import TestDisplay
 
@@ -32,41 +33,80 @@ import TestDisplay
 log = logging.getLogger('hatchLib');
 
 ts = TopoDS.TopoDS();
+btool = BRep.BRep_Tool();
 
+"""
+	convienient way to iterate in pairs with loop around to the start
+	given a list, return it in pairs, with the last element wrapping around to the first
+	if wrap is false, the last element is not returned.
+	
+	
+	Example:
+		lst = [1,2,3];
+		
+		ntuples(lst,2,True)
+			(1,2)
+			(2,3)
+			(3,1)
+		
+		ntuples(lst,2,False)
+			(1,2)
+			(2,3)
+		
+		ntuples(lst,3,True)
+			(1,2,3)
+			(2,3,1)
+			
+		ntuples(lst,3,False)
+			(1,2,3)
+"""
+def ntuples(lst, n,wrap=True):
+	B = 0;
+	if not wrap:
+		B = 1;
+	return zip(*[lst[i:]+lst[:(i-B)] for i in range(n)])
+
+def pause():
+	raw_input("Press Enter to continue");
+	
+#TODO: Vertex Nodes and Inodes need to be different classes extending Node
 class Node:
 	"represents a point on a boundary, with two references to the next and previous nodes"
 	"the use of a wrapper class also allows the nodes to be moved slightly if needed, without"
 	"affecting the ability to very quickly find the node using hash lookups"
 	
-	def __init__(self,point):
+	def __init__(self,point,isVertex):
+	
+		"these are used for all nodes"
 		self.point = point;
-		
-		self.boundary = None;
+		self.boundary = None; #the boundary this node lies upon		
 		self.nextNode = None; #next node along the boundary, wrapping around
 		self.prevNode = None; #previous node along the boundary, wrapping around
-		self.infillNode = None; #the other node that makes up the edge of this hatch line
-		self.parameter = -1;
-		
+		self.vertex = isVertex; # a vertex is a node that is there because the curve changes along the wire
 		self.used = False;
-	
-	def canMoveNext(self):
-		"can we travel on the boundary to a node that would allow infill?"
-		return self.nextNode and (not self.nextNode.used) and self.nextNode.infillNode ;
-	
-	def canMovePrev(self):
-		"can we travel on the boundary to a node that would allow infill?"
-		return self.prevNode and (not self.prevNode.used) and self.prevNode.infillNode ;
-	
+
+		
+		#these only used for intersection ( not vertex ) nodes
+		self.infillNode = None; #the other node that makes up the edge of this hatch line
+
+		#for vertex nodes these values will be different, because the edges on eitherside
+		#of the node are different. But for intersection nodes, the values will always match
+		self.prevEdge = None;
+		self.nextEdge = None;
+		self.paramOnPrevEdge = None;
+		self.paramOnNextEdge = None;
+		
 	def canMoveInfill(self):
 		return self.infillNode and (not self.infillNode.used);
 	
-	def canMoveOnBoundary(self):
-		return self.canMoveNext() or self.canMovePrev();
 		
 	@staticmethod
 	def toString(node):
-		return "Node(%d),Parameter=%0.2f, loc=[%0.2f, %0.2f, %0.2f]"  %  ( id(node), node.parameter, node.point.X(), node.point.Y(), node.point.Z() );
-		
+		if node.vertex:
+			return "Vertex(%d), loc=[%0.2f, %0.2f, %0.2f]"  %  ( id(node), node.point.X(), node.point.Y(), node.point.Z() );
+		else:
+			return "INode(%d), Edge1= %d, Edge2=%d, P1=%0.2f,P2=%0.2f, loc=[%0.2f, %0.2f, %0.2f]"  %  ( id(node), hashE(node.prevEdge.edgeWrapper.edge), hashE(node.nextEdge.edgeWrapper.edge),node.paramOnPrevEdge,node.paramOnNextEdge, node.point.X(), node.point.Y(), node.point.Z() );
+
 	def __str__(self):
 		
 		s =  Node.toString(self);
@@ -77,171 +117,310 @@ class Node:
 		if self.infillNode:
 			s += "\n\t\tinFill-->" + Node.toString(self.infillNode);
 		return s;
-		
-class WrapAroundIndex:
-	"an index adapter that converts indices that are out of bounds"
-	"to a valid call wrapped around to the beginning or end of the list"
-	"so -2 means the sent from the right end, and len() + 2 means the second index"
-	def __init__(self,length):
-		self.length = length;
-		self.maxIndex = length - 1;
-		
-	def index(self,idx):
-		if idx < -self. length or idx > self.length *2:
-			raise ValueError,"Cannot loop around more than once"
-		if idx < 0:
-			return self.length + idx;
-		if idx > self.maxIndex:
-			return idx - self.length;
 
-		return idx;
+def findNextInfillNode(node):
+	"finds the next infill node in either direction"
+	n = findNextInfillNodeForward(node.nextNode);
+	if n:
+		return n;
+		
+	n = findNextInfillNodeBackward(node.prevNode);
+	if n:
+		return n;
 	
-class SegmentedBoundary:
-	"a boundary with a number of nodes along the boundary."
-	def __init__(self,wire,intersectionNodes):
-		log.debug("SegementedBoundary : %d nodes." % len(intersectionNodes ) );
-		
-		self.wire = wire;
-		
-		self.tolerance = 0.000001;
-
-		self.nodes = set();
-		self.edges = [];
-		
-		#build a map of the edges
-		#we'll use this to build edges between nodes later on
-		wr = Wrappers.Wire(wire);
-		for e in wr.edges():
-			self.edges.append(e);
-		
-		
-		#make a parameterized approximation of the wire
-		#TODO: why do i have to approximate the curve instead of just using the curve itself?
-		#the trouble is that this means that i cannot retain any real circles or splines, and instead
-		#have to turn everything into line segments!
-		self.curve  = BRepAdaptor.BRepAdaptor_CompCurve (wire);
-		hc = BRepAdaptor.BRepAdaptor_HCompCurve(self.curve);
-		curveHandle = hc.GetHandle();
-
-		#approximate the curve using a tolerance
-		#do we need the below?
-		approx = Approx.Approx_Curve3d(curveHandle,self.tolerance,GeomAbs.GeomAbs_C2,2000,12);
-		if approx.IsDone() and  approx.HasResult():
-			# have the result
-			anApproximatedCurve=approx.Curve();
-			log.debug( "Curve is parameterized between %0.5f and %0.5f " % (  anApproximatedCurve.GetObject().FirstParameter(), anApproximatedCurve.GetObject().LastParameter() ));
-			#anApproximatedCurve.GetObject().SetPeriodic();
-			#log.debug( "Curve Periodic ="  + str(anApproximatedCurve.GetObject().IsPeriodic() ));
-			self.approxCurve  = anApproximatedCurve;
-		else:
-			log.warn( "Failed to create approximation curve." );
-		
-		#project each point onto the curve and save the parameter
-		for node in intersectionNodes:
-			n =  self._findPointOnCurve(node.point);
-			if not n:
-				#TODO: weird problem where sometimes pointOnCurve does not match
-				#I'm sure it is due to curve approximation
-				log.warn("Could Not project a point on the curve. Lets act like this is not on the boundary.");
-				continue;
-			[ppt,param] = n;
-			
-			#replace the original point with the projected one.
-			#this way the caller's reference to the provided node still works, but
-			#we have adjusted the point underneath to match the projection
-			node.point = ppt;
-			node.boundary = self;
-			node.parameter = param;
-			self.nodes.add(node);
-
-		sortedNodes= self._parameterSortedNodes();	
-		#TODO this woorked, but connecting edges across the seams
-		#of a parameterized curve didnt work
-		#wrapIndex = WrapAroundIndex(len(sortedNodes));
-		#for i in range(0,len(sortedNodes)):
-		#	#these are safe-- the boundaries are 'wrapped around'
-		#	prevNode = sortedNodes[wrapIndex.index(i-1)];
-		#	thisNode = sortedNodes[wrapIndex.index(i)];
-		#	nextNode = sortedNodes[wrapIndex.index(i+1)];
-			
-		#	thisNode.nextNode = nextNode;
-		#	thisNode.prevNode = prevNode;
-
-		for i in range(0,len(sortedNodes)):
-			#these are safe-- the boundaries are 'wrapped around'
-			if (i-1) >= 0:
-				prevNode = sortedNodes[(i-1)];
-			else:
-				prevNode = None;
-			
-			if ( i+1) < (len(sortedNodes)  ):
-				nextNode = sortedNodes[(i+1)];
-			else:
-				nextNode = None;
-				
-			thisNode = sortedNodes[i];
-			thisNode.nextNode = nextNode;
-			thisNode.prevNode = prevNode;
-		
-
-	@staticmethod
-	def edgeBetweenNodes(startNode, endNode):
-		"makes an edge between the specified two nodes, which must lie on the wire"
-		if startNode.boundary  != endNode.boundary:
-			raise ValueError,"Start Node and End Node are not on the same boundary"
-			
-		
-		sP = startNode.parameter;
-		eP = endNode.parameter;
-		log.warn("Building Edge from parameter %0.2f to %0.2f" % ( startNode.parameter, endNode.parameter) );
-		if sP > eP:
-			print "reversing parameters"
-			builder =BRepBuilderAPI.BRepBuilderAPI_MakeEdge(startNode.boundary.approxCurve, eP,sP);
-		else:
-			builder =BRepBuilderAPI.BRepBuilderAPI_MakeEdge(startNode.boundary.approxCurve, sP,eP);
-			
-		builder.Build();
-		if builder.IsDone():
-			e = builder.Edge();
-			
-			if sP > eP:
-				print" reversing edge."
-				e .Reverse();
-			
-			print "finished making edge."
-			print "Orientation = ",e.Orientation()
-			return e;
-		else:
-			log.error( "Error building Edge: Error Number %d" % builder.Error());
-			return None;
-		
-		
-	def _findPointOnCurve(self,point):
-		"finds the point and parameter on the wire"
-		#or BRepExtrema_DistShapeShape ??
-		#print "projecting point" + str(Wrappers.Point(point));
-		
-		projector = Extrema.Extrema_ExtPC(point,self.curve,self.tolerance);
-		projector.Perform(point);
-		if projector.IsDone():
-			for i in range(1,projector.NbExt()+1):
-				if projector.IsMin(i) and projector.Value(i) < self.tolerance:
-					#print projector.Value(i),projector.Point(i).Value().X(), projector.Point(i).Value().Y(), projector.Point(i).Parameter()
-					return [projector.Point(i).Value(), projector.Point(i).Parameter() ];
-			log.warn("Could Not Find Close Enough Value!");
-		else:
-			log.warn("Could not project point.");
-			return None;
+	return None;
 	
-	def _parameterSortedNodes(self):
-		return sorted(self.nodes, cmp=lambda x,y: cmp(x.parameter, y.parameter));
-	
+def findNextInfillNodeForward(node,path=[]):
+	"finds the next infill node in the forward direction, starting with supplied node"
+	path = path +[node];
+	if node.used:
+		return None;
+		
+	if node.vertex:
+		log.debug("node is a vertex, deferring");
+		if node.nextNode:
+			return  findNextInfillNodeForward(node.nextNode,path);
+	else:
+		if node.canMoveInfill():
+			return path + [node];
+			
+	return None;		
+
+def findNextInfillNodeBackward(node,path=[]):
+	"finds the next infill node in the forward direction, starting with supplied node"
+	if node.used:
+		return None;
+		
+	if node.vertex:
+		log.debug("node is a vertex, deferring");
+		if node.nextNode:
+			return  findNextInfillNodeBackward(node.prevNode,path);
+	else:
+		if node.canMoveInfill():
+			return path + [node];
+			
+	return None;	
+
+class BoundaryEdge:
+	"represents a boundary edge. Composese a regular edge"
+	def __init__ ( self,edge):
+		self.edgeWrapper = Wrappers.Edge(edge);
+		self.id = hashE(edge);
+		self.startNode = None;
+		self.endNode = None;
+		self.middleNodes = [];
+		
 	def __str__(self):
-		"render this boundary"
-		s = "Segmented Boundary, %d Nodes.\n" % len(self.nodes);
-		for n in self._parameterSortedNodes():
-			s+= ( "\t %s \n" % n);
-		return s;
+		return "BoundaryEdge:\n  Start Node:%s \n  EndNode:%s" % ( str(self.startNode),str(self.endNode));
+	
+	def __repr__(self):
+		return self.__str__();
+		
+def linkNodes(nodeList,wrapAround=False):
+	"link all of the nodes in the list head-to-tail"
+	
+	for i in range(1,len(nodeList)):
+		n1 = nodeList[i-1];
+		n2 = nodeList[i];
+		
+		n1.nextNode = n2;
+		n2.prevNode = n1;
+		
+	if wrapAround:
+		n1 = nodeList[0];
+		n2 = nodeList[len(nodeList)-1];
+		n1.prevNode = n2;
+		n2.nextNode = n1;
+		
+
+def hashE(edge):
+	return edge.HashCode(1000000);
+
+class SegmentedBoundary:
+	"""
+		represents a boundary.
+		on construction the boundary will map its edges,
+		
+		The object can then provide wires that link nodes along its edges		
+	"""
+
+	def __init__(self,wire):
+
+		self.wire = wire;
+		self.tolerance = 0.000001;
+		self.edgeHashMap = {};	 # a hash of boundary edge objects
+		self.edges = [] #needed to store the lists in the original, wire order
+		
+		#self.edgeGraph = Wrappers.Graph();		
+		
+		#build a graph of the edges on the boundary
+		#we'll use this to build edges between nodes later on
+		log.debug("Building Edge Graph...");
+		wr = Wrappers.Wire(wire);
+		
+
+		#store edges hashed by the OCC C++ object ID
+		for e in wr.edges():
+			be = BoundaryEdge(e);
+			self.edges.append(be);
+			h = hashE(e);
+			print "Found Edge %d " % h;
+			self.edgeHashMap[be.id] = be;
+
+		
+		#build nodes between the edges
+		#traverse the edges forwards to create start nodes
+		previousNode = None;
+		previousEdge = None;
+		
+		for be in self.edges:
+			log.debug("Procssing Edge %s" % be.id);
+			#create a node at the start of the edge
+			#this node is a vertex, it has a parameter on two edges
+			node = Node(be.edgeWrapper.firstPoint,True);
+			node.boundary = self;
+			node.nextEdge = be;
+			node.paramOnNextEdge = be.edgeWrapper.firstParameter;
+			be.startNode = node;
+			
+			if previousNode:
+				previousEdge.endNode = node;
+				node.prevEdge = previousEdge;
+				node.paramOnPrevEdge = previousEdge.edgeWrapper.lastParameter;
+				
+				#connect the nodes together
+				previousNode.nextNode = node;
+				node.prevNode = previousNode;
+				
+			#save current values for next pass through the loop
+			previousNode = node;
+			previousEdge = be;
+		
+		#now all are linked but the last node. of the last edge, which is 
+		#handled differently depending on if the wire is closed or not
+		firstNode = self.edges[0].startNode;
+		lastEdge = self.edges[len(self.edges)-1];
+		
+		if wire.Closed():
+			log.debug("Wire Is Closed, linking end to start");
+			lastEdge.endNode = firstNode;
+			lastEdge.startNode.nextNode = firstNode;
+			firstNode.prevEdge = lastEdge;
+			firstNode.paramOnPrevEdge = lastEdge.edgeWrapper.lastParameter;
+			firstNode.prevNode = lastEdge.startNode;
+			
+		else:
+			#last edge gets a new node
+			node = Node(previousEdgeW.edgeWrapper.lastPoint,True);
+			node.boundary = self;
+			node.prevEdge = lastEdge;
+			lastEdge.endNode = node;
+
+			firstNode.prevNode = node;
+			node.nextNode = firstNode;
+			
+						
+		print self.edgeHashMap;
+		#pause();
+		
+		
+	def newIntersectionNode(self, edge,edgeParam, point):
+		"returns a new intersection node on this boundary."
+		"the boundary will adjust neighbors to work it into the boundary"
+	
+		be = self.edgeHashMap[hashE(edge)];
+		#make a new node to insert into the list
+		newNode = Node(point,False); #an intersection point
+		
+		newNode.boundary = self;
+		
+		#bit of a hack-- a node in the middle of an edge
+		#gets simulated values for next and previous
+		#edges, just like a vertex. that makes making edges easier later.
+
+		newNode.paramOnPrevEdge = edgeParam;
+		newNode.paramOnNextEdge = edgeParam;
+		newNode.prevEdge = be;
+		newNode.nextEdge = be;
+			
+		be.middleNodes.append(newNode);		
+		be.middleNodes.sort(cmp= lambda x,y: cmp(x.paramOnPrevEdge,y.paramOnPrevEdge));
+		
+		if be.edgeWrapper.edge.Orientation() != TopAbs.TopAbs_FORWARD:
+			be.middleNodes.reverse();
+	
+		#now link the nodes together
+		tmpList = [];
+		tmpList.append(be.startNode);
+		tmpList.extend(be.middleNodes);
+		tmpList.append(be.endNode);
+		linkNodes(tmpList,False);
+		
+		return newNode;
+		
+	def edgesToInFillNode(self,startNode):
+		"returns a list of edges and the node that should be used next"
+		"if no next code can be found, None is returned"
+		assert startNode.boundary==self,"Expected to get a startnode on my boundary";		
+		
+		#search the node graph. if a vertex is encountered, it means we'll have to add an edge
+		pathToNextInfill = findNextInfillNode(startNode);
+		
+		log.debug("Path has %d Nodes In it" % len(pathToNextInfill) );
+		
+		if pathToNextInfill == None:
+			log.warn("Could not find valid path to the next infill");
+			return None;
+			
+		edgesToReturn = [];
+		
+		#ok we have a path, starting with startNode and ending
+		#with a node that is an infill node
+		edgesToReturn = []; #the edges that will become our return list
+		
+		for (startNode,endNode) in ntuples(pathToNextInfill,2,False):  #iterate over the list in pairs of nodes
+			log.debug("Start Node:" + str(startNode));
+			log.debug("End Node:" + str(endNode));
+			
+			assert startNode.nextEdge == endNode.prevEdge, "These nodes should be on either side of the same edge"
+			
+			currentEdge = startNode.nextEdge;
+			edgesToReturn.append(currentEdge.edgeWrapper.trimmedEdge(startNode.paramOnNextEdge,endNode.paramOnPrevEdge) );
+
+			startNode.used = True;
+			endNode.used = True;
+		
+		log.info("Path Contains %d Edges." % len(edgesToReturn) );
+		lastNode = pathToNextInfill.pop();
+		return  [edgesToReturn,lastNode];
+		
+	"""
+	def edgesBetweenNodes(self,startNode, endNode ):
+		
+			builds a wire between the two nodes.
+			the wire will consist of one edge if the two nodes
+			are on the same edge. but if they are on different edges,
+			the wire will contain all of the segments inbetween
+			all of the nodes used as a part of the wire ( vertex or not ) will be marked used so they are not used again.
+			THIS ALGORITHM assumes that the edges in the wire are oriented correctly, head to tail
+		
+
+		assert endNode.boundary == self,"Expected to get an endNode on my boundary";
+		
+		if startNode.edge == endNode.edge:
+			log.debug("Nodes are on the same edge. Returning a single trimmed edge");
+			log.debug("Making Edge between parameters %0.2f and %0.2f on EdgeID %d" % (startNode.edgeParameter, endNode.edgeParameter, hashE(startNode.edge)) );
+			ew = Wrappers.Edge(startNode.edge);
+			return  [ew.trimmedEdge(startNode.edgeParameter,endNode.edgeParameter)];
+		
+		log.debug("nodes are on different edges. need to find the best path");
+
+		edgesToReturn = []; #the edges that will become our wire
+		log.debug("Finding Path between edges %d and %d " % (hashE(startNode.edge), hashE(endNode.edge) ));
+		path = self.edgeGraph.find_shortest_path(hashE(startNode.edge), hashE(endNode.edge));		
+		log.debug("Shortest Path Contains %d segments" % len(path ) );
+		
+		#the list includes the start and end edges. there are intermediate 
+		#edges if the list is bigger than two
+		print path;
+		print self.edgeHashMap;
+		#get the portion of the first edge
+		#then determine if we are going along the wire or backwards
+		ew1 = Wrappers.Edge(startNode.edge);
+		ew2 = Wrappers.Edge(self.edgeHashMap[path[1]].edge );
+		
+		if ew1.lastPoint.Distance(ew2.firstPoint) < self.tolerance:
+			log.debug("Edges are aligned with the wire");
+			movingPositive= True;
+			edgesToReturn.append( ew1.trimmedEdge(startNode.edgeParameter,ew1.lastParameter));
+		else:
+			log.debug("Edges are reversed from the wire");
+			movingPositive=False;
+			edgesToReturn.append( ew1.trimmedEdge(startNode.edgeParameter,ew1.firstParameter));
+		
+		#get intermediate edges
+		for i in range(1,len(path)-1): #executes only for edges in between first and last
+			edge = self.edgeHashMap(path[i]).edge;
+			if not movingPositive:
+				edge = Wrappers.cast( edge.Reversed());
+			edgesToReturn.append(edge);
+			
+			#mark these nodes used. the other nodes are marked as used by the hatch algo
+			[n1,n2] = self.nodesByEdge[hashE(edge)];
+			n1.used = True;
+			n2.used = True;
+			
+		#get the portion of the last edge
+		ew1 = Wrappers.Edge(endNode.edge);
+		
+		if movingPositive:
+			edgesToReturn.append( ew1.trimmedEdge(ew1.firstParameter, endNode.edgeParameter));
+		else:
+			edgesToReturn.append( ew1.trimmedEdge(ew1.lastParameter, endNode.edgeParameter));
+
+		log.debug("Path Contains %d edges." % len(edgesToReturn) );
+		return  edgesToReturn;
+	"""
 
 class Hatcher:
 	"class that accepts a shape and produces a set of edges from it"
@@ -250,6 +429,11 @@ class Hatcher:
 	
 		#self.boundaryWires = Wrappers.makeWiresFromOffsetShape(shape);
 		self.boundaryWires = wireList;
+		
+		self.boundaries = [];
+		for w in wireList:
+			self.boundaries.append(SegmentedBoundary(w));
+			
 		self.bounds = bounds;
 		self.zLevel = zLevel;
 		self.HATCH_PADDING = 1; #TODO, should be based on unit of measure
@@ -267,13 +451,6 @@ class Hatcher:
 		#list of all intersection points
 		self.allIntersectionNodes  = [];
 		
-		#list of the boundaries
-		boundaryIntersections = {};
-		segmentedBoundaries = [];
-		
-		for boundary in self.boundaryWires:
-			#TestDisplay.display.showShape(boundary);
-			boundaryIntersections[boundary] = [];
 		boundariesFound = {};
 		#intersect each line with each boundary
 		continueHatching = True;
@@ -288,11 +465,9 @@ class Hatcher:
 
 			interSections = [];	#list of intersections for just this single hatch line	
 			
-			#Geom2dAPI_InterCurveCurve is the 2-d equivalent, which would be much faster
-			
-			for boundary in self.boundaryWires:
+			for boundary in self.boundaries:
 				brp = BRepExtrema.BRepExtrema_DistShapeShape();
-				brp.LoadS1(boundary);
+				brp.LoadS1(boundary.wire);
 				brp.LoadS2(hatchLine );
 				
 				if brp.Perform() and brp.Value() < 0.001:
@@ -300,11 +475,19 @@ class Hatcher:
 					
 					#TODO: if the intersections in practics are always ordered in ascending X, we can avoid
 					#a lot of this code
+					#TODO need to handle the somewhat unusual cases that the intersection is
+					#on a vertex
 					for k in range(1,brp.NbSolution()+1):
 						#make the node
-						newNode = Node(brp.PointOnShape1(k));						
+						if brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsOnEdge:
+							newNode = boundary.newIntersectionNode(
+								Wrappers.cast(brp.SupportOnShape1(k)),
+								brp.ParOnEdgeS1(k),
+								brp.PointOnShape1(k) );
+						else:
+							raise ValueError("I dont know how to handle vertex intersections");
+
 						interSections.append(newNode);
-						boundaryIntersections[boundary].append(newNode);
 					
 				else:
 					log.debug( "No Intersections Found");
@@ -335,19 +518,14 @@ class Hatcher:
 			#add to the global list
 			self.allIntersectionNodes .extend(interSections);
 
-		#build all the intersection nodes for the boundaries
-		for [k,v] in boundaryIntersections.iteritems():
-			segmentedBoundaries.append(SegmentedBoundary(k,v));
-		log.info("Found %d intersection Nodes" % len(self.allIntersectionNodes ));
+		for n in self.allIntersectionNodes:
+			print n;
+			TestDisplay.display.showShape(Wrappers.make_vertex(n.point));
 		log.info("Finished Hatching.");
 		
-		#for n in self.allIntersectionNodes:
-		#	print (str(n));
 
 	def edges(self):
-		log.debug("Following Node Map...");
-		
-		
+		log.debug("Following Node Map...");				
 		nodesLeft = Hatcher.findUnTracedNodes(self.allIntersectionNodes );
 		numNodesLeft = len(nodesLeft);
 		
@@ -381,25 +559,16 @@ class Hatcher:
 
 			else:
 				log.debug("looking for a boundary edge..");
-				
-				if not currentNode.canMoveOnBoundary():
+				nn = currentNode.boundary.edgesToInFillNode(currentNode);
+				if nn:
+					log.debug("next node is available for a move, using that one");
+					for e in nn[0]:
+						yield e;
+					currentNode = nn[1];
+				else:
 					log.debug("current node does not have any boundary nodes available, selecting new infill node");
 					#need to select a new infill Edge
 					currentNode = self.findFirstInfillNode();
-
-				else:
-					#can move either way, choose the next one
-					#TODO: different algo needed here?
-					if currentNode.canMoveNext():
-						log.debug("next node is available for a move, using that one");
-						yield SegmentedBoundary.edgeBetweenNodes(currentNode,currentNode.nextNode);
-						currentNode = currentNode.nextNode;
-					else:
-						log.debug("prev node is available for a move, using that one");
-						#TestDisplay.display.showShape(Wrappers.make_vertex(currentNode.prevNode.point));
-						#print str(currentNode);
-						yield SegmentedBoundary.edgeBetweenNodes(currentNode,currentNode.prevNode);
-						currentNode = currentNode.prevNode;
 						
 				findingInfillEdge = True;
 
@@ -437,55 +606,7 @@ class Hatcher:
 			#TestDisplay.display.showShape(edge);
 			if edge:
 				hatchEdges.append(edge);			
-		
-		
-		"""
-		    The below algo could be modified, but what is the point?
-			most everyone will want 45 degrees, and that's ea
-			
-			
-		#compute direction of line
-		lineDir = gp.gp_Dir( 1,math.cos(math.radians(self.infillAngle)),self.zLevel );
-		
-		#disable built-in setting
-		angleRads = math.radians(45.0);
-		xSpacing = self.infillSpacing / math.sin(angleRads);		
-		xStart = xMin - ( xMax  - xMin );
-		xStop = xMax;
-		#tan theta = op/adj , adj =op / tan 
-
-		
-		if self.infillAngle == 90:
-			raise Exception, "90 Degree Hatching is not supported"
-			
-		if self.infillAngle < 90:
-			xStart = ( xMin - (yMax - yMin)/math.tan(angleRads));
-			xStop = xMax;			
-			log.warn("xspacing = %0.2f, start = %0.2f, stop= %0.2f" %( xSpacing ,xStart, xStop) );
-			for xN in Wrappers.frange6(xStart,xStop,xSpacing):
-				
-				#make an edge to intersect
-				p1 = gp.gp_Pnt(xN,yMin,self.zLevel);
-				p2 = gp.gp_Pnt(xMax, (xMax - xN)* math.tan(angleRads) + yMin, self.zLevel);
-			
-				edge = Wrappers.edgeFromTwoPoints(p1,p2);
-				#TestDisplay.display.showShape(edge);
-				hatchEdges.append(edge);			
-		else:
-			xStart = xMin;
-			xStop = ( xMin - (yMax - yMin)/math.tan(angleRads));
-			log.warn("xspacing = %0.2f, start = %0.2f, stop= %0.2f" %( xSpacing ,xStart, xStop) );
-			for xN in Wrappers.frange6(xStart,xStop,xSpacing):
-				
-				#make an edge to intersect
-				p1 = gp.gp_Pnt(xMin, ( xN -xMax )* math.tan(angleRads) + yMin, self.zLevel);
-				p2 = gp.gp_Pnt(xN,yMin,self.zLevel);
-				
-			
-				edge = Wrappers.edgeFromTwoPoints(p1,p2);
-				TestDisplay.display.showShape(edge);
-				hatchEdges.append(edge);
-		"""
+	
 		
 		return hatchEdges;		
 		
@@ -517,27 +638,100 @@ class Hatcher:
 			return None;	
 
 
+def checkWalkClosedWire(boundary,forward=True):
+	"walk a wire, make sure its possible to get back to the start"
+	
+	MAX_HOPS = len(boundary.edges)*2;
+	firstNode = boundary.edges[0].startNode;
+	
+	if forward:
+		node = firstNode.nextNode;
+	else:
+		node = firstNode.prevNode;
+	numHops = 0;
+	
+	while node != firstNode and numHops < MAX_HOPS:
+		if forward:
+			node = node.nextNode;
+		else:
+			node = node.prevNode;
+		numHops += 1;
+	log.debug("Traversed Wire in %d hops" % numHops );
+	assert numHops < MAX_HOPS,"Too many hops to traverse the wire"
+
+def checkNode(node,desc):
+	"checks a node to ensure it looks right"
+	assert node != None,desc + "Node is null"
+	assert node.nextNode !=None,desc + ":No next node";
+	assert node.prevNode !=None,desc +":No prev Node";
+	assert node.nextNode != node, desc +":Next is self reference";
+	assert node.prevNode != node, desc+":Prev is self reference";
+	assert node.prevEdge != None, desc+":No prev edge";
+	assert node.nextEdge != None, desc+":No next edge";
+
+def checkBoundary(sb):
+	"checks a boundary for correctness"
+	print "Segmented boundary for square wire....",
+	assert len(sb.edges) == 4, "There should be 4 edges"
+	
+	#make sure each edge has a start and end node, and each of those
+	#has a next and previous node
+	for edge  in sb.edges:
+		checkNode(edge.startNode,"StartNode");
+		checkNode(edge.endNode,"EndNode");
+		
+	checkWalkClosedWire(sb,True);
+	checkWalkClosedWire(sb,False);			
+	print "OK"	
+
 if __name__=='__main__':
 
 	###Logging Configuration
 	logging.basicConfig(level=logging.DEBUG,
 						format='%(asctime)s [%(funcName)s] %(levelname)s %(message)s',
 						stream=sys.stdout)	
+	print "******************************"
+	print " HatchLib Unit Tests...."
+	print "******************************"
 	w = TestDisplay.makeSquareWire();
 	w2=TestDisplay.makeCircleWire();
-	#TestDisplay.display.showShape(w2);
-	#TestDisplay.display.showShape(w);
 	
+	print "* Basic Boundary",
+	sb = SegmentedBoundary(w);
+	checkBoundary(sb);
+	print "OK"
+	
+	print "* Basic Intersection",
+	#add an intersection node in the middle of the first edge
+	firstEdge = sb.edges[0];
+	ew = firstEdge.edgeWrapper;
+	p = abs(ew.firstParameter - ew.lastParameter )/2;
+	newNode = sb.newIntersectionNode(  ew.edge,p ,ew.curve.Value(p) );
+	
+	assert newNode != None,"New Node should not be null"
+	assert newNode.nextNode.vertex,"Next node should be vertex"
+	assert newNode.prevNode.vertex,"Prev node should be vertex"
+	checkBoundary(sb);
+
+
+	#add another intersection on the same edge
+	newNode2 = sb.newIntersectionNode(ew.edge,p+0.2,ew.curve.Value(p+0.2));
+	checkBoundary(sb);
+	print sb.edgeHashMap;
+	print "OK"
+	
+	
+	pause();
 	#d.showShape(w);
 	#TestDisplay.display.eraseAll();
 	#hatch it
-	h  = Hatcher([w2,w],0,0.1,False,[ 0,0,10,10] );
+	h  = Hatcher([w2,w],0,2,False,[ 0,0,10,10] );
 	h.hatch();
 	#time.sleep(40);
 	for e in h.edges():
-		if e:
-			TestDisplay.display.showShape(e);
-		#time.sleep(.5);
+		TestDisplay.display.showShape(e);
+			
+		time.sleep(1);
 	TestDisplay.display.run();
 
 	

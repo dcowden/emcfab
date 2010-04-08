@@ -167,6 +167,7 @@ class BoundaryEdge:
 	"represents a boundary edge. Composese a regular edge"
 	def __init__ ( self,edge):
 		self.edgeWrapper = Wrappers.Edge(edge);
+		#TestDisplay.display.showShape(edge);
 		self.id = hashE(edge);
 		self.startNode = None;
 		self.endNode = None;
@@ -223,10 +224,7 @@ class SegmentedBoundary:
 
 		#store edges hashed by the OCC C++ object ID
 		for e in wr.edges():
-			be = BoundaryEdge(e);
-			self.edges.append(be);
-			h = hashE(e);
-			self.edgeHashMap[be.id] = be;
+			self.addEdge(e);
 
 		
 		#build nodes between the edges
@@ -282,6 +280,11 @@ class SegmentedBoundary:
 			
 		#pause();
 		
+	def addEdge(self,edge):
+		"add an edge to the boundary"
+		be = BoundaryEdge(edge);
+		self.edges.append(be);
+		self.edgeHashMap[be.id] = be;
 		
 	def newIntersectionNode(self, edge,edgeParam, point):
 		"returns a new intersection node on this boundary."
@@ -296,7 +299,10 @@ class SegmentedBoundary:
 		#bit of a hack-- a node in the middle of an edge
 		#gets simulated values for next and previous
 		#edges, just like a vertex. that makes making edges easier later.
-
+		#TestDisplay.display.showShape( Wrappers.make_vertex(point));
+		#log.warn("Point Parmeter is %0.2f"% edgeParam);
+		#time.sleep(3);
+		
 		newNode.paramOnPrevEdge = edgeParam;
 		newNode.paramOnNextEdge = edgeParam;
 		newNode.prevEdge = be;

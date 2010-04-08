@@ -9,7 +9,7 @@ from OCC import BRepGProp,BRepLProp, BRepBuilderAPI,BRepPrimAPI,GeomAdaptor,Geom
 import time,os,sys,string,logging;
 brepTool = BRep.BRep_Tool();
 topoDS = TopoDS.TopoDS();
-
+import TestDisplay
 #topexp = TopExp.TopExp()
 #texp = TopExp.TopExp_Explorer();
 #brt = BRepTools.BRepTools();
@@ -150,23 +150,24 @@ def wireFromEdges(edgeList):
 	
 def edgeFromTwoPointsOnCurve(handleCurve,p1,p2):
 	"make an edge from a curve and two parameters"
-	log.debug("Making Edge from Parameters %0.2f, %0.2f" %( p1, p2) );
+	log.info("Making Edge from Parameters %0.2f, %0.2f" %( p1, p2) );
 	
-	#this logic appears backwards, but it produces the right result! Why?
-	if p1 < p2:
+	a = p1;
+	b = p2;
+	if p1 > p2:
+		a = p2;
+		b = p1;
 		log.info("Parameters are inverted, so we'll reverse the resulting edge");
-		rev = True;
+		rev = True;		
 	else:
+		a = p1;
+		b = p2;
 		rev = False;
-
-	builder = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(handleCurve, p1,p2);
+	
+	builder = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(handleCurve,a,b);
 	builder.Build();
 	if builder.IsDone():
 		e = builder.Edge();
-		#if e.Orientation() != TopAbs.TopAbs_FORWARD:
-			#OCC docs say that passing in reversed parameters will create a reversed edge, but this appears not
-			#to ever be the case.
-		#	print "Created a reversed Edge!";
 		if rev:
 			e.Reverse();
 		return e;
@@ -231,21 +232,12 @@ class Edge:
 	def isLine(self):
 		return self.curve.GetType() == GeomAbs.GeomAbs_Line;
 	
+	
 	def trimmedEdge(self,parameter1, parameter2):
 		"make a trimmed edge based on a start and end parameter on the same curve"
-		#if parameter1 > parameter2:
-		#	p1 = parameter1;
-		#	p2 = parameter2;
-		#	rev = False;
-		#else:
-		#	p1 = parameter2;
-		#	p2 = parameter1;
-		#	rev = True;
-		e = edgeFromTwoPointsOnCurve(self.handleCurve, parameter1, parameter2 );
-		e.Reverse();
-		#if rev:
-		#	e.Reverse();
-			
+		"p1 and p2 are either points or parameters"
+
+		e = edgeFromTwoPointsOnCurve(self.handleCurve, parameter1, parameter2 );		
 		return e;
 		
 	def isCircle(self):
@@ -309,49 +301,3 @@ if __name__=='__main__':
 	print "Basic Wrappers and Utilities Module"
 	print "No Test Cases Yet";
 
-"""
-	Creates a graph of connected nodes.
-	This is a very simple algorithm. If it gets more complex,
-	we should look at python-graph
-"""
-class Graph():
-	def __init__(self):
-		self.graph = {};
-	
-	def addPath(self,fromNode,toNode):
-		if not self.graph.has_key(fromNode):
-			self.graph[fromNode] = [];
-		
-		self.graph[fromNode].append(toNode);
-	
-	"""
-		find the shortest path between nodes according to a graph.
-	"""
-	def find_shortest_path(self, start, end, path=[]):
-		path = path + [start]
-		if start == end:
-			return path
-		if not self.graph.has_key(start):
-			return None
-		shortest = None
-		for node in self.graph[start]:
-			if node not in path:
-				newpath = self.find_shortest_path( node, end, path)
-				if newpath:
-					if not shortest or len(newpath) < len(shortest):
-						shortest = newpath
-		return shortest		
-
-	def find_all_paths(self, start, end, path=[]):
-		path = path + [start]
-		if start == end:
-			return [path]
-		if not self.graph.has_key(start):
-			return []
-		paths = []
-		for node in self.graph[start]:
-			if node not in path:
-				newpaths = self.find_all_paths( node, end, path)
-				for newpath in newpaths:
-					paths.append(newpath)
-		return paths	

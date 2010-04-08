@@ -490,8 +490,8 @@ class Slicer:
 			i = 0;
 			for e in h.edges():
 				i += 1;
-				TestDisplay.display.showShape(e);
-				TestDisplay.display.showShape(TestDisplay.makeEdgeIndicator(e));
+				#TestDisplay.display.showShape(e);
+				#TestDisplay.display.showShape(TestDisplay.makeEdgeIndicator(e));
 				#time.sleep(5);
 				slice.fillEdges.append(e);
 		
@@ -710,10 +710,10 @@ def main(filename):
 
 	#slicing options: use defaults
 	options = SliceOptions();
-	options.numSlices=1;
+	options.numSlices=2;
 	options.numExtraShells=3;
 	options.resolution=.3;
-	options.inFillSpacing=5.;
+	options.inFillSpacing=0.3;
 	#options.zMin=10. 
 	#options.zMax=12
 	
@@ -722,7 +722,7 @@ def main(filename):
 		sliceSet = Slicer(shape,options);
 		sliceSet.execute()
 		
-		showSlices(sliceSet);
+		#showSlices(sliceSet);
 		
 		#export gcode
 		ge = GcodeExporter.GcodeExporter();
@@ -739,10 +739,10 @@ def main(filename):
 		for s in sliceSet.slices:
 			f.write(ge.comment("Slice Number %d" % s.layerNo ));
 			log.warn("SLICE NUMBER %d" % s.layerNo );
-			#f.write(ge.comment("FillWires"));
-			#for gc in ge.gcode(s.fillWires):				
-			#	f.write(gc);
-			#f.write(ge.comment("InfillEdges"));
+			f.write(ge.comment("FillWires"));
+			for gc in ge.gcode(s.fillWires):				
+				f.write(gc);
+			f.write(ge.comment("InfillEdges"));
 			for gc in ge.gcode(s.fillEdges):
 				f.write(gc);
 		

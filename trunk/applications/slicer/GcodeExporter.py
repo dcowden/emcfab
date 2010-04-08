@@ -83,9 +83,9 @@ class GcodeExporter:
 			elif moveType == "ArcMove" :
 				"it is an arc move"
 				if move.ccw:
-					cmd.append("G02");
-				else:
 					cmd.append("G03");
+				else:
+					cmd.append("G02");
 				#I and J are always relative to the start point. of the arc. but
 				#X, Y, and Z have to honor incremental or absolute mode
 				i = move.centerPoint.X() - move.fromPoint.X();

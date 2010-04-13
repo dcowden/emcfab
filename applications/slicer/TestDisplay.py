@@ -18,7 +18,7 @@ import Wrappers
 
 class AppFrame(wx.Frame):
   def __init__(self, parent,title,x,y,app):
-      wx.Frame.__init__(self, parent=parent, id=-1, title=title, pos=(x,y),style=wx.DEFAULT_FRAME_STYLE,size = (400,300))
+      wx.Frame.__init__(self, parent=parent, id=-1, title=title, pos=(x,y),style=wx.DEFAULT_FRAME_STYLE,size = (800,600))
       self.canva = wxViewer3d(self);
       self.app = app;
   def showShape(self,shape):
@@ -105,7 +105,7 @@ def makeEdgeIndicator(edge):
 	
 app = wx.PySimpleApp()
 wx.InitAllImageHandlers()
-display = AppFrame(None,"Test Debug Display",1220,20,app)
+display = AppFrame(None,"Test Debug Display",1000,20,app)
 display.canva.InitDriver()
 display.canva._display.SetModeWireFrame()
 display.Show(True)	

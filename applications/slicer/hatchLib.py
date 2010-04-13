@@ -25,6 +25,7 @@ from OCC import BRep;
 from OCC import TopTools
 from OCC import TopoDS
 from OCC import TopAbs
+from OCC import BRepTools
 import Wrappers
 import TestDisplay
 
@@ -103,9 +104,11 @@ class Node:
 	@staticmethod
 	def toString(node):
 		if node.vertex:
-			return "Vertex(%d), loc=[%0.2f, %0.2f, %0.2f]"  %  ( id(node), node.point.X(), node.point.Y(), node.point.Z() );
+			#return "Vertex(%d), Used = %s" % ( id(node),node.used );
+			return "Vertex(%d), Used= %s, prevEdge= %d, nextEdge=%d,loc=[%0.2f, %0.2f, %0.2f]"  %  ( id(node), node.used, hashE(node.prevEdge.edgeWrapper.edge), hashE(node.nextEdge.edgeWrapper.edge),node.point.X(), node.point.Y(), node.point.Z() );
 		else:
-			return "INode(%d), Edge1= %d, Edge2=%d, P1=%0.2f,P2=%0.2f, loc=[%0.2f, %0.2f, %0.2f]"  %  ( id(node), hashE(node.prevEdge.edgeWrapper.edge), hashE(node.nextEdge.edgeWrapper.edge),node.paramOnPrevEdge,node.paramOnNextEdge, node.point.X(), node.point.Y(), node.point.Z() );
+			#return "INode(%d), Used = %s" % ( id(node),node.used );
+			return "INode(%d), Used= %s, prevEdge= %d, nextEdge=%d, P1=%0.2f,P2=%0.2f, loc=[%0.2f, %0.2f, %0.2f]"  %  ( id(node), node.used, hashE(node.prevEdge.edgeWrapper.edge), hashE(node.nextEdge.edgeWrapper.edge),node.paramOnPrevEdge,node.paramOnNextEdge, node.point.X(), node.point.Y(), node.point.Z() );
 
 	def __str__(self):
 		
@@ -151,12 +154,13 @@ def findNextInfillNodeForward(node,path=[]):
 def findNextInfillNodeBackward(node,path=[]):
 	"finds the next infill node in the forward direction, starting with supplied node"
 	path = path +[node];
+	if node.used:
+		return None;
 		
 	if node.vertex:
 		log.debug("node is a vertex, deferring");
 		if node.prevNode:
 			return  findNextInfillNodeBackward(node.prevNode,path);
-
 	else:
 		if node.canMoveInfill():
 			return path;
@@ -210,23 +214,28 @@ class SegmentedBoundary:
 	def __init__(self,wire):
 
 		self.wire = wire;
+
 		self.tolerance = 0.000001;
 		self.edgeHashMap = {};	 # a hash of boundary edge objects
-		self.edges = [] #needed to store the lists in the original, wire order
-		
-		#self.edgeGraph = Wrappers.Graph();		
+		#self.edges = [] #needed to store the lists in the original, wire order
+		self.edges = [];
 		
 		#build a graph of the edges on the boundary
 		#we'll use this to build edges between nodes later on
 		log.debug("Building Edge Graph...");
 		wr = Wrappers.Wire(wire);
 		
+		edgeSeq = wr.edgesAsSequence();
+		for i in range(1,edgeSeq.Length()+1):
+			edge = Wrappers.cast(edgeSeq.Value(i));
+			self.addEdge(edge);
+	
 
 		#store edges hashed by the OCC C++ object ID
-		for e in wr.edges():
-			self.addEdge(e);
+		#for e in wr.edges2():
+		#	self.addEdge(e);
 
-		
+		log.debug("Finished Adding Edges.");
 		#build nodes between the edges
 		#traverse the edges forwards to create start nodes
 		previousNode = None;
@@ -277,7 +286,11 @@ class SegmentedBoundary:
 
 			firstNode.prevNode = node;
 			node.nextNode = firstNode;
-			
+		
+		#for be in self.edges:		
+		#	TestDisplay.display.showShape(Wrappers.make_vertex(be.startNode.point));
+		#	TestDisplay.display.showShape(Wrappers.make_vertex(be.endNode.point));
+		#	#TestDisplay.display.showShape(be.edgeWrapper.edge);
 		#pause();
 		
 	def addEdge(self,edge):
@@ -335,10 +348,15 @@ class SegmentedBoundary:
 		pathToNextInfill = findNextInfillNode(startNode);
 		
 		if pathToNextInfill == None:
-			log.warn("Could not find valid path to the next infill");
+			log.info("Could not find valid path to the next infill");
 			return None;
 			
 		log.debug("Path has %d Nodes In it" % len(pathToNextInfill) );
+		
+		#print "***** NODE PATH *****"
+		#for n in pathToNextInfill:
+		#	print str(n);
+		#print "**** END NODE PATH****"
 		assert len(pathToNextInfill ) >1,"Expected a Path with at least two nodes"		
 		edgesToReturn = [];
 		
@@ -347,12 +365,22 @@ class SegmentedBoundary:
 		edgesToReturn = []; #the edges that will become our return list
 		
 		for (startNode,endNode) in ntuples(pathToNextInfill,2,False):  #iterate over the list in pairs of nodes
-			log.debug("Start Node:" + str(startNode));
-			log.debug("End Node:" + str(endNode));			
-			#assert startNode.nextEdge == endNode.prevEdge, "These nodes should be on either side of the same edge"
-			
-			currentEdge = startNode.nextEdge;
-			edgesToReturn.append(currentEdge.edgeWrapper.trimmedEdge(startNode.paramOnNextEdge,endNode.paramOnPrevEdge) );
+			#be careful, we might be moving along the edge opposite to its original direction
+			#ie, nextEdge and prevEdge might be reversed
+			#TODO: is there a cleaner way to do this?
+			newEdge = None;
+			if startNode.nextEdge == endNode.prevEdge:
+				newEdge = startNode.nextEdge.edgeWrapper.trimmedEdge( startNode.paramOnNextEdge,endNode.paramOnPrevEdge);
+			elif startNode.nextEdge == endNode.nextEdge:
+				newEdge = startNode.nextEdge.edgeWrapper.trimmedEdge( startNode.paramOnNextEdge,endNode.paramOnNextEdge);
+			elif startNode.prevEdge == endNode.prevEdge:
+				newEdge = startNode.prevEdge.edgeWrapper.trimmedEdge( startNode.paramOnPrevEdge,endNode.paramOnPrevEdge);
+			elif startNode.prevEdge == endNode.nextEdge:
+				newEdge = startNode.prevEdge.edgeWrapper.trimmedEdge( startNode.paramOnPrevEdge,endNode.paramOnNextEdge);
+			else:
+				raise ValueError,"Two consecutive nodes did not share an edge!"
+				
+			edgesToReturn.append(newEdge );
 
 			startNode.used = True;
 			endNode.used = True;
@@ -424,8 +452,13 @@ class Hatcher:
 								Wrappers.cast(brp.SupportOnShape1(k)),
 								brp.ParOnEdgeS1(k),
 								brp.PointOnShape1(k) );
+						elif brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsVertex:
+							#how on earth to handle this one?
+							#this actually means that a vertex can also have an infill node attached to it!
+							#for right now let's just ignore it.
+							pass;
 						else:
-							raise ValueError("I dont know how to handle vertex intersections");
+							raise ValueError("I dont know how to handle this kind of intersection");
 
 						interSections.append(newNode);
 					
@@ -442,7 +475,7 @@ class Hatcher:
 				continueHatching = False;
 			
 			if len(interSections) % 2 == 1:
-				print "Detected Odd Number of intersection points. This is ignored for now."
+				log.warn( "Detected Odd Number of intersection points. This is ignored for now.");
 				continue;
 			
 			log.debug("found %d intersection Nodes." % len(interSections));
@@ -458,9 +491,10 @@ class Hatcher:
 			#add to the global list
 			self.allIntersectionNodes .extend(interSections);
 
+		#print "There are %d intersetion Nodes" % len(self.allIntersectionNodes);
 		#for n in self.allIntersectionNodes:
 		#	print n;
-		#	TestDisplay.display.showShape(Wrappers.make_vertex(n.point));
+			#TestDisplay.display.showShape(Wrappers.make_vertex(n.point));
 		log.info("Finished Hatching.");
 		
 
@@ -477,7 +511,7 @@ class Hatcher:
 		findingInfillEdge = True; #used to alternate between boundary and infill edges
 		
 		while ( numNodesLeft > 0):
-		
+
 			currentNode.used = True;
 			numNodesLeft -= 1;
 
@@ -488,9 +522,15 @@ class Hatcher:
 					
 					#return edge
 					newNode = currentNode.infillNode
+					currentNode.used = True;
+					newNode.used = True;
+					#TestDisplay.display.showShape(Wrappers.make_vertex(newNode.point));
+					#print "***** NODE PATH *****"
+					#print str(currentNode)
+					#print str(newNode);
+					#print "***** END NODE PATH ****"
 					yield Hatcher.linearEdgeBetweenNodes(currentNode,newNode);
-					currentNode = newNode;
-					
+					currentNode = newNode;					
 					findingInfillEdge = False;
 				else:
 					log.debug("current node does not have an infill path available, finding a new starting node ");
@@ -501,6 +541,7 @@ class Hatcher:
 				log.debug("looking for a boundary edge..");
 				nn = currentNode.boundary.edgesToInFillNode(currentNode);
 				if nn:
+					#TestDisplay.display.showShape(Wrappers.make_vertex(nn[1].point));
 					log.debug("next node is available for a move, using that one");
 					for e in nn[0]:
 						yield e;

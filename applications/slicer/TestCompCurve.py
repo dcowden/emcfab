@@ -74,7 +74,7 @@ if __name__=='__main__':
 	
 	wr = Wrappers.Wire(testWire);
 	edgeList = []
-	for e in wr.edges():
+	for e in wr.edges2():
 		edgeList.append(e);
 		
 	print "Edges:",edgeList

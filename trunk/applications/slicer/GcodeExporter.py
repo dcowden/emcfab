@@ -109,7 +109,7 @@ class GcodeExporter:
 		"returns an array of move Values"
 		cmd = [];
 		m = map(self._withinTolerance,compareValues, moveValues);
-		log.debug("Mapped Values:"+ str(m));
+		#log.debug("Mapped Values:"+ str(m));
 		if m[0] != None:
 			cmd.append("X" + self.numberFormat % m[0] );
 		if m[1] != None:

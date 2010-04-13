@@ -105,12 +105,10 @@ import TestDisplay
 import cProfile
 import pstats
 import GcodeExporter
-
+import Wrappers
 
 log = logging.getLogger('slicer');
 
-
-					
 
 # todo list:
 #   Improve performance
@@ -119,7 +117,10 @@ log = logging.getLogger('slicer');
 #		better overlapping checks
 #		compute bounding boc just once
 #	thin feature checks
-#   alternate hatch fill direction
+#   allow offsetting of some wires without the others
+#   instersection checking
+#   short edge detection ( remove dumb little edges )
+#   svg export for visualization ( or is there another format web-suitable? )
 #   stop using memory by generating as we go
 #
 """
@@ -149,11 +150,8 @@ UNITS_MM = "mm";
 UNITS_IN = "in";
 UNITS_UNKNOWN = "units";
 
-	
-
-def sortPoints(pointList):
-	"Sorts points by ascending X"
-	pointList.sort(cmp= lambda x,y: cmp(x.X(),y.X()));
+def pause():
+	raw_input("Press Enter to continue");
 
 def pointsFromWire(wire,spacing):
 	"Makes a single parameterized adapter curve from a wire"	
@@ -473,9 +471,13 @@ class Slicer:
 			
 			#add shells to the slice
 			for s in shells:
-				slice.fillWires.extend(
-					listFromHSequenceOfShape(
-						makeWiresFromOffsetShape(s)));
+				#TestDisplay.display.showShape(s);
+				list = listFromHSequenceOfShape( makeWiresFromOffsetShape(s));
+				for w in list:
+					ww = Wrappers.Wire(w);
+					ww.assertHeadToTail();
+					log.info(str(ww));
+				slice.fillWires.extend(list);
 			
 			#use last shell for hatching
 			#debugShape(lastShell);
@@ -487,13 +489,17 @@ class Slicer:
 			
 		
 			h.hatch();
-			i = 0;
+			#i = 0;
 			for e in h.edges():
-				i += 1;
+				#i += 1;
+				
 				#TestDisplay.display.showShape(e);
 				#TestDisplay.display.showShape(TestDisplay.makeEdgeIndicator(e));
-				#time.sleep(5);
+				
+				#print "*********NEW EDGE*********"
+
 				slice.fillEdges.append(e);
+				#time.sleep(5);
 		
 		self.hatchReversed = not self.hatchReversed;		
 		log.warn("Filling Complete, Created %d paths." % len(slice.fillWires)  );
@@ -710,18 +716,19 @@ def main(filename):
 
 	#slicing options: use defaults
 	options = SliceOptions();
-	options.numSlices=2;
-	options.numExtraShells=3;
+	#options.numSlices=1;
+	options.numExtraShells=4;
 	options.resolution=.3;
-	options.inFillSpacing=0.3;
+	options.inFillSpacing=.3;
 	#options.zMin=10. 
 	#options.zMax=12
 	
 	#slice it
 	try:
+		print "*** Beginning Slicing... ***";
 		sliceSet = Slicer(shape,options);
 		sliceSet.execute()
-		
+		print "*** Slicing Complete.";
 		#showSlices(sliceSet);
 		
 		#export gcode
@@ -729,7 +736,7 @@ def main(filename):
 		ge.incremental = False;
 		ge.useArcs = True;
 		
-		
+		print "*** Exporting Gcode...";
 		f = open('test.nc','w');
 		
 		for c in ge.header():
@@ -737,19 +744,28 @@ def main(filename):
 		
 		
 		for s in sliceSet.slices:
-			f.write(ge.comment("Slice Number %d" % s.layerNo ));
-			log.warn("SLICE NUMBER %d" % s.layerNo );
+			f.write(ge.comment("Slice zLevel %0.2f" % s.zLevel ));
+			log.warn("Slice zLevel %0.2f" % s.zLevel );
 			f.write(ge.comment("FillWires"));
-			for gc in ge.gcode(s.fillWires):				
+			
+
+			for gc in ge.gcode(s.fillWires):
 				f.write(gc);
+			#print "******** DOING THIS WIRE ******"
+			#print str(Wrappers.Wire(s.fillWires[3]));
+			#TestDisplay.display.showShape(s.fillWires[3]);
+			#for gc in ge.gcode([s.fillWires[3]]):
+		#	#	f.write(gc);
+				
+			#print "******** DONE WITH THIS WIRE ******"
 			f.write(ge.comment("InfillEdges"));
 			for gc in ge.gcode(s.fillEdges):
 				f.write(gc);
 		
 		f.close();
+		print "Export Complete.";
 		
-		
-		#cProfile.runctx('sliceSet.execute()', globals(), locals(), filename="slicer.prof")	;			
+		cProfile.runctx('sliceSet.execute()', globals(), locals(), filename="slicer.prof")	;			
 		
 		#p = pstats.Stats('slicer.prof')
 		#p.sort_stats('time')
@@ -764,7 +780,7 @@ def main(filename):
 if __name__=='__main__':
 
 	###Logging Configuration
-	logging.basicConfig(level=logging.INFO,
+	logging.basicConfig(level=logging.WARN,
 						format='%(asctime)s [%(funcName)s] %(levelname)s %(message)s',
 						stream=sys.stdout)
 	nargs = len(sys.argv);

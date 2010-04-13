@@ -13,7 +13,6 @@ import TestDisplay
 #topexp = TopExp.TopExp()
 #texp = TopExp.TopExp_Explorer();
 #brt = BRepTools.BRepTools();
-
 log = logging.getLogger('Wrapper');
 
 """
@@ -34,6 +33,13 @@ class Timer:
 	def finishedString(self):
 		return "%0.3f sec" % ( self.elapsed() );
 
+		
+def ntuples(lst, n,wrap=True):
+	B = 0;
+	if not wrap:
+		B = 1;
+	return zip(*[lst[i:]+lst[:(i-B)] for i in range(n)])
+	
 """
 	A floating point range generator
 """		
@@ -209,13 +215,13 @@ class Point:
 """
 class Edge:
 	def __init__(self,edge):
+
 		self.edge = edge;		
-		hc = brepTool.Curve(edge);
+		hc = BRep.BRep_Tool().Curve(edge);
 		self.curve = GeomAdaptor.GeomAdaptor_Curve(hc[0]); 
 		self.handleCurve  = hc[0];
 		self.firstParameter = hc[1];
 		self.lastParameter = hc[2];		
-		
 		p1 = self.curve.Value(self.firstParameter);
 		p2 = self.curve.Value(self.lastParameter);
 
@@ -264,7 +270,7 @@ class Edge:
 		else:
 			s = "Curve:\t"; 
 		return s + str(Point(self.firstPoint)) + "-->" + str(Point(self.lastPoint));
-		
+	
 """
 	Follow a wire's edges in order
 """
@@ -272,25 +278,65 @@ class Wire():
 	def __init__(self,wire):
 		self.wire = wire;
 		
+	def edges2(self):
+		"return edges in a list"
+		wireExp = BRepTools.BRepTools_WireExplorer(self.wire);
+		while  wireExp.More():
+			e = wireExp.Current();
+			yield e;
+			wireExp.Next();
+		#wireExp.Clear();
+	
+	def edgesAsSequence(self):
+		"returns edge list as a sequence"
+		wireExp = BRepTools.BRepTools_WireExplorer(self.wire);
+		resultWires = TopTools.TopTools_HSequenceOfShape();
+		
+		while  wireExp.More():
+			e = wireExp.Current();
+			resultWires.Append( e);
+			wireExp.Next();
+		
+		return resultWires;
+		
+	def edgesAsList(self):
+		edges = [];
+		for e in self.edges():
+			edges.append(e);
+		return edges;
+
 	def edges(self):
 		"a generator for edges"
-		#bwe = BRepTools.BRepTools_WireExplorer(self.wire);
-		#while bwe.More():
-		#	edge = bwe.Current();
-		#	yield edge;
-		#	bwe.Next();
-		#bwe.Clear();
-		#bwe.ReInit();
-		
 		bb = TopExp.TopExp_Explorer();
 		bb.Init(self.wire,TopAbs.TopAbs_EDGE);
 		while bb.More():
 			e = topoDS.Edge(bb.Current());
 			yield e;	
-			bb.Next();
-		
+			bb.Next();		
 		bb.ReInit();		
+	
+	def assertHeadToTail(self):
+		"checks that a wire is head to tail."
+		log.info("Asserting Wire..");
+		seq = self.edgesAsSequence();
+		list  = listFromHSequenceOfShape(seq);
+		wrapAround = self.wire.Closed();
+		if wrapAround:
+			log.info("Wire is closed.");
+		for (edge1,edge2) in ntuples(list,2,wrapAround):
+			ew1 = Edge(edge1);
+			ew2 = Edge(edge2);
+			assert ew1.lastPoint.Distance(ew2.firstPoint) < 0.0001;
+		log.info("Wire is valid.");
 		
+	def __str__(self):
+		"print the points in a wire"
+		s = ["Wire:"];
+		for edge in self.edges2():
+			ew = Edge(edge);
+			s.append( str(ew) );
+		return "\n".join(s);
+
 	def discretePoints(self,deflection):
 		"discrete points for all of a wire"
 		for e in self.edges():

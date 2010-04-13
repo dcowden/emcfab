@@ -161,7 +161,7 @@ class ShapeDraw():
 			Follow the edges in a wire in order
 		"""	
 		ww = Wrappers.Wire(wire);
-		for e in ww.edges():
+		for e in ww.edges2():
 			for m in self.followEdge(e,False):
 				yield m;
 
@@ -211,7 +211,7 @@ class ShapeDraw():
 			if self.pendingLinearMove:				
 				if  not self.pendingLinearMove.dir.IsParallel(thisMoveDir,self.tolerance):
 					"this move is parallel to the last one, so replace with this one"
-					log.warning("Move is redundant, replacing with this one.");
+					log.info("Move is redundant, replacing with this one.");
 					yield self.pendingLinearMove;
 
 			log.debug("Saving Move as Pending.");

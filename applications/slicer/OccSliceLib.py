@@ -106,7 +106,7 @@ import cProfile
 import pstats
 import GcodeExporter
 import Wrappers
-
+import SvgExporter
 log = logging.getLogger('slicer');
 
 
@@ -741,13 +741,12 @@ def main(filename):
 		
 		for c in ge.header():
 			f.write(c);
-		
-		
+
 		for s in sliceSet.slices:
 			f.write(ge.comment("Slice zLevel %0.2f" % s.zLevel ));
 			log.warn("Slice zLevel %0.2f" % s.zLevel );
 			f.write(ge.comment("FillWires"));
-			
+		
 
 			for gc in ge.gcode(s.fillWires):
 				f.write(gc);
@@ -764,8 +763,13 @@ def main(filename):
 		
 		f.close();
 		print "Export Complete.";
+
+		print "Exporting SVG...";
+		se = SvgExporter.SVGExporter(sliceSet);
+		se.export('test.svg');
+		print "Exporting Complete.";
 		
-		cProfile.runctx('sliceSet.execute()', globals(), locals(), filename="slicer.prof")	;			
+		#cProfile.runctx('sliceSet.execute()', globals(), locals(), filename="slicer.prof")	;			
 		
 		#p = pstats.Stats('slicer.prof')
 		#p.sort_stats('time')

@@ -25,6 +25,8 @@ log = logging.getLogger('GcodeExporter');
 	all of the commands are not required to be in memory at the same time.
 	
 	NOTE: the machine starts with position [0,0,0].
+	
+	TODO: add 4th dimension for extruder control
 """
 class GcodeExporter:
 	def __init__(self):

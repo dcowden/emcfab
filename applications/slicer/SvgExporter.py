@@ -1,55 +1,123 @@
-"export a slicer into svg files"
+"""
+	An exporter that writes svg files.
+	Most of the intelligence of following paths is available in PathExport.
+	
+	This simply translates ArcMove and LinearMove objects into svg syntax
+"""
+import os,sys,logging,math
+from OCC import gp;
+from string import Template
+import PathExport
+import TestDisplay
+import Wrappers
+log = logging.getLogger('SVGExporter');
+
+NUMBERFORMAT = '%0.3f';	
+
 class SVGExporter():
 	def __init__(self,slicer):
 		self.slicer = slicer;
 		self.title="Untitled";
 		self.description="No Description"
 		self.unitScale = 3.7;
-		self.units = sliceSet.analyzer.guessUnitOfMeasure();
-		self.NUMBERFORMAT = '%0.3f';		
+		#self.unitScale = 1;
+		self.units = slicer.analyzer.guessUnitOfMeasure();
+
+		self.xTranslate=(-1)*self.slicer.analyzer.xMin
+		self.yTranslate=(-1)*self.slicer.analyzer.yMin
 
 	def export(self, fileName):
-		slices = self.slicer.slices;
-		logging.info("Exporting " + str(len(slices)) + " slices to file'" + fileName + "'...");
-		layers = []
+	
+		f = open(fileName,'w');
+
+		print "Exporting " + str(len( self.slicer.slices)) + " slices to file'" + fileName + "'...";
+		
+		#compute the top section
+		d = {};
+		d.update(self.slicer.analyzer.__dict__.copy() ); #dump in properties of the analyzer
+		d.update( self.slicer .__dict__.copy() ); #dump in properties of the slicer
+		d.update(self.__dict__.copy() ); #dump in my properties
+		
+		f.write( topTemplate.substitute(d));
 		
 		#for each slice, print the paths
-		for s in	self.sliceSet.slices:
-			layers.append( SVGLayer(s,self.unitScale,self.NUMBERFORMAT) );
+		for s in	self.slicer.slices:
+			sl = SVGLayer(s,self.unitScale);
+			ld = {};
+			ld.update(d);
+			ld.update(sl.__dict__.copy() );
+			f.write(pathTemplate.substitute(ld) );
 	
-	
+		#compute the bottom section
+		f.write(bottomTemplate.substitute(d));
+		
+		print "SVG Export Complete."
+		f.close();
 	
 "decorates a slice to provide extra computations"
 class SVGLayer:
 	def __init__(self,slice,unitScale):
 		self.slice = slice;
-		self.margin = 20;
 		self.unitScale = unitScale;
-		self.NUMBERFORMAT = '%0.3f';
+		self.xTransform = 20;
+		self.margin = 20;
+		#self.yTransform = (self.slice.layerNo + 1 ) * (self.margin + ( self.slice.sliceHeight * self.unitScale )) + ( self.slice.layerNo * self.margin );
+		self.yTransform = 0;
+		self.zLevel = NUMBERFORMAT % self.slice.zLevel;
+		self.path = SVGLayer.computePath(self.slice);
 		
-	def zLevel(self):
-		return self.NUMBERFORMAT % self.slice.zLevel;
-		
-	def xTransform(self):
-		return self.margin;
-		
-	def yTransform(self):
-		return (self.slice.layerNo + 1 ) * (self.margin + ( self.slice.sliceHeight * self.unitScale )) + ( self.slice.layerNo * 20 );
-
-	def getSVGPath(self):
+	@staticmethod
+	def computePath(slice):
 		"compute the path based on the wires and fill edges"
-		"""
-				<g id="z $zLevel" transform="translate($xTransform, $yTransform)">
-					<text y="15" fill="\#000" stroke="none">Layer $layerNo, z $zLevel</text>
-					<path transform="scale($unitScale, -$unitScale) translate($xTranslate, $yTranslate )" d="$path"/>
-				</g>
-		"""
+		pe = PathExport.ShapeDraw(True,0.001 );
+		path = [];
+		
+		for move in pe.follow( slice.fillWires  + slice.fillEdges):
+			moveType = move.__class__.__name__;
+			if moveType == "LinearMove":
+				path.append(SVGLayer.linearMove(move) );
+			elif moveType == "ArcMove":
+				path.append(SVGLayer.arcMove(move) );
+			else:
+				raise ValueError,"Unknown Move Type!"
+
+		return "\n".join(path);
+		
+	@staticmethod
+	def linearMove(move):
+		"get svg path substring from a linear move"
+		v = move.vector();
+		if move.draw:
+			s = "L" + NUMBERFORMAT + "," + NUMBERFORMAT;
+		else:
+			s = "M" + NUMBERFORMAT + "," + NUMBERFORMAT;
+		return s % (v[0] , v[1]);
+	
+	@staticmethod
+	def arcMove(move):
+		v = move.vector();
+		"get svg path substring from an arc move"
+		rx  = ry = move.getRadius();
+		rotation = 0;
+		x = v[0];
+		y = v[1];
+
+		if move.includedAngle > math.pi:
+			largeArc = 1;
+		else:
+			largeArc = 0;
+		if move.ccw:
+			sweep = 1;
+		else:
+			sweep = 0;
+		# A rx ry xAxisRotation largeArcFlag sweepFlag endX endY
+		s  = "A" + NUMBERFORMAT + "," + NUMBERFORMAT + ", %d , %d, %d, " +NUMBERFORMAT + "," + NUMBERFORMAT;
+		return s % ( rx,ry,rotation,largeArc,sweep,x,y) ;
 		
 	
 
 "template for output svg. It is pretty long"
-topSection = """
-<?xml version="1.0" standalone="no"?>
+topTemplate = Template("""<?xml version="1.0" standalone="no"?>
 <!--
     Copyright [2009] [Dave Cowden ( dave.cowden@gmail.com)]
 
@@ -137,12 +205,12 @@ function init(){
 	//Get meta data
 	mD = document.getElementsByTagNameNS('http://www.reprap.org/slice','layers')[0];
 	units = mD.getAttributeNS(null,'units');
-	sliceMinX = mD.getAttribute('minX') * 1;
-	sliceMaxX = mD.getAttribute('maxX') * 1;
-	sliceMinY = mD.getAttribute('minY') * 1;
-	sliceMaxY = mD.getAttribute('maxY') * 1;
-	sliceMinZ = mD.getAttribute('minZ') * 1;
-	sliceMaxZ = mD.getAttribute('maxZ') * 1;
+	sliceMinX = (mD.getAttribute('minX') * 1).toFixed(2);
+	sliceMaxX = (mD.getAttribute('maxX') * 1).toFixed(2);
+	sliceMinY = (mD.getAttribute('minY') * 1).toFixed(2);
+	sliceMaxY = (mD.getAttribute('maxY') * 1).toFixed(2);
+	sliceMinZ = (mD.getAttribute('minZ') * 1).toFixed(2);
+	sliceMaxZ = (mD.getAttribute('maxZ') * 1).toFixed(2);
 	
 	//Set Display variables
 	unitScale = units == 'in' ? 96 : 3.7;
@@ -180,7 +248,7 @@ function init(){
 	setText('dimY', sliceDimensionY)
 	setText('dimZ', sliceDimensionZ)
 	setText('scaleNum','1 : ' + 1/zoomScale);
-	setText('layerThickness', 'Layer Thickness: ' + mD.getAttribute('layerThickness') + units);
+	setText('layerThickness', 'Layer Thickness: ' + (mD.getAttribute('layerThickness') *1 ).toFixed(2) + units);
 	
 	changeScale(zoomScale);
 }
@@ -283,7 +351,7 @@ function viewSingle(){
 				minZ="$zMin" maxZ="$zMax"/>
 	</metadata>
 	<!--Begin Layer Data   -->
-	<g id="layerData" fill="darkseagreen" stroke="\#00F" stroke-width="0.54px" 
+	<g id="layerData" fill="none" stroke="blue" stroke-width="4"  
 	font-weight="bold" font-family="Arial" font-size="15px">
 <!--Beginning of path section-->
 <!-- transform algorithm
@@ -300,16 +368,16 @@ function viewSingle(){
 		scale = (unit scale) (-1 * unitscale)
 		translate = (-1 * minX) (-1 * minY)
 -->
-"""
+""");
 
-pathSection= """
+pathTemplate= Template("""
 		<g id="z $zLevel" transform="translate($xTransform, $yTransform)">
-			<text y="15" fill="\#000" stroke="none">Layer $layerNo, z $zLevel</text>
+			<text y="15" fill="\#000" stroke="none"> z $zLevel</text>
 			<path transform="scale($unitScale, -$unitScale) translate($xTranslate, $yTranslate )" d="$path"/>
 		</g>
-"""
+""");
 
-bottomSection="""
+bottomTemplate= Template("""
 <!--End of path section-->
 	</g>
 	<!--End Layer Data-->
@@ -379,23 +447,23 @@ bottomSection="""
 				<text>X</text>
 				<text id="minXNoJavascript" x="20">$xMin</text>
 				<text id="maxXNoJavascript" x="70">$xMax</text>
-				<text id="dimXNoJavascript" x="120">$xRange</text>
+				<text id="dimXNoJavascript" x="120">$xDim</text>
 			</g>
 			<g transform="translate(100, 60)">
 				<text>Y</text>
 				<text id="minYNoJavascript" x="20">$yMin</text>
 				<text id="maxYNoJavascript" x="70">$yMax</text>
-				<text id="dimYNoJavascript" x="120">$yRange </text>
+				<text id="dimYNoJavascript" x="120">$yDim </text>
 			</g>
 			<g transform="translate(100, 80)">
 				<text>Z</text>
 				<text id="minZNoJavascript" x="20">$zMin</text>
 				<text id="maxZNoJavascript" x="70">$zMax</text>
-				<text id="dimZNoJavascript" x="120">$zRange</text>
+				<text id="dimZNoJavascript" x="120">$zDim</text>
 			</g>
 		</g>
 	</g>
 	<!--End Controls-->
 	
 </svg>
-"""
+""");

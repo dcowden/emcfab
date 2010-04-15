@@ -9,7 +9,7 @@
 	edges, shapes, and such for toolpaths
 """
 
-import os
+import os,math
 import sys,logging
 from OCC import TopoDS, TopExp, TopAbs,BRep,gp,Geom,GeomAbs,GeomAPI,BRepBuilderAPI
 
@@ -71,7 +71,13 @@ class ArcMove(Move):
 		Move.__init__(self,fromPoint,toPoint);
 		self.centerPoint = centerPoint;
 		self.ccw = ccw;
-
+		self.includedAngle = None;
+	def getRadius(self):
+		"gets the radius of the circle"
+		dX = abs( self.fromPoint.X() - self.centerPoint.X() );
+		dY = abs ( self.fromPoint.Y() - self.centerPoint.Y() );
+		return math.sqrt( math.pow( dX, 2) + math.pow(dY,2) );
+		
 	def __str__(self):
 		if self.ccw:
 			s = "CCW ArcTo: ";
@@ -237,6 +243,10 @@ class ShapeDraw():
 					zDir = zDir.Reversed();
 				ccw = zDir.IsEqual(axisDir,self.tolerance);	
 				self.currentPoint = ew.lastPoint;
+				a = ArcMove(ew.firstPoint, ew.lastPoint, center, ccw );
+				a.includedAngle = abs( ew.firstParameter - ew.lastParameter );
+				#circles are parameterized between zero and 2*pi.
+				
 				yield ArcMove(ew.firstPoint, ew.lastPoint,center,ccw);				
 			else:
 				log.debug("Curve is not a line or a circle");

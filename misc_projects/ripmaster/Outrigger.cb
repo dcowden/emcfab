@@ -761,6 +761,7 @@
     </layer>
   </layers>
   <MachiningOptions>
+    <OutFile>C:\data\emcfab\misc_projects\ripmaster\Outrigger.ngc</OutFile>
     <SplineCurveSteps>12</SplineCurveSteps>
     <TextCurveSteps>5</TextCurveSteps>
   </MachiningOptions>

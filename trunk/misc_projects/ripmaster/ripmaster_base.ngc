@@ -120,7 +120,7 @@ G00 Z4.0 ( Make room for operator to install screws
 (Pause here: operator should secure work using screws in the newly created holes )
 M00
 
-
+M03
 ( OuterProfile )
 
 G00 X15.841859 Y5.20296

@@ -21,7 +21,7 @@ F140
 ( Hole1CSK )
 G00 Z0.1
 G00 X3.871951 Y10.547736
-G01 Z0.185
+G01 Z-0.185
 G02 X3.843451 Y10.531282 I-0.019 J0
 G02 Y10.564191 I0.0095 J0.016454
 G02 X3.871951 Y10.547736 I0.0095 J-0.016454
@@ -171,7 +171,7 @@ G02 X18.085451 Y10.017425 I-0.035 J0
 G02 Y10.078047 I0.0175 J0.030311
 G02 X18.137951 Y10.047736 I0.0175 J-0.030311
 
-G00 Z4.0 ( Make room for operator to install screws
+G00 Z4.0 ( Make room for operator to install screws )
 (Pause here: operator should secure work using screws in the newly created holes )
 M00
 M03

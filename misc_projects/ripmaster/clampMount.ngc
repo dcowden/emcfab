@@ -1,0 +1,77 @@
+(RipMaster Clamp Mount )
+( Material: Aluminum, thickness .25", width 1" )
+( 4/25/2010 )
+(TO: D 0.125" )
+( holes are diameter 0.125. slots are thickness .196" )
+(x=0 is at the left end of the plate )
+(y=0 is in the center of the plate )
+
+( ===== SUBROUTINES ===== )
+(mills a slot in the x direction, assuming the current position is the center left )
+( #1 = height in Y  eg .125)
+( #2 = length in X  eg 2.0)
+( #3 = depth per pass eg 0.010)
+( #4 = end depth, eg -0.25)
+O100 sub 
+	#5 = 0
+	G91
+	G00 Y[#1/2]
+	O101 while [#5 gt #4]
+		G01 X[#2] Z[-1*#3]
+		G02 I0.0 J[-1*#1/2] Y[-1*#1]
+		G01 X[-1.0*#2]
+		G02 I0.0 J[#1/2] Y[#1]
+		#5 = [#5-#3]
+	O101 endwhile
+	G01 Z0.1
+	G90
+O100 endsub 
+(end slot mill )
+
+(mills a vertical slot -- y direction )
+(assumes you start at the bottom of the slot )
+( #1 = height in Y )
+( #2 = depth per pass )
+( #3 = end depth )
+O101 sub
+	#5 = 0
+	G91
+	O101 while [#5 gt #3]
+		G01 Y[#1] Z[-1*#2]
+		G01 Y[-1.0*#1]
+		#5 = [#5-#2]
+	O101 endwhile
+	G01 Z0.1
+	G90
+O101 endsub
+(end vertical slot )
+
+( ===== MAIN PROGRAM ====== )
+F60.
+G90
+#8 = 0.1 (clearance plane )
+
+(peck drill holes for clamp )
+(assume here that hole diam is equal to cutter )
+G00 X0 Y0 Z#8
+G83 X2.125 Y-0.375 R0.1 Z-0.25 Q0.05 F40.0
+G83 X2.125 Y0.375
+G83 X2.875 Y0.375
+G83 X2.875 Y-0.375
+
+(slot 1 )
+G01 X0.25 Y0.0 Z#8
+O100 call [0.070] [1.875] [0.010] [-0.25]
+
+(slot 2 )
+G01 X2.875 Y0.0 Z#8
+O100 call [0.070] [1.875] [0.010] [-0.25]
+
+(left end)
+G00 X-0.0625 Y-0.625 Z#8
+O101 call [1.125] [0.010] [-0.25]
+
+(right end )
+G00 X5.0625 Y-0.625 Z#8
+O101 call [1.125] [0.010] [-0.25]
+M30

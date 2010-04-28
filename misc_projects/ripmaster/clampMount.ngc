@@ -54,10 +54,10 @@ G90
 (peck drill holes for clamp )
 (assume here that hole diam is equal to cutter )
 G00 X0 Y0 Z#8
-G83 X2.125 Y-0.375 R0.1 Z-0.25 Q0.05 F40.0
-G83 X2.125 Y0.375
-G83 X2.875 Y0.375
-G83 X2.875 Y-0.375
+G83 X2.23 Y-0.315 R0.1 Z-0.25 Q0.05 F40.0
+G83 X2.23 Y0.315
+G83 X2.77 Y0.315
+G83 X2.77 Y-0.315
 
 (slot 1 )
 G01 X0.25 Y0.0 Z#8

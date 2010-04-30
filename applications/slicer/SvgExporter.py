@@ -15,17 +15,18 @@ log = logging.getLogger('SVGExporter');
 NUMBERFORMAT = '%0.3f';	
 
 class SVGExporter():
-	def __init__(self,slicer):
+	def __init__(self,slicer,options):
 		self.slicer = slicer;
 		self.title="Untitled";
 		self.description="No Description"
 		self.unitScale = 3.7;
 		#self.unitScale = 1;
-		self.units = slicer.analyzer.guessUnitOfMeasure();
-
+		self.units = options.units;
+		self.options = options;
+		
 		self.xTranslate=(-1)*self.slicer.analyzer.xMin
 		self.yTranslate=(-1)*self.slicer.analyzer.yMin
-
+	
 	def export(self, fileName):
 	
 		f = open(fileName,'w');
@@ -37,15 +38,24 @@ class SVGExporter():
 		d.update(self.slicer.analyzer.__dict__.copy() ); #dump in properties of the analyzer
 		d.update( self.slicer .__dict__.copy() ); #dump in properties of the slicer
 		d.update(self.__dict__.copy() ); #dump in my properties
+		d.update(self.options.__dict__.copy() );
 		
 		f.write( topTemplate.substitute(d));
 		
 		#for each slice, print the paths
 		for s in	self.slicer.slices:
-			sl = SVGLayer(s,self.unitScale);
-			ld = {};
+			
+			#stash a bunch of properties for conversion			
+			ld = {
+				'unitScale': self.unitScale,
+				'xTransform': 20,
+				'margin': 20,
+				'yTransform' :0 ,
+				'zLevel': ( self.options.svg.numberFormat %( s.zLevel) ),
+				'layerNo' : s.layerNo,
+				'path': self.computeLayerPath(s )
+			};
 			ld.update(d);
-			ld.update(sl.__dict__.copy() );
 			f.write(pathTemplate.substitute(ld) );
 	
 		#compute the bottom section
@@ -53,50 +63,40 @@ class SVGExporter():
 		
 		print "SVG Export Complete."
 		f.close();
-	
-"decorates a slice to provide extra computations"
-class SVGLayer:
-	def __init__(self,slice,unitScale):
-		self.slice = slice;
-		self.unitScale = unitScale;
-		self.xTransform = 20;
-		self.margin = 20;
-		#self.yTransform = (self.slice.layerNo + 1 ) * (self.margin + ( self.slice.sliceHeight * self.unitScale )) + ( self.slice.layerNo * self.margin );
-		self.yTransform = 0;
-		self.zLevel = NUMBERFORMAT % self.slice.zLevel;
-		self.path = SVGLayer.computePath(self.slice);
 		
-	@staticmethod
-	def computePath(slice):
-		"compute the path based on the wires and fill edges"
+	def computeLayerPath(self,slice):
+		"computes paths for a single layer"
+
 		pe = PathExport.ShapeDraw(True,0.001 );
 		path = [];
 		
 		for move in pe.follow( slice.fillWires  + slice.fillEdges):
 			moveType = move.__class__.__name__;
 			if moveType == "LinearMove":
-				path.append(SVGLayer.linearMove(move) );
+				path.append(self.linearMove(move) );
 			elif moveType == "ArcMove":
-				path.append(SVGLayer.arcMove(move) );
+				path.append(self.arcMove(move) );
 			else:
 				raise ValueError,"Unknown Move Type!"
 
-		return "\n".join(path);
-		
-	@staticmethod
-	def linearMove(move):
+		return "\n".join(path);		
+
+	
+	def linearMove(self,move):
 		"get svg path substring from a linear move"
+		nf = self.options.svg.numberFormat;
 		v = move.vector();
 		if move.draw:
-			s = "L" + NUMBERFORMAT + "," + NUMBERFORMAT;
+			s = "L" + nf + "," + nf;
 		else:
-			s = "M" + NUMBERFORMAT + "," + NUMBERFORMAT;
+			s = "M" + nf + "," + nf;
 		return s % (v[0] , v[1]);
 	
-	@staticmethod
-	def arcMove(move):
+	
+	def arcMove(self,move):
 		v = move.vector();
 		"get svg path substring from an arc move"
+		nf = self.options.svg.numberFormat;
 		rx  = ry = move.getRadius();
 		rotation = 0;
 		x = v[0];
@@ -111,8 +111,9 @@ class SVGLayer:
 		else:
 			sweep = 0;
 		# A rx ry xAxisRotation largeArcFlag sweepFlag endX endY
-		s  = "A" + NUMBERFORMAT + "," + NUMBERFORMAT + ", %d , %d, %d, " +NUMBERFORMAT + "," + NUMBERFORMAT;
+		s  = "A" + nf + "," + nf + ", %d , %d, %d, " +nf + "," + nf;
 		return s % ( rx,ry,rotation,largeArc,sweep,x,y) ;
+		
 		
 	
 
@@ -178,7 +179,7 @@ function changeScale(newScale){
 	zoomScale = newScale
 	scale = unitScale * zoomScale
 	viewSingle()
-	setText('scaleNum','1 : ' + 1/zoomScale);
+	setText('scaleNum','1 : ' + (1/zoomScale).toFixed(2));
 	if(zoomScale >=1 ) //dont scale line thickness for large display scale 
 		document.getElementById('layerData').setAttributeNS(null,'stroke-width',2/(scale))
 }
@@ -304,7 +305,7 @@ function viewAll(){
 	
 	//show control box
 	document.getElementById('javascriptControls').setAttributeNS(null,'visibility','hidden')
-	document.getElementById('noJavascriptControls').setAttributeNS(null,'visibility','visible')
+	document.getElementById('noJavascriptControls').setAttributeNS(null,'visibility','hidden')
 	x = margin
 	y = layers.length * (margin + sliceDimensionY * unitScale + textHeight) + margin
 	document.getElementById('buttonSingle').setAttributeNS(null,'visibility','visible')
@@ -324,7 +325,7 @@ function viewSingle(){
 		y = margin + sliceDimensionY * scale
 		layers[i].setAttributeNS(null,'transform','translate(' + x + ' ' + y + ')')
 		layers[i].setAttributeNS(null,'visibility','hidden')
-		layers[i].getElementsByTagName('text')[0].setAttributeNS(null,'visibility','hidden')
+		//layers[i].getElementsByTagName('text')[0].setAttributeNS(null,'visibility','hidden')
 		transform = 'scale(' + scale + ' ' + (scale * -1) + ') translate(' + (sliceMinX * -1) + ' ' + (sliceMinY * -1) + ')'
 		layers[i].getElementsByTagName('path')[0].setAttributeNS(null,'transform',transform)
 	}
@@ -345,7 +346,7 @@ function viewSingle(){
 	<title>$title</title>
 	<desc>$description</desc>
 	<metadata>
-		<slice:layers id="sliceData" version="0.1" units="$units" layerThickness="$sliceHeight" 
+		<slice:layers id="sliceData" version="0.1" units="$units" layerThickness="$layerHeight" 
 				minX="$xMin" maxX="$xMax" 
 				minY="$yMin" maxY="$yMax" 
 				minZ="$zMin" maxZ="$zMax"/>
@@ -372,7 +373,7 @@ function viewSingle(){
 
 pathTemplate= Template("""
 		<g id="z $zLevel" transform="translate($xTransform, $yTransform)">
-			<text y="15" fill="\#000" stroke="none"> z $zLevel</text>
+			<text y="15" fill="black" stroke="black"> Layer $layerNo (z= $zLevel $units)</text>
 			<path transform="scale($unitScale, -$unitScale) translate($xTranslate, $yTranslate )" d="$path"/>
 		</g>
 """);
@@ -406,8 +407,8 @@ bottomTemplate= Template("""
 				<text y="20" x="153" onclick="displayLayer(currentLayer+1)" fill="darkslateblue">&gt;</text>
 				<text y="40" x="0">Scale</text>
 				<text y="40" x="45" id="scaleNum">0.125</text>
-				<text y="40" x="138" onclick="changeScale(zoomScale/2)" fill="darkslateblue">&lt;</text>
-				<text y="40" x="153" onclick="changeScale(zoomScale*2)" fill="darkslateblue">&gt;</text>
+				<text y="40" x="138" onclick="changeScale(zoomScale/1.5)" fill="darkslateblue">&lt;</text>
+				<text y="40" x="153" onclick="changeScale(zoomScale*1.5)" fill="darkslateblue">&gt;</text>
 				<text y="60" id="layerThickness" >Layer Thickness: </text>
 			</g>
 			<g transform="translate(290, 0)">
@@ -441,7 +442,7 @@ bottomTemplate= Template("""
 				<path stroke="\#000" stroke-width="3" d="M 5 40 h5 l-5 -10 l-5 10 h5 v35 h35 v-5 l10 5 l-10 5 v-5 h-35 z"/>
 				<text x="3" y="20" font-weight="bold">Y</text>
 				<text x="60" y="80" font-weight="bold">X</text>
-				<text x="120" y="80" id="layerThicknessNoJavascript">Layer Thickness: $sliceHeight $units</text>
+				<text x="120" y="80" id="layerThicknessNoJavascript">Layer Thickness: $layerHeight $units</text>
 			</g>
 			<g transform="translate(100, 40)">
 				<text>X</text>

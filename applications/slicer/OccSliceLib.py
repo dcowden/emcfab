@@ -45,18 +45,8 @@
 								Type "help", "copyright", "credits" or "license" for more information.
 								>>> from OCC import *
 								>>>					
-									
-			3)Install the Cheetah Template library for python, version 2.2 from here: 
-					GET:		http://sourceforge.net/project/showfiles.php?group_id=28961
-					TEST:		at a python prompt try to import Cheetah, like this:
-					
-								Python 2.5.2 (r252:60911, Feb 21 2008, 13:11:45) [MSC v.1310 32 bit (Intel)] o
-								win32
-								Type "help", "copyright", "credits" or "license" for more information.
-								>>> from Cheetah import *
-								>>>		
 
-			4)Copy OccSliceLib(this script) into a directory of your choice.
+			3)Copy OccSliceLib(this script) into a directory of your choice.
 					TEST:		Run the script without any arguments to confirm installation is ok, and to print help:
 			
 								>python OccSliceLib.py
@@ -80,7 +70,7 @@ import traceback
 import math
 import itertools
 
-from OCC import STEPControl,TopoDS, TopExp, TopAbs,BRep,gp,GeomAbs,GeomAPI
+from OCC import STEPControl,TopoDS, TopExp, TopAbs,BRep,gp,GeomAbs,GeomAPI,Message,ShapeExtend,TopTools
 from OCC import BRepBuilderAPI,BRepTools,BRepAlgo,BRepBndLib,Bnd,StlAPI,BRepAlgoAPI,BRepAdaptor
 from OCC import BRepLProp,BRepGProp,BRepBuilderAPI,BRepPrimAPI,GeomAdaptor,GeomAbs,BRepExtrema
 from OCC import BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI,BRepAdaptor,IntCurvesFace,Approx,BRepLib
@@ -90,7 +80,7 @@ from OCC.Utils.Topology import Topo
 from OCC.ShapeAnalysis import ShapeAnalysis_FreeBounds
 from OCC.ShapeAnalysis import ShapeAnalysis_WireOrder
 from OCC.ShapeFix import ShapeFix_Wire
-
+from  OCC.Utils import Topology 
 from OCC import ShapeFix
 from OCC import BRepBuilderAPI
 from OCC import TopTools
@@ -107,6 +97,8 @@ import pstats
 import GcodeExporter
 import Wrappers
 import SvgExporter
+from  SlicerConfig import *
+
 log = logging.getLogger('slicer');
 
 
@@ -115,23 +107,13 @@ log = logging.getLogger('slicer');
 #      	2d instead of 3d
 #  		section instead of cut
 #		better overlapping checks
-#		compute bounding boc just once
+#		compute bounding box just once
 #	thin feature checks
-#   allow offsetting of some wires without the others
 #   instersection checking
 #   short edge detection ( remove dumb little edges )
-#   svg export for visualization ( or is there another format web-suitable? )
 #   stop using memory by generating as we go
 #
-"""
-	##
-	##  Performance Improvement Ideas
-	## 
-    Compute slice boundaries once instead of per layer
-	Generate gcode as you go instead of storing in memory
-	 
- 
-"""
+
 
 #####
 #utility class instances
@@ -144,14 +126,14 @@ topexp = TopExp.TopExp()
 texp = TopExp.TopExp_Explorer();
 BRepLProp_CurveTool = BRepLProp.BRepLProp_CurveTool();
 
-
-#### some constants
+TOLERANCE = 0.00001 # a good value that is precise enough for both MM and IN
 UNITS_MM = "mm";
 UNITS_IN = "in";
 UNITS_UNKNOWN = "units";
 
-def pause():
-	raw_input("Press Enter to continue");
+def userMessage(msg):
+	"message intended for the user. Separate from Logging, which should be only for debugging"
+	print "[OccSlicer]:" + msg;
 
 def pointsFromWire(wire,spacing):
 	"Makes a single parameterized adapter curve from a wire"	
@@ -242,6 +224,21 @@ class SolidAnalyzer:
 	def friendlyDimensions(self):		
 		formatString = "x:%0.2f y:%0.2f z:%0.2f (" + self.guessUnitOfMeasure() + ")" 
 		return formatString % ( self.xDim, self.yDim, self.zDim );
+	
+	"""
+		Compute a set of sane slicing options
+	"""
+	def defaultSlicingOptions(self):
+		options = SlicerOptions();
+		
+		options.setDefaults( self.guessUnitOfMeasure());
+		
+		#assume that by default we'll translate to positive space
+		options.zMin = 0;
+		options.zMax = self.zDim;
+		options.translateToPositiveSpace = True;
+		
+		return options;
 		
 	"""
 		Translate to positive space This returns another shape that
@@ -263,9 +260,10 @@ class SolidAnalyzer:
 			log.info("Translating shape by x=%0.3f,y=%0.3f,z=%0.3f" % ( x, y, z ));
 			bt = BRepBuilderAPI.BRepBuilderAPI_Transform(xform);
 			bt.Perform(self.shape,False);
-			return bt.Shape();
+			return SolidAnalyzer(bt.Shape());
 		else:
 			log.debug("Translation is not required. Returning existing shape");
+			return self;
 	
 	"""
 	  Given a list of dimenions, guess the unit of measure.
@@ -286,131 +284,84 @@ class SolidAnalyzer:
 		if sum(dimList) < 10:
 			return UNITS_IN;
 		
-		return UNITS_UNKNOWN;	
+		return UNITS_MM;	
 
 		
-"""
-	Slicing Parameters Object stores the various options
-	that are selected during slicing.
-	
-	This object is separated out because as these routines
-	become more complex, it is expected that this obejct will grow in size
-"""
-class SliceOptions:
-	def __init__(self):
-	
-		#global options
-		self.zMin = None;
-		self.zMax = None;
-		self.translateToPositiveSpace=False;
-		self.numSlices = None;
-		self.resolution = None;
-		self.sliceHeight = None;
-		self.uom = None;
-		self.DEFAULT_RESOLUTION = { UNITS_MM : 0.3, UNITS_IN : 0.012 };
-		self.FIRST_LAYER_OFFSET = 0.0001;
-		self.DEFAULT_NUMSHELLS = 5;
-		self.inFillAngle = 30;
-		self.hatchPadding = 0.15; # a percentage
-		self.inFillSpacing=1;	
-	
 """
 	a set of slices that together make a part
 """
 class Slicer:
-	def __init__(self,shape,options):
+	def __init__(self,analyzer,options):
 		"initialize the object"
 		self.slices=[]
-		self.shape = shape;
-		self.analyzer = SolidAnalyzer(shape);
-		self.hatchReversed = False;
-		self.options = options;		
-
+		self.shape = analyzer.shape;
+		self.analyzer = analyzer;
+		self.hatchReversed = False;	
 		self.saveSliceFaces = True;				
-		self.FIRST_LAYER_OFFSET = 0.00001;
-		
-		
-		#use options and actual object to determine unit of measure and other values
-		#unit of measure
-		self.uom = self.analyzer.guessUnitOfMeasure();
-		if options.uom:
-			self.uom = options.uom;
-		
-		#nozzle resolution
-		self.resolution = options.DEFAULT_RESOLUTION.get(self.uom);
-		if options.resolution:
-			self.resolution = options.resolution;
+		self.FIRST_LAYER_OFFSET =TOLERANCE*1.5;
+		self.options = options;	
 			
-		#slicing boundaries
-		self.zMin = self.analyzer.zMin;
-		self.zMax = self.analyzer.zMax;
-		
-		if options.zMin and options.zMin > self.zMin:
-			self.zMin = options.zMin;
-			
-		if options.zMax and options.zMax < self.zMax:
-			self.zMax = options.zMax;
-			
-		#slice thickness: default to same as resolution
-		zRange = (self.zMax - self.zMin );
-		self.sliceHeight = self.resolution;
-		self.numSlices = math.floor(zRange/self.sliceHeight);
-		
-		#alter if number of slices or a particular thickness is provided
-		if options.sliceHeight:
-			self.sliceHeight = options.sliceHeight;
-			self.numSlices = math.floor(zRange/self.sliceHeight);
-		elif options.numSlices:
-			self.numSlices = options.numSlices;
-			self.sliceHeight = zRange / self.numSlices;
-					
-		log.info("Object Loaded. Dimensions are " + self.analyzer.friendlyDimensions());
-
-
 	def execute(self):
 		"slices the object with the settings supplied in the options property"
+
+		if self.options.translateToPositiveSpace:
+			userMessage("Translating Object to Positive Space...");
+			self.analyzer = self.analyzer.translateToPositiveSpace();		
+
+		shapeToSlice = self.analyzer.shape;
 		t = Timer();		
-		log.info("Slicing Started.");
+		userMessage("Slicing Started.");
 		
-		reportInterval = round(self.numSlices/10);
-		log.info( "Slice Thickness is %0.3f %s, %0d slices. " % ( self.sliceHeight,self.uom,self.numSlices ));
+		reportInterval = round(self.options.zMax /10);
 		
+		#
 		#make slices
-		zLevel = self.zMin + self.FIRST_LAYER_OFFSET;
+		#
+		zLevel = self.options.zMin + self.FIRST_LAYER_OFFSET;
 		sliceNumber = 1;
-
+						
 		t2 = Timer();
-		while zLevel < self.zMax:
-			log.warn( "Creating Slice %0d, z=%0.3f " % ( sliceNumber,zLevel));
-			slice = self._makeSlice(self.shape,zLevel);
-
+		while zLevel < self.options.zMax:
+			#userMessage("Slicing Z= %0.3f ..." % zLevel );
+			log.info( "Creating Slice %0d, z=%0.3f " % ( sliceNumber,zLevel));
+			slice = self._makeSlice(shapeToSlice,zLevel);
+			slice.layerNo = sliceNumber;
 			if slice != None:		
 				self.slices.append(slice);
-				#todo: this should probably be componentize: filling is quite complex.
-				self._fillSlice(slice);
-
 				
-			zLevel += self.sliceHeight
+				if self.options.filling.enabled:
+					self._fillSlice(slice);
+				
+			zLevel += self.options.layerHeight;
 			sliceNumber += 1;
+
+			#TestDisplay.display.eraseAll();
+			#showSlice(slice);
+			#time.sleep(2);
 			
-			log.warn("Slice %d : %d paths" % (sliceNumber,  len(slice.fillWires) + len(slice.fillEdges) ));
+			#userMessage("Slice z=%03.f : %d paths" % (zLevel,  len(slice.fillWires) + len(slice.fillEdges) ));
 			#compute an estimate of time remaining every 10 or so slices
 			if reportInterval > 0 and sliceNumber % reportInterval == 0:
-				pc = ( zLevel - self.zMin )/   ( self.zMax - self.zMin) * 100;
-				log.warn("%0.0f %% complete." % (pc) );			
+				pc = ( zLevel - self.options.zMin )/   (self.options.zMax - self.options.zMin) * 100;
+				userMessage("%0.0f %% complete." % (pc) );			
 
-		log.warn("Slicing Complete: " + t.finishedString() );
-		log.warn("Throughput: %0.3f slices/sec" % (sliceNumber/t.elapsed() ) );
-
-
+		userMessage("Slicing Complete: " + t.finishedString() );
+		userMessage("Throughput: %0.3f slices/sec" % (sliceNumber/t.elapsed() ) );
 			
 	#fills a slice with the appropriate toolpaths.
 	#returns: void
 	#a number of wires are added to the slice as paths.
 	def _fillSlice(self,slice):
 	
+		
 		log.info("Filling Slice at zLevel %0.3f" % slice.zLevel);
+		log.info("There are %d faces" % len(slice.faces) );
 		for f in slice.faces:
+			log.info("Filling Face..");
+			#TestDisplay.display.eraseAll();
+			#time.sleep(3);			
+			#TestDisplay.display.showShape(f);
+			#time.sleep(3);
 			numShells = 0;
 			t3=Timer();
 			shells = [];
@@ -421,17 +372,21 @@ class Slicer:
 
 			#compute one offset for the outer boundary. This is required.If we cannot
 			#compute it, we should throw an error
-			currentOffset =  (-1) * self.resolution / 2;
+			currentOffset =  (-1) * self.options.nozzleDiameter / 2;
 			lastOffset = self._offsetFace(f, currentOffset);
+
 			if lastOffset:
 				shells.append(lastOffset);
 			else:
 				log.error("Cannot compute a single offset. Filling Failed");
 				return;
+
+			infillSpacing = self.options.filling.fillWidth;
+			numExtraShells = self.options.filling.numExtraShells;
 			
 			#compute one more offset for filling. If this cannot be computed, again,
 			#return
-			currentOffset -= self.resolution;
+			currentOffset -= infillSpacing;
 			lastOffset = self._offsetFace(f, currentOffset);
 			if lastOffset:
 				shells.append(lastOffset);
@@ -440,19 +395,18 @@ class Slicer:
 				return;
 			
 			numShells = 0;
-			for i in range(2,self.options.numExtraShells):
-				currentOffset -= self.resolution;
+			
+			for i in range(2,numExtraShells):
+				currentOffset -= infillSpacing;
 
 				try:
-					#print "Offsetting at zlevel %0.3f" % slice.zLevel
 					newOffset = self._offsetFace(f,currentOffset);
-					if newOffset:
-						r = checkMinimumDistanceForOffset(newOffset,self.options.resolution);						
+					if newOffset and self.options.filling.checkFillInterference:					
+						r = checkMinimumDistanceForOffset(newOffset,self.options.nozzleDiameter);						
 						if not r:
 							log.warn("Shell is too close to other shells.");
 							break;
 							
-					#TestDisplay.display.showShape(newOffset);
 					shells.append(newOffset);
 					numShells+=1;
 				except Exception as e:
@@ -462,8 +416,8 @@ class Slicer:
 
 			
 			#completed
-			if numShells < self.options.numExtraShells:
-				log.warn(("Could only create %d of the requested %d shells:") % (numShells, self.options.numExtraShells ));
+			if numShells < numExtraShells:
+				userMessage(("Could only create %d of the requested %d shells:") % (numShells, numExtraShells ));
 			
 			#the last shell is for hatch rather than infill.
 			#if it was possible to create the last shell, that means it is large enough to fill
@@ -483,48 +437,38 @@ class Slicer:
 			#debugShape(lastShell);
 			h = hatchLib.Hatcher(
 					listFromHSequenceOfShape(makeWiresFromOffsetShape(lastShell)),
-					slice.zLevel,self.options.inFillSpacing,
+					slice.zLevel,self.options.filling.fillWidth,
 					self.hatchReversed ,
 					[ self.analyzer.xMin,self.analyzer.yMin, self.analyzer.xMax, self.analyzer.yMax]);
 			
 		
 			h.hatch();
-			#i = 0;
+			#TestDisplay.display.eraseAll();
 			for e in h.edges():
-				#i += 1;
-				
 				#TestDisplay.display.showShape(e);
-				#TestDisplay.display.showShape(TestDisplay.makeEdgeIndicator(e));
-				
-				#print "*********NEW EDGE*********"
-
+				#time.sleep(.1);
 				slice.fillEdges.append(e);
-				#time.sleep(5);
 		
-		self.hatchReversed = not self.hatchReversed;		
+		self.hatchReversed = not self.hatchReversed;
 		log.warn("Filling Complete, Created %d paths." % len(slice.fillWires)  );
 
 
 		
 	#offset a face, returning the offset shape
 	def _offsetFace(self,face,offset ):
-		resultWires = [];
 		ow = brt.OuterWire(face);
 		bo = BRepOffsetAPI.BRepOffsetAPI_MakeOffset();
 		bo.AddWire(ow);
-
-		#now get the other wires
-		te = TopExp.TopExp_Explorer();
 		
-		te.Init(face,TopAbs.TopAbs_WIRE);
-		while te.More():
-				w = ts.Wire(te.Current());
-				if not w.IsSame(ow):
-						bo.AddWire(w);
-				te.Next();
-		te.ReInit();
-			
-		bo.Perform(offset,0.00001);
+		
+		for w in Topo(face).wires():
+			if not w.IsSame(ow):
+				#TestDisplay.display.showShape(w);
+				bo.AddWire(w);
+		
+		#print "about to offset by %0.2f" % offset;
+		bo.Perform(offset,TOLERANCE);  #this line crashes hard, but only sometimes.
+		#print "done offsetting..";
 		if  not bo.IsDone():
 			raise Exception, "Offset Was Not Successful.";
 		else:
@@ -535,7 +479,7 @@ class Slicer:
 		s = Slice();
 		
 		#change if layers are variable thickness
-		s.sliceHeight = self.sliceHeight;		
+		s.sliceHeight = self.options.layerHeight;		
 		s.zLevel = zLevel;
 
 		#make a cutting plane
@@ -556,24 +500,14 @@ class Slicer:
 		bc = BRepAlgoAPI.BRepAlgoAPI_Cut(shapeToSlice,halfspace);
 		cutShape = bc.Shape();
 		
-		#search the shape for faces at the specified zlevel
-		texp = TopExp.TopExp_Explorer();
-		texp.Init(cutShape,TopAbs.TopAbs_FACE);
 		foundFace = False;
-		while ( texp.More() ):
-			face = ts.Face(texp.Current());
+		for face in Topo(cutShape).faces():
 			if self._isAtZLevel(zLevel,face):
 				foundFace = True;
 				log.debug( "Face is at zlevel" + str(zLevel) );
 				s.addFace(face);
-			texp.Next();
 		
-		#free memory
-		face.Nullify();
-		bc.Destroy();
-		texp.Clear();
-		texp.Destroy();
-			
+
 		if not foundFace:
 			log.warn("No faces found after slicing at zLevel " + str(zLevel) + " !. Skipping This layer completely");
 			return None;
@@ -618,6 +552,7 @@ class Slice:
 	def addFace(self, face ):
 		copier = BRepBuilderAPI.BRepBuilderAPI_Copy(face);
 		self.faces.append(ts.Face(copier.Shape()));
+		#self.faces.append(face);
 		copier.Delete();
 	
 	def getBounds(self):
@@ -645,16 +580,25 @@ class Slice:
 def readStepShape(fileName):
 	log.info("Reading STEP file:'" + fileName + "'...");
 	stepReader = STEPControl.STEPControl_Reader();
+	
+	
+	if not os.path.exists(fileName):
+		raise ValueError, "Error: '%s' Does not Exist!" % fileName;
+		
 	stepReader.ReadFile(fileName);
 	
 	numItems = stepReader.NbRootsForTransfer();
 	numTranslated = stepReader.TransferRoots();
 	log.info("Read " + str(numTranslated) + " from File.");
 	shape = stepReader.OneShape();
+	print "Step file is of type %d" % shape.ShapeType();
 	log.info("Done.");
+	
 	return shape;
 
 def readSTLShape(fileName):
+
+
 	ts = TopoDS.TopoDS();
 
 	log.info("Reading STL:'" + fileName + "'...");
@@ -664,36 +608,71 @@ def readSTLShape(fileName):
 	stl_reader.Read(shape,fileName)
 	log.info("Fixing holes and degenerated Meshes...");
 	sf = ShapeFix.ShapeFix_Shape(shape);
+	sf.SetMaxTolerance(TOLERANCE);
+
+	msgRegistrator = ShapeExtend.ShapeExtend_MsgRegistrator();
+	sf.SetMsgRegistrator(msgRegistrator.GetHandle() );
+	
 	sf.Perform();
+	
+	log.info("ShapeFix Complete.");
+	for i in range(0,18):
+		log.info( "ShapeFix Status %d --> %s" % ( i, sf.Status(i) ));
+		
 	fixedShape = sf.Shape();
-	log.info("Making Solid from the Shell...");
-	bb = ShapeFix.ShapeFix_Solid();
-	return bb.SolidFromShell(ts.Shell(fixedShape));
-	log.info("Done.");
-	return bb.Solid();
+	fixedShape = shape;
+	
+	#if the resulting shape is a compound, we need to convert
+	#each shell to a solid, and then re-create a new compound of solids
+	if fixedShape.ShapeType() == TopAbs.TopAbs_COMPOUND:
 
+		log.warn("Shape is a compound. Creating solids for each shell.");
+		builder= BRep.BRep_Builder();
+		newCompound = TopoDS.TopoDS_Compound();
+		#newCompound = TopoDS.TopoDS_CompSolid();
+		builder.MakeCompound(newCompound);
+		#builder.MakeCompSolid(newCompound);
+		for shell in Topo(fixedShape).shells():
+			
+			solidBuilder = BRepBuilderAPI.BRepBuilderAPI_MakeSolid(shell);
+			solid = solidBuilder.Solid();
+			sa = SolidAnalyzer(solid);
+			print sa.friendlyDimensions();
+			builder.Add(newCompound, solid);
+		
+		time.sleep(4);
+		Topology.dumpTopology(newCompound);
+		return newCompound;  #return temporarily after the first one
+	else:
+		log.info("Making Solid from the Shell...");
 
+		solidBuilder = BRepBuilderAPI.BRepBuilderAPI_MakeSolid(ts.Shell(fixedShape));
+		return solidBuilder.Solid();
+	
 
 def printUsage():
 	print """
-		Usage: OccSliceLib <inputfile: STL or STEP> 
+		Usage: OccSliceLib <inputfile: STL or STEP> <configurationfile>
 			- inputfile [required] is an STL or STEP file, ending in .stl, .stp, or .step.
-		
-		Creates an SVG output file compatible with skeinforge	, in same directory as inputfile
-	"""
+			- configurationfile [optional] is a configuation file, see example.cfg
+		"""
 
 def showSlices(slicer):
 	"show slices on the debug display"
 	for s in slicer.slices:
-		for w in s.fillWires:
-			TestDisplay.display.showShape(w);
-		for e in s.fillEdges:
-			TestDisplay.display.showShape(e);
+		showSlice(s);
 
-def main(filename):
-
+def showSlice(s):
+	"show a single slice"
+	for w in s.fillWires:
+		TestDisplay.display.showShape(w);
+	for e in s.fillEdges:
+		TestDisplay.display.showShape(e);
+	
+def main(filename,userOptions):
 	
 	ok = False;
+	userMessage("Loading File...");
 	if filename.lower().endswith('stl'):
 		theSolid = readSTLShape(filename);
 		ok = True;
@@ -706,68 +685,55 @@ def main(filename):
 		printUsage();
 		return;
 	
-	#compute output filename
-	#outFileName = filename[ : filename.rfind( '.' ) ] + '_sliced.svg'
-	outFileName = filename[ : filename.rfind( '.' ) ] + '_sliced.nc'
-	
-	analyzer = SolidAnalyzer(theSolid);	
-	shape = analyzer.translateToPositiveSpace();
-		
+	rootFileName = filename[ : filename.rfind( '.' ) ]; 
 
-	#slicing options: use defaults
-	options = SliceOptions();
-	#options.numSlices=1;
-	options.numExtraShells=4;
-	options.resolution=.3;
-	options.inFillSpacing=.3;
-	#options.zMin=10. 
-	#options.zMax=12
+	analyzer = SolidAnalyzer(theSolid);
+	
+	options = analyzer.defaultSlicingOptions();
+	userMessage("Object Loaded: %s " % analyzer.friendlyDimensions() );
+	
+	userMessage("** Recommended Slicing Options: **");
+	print str(options);
+	
+	#overwrite defaults with user provided settings
+	userMessage("** User Selected Slicing Options...");
+	options.merge(userOptions);
+	print str(options);
 	
 	#slice it
 	try:
-		print "*** Beginning Slicing... ***";
-		sliceSet = Slicer(shape,options);
-		sliceSet.execute()
-		print "*** Slicing Complete.";
-		#showSlices(sliceSet);
-		
-		#export gcode
-		ge = GcodeExporter.GcodeExporter();
-		ge.incremental = False;
-		ge.useArcs = True;
-		
-		print "*** Exporting Gcode...";
-		f = open('test.nc','w');
-		
-		for c in ge.header():
-			f.write(c);
-
-		for s in sliceSet.slices:
-			f.write(ge.comment("Slice zLevel %0.2f" % s.zLevel ));
-			log.warn("Slice zLevel %0.2f" % s.zLevel );
-			f.write(ge.comment("FillWires"));
-		
-
-			for gc in ge.gcode(s.fillWires):
-				f.write(gc);
-			#print "******** DOING THIS WIRE ******"
-			#print str(Wrappers.Wire(s.fillWires[3]));
-			#TestDisplay.display.showShape(s.fillWires[3]);
-			#for gc in ge.gcode([s.fillWires[3]]):
-		#	#	f.write(gc);
 				
-			#print "******** DONE WITH THIS WIRE ******"
-			f.write(ge.comment("InfillEdges"));
-			for gc in ge.gcode(s.fillEdges):
-				f.write(gc);
+		slicer = Slicer(analyzer,options);		
 		
-		f.close();
-		print "Export Complete.";
+		userMessage( "*** Beginning Slicing... ");
+		t = Timer();
+		slicer.execute()
+		userMessage("*** Slicing Complete, %0.1f seconds" % t.elapsed() );
+		
+		if options.gcode.enabled:
 
-		print "Exporting SVG...";
-		se = SvgExporter.SVGExporter(sliceSet);
-		se.export('test.svg');
-		print "Exporting Complete.";
+			#export gcode
+			fileName = rootFileName + options.gcode.fileExtension;
+			
+			ge = GcodeExporter.GcodeExporter(options.gcode);
+			t = Timer();
+			userMessage("*** Exporting Gcode... ");
+			ge.export( fileName, slicer );
+			userMessage("*** Gcode Created: %0.3f seconds ***" % t.elapsed()  );
+		else:
+			userMessage("*** Gcode output is disabled.");
+			
+		if options.svg.enabled:
+			se = SvgExporter.SVGExporter(slicer,options);
+
+			userMessage("*** Creating SVG ***");
+			fileName = rootFileName + options.svg.fileExtension;
+			t = Timer();			
+			se.export(fileName);
+			userMessage("***SVG Created, %0.3f seconds."  % t .elapsed() );
+		else:
+			userMessage("*** SVG output is disabled.");
+		userMessage("***Processing Complete.***");
 		
 		#cProfile.runctx('sliceSet.execute()', globals(), locals(), filename="slicer.prof")	;			
 		
@@ -777,7 +743,8 @@ def main(filename):
 	except:
 		#TestDisplay.display.showShapes(sliceSet.slices.pop().faces );
 		traceback.print_exc(file=sys.stdout);
-		log.critical( 'Slicing Terminated.');	
+		log.critical( 'Slicing Terminated.');
+		raise ValueError,"Cannot Slice."
 		
 	TestDisplay.display.run();
 	
@@ -789,10 +756,20 @@ if __name__=='__main__':
 						stream=sys.stdout)
 	nargs = len(sys.argv);
 
+	userOptions = SlicerOptions();
 	if nargs > 1:
 		filename = sys.argv[1];
-		
-		main(filename);
+	
+		if nargs > 2:
+			"second arg is configuration file"
+			cFile = sys.argv[2];
+			if os.path.exists(cFile):
+				execfile(cFile);
+				userMessage( "Reading Options from file '%s'" % cFile );
+			else:
+				userMessage ( "Configuration file '%s' not found." % cFile );
+				printUsage();
+		main(filename,userOptions);
 	else:
 		printUsage();
 		

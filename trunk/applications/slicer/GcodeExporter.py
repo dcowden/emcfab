@@ -8,6 +8,7 @@ import os,sys,logging
 from OCC import gp;
 
 import PathExport
+import SlicerConfig
 import TestDisplay
 import Wrappers
 log = logging.getLogger('GcodeExporter');
@@ -29,18 +30,37 @@ log = logging.getLogger('GcodeExporter');
 	TODO: add 4th dimension for extruder control
 """
 class GcodeExporter:
-	def __init__(self):
+	def __init__(self,options):
 	
 		#defines the initial machine coordinates
 		#and tracks current position for incremental coordinates
-		self.currentPosition = gp.gp_Pnt(0,0,0);
-		self.feedRate = 100.0;
+		self.currentPosition = gp.gp_Pnt(-999,-999,-999);
 		self.incremental = False;
-		self.numberFormat = "%0.3f";
-		self.useArcs = True;
-		self.curveApproximation = 0.0001;
 		self.lastMove = None;
-		self.tolerance = 0.00001;
+		self.options=options;
+		
+	def export(self, fileName,slicer):
+		"export gcode for the completed slicer"
+		
+		f= open ( fileName ,'w');
+		
+		for c in self.header():
+			f.write(c);
+
+		for s in slicer.slices:
+			f.write(self.comment("Slice zLevel %0.3f" % s.zLevel ));
+			log.warn("Slice zLevel %0.3f" % s.zLevel );
+			f.write(self.comment("FillWires") + "\n");
+		
+
+			for gc in self.gcode(s.fillWires):
+				f.write(gc);
+				
+			f.write(self.comment("InfillEdges")  + "\n");
+			for gc in self.gcode(s.fillEdges):
+				f.write(gc);
+		
+		f.close();
 	
 	def header(self):
 		"generator that returns the required header"
@@ -50,13 +70,14 @@ class GcodeExporter:
 		else:
 			yield "G90";
 			yield self.comment( "Absolute Distance Mode.");
-		yield "F" + self.numberFormat % self.feedRate;
+		yield "F" + self.options.numberFormat % self.options.feedRate;
 		
 	def gcode(self,shapeList):
 		"convert the list of shapes to gcode"
 		"returns a generator of gcode lines"
 		"listOfShape is a list of wires, edges, or compounds of these"
-		pe = PathExport.ShapeDraw(self.useArcs,self.curveApproximation);
+				
+		pe = PathExport.ShapeDraw(self.options.useArcs,self.options.curveApproximationTolerance);
 			
 		for move in pe.follow(shapeList):
 			log.debug( move );
@@ -82,6 +103,8 @@ class GcodeExporter:
 					else:
 						cmd.append("G00");					
 					cmd.extend ( c);
+					
+
 			elif moveType == "ArcMove" :
 				"it is an arc move"
 				if move.ccw:
@@ -92,12 +115,16 @@ class GcodeExporter:
 				#X, Y, and Z have to honor incremental or absolute mode
 				i = move.centerPoint.X() - move.fromPoint.X();
 				j = move.centerPoint.Y() - move.fromPoint.Y();
-				cmd.append("I" + self.numberFormat % i );
-				cmd.append("J" + self.numberFormat % j);
+				cmd.append("I" + self.options.numberFormat % i );
+				cmd.append("J" + self.options.numberFormat % j);
 				cmd.extend(c);
+			
 			else:
 				cmd.append("Unknown Move Type" + moveType);
-				
+			
+			if self.options.computeExtraAxis and len(cmd) > 0 :
+				cmd.append(self.options.extraAxisName + (self.options.numberFormat % move.length()) );
+
 			if len(cmd)> 0:
 				yield " ".join(cmd) + "\n";
 			
@@ -113,29 +140,30 @@ class GcodeExporter:
 		m = map(self._withinTolerance,compareValues, moveValues);
 		#log.debug("Mapped Values:"+ str(m));
 		if m[0] != None:
-			cmd.append("X" + self.numberFormat % m[0] );
+			cmd.append("X" + self.options.numberFormat % m[0] );
 		if m[1] != None:
-			cmd.append("Y" + self.numberFormat % m[1] );
+			cmd.append("Y" + self.options.numberFormat % m[1] );
 		if m[2] != None:
-			cmd.append("Z" + self.numberFormat % m[2] );
+			cmd.append("Z" + self.options.numberFormat % m[2] );
 		
 		return cmd;
 		
 	def _withinTolerance(self,refVal, theVal):
 		"returns theVal if the two are not the same, otherwise returns None"
 		if refVal != None and theVal != None:			
-			if  abs(refVal - theVal) <= self.tolerance:
+			#if  abs(refVal - theVal) <= self.options.machineResolution:
+			if abs(refVal - theVal ) <= 0.000001:
 				return None;
 		
 		return theVal;
 
 	def comment(self,txt):
-		return "( %s )\n" % txt;
+		return self.options.commentFormat  % txt;
 		
 if __name__=='__main__':
 
 	###Logging Configuration
-	logging.basicConfig(level=logging.INFO,
+	logging.basicConfig(level=logging.WARN,
 						format='%(asctime)s [%(funcName)s] %(levelname)s %(message)s',
 						stream=sys.stdout)	
 						
@@ -143,7 +171,10 @@ if __name__=='__main__':
 	w2 = TestDisplay.makeCircleWire();
 	w3 = TestDisplay.makeReversedWire();
 	TestDisplay.display.showShape([w1,w2,w3]);
-	ge = GcodeExporter();
+	o = SlicerConfig.GcodeOptions();
+	o.setDefaults();
+	o.computeExtraAxis=False;
+	ge = GcodeExporter(o );
 	#ge.useArcs = False;
 	for line in ge.gcode([w1,w2,w3]):
 		print line,;

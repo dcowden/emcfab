@@ -584,8 +584,9 @@ class Hatcher:
 				p2 = gp.gp_Pnt(xMin + dl,yMax,self.zLevel );
 
 			edge = Wrappers.edgeFromTwoPoints(p1,p2);
-			#TestDisplay.display.showShape(edge);
+			
 			if edge:
+				#TestDisplay.display.showShape(edge);
 				hatchEdges.append(edge);			
 	
 		

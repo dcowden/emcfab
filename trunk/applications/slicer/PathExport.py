@@ -34,7 +34,9 @@ class Move:
 		self.fromPoint = fromPoint;
 		self.toPoint = toPoint;
 		self.dir = gp.gp_Vec(fromPoint,toPoint);
-		
+	
+
+
 	def vector(self):
 		"returns a vector for this move. if fromPoint is empty, assumes the origin"
 		return [ self.toPoint.X(), self.toPoint.Y(), self.toPoint.Z() ];
@@ -55,6 +57,9 @@ class LinearMove(Move):
 		Move.__init__(self,fromPoint,toPoint);
 		self.draw = draw;
 
+	def length(self):
+		return self.toPoint.Distance(self.fromPoint );
+		
 	def __str__(self):
 		if self.draw:
 			s = "DrawTo: ";
@@ -67,11 +72,15 @@ class LinearMove(Move):
 	Arc moves have an endpoint, a center point, and are clockwise or counterclockwise
 """
 class ArcMove(Move):
-	def __init__(self,fromPoint,toPoint,centerPoint,ccw):
+	def __init__(self,fromPoint,toPoint,centerPoint,ccw,includedAngle):
 		Move.__init__(self,fromPoint,toPoint);
 		self.centerPoint = centerPoint;
 		self.ccw = ccw;
-		self.includedAngle = None;
+		self.includedAngle = includedAngle;
+		
+	def length(self):
+		return self.includedAngle * self.getRadius();
+		
 	def getRadius(self):
 		"gets the radius of the circle"
 		dX = abs( self.fromPoint.X() - self.centerPoint.X() );
@@ -243,11 +252,12 @@ class ShapeDraw():
 					zDir = zDir.Reversed();
 				ccw = zDir.IsEqual(axisDir,self.tolerance);	
 				self.currentPoint = ew.lastPoint;
-				a = ArcMove(ew.firstPoint, ew.lastPoint, center, ccw );
-				a.includedAngle = abs( ew.firstParameter - ew.lastParameter );
-				#circles are parameterized between zero and 2*pi.
 				
-				yield ArcMove(ew.firstPoint, ew.lastPoint,center,ccw);				
+				includedAngle = abs( ew.firstParameter - ew.lastParameter );
+				a = ArcMove(ew.firstPoint, ew.lastPoint, center, ccw ,includedAngle);
+				#circles are parameterized between zero and 2*pi.
+				yield a;
+				#yield  ArcMove(ew.firstPoint, ew.lastPoint, center, ccw );				
 			else:
 				log.debug("Curve is not a line or a circle");
 				"a curve, or a circle we'll approximate"

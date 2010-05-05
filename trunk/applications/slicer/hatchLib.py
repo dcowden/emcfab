@@ -175,11 +175,11 @@ def isCloserThan(shape1,shape2,distance):
 	
 	if brp.Perform():
 		if brp.Value() < distance:
-			TestDisplay.display.eraseAll();
-			TestDisplay.display.showShape(shape1);
-			TestDisplay.display.showShape(shape2);
+			#TestDisplay.display.eraseAll();
+			#TestDisplay.display.showShape(shape1);
+			#TestDisplay.display.showShape(shape2);
 			log.warn ("Distance is %0.2f" % brp.Value() );
-			time.sleep(0.2);
+			#time.sleep(0.2);
 		return brp.Value() < distance;
 	else:
 		log.warn("Trouble Computing Closest Distance!");
@@ -542,10 +542,10 @@ class Hatcher:
 					#print str(newNode);
 					#print "***** END NODE PATH ****"
 					candidateEdge = Hatcher.linearEdgeBetweenNodes(currentNode,newNode);
-					cew = Wrappers.Edge(candidateEdge);
-					TRIMLENGTH = 0.6;
-					print "Old P1=%0.2f,P2=%0.2f  " % (cew.firstParameter, cew.lastParameter )
-					shorterEdge = cew.trimmedEdge(cew.firstParameter+ TRIMLENGTH, cew.lastParameter -TRIMLENGTH );
+					#cew = Wrappers.Edge(candidateEdge);
+					#TRIMLENGTH = 0.6;
+					#print "Old P1=%0.2f,P2=%0.2f  " % (cew.firstParameter, cew.lastParameter )
+					#shorterEdge = cew.trimmedEdge(cew.firstParameter+ TRIMLENGTH, cew.lastParameter -TRIMLENGTH );
 					
 					#check to make sure this edge is not too close to other boundaries.
 					#if it is, we'll simply supress it 
@@ -555,13 +555,13 @@ class Hatcher:
 					#to throw out this wire
 					tooClose = False;
 
-					for w in self.boundaryWires:
+					#for w in self.boundaryWires:
 						#dont check the boundary that this line starts and ends on
-						if shorterEdge:
-							if isCloserThan(shorterEdge, w, 0.002 ):
-								print cew.firstParameter, cew.lastParameter;
-								tooClose = True;
-								break;
+					#	if shorterEdge:
+					#		if isCloserThan(shorterEdge, w, 0.002 ):
+					#			#print cew.firstParameter, cew.lastParameter;
+					#			tooClose = True;
+					#			break;
 					
 					if not tooClose:
 						yield candidateEdge;

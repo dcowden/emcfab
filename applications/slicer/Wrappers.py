@@ -81,7 +81,17 @@ def listFromHSequenceOfShape(seq):
 	for i in range(1,seq.Length()+1):
 		newList.append(cast(seq.Value(i)));
 	return newList;
-	
+
+def hSeqIterator(hSeq):
+	"sane iteration over hsequenceof shape"
+	for i in range(1,hSeq.Length()+1):
+		yield cast(hSeq.Value(i));
+		
+def extendhSeq(hSeqTo, hSeqFrom):
+	"append elements in from to to"
+	for e in hSeqIterator(hSeqFrom):
+		hSeqTo.Append(e);
+
 def edgeFromTwoPoints(p1,p2):
 	"make a linear edge from two points "
 	builder = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(p1,p2);
@@ -201,7 +211,8 @@ def cast(shape):
 	elif type == TopAbs.TopAbs_COMPOUND:
 		return topoDS.Compound(shape);
 	return shape;
-	
+
+
 """
 	Point
 """

@@ -333,14 +333,14 @@ class Slicer:
 			
 			if slice != None:		
 				self.slices.append(slice);
-				if len(slice.fillWires) > 0 and self.options.useSliceFactoring:
-					log.warn("This slice is a duplicate of another one. We are done!");					
+				if slice.fillWires.Length() > 0 and self.options.useSliceFactoring:
+					log.info("This slice is a duplicate of another one. We are done!");					
 				elif self.options.filling.enabled:
 					self._fillSlice(slice);
 				
 			zLevel += self.options.layerHeight;
 			sliceNumber += 1;
-
+			self.hatchReversed = not self.hatchReversed;
 			#TestDisplay.display.eraseAll();
 			#showSlice(slice);
 			#time.sleep(2);
@@ -359,11 +359,10 @@ class Slicer:
 	#a number of wires are added to the slice as paths.
 	def _fillSlice(self,slice):
 	
-
-		
 		log.info("Filling Slice at zLevel %0.3f" % slice.zLevel);
-		log.info("There are %d faces" % len(slice.faces) );
-		for f in slice.faces:
+		log.info("There are %d faces" % slice.faces.Length() );
+		
+		for f in hSeqIterator(slice.faces):
 			log.info("Filling Face..");
 			#TestDisplay.display.eraseAll();
 			#time.sleep(3);			
@@ -433,12 +432,14 @@ class Slicer:
 			#add shells to the slice
 			for s in shells:
 				#TestDisplay.display.showShape(s);
-				list = listFromHSequenceOfShape( makeWiresFromOffsetShape(s));
-				for w in list:
+				seq =  makeWiresFromOffsetShape(s);
+				for w in hSeqIterator(seq):
 					ww = Wrappers.Wire(w);
 					ww.assertHeadToTail();
 					log.info(str(ww));
-				slice.fillWires.extend(list);
+				
+				for w in hSeqIterator(seq):
+					slice.fillWires.Append(w);
 			
 			#use last shell for hatching
 			#debugShape(lastShell);
@@ -454,10 +455,10 @@ class Slicer:
 			for e in h.edges():
 				#TestDisplay.display.showShape(e);
 				#time.sleep(.1);
-				slice.fillEdges.append(e);
+				slice.fillEdges.Append(e);
 		
-		self.hatchReversed = not self.hatchReversed;
-		log.warn("Filling Complete, Created %d paths." % len(slice.fillWires)  );
+		
+		log.warn("Filling Complete, Created %d paths." % slice.fillWires.Length()  );
 
 
 		
@@ -482,7 +483,7 @@ class Slicer:
 			return  bo.Shape();
 			
 	def _makeSlice(self,shapeToSlice,zLevel):
-		global mainDisplay;
+
 		s = Slice();
 
 		#used to determine if a slice is identical to others.
@@ -520,11 +521,11 @@ class Slicer:
 				
 		if self.options.useSliceFactoring:
 			mySum = s.getCheckSum();
-			print 'Slice Created, Checksum is',mySum;
+			#print 'Slice Created, Checksum is',mySum;
 			for otherSlice in self.slices:
-				print "Slice Checksum=",otherSlice.getCheckSum();
+				#print "Slice Checksum=",otherSlice.getCheckSum();
 				if mySum == otherSlice.getCheckSum():
-					log.warn("This slice matches another one exactly. using that so we can save time.");
+					log.info("This slice matches another one exactly. using that so we can save time.");
 					return otherSlice.copyToZ(zLevel);
 				
 		if not foundFace:
@@ -558,14 +559,14 @@ class Slice:
 		self.path = "";
 		
 		#actually these are Wires
-		self.fillWires = [];
-		self.fillEdges = [];
+		self.fillWires = TopTools.TopTools_HSequenceOfShape();
+		self.fillEdges = TopTools.TopTools_HSequenceOfShape();
 		#self.boundaryWires = [];
 		self.zLevel=0;
 		self.zHeight = 0;
 		self.layerNo = 0;
 		self.sliceHeight=0;
-		self.faces = [];
+		self.faces = TopTools.TopTools_HSequenceOfShape();
 		self.fillWidth = None;
 		self.hatchDir = None;
 		self.checkSum = None;
@@ -573,7 +574,7 @@ class Slice:
 	"TODO: Do we really need this?"
 	def addFace(self, face ):
 		copier = BRepBuilderAPI.BRepBuilderAPI_Copy(face);
-		self.faces.append(ts.Face(copier.Shape()));
+		self.faces.Append(ts.Face(copier.Shape()));
 		#self.faces.append(face);
 		copier.Delete();
 	
@@ -582,8 +583,9 @@ class Slice:
 		t = Timer();
 		box = Bnd.Bnd_Box();
 		b = BRepBndLib.BRepBndLib();	
-		for face in self.faces:
-			b.Add(face,box);
+
+		for f in hSeqIterator(s.faces):
+			b.Add(f,box);
 			
 		bounds = box.Get();
 		xMin = bounds[0];
@@ -613,21 +615,21 @@ class Slice:
 		bt = BRepBuilderAPI.BRepBuilderAPI_Transform(xform);
 		
 		#copy all of the faces
-		for f in self.faces:
+		for f in hSeqIterator(self.faces):
 			bt.Perform(f,True);
 			theCopy.addFace( Wrappers.cast(bt.Shape()));
 		
 		#copy all of the fillWires
-		for w in self.fillWires:
+		for w in hSeqIterator(self.fillWires):
 			bt.Perform(w,True);
-			TestDisplay.display.showShape(bt.Shape() );
-			theCopy.fillWires.append(Wrappers.cast(bt.Shape()));
+			#TestDisplay.display.showShape(bt.Shape() );
+			theCopy.fillWires.Append(Wrappers.cast(bt.Shape()));
 		
 		#copy all of the fillEdges
-		for e in self.fillEdges:
+		for e in hSeqIterator(self.fillEdges):
 			bt.Perform(e,True);
-			TestDisplay.display.showShape(bt.Shape() );
-			theCopy.fillEdges.append(Wrappers.cast(bt.Shape()));
+			#TestDisplay.display.showShape(bt.Shape() );
+			theCopy.fillEdges.Append(Wrappers.cast(bt.Shape()));
 			
 		return theCopy;
 		
@@ -641,11 +643,11 @@ class Slice:
 			"slice properties that would make them different besides the boundaries"
 			m.update(str(self.hatchDir));
 			m.update(NUMFORMAT % self.fillWidth);
-			m.update(NUMFORMAT % len(self.faces) );
+			m.update(NUMFORMAT % self.faces.Length() );
 			gp = GProp.GProp_GProps();
 			bg = BRepGProp.BRepGProp();
 
-			for f in self.faces:
+			for f in hSeqIterator(self.faces):
 				bg.SurfaceProperties(f,gp);
 
 			m.update(NUMFORMAT % gp.Mass() );
@@ -746,9 +748,10 @@ def showSlices(slicer):
 
 def showSlice(s):
 	"show a single slice"
-	for w in s.fillWires:
+	for w in hSeqIterator(s.fillWires):
 		TestDisplay.display.showShape(w);
-	for e in s.fillEdges:
+	
+	for e in hSeqIterator(s.fillEdges):
 		TestDisplay.display.showShape(e);
 	
 def main(filename,userOptions):

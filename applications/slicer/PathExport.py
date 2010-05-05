@@ -134,7 +134,7 @@ class ShapeDraw():
 		"if finish is true, any pending move will be finished. If false,"
 		"pending linear moves are left in case next moves duplicate them"
 		log.debug("Following Shape");
-		for s in shapeList:
+		for s in Wrappers.hSeqIterator(shapeList):
 			for m in self.followShape(s):
 				yield m;
 		

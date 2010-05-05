@@ -6,6 +6,7 @@
 """
 import os,sys,logging,math
 from OCC import gp;
+from OCC import TopTools
 from string import Template
 import PathExport
 import TestDisplay
@@ -70,7 +71,10 @@ class SVGExporter():
 		pe = PathExport.ShapeDraw(True,0.001 );
 		path = [];
 		
-		for move in pe.follow( slice.fillWires  + slice.fillEdges):
+		allShapes = TopTools.TopTools_HSequenceOfShape();
+		Wrappers.extendhSeq( allShapes, slice.fillWires );
+		Wrappers.extendhSeq( allShapes, slice.fillEdges );
+		for move in pe.follow( allShapes):
 			moveType = move.__class__.__name__;
 			if moveType == "LinearMove":
 				path.append(self.linearMove(move) );

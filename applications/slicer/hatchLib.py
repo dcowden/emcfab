@@ -167,6 +167,25 @@ def findNextInfillNodeBackward(node,path=[]):
 			
 	return None;	
 
+def isCloserThan(shape1,shape2,distance):
+
+	brp = BRepExtrema.BRepExtrema_DistShapeShape();
+	brp.LoadS1(shape1);
+	brp.LoadS2(shape2);
+	
+	if brp.Perform():
+		if brp.Value() < distance:
+			TestDisplay.display.eraseAll();
+			TestDisplay.display.showShape(shape1);
+			TestDisplay.display.showShape(shape2);
+			log.warn ("Distance is %0.2f" % brp.Value() );
+			time.sleep(0.2);
+		return brp.Value() < distance;
+	else:
+		log.warn("Trouble Computing Closest Distance!");
+		return False;
+
+	
 class BoundaryEdge:
 	"represents a boundary edge. Composese a regular edge"
 	def __init__ ( self,edge):
@@ -220,6 +239,8 @@ class SegmentedBoundary:
 		#self.edges = [] #needed to store the lists in the original, wire order
 		self.edges = [];
 		
+		self.fingers = []; #normal edges to this edge, used to prevent intersections with hatch lines
+		
 		#build a graph of the edges on the boundary
 		#we'll use this to build edges between nodes later on
 		log.debug("Building Edge Graph...");
@@ -229,12 +250,8 @@ class SegmentedBoundary:
 		for i in range(1,edgeSeq.Length()+1):
 			edge = Wrappers.cast(edgeSeq.Value(i));
 			self.addEdge(edge);
+
 	
-
-		#store edges hashed by the OCC C++ object ID
-		#for e in wr.edges2():
-		#	self.addEdge(e);
-
 		log.debug("Finished Adding Edges.");
 		#build nodes between the edges
 		#traverse the edges forwards to create start nodes
@@ -287,18 +304,13 @@ class SegmentedBoundary:
 			firstNode.prevNode = node;
 			node.nextNode = firstNode;
 		
-		#for be in self.edges:		
-		#	TestDisplay.display.showShape(Wrappers.make_vertex(be.startNode.point));
-		#	TestDisplay.display.showShape(Wrappers.make_vertex(be.endNode.point));
-		#	#TestDisplay.display.showShape(be.edgeWrapper.edge);
-		#pause();
 		
 	def addEdge(self,edge):
 		"add an edge to the boundary"
 		be = BoundaryEdge(edge);
 		self.edges.append(be);
 		self.edgeHashMap[be.id] = be;
-		
+			
 	def newIntersectionNode(self, edge,edgeParam, point):
 		"returns a new intersection node on this boundary."
 		"the boundary will adjust neighbors to work it into the boundary"
@@ -529,7 +541,33 @@ class Hatcher:
 					#print str(currentNode)
 					#print str(newNode);
 					#print "***** END NODE PATH ****"
-					yield Hatcher.linearEdgeBetweenNodes(currentNode,newNode);
+					candidateEdge = Hatcher.linearEdgeBetweenNodes(currentNode,newNode);
+					cew = Wrappers.Edge(candidateEdge);
+					TRIMLENGTH = 0.6;
+					print "Old P1=%0.2f,P2=%0.2f  " % (cew.firstParameter, cew.lastParameter )
+					shorterEdge = cew.trimmedEdge(cew.firstParameter+ TRIMLENGTH, cew.lastParameter -TRIMLENGTH );
+					
+					#check to make sure this edge is not too close to other boundaries.
+					#if it is, we'll simply supress it 
+					#TODO: replace this with better code to build a replacement
+					#the general approach is to trim the edge on the ends (so that it does not touch either end )
+					#then check the minimum distance against the offset wire. If the distance is too short, we need
+					#to throw out this wire
+					tooClose = False;
+
+					for w in self.boundaryWires:
+						#dont check the boundary that this line starts and ends on
+						if shorterEdge:
+							if isCloserThan(shorterEdge, w, 0.002 ):
+								print cew.firstParameter, cew.lastParameter;
+								tooClose = True;
+								break;
+					
+					if not tooClose:
+						yield candidateEdge;
+					else:
+						log.warn("Hatch Line is too close to boundary, skipping it. Later you should create a better edge instead");
+						
 					currentNode = newNode;					
 					findingInfillEdge = False;
 				else:

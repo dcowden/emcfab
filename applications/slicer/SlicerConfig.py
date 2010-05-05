@@ -52,6 +52,7 @@ class SlicerOptions(BaseOption):
 		self.translateToPositiveSpace = None;
 		self.DEFAULT_RESOLUTION = { UNITS_MM : 0.3, UNITS_IN : 0.012 };
 		
+		self.useSliceFactoring = False;
 		
 		#other groups of options
 		self.filling = FillingOptions();

@@ -10,6 +10,8 @@ import time,os,sys,string,logging;
 brepTool = BRep.BRep_Tool();
 topoDS = TopoDS.TopoDS();
 import TestDisplay
+
+
 #topexp = TopExp.TopExp()
 #texp = TopExp.TopExp_Explorer();
 #brt = BRepTools.BRepTools();
@@ -336,7 +338,8 @@ class Wire():
 			ew = Edge(edge);
 			s.append( str(ew) );
 		return "\n".join(s);
-
+		
+		
 	def discretePoints(self,deflection):
 		"discrete points for all of a wire"
 		for e in self.edges():

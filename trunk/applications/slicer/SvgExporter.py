@@ -168,7 +168,7 @@ sliceDimensionZ = null;
 svgMinWidth = javascriptControlBoxX + 2 * margin; //Width of control box and margins
 textHeight = 22.5;
 unitScale = $unitScale; //mm = 1; inch = 25.4
-zoomScale = 1; //Default 1:1 may need smaller scale for large objects
+zoomScale = 7.5; //Default 1:1 may need smaller scale for large objects
 
 //No javascript control var
 noJavascriptControlBoxY = 110;

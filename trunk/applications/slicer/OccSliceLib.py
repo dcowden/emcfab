@@ -64,7 +64,7 @@ import wx
 import logging
 import time
 import traceback
-
+import hashlib
 
 
 import math
@@ -84,7 +84,8 @@ from  OCC.Utils import Topology
 from OCC import ShapeFix
 from OCC import BRepBuilderAPI
 from OCC import TopTools
-
+from OCC import GProp
+from OCC import BRepGProp
 
 from OCC import gce
 #my libraries
@@ -174,7 +175,7 @@ def checkMinimumDistanceForOffset(offset,resolution):
 			w = ts.Wire(te.Current());
 			wr = Wire(w);
 			resultWires.Append(w);
-			allPoints.extend(pointsFromWire(w,resolution*2));
+			allPoints.extend(pointsFromWire(w,resolution*3));
 			#for p in wr.discretePoints(resolution/2):
 			#	debugShape(make_vertex(p));
 			#	allPoints.append(p);
@@ -325,11 +326,16 @@ class Slicer:
 			#userMessage("Slicing Z= %0.3f ..." % zLevel );
 			log.info( "Creating Slice %0d, z=%0.3f " % ( sliceNumber,zLevel));
 			slice = self._makeSlice(shapeToSlice,zLevel);
+			
 			slice.layerNo = sliceNumber;
+			
+
+			
 			if slice != None:		
 				self.slices.append(slice);
-				
-				if self.options.filling.enabled:
+				if len(slice.fillWires) > 0 and self.options.useSliceFactoring:
+					log.warn("This slice is a duplicate of another one. We are done!");					
+				elif self.options.filling.enabled:
 					self._fillSlice(slice);
 				
 			zLevel += self.options.layerHeight;
@@ -353,6 +359,7 @@ class Slicer:
 	#a number of wires are added to the slice as paths.
 	def _fillSlice(self,slice):
 	
+
 		
 		log.info("Filling Slice at zLevel %0.3f" % slice.zLevel);
 		log.info("There are %d faces" % len(slice.faces) );
@@ -477,6 +484,10 @@ class Slicer:
 	def _makeSlice(self,shapeToSlice,zLevel):
 		global mainDisplay;
 		s = Slice();
+
+		#used to determine if a slice is identical to others.
+		s.hatchDir = self.hatchReversed;
+		s.fillWidth = self.options.filling.fillWidth;
 		
 		#change if layers are variable thickness
 		s.sliceHeight = self.options.layerHeight;		
@@ -506,12 +517,20 @@ class Slicer:
 				foundFace = True;
 				log.debug( "Face is at zlevel" + str(zLevel) );
 				s.addFace(face);
-		
-
+				
+		if self.options.useSliceFactoring:
+			mySum = s.getCheckSum();
+			print 'Slice Created, Checksum is',mySum;
+			for otherSlice in self.slices:
+				print "Slice Checksum=",otherSlice.getCheckSum();
+				if mySum == otherSlice.getCheckSum():
+					log.warn("This slice matches another one exactly. using that so we can save time.");
+					return otherSlice.copyToZ(zLevel);
+				
 		if not foundFace:
 			log.warn("No faces found after slicing at zLevel " + str(zLevel) + " !. Skipping This layer completely");
 			return None;
-		else:				
+		else:		
 			return s;		
 		
 	def _isAtZLevel(self,zLevel,face):
@@ -531,7 +550,7 @@ class Slicer:
 	One slice in a set of slices that make up a part
 	A slice typically has one or more faces, one or more
 	outer boundaries, and other infill paths
-
+	
 """
 class Slice:
 	def __init__(self):
@@ -541,12 +560,15 @@ class Slice:
 		#actually these are Wires
 		self.fillWires = [];
 		self.fillEdges = [];
-		self.boundaryWires = [];
+		#self.boundaryWires = [];
 		self.zLevel=0;
 		self.zHeight = 0;
 		self.layerNo = 0;
 		self.sliceHeight=0;
 		self.faces = [];
+		self.fillWidth = None;
+		self.hatchDir = None;
+		self.checkSum = None;
 		
 	"TODO: Do we really need this?"
 	def addFace(self, face ):
@@ -572,7 +594,67 @@ class Slice:
 		zMax = bounds[5];
 		return [xMin,xMax,yMin,yMax,zMin,zMax];
 		
+	def copyToZ(self,z):
+		"makes a copy of this slice, transformed to the specified z height"
+		theCopy = Slice();
+		theCopy.zLevel = z;
+		theCopy.zHeight = self.zHeight;
+		theCopy.sliceHeight = self.sliceHeight;
+		theCopy.fillWidth = self.fillWidth;
+		theCopy.hatchDir = self.hatchDir;
+		theCopy.checkSum = self.checkSum;
 
+		
+		#make transformation
+		p1 = gp.gp_Pnt(0,0,0);
+		p2 = gp.gp_Pnt(0,0,z);
+		xform = gp.gp_Trsf();
+		xform.SetTranslation(p1,p2);
+		bt = BRepBuilderAPI.BRepBuilderAPI_Transform(xform);
+		
+		#copy all of the faces
+		for f in self.faces:
+			bt.Perform(f,True);
+			theCopy.addFace( Wrappers.cast(bt.Shape()));
+		
+		#copy all of the fillWires
+		for w in self.fillWires:
+			bt.Perform(w,True);
+			TestDisplay.display.showShape(bt.Shape() );
+			theCopy.fillWires.append(Wrappers.cast(bt.Shape()));
+		
+		#copy all of the fillEdges
+		for e in self.fillEdges:
+			bt.Perform(e,True);
+			TestDisplay.display.showShape(bt.Shape() );
+			theCopy.fillEdges.append(Wrappers.cast(bt.Shape()));
+			
+		return theCopy;
+		
+	def getCheckSum(self):
+		"produce a checksum that can be used to determine if other wires are practically identical to this one"
+		if self.checkSum == None:
+		
+			PRECISION = 0.1;
+			NUMFORMAT = "%0.3f";
+			m = hashlib.md5();
+			"slice properties that would make them different besides the boundaries"
+			m.update(str(self.hatchDir));
+			m.update(NUMFORMAT % self.fillWidth);
+			m.update(NUMFORMAT % len(self.faces) );
+			gp = GProp.GProp_GProps();
+			bg = BRepGProp.BRepGProp();
+
+			for f in self.faces:
+				bg.SurfaceProperties(f,gp);
+
+			m.update(NUMFORMAT % gp.Mass() );
+			m.update(NUMFORMAT % gp.CentreOfMass().X() );
+			m.update(NUMFORMAT % gp.CentreOfMass().Y() );
+			
+			self.checkSum = m.hexdigest();
+		
+		return self.checkSum;
 		
 """
 	Read a shape from Step file
@@ -670,6 +752,8 @@ def showSlice(s):
 		TestDisplay.display.showShape(e);
 	
 def main(filename,userOptions):
+	t = Timer();
+	perfTimes = {};
 	
 	ok = False;
 	userMessage("Loading File...");
@@ -684,6 +768,7 @@ def main(filename,userOptions):
 	if not ok:
 		printUsage();
 		return;
+	perfTimes['loadObject'] = t.elapsed();
 	
 	rootFileName = filename[ : filename.rfind( '.' ) ]; 
 
@@ -709,6 +794,8 @@ def main(filename,userOptions):
 		t = Timer();
 		slicer.execute()
 		userMessage("*** Slicing Complete, %0.1f seconds" % t.elapsed() );
+		perfTimes['slice'] = t.elapsed();
+		sliceTime = t.elapsed();
 		
 		if options.gcode.enabled:
 
@@ -719,6 +806,7 @@ def main(filename,userOptions):
 			t = Timer();
 			userMessage("*** Exporting Gcode... ");
 			ge.export( fileName, slicer );
+			perfTimes['gcodeExport'] = t.elapsed();
 			userMessage("*** Gcode Created: %0.3f seconds ***" % t.elapsed()  );
 		else:
 			userMessage("*** Gcode output is disabled.");
@@ -730,11 +818,15 @@ def main(filename,userOptions):
 			fileName = rootFileName + options.svg.fileExtension;
 			t = Timer();			
 			se.export(fileName);
+			perfTimes['svgExport'] = t.elapsed();
 			userMessage("***SVG Created, %0.3f seconds."  % t .elapsed() );
 		else:
 			userMessage("*** SVG output is disabled.");
 		userMessage("***Processing Complete.***");
-		
+		userMessage("*** Performance Summary ***" );
+		for k in perfTimes.keys():
+			userMessage( "%s : %0.3f sec." % (k,perfTimes[k] ) );
+			
 		#cProfile.runctx('sliceSet.execute()', globals(), locals(), filename="slicer.prof")	;			
 		
 		#p = pstats.Stats('slicer.prof')

@@ -171,7 +171,7 @@ G02 X18.085451 Y10.017425 I-0.035 J0
 G02 Y10.078047 I0.0175 J0.030311
 G02 X18.137951 Y10.047736 I0.0175 J-0.030311
 
-G00 Z4.0 ( Make room for operator to install screws )
+G00 X7.0 Y2.0 Z3.0 ( Make room for operator to install screws )
 (Pause here: operator should secure work using screws in the newly created holes )
 M00
 M03
@@ -213,6 +213,6 @@ G03 X3.040451 Y10.735236 I0 J-0.125
 G01 Y9.797736
 G03 X3.352951 Y9.485236 I0.3125 J0
 
-G00 Z4.0
+G00 Z3.0
 M05
 M30

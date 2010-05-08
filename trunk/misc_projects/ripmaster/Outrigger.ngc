@@ -9,13 +9,8 @@ G20
 G90
 G64
 G00 Z0.1
-
-
-M06 T0
 M03
-
 F140
-
 
 
 ( Hole1CSK )
@@ -170,6 +165,26 @@ G01 Z-0.385
 G02 X18.085451 Y10.017425 I-0.035 J0
 G02 Y10.078047 I0.0175 J0.030311
 G02 X18.137951 Y10.047736 I0.0175 J-0.030311
+
+
+(Retaining Pin Holes)
+G01 Z0.1
+G01 x7.728 Y10.233
+G01 Z-0.125
+G01 Z0.0
+G01 Z-0.25
+G01 Z0.0
+G01 Z-0.385
+
+G01 Z0.1
+G01 X12.228 Y10.233
+G01 Z-0.125
+G01 Z0.0
+G01 Z-0.25
+G01 Z0.0
+G01 Z-0.385
+G01 Z0.1
+
 
 G00 X7.0 Y2.0 Z3.0 ( Make room for operator to install screws )
 (Pause here: operator should secure work using screws in the newly created holes )

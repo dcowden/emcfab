@@ -24,7 +24,6 @@ O100 sub
 		#5 = [#5-#3]
 	O101 endwhile
 	G90
-	G01 Z0.1
 O100 endsub 
 (end slot mill )
 
@@ -42,8 +41,6 @@ O101 sub
 		#5 = [#5-#2]
 	O101 endwhile
 	G90
-	G01 Z0.1
-
 O101 endsub
 (end vertical slot )
 
@@ -51,25 +48,37 @@ O101 endsub
 F60.
 G90
 #8 = 0.1 (clearance plane )
+
 
 (peck drill holes for clamp )
 (assume here that hole diam is equal to cutter )
 G00 X0 Y0 Z#8
-G83 X6.75 Y0.25 R0.1 Z-0.2 Q0.05 F30.0
+G01 Z0.001
+G83 X6.75 Y0.25 R0.1 Z-0.25 Q0.05 F10.0
 G83 X7.25 Y-0.25
+G00 Z#8
 
+F60.
+(right end )
+G00 X7.5625 Y-0.625
+G01 Z0.001
+O101 call [1.125] [0.010] [-0.25]
+G00 Z#8
+
+(left end)
+G00 X-0.0625 Y-0.625
+G01 Z0.001
+O101 call [1.125] [0.010] [-0.25]
+G00 Z#8
 
 (slot 1 )
 F60.
-G01 X0.250 Y0.0 Z#8
-O100 call [0.070] [5.75] [0.010] [-0.2]
+G01 X0.250 Y0.0
+G01 Z0.001
+O100 call [0.070] [5.75] [0.010] [-0.25]
+G00 Z#8
 
-(left end)
-G00 X-0.0625 Y-0.625 Z#8
-O101 call [1.125] [0.010] [-0.2]
 
-(right end )
-G00 X7.5625 Y-0.625 Z#8
-O101 call [1.125] [0.010] [-0.2]
+G00 X-0.0625 Y-.5625
 
 M30

@@ -15,7 +15,7 @@ G90
 G64
 M03 
 G00 Z0.1
-F140
+F130
 
 ( Drill Holes )
 ( URHole )
@@ -170,8 +170,9 @@ G01 Z-0.385
 G02 X1.012109 Y4.923082 I-0.0345 J0
 G02 Y4.982838 I0.01725 J0.029878
 G02 X1.063859 Y4.95296 I0.01725 J-0.029878
+G00 Z0.1
 
-G00 X7.0 Y2.0 Z3.0 ( Make room for operator to install screws )
+G00 X7.0 Y5.0 Z3.0 ( Make room for operator to install screws )
 (Pause here: operator should secure work using screws in the newly created holes )
 M00
 

@@ -15,7 +15,7 @@ G90
 G64
 M03 
 G00 Z0.1
-F140
+F130
 
 ( RipMasterLogo )
 G00 Z0.1

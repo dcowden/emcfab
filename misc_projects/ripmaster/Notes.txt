@@ -1,0 +1,10 @@
+5/16/2010 Notes:
+
+things to fix when you need to do the next set:
+
+1.  merge outrigger and base into 1 program with pause
+2.  there is no need to remove the original holding screws, as long as the tool tip is long enough
+3.  move existing screws to allow cutting both profiles without impacting tools, and to minimize waste between the pieces
+4.  make sure to use the right tool to cut the plastic. dont use the 1/8 mill!
+5.  add a finishing pass around the outer profiles at the full depth to get a good clean finish
+6.  add finishing pass around profiles on al pieces to get a clean finish also

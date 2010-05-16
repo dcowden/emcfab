@@ -4,7 +4,7 @@
 ( T0 : 0.125 Single flute carbide )
 ( At prompt, fixture part using the holes created by the first part of the program )
 ( make sure hal_manualtoolchange is loaded ! )( T0 : 0.125 )
-( T0 : 0.125 )
+( bottom left corner is x=3.103, y=9.584 )
 G20
 G90
 G64
@@ -168,25 +168,25 @@ G02 X18.137951 Y10.047736 I0.0175 J-0.030311
 
 
 (Retaining Pin Holes)
-G01 Z0.1
-G01 x7.666 Y10.357
+G00 Z0.1
+G00 x7.666 Y10.357
 G01 Z-0.125
-G01 Z0.0
+G00 Z0.0
 G01 Z-0.25
-G01 Z0.0
+G00 Z0.0
 G01 Z-0.385
 
-G01 Z0.1
-G01 X12.666 Y10.357
+G00 Z0.1
+G00 X12.666 Y10.357
 G01 Z-0.125
-G01 Z0.0
+G00 Z0.0
 G01 Z-0.25
-G01 Z0.0
+G00 Z0.0
 G01 Z-0.385
-G01 Z0.1
+G00 Z0.1
 
 
-G00 X7.0 Y2.0 Z3.0 ( Make room for operator to install screws )
+G00 X7.0 Y15.0 Z3.0 ( Make room for operator to install screws )
 (Pause here: operator should secure work using screws in the newly created holes )
 M00
 M03

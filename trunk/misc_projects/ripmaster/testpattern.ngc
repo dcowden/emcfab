@@ -1,0 +1,22 @@
+(Test Pattern for machine tuning )
+G90
+M03
+
+G00 X0 Y0 Z0.1
+G83 X1.0 Y0.0 R0.1 Z-0.010 Q0.010 F10.0
+G83 X2.
+G83 X3.
+G83 X4.
+G83 X5.
+G83 X6.
+G83 X7.
+G83 X8.
+G83 X9.
+G83 X10.
+G83 X0.0 Y1.0
+G83 Y2.
+G83 Y3.
+G83 Y4.
+G83 Y5.
+G83 Y6.
+

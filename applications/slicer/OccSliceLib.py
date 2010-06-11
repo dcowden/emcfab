@@ -86,7 +86,7 @@ from OCC import BRepBuilderAPI
 from OCC import TopTools
 from OCC import GProp
 from OCC import BRepGProp
-
+from OCC import VrmlAPI
 from OCC import gce
 #my libraries
 #import Gcode_Lib
@@ -127,7 +127,7 @@ topexp = TopExp.TopExp()
 texp = TopExp.TopExp_Explorer();
 BRepLProp_CurveTool = BRepLProp.BRepLProp_CurveTool();
 
-TOLERANCE = 0.00001 # a good value that is precise enough for both MM and IN
+TOLERANCE = 0.0005 # a good value that is precise enough for both MM and IN
 UNITS_MM = "mm";
 UNITS_IN = "in";
 UNITS_UNKNOWN = "units";
@@ -433,10 +433,10 @@ class Slicer:
 			for s in shells:
 				#TestDisplay.display.showShape(s);
 				seq =  makeWiresFromOffsetShape(s);
-				for w in hSeqIterator(seq):
-					ww = Wrappers.Wire(w);
-					ww.assertHeadToTail();
-					log.info(str(ww));
+				#for w in hSeqIterator(seq):
+				#	ww = Wrappers.Wire(w);
+				#	ww.assertHeadToTail();
+				#	log.info(str(ww));
 				
 				for w in hSeqIterator(seq):
 					slice.fillWires.Append(w);
@@ -704,7 +704,7 @@ def readSTLShape(fileName):
 		log.info( "ShapeFix Status %d --> %s" % ( i, sf.Status(i) ));
 		
 	fixedShape = sf.Shape();
-	fixedShape = shape;
+	#fixedShape = shape;
 	
 	#if the resulting shape is a compound, we need to convert
 	#each shell to a solid, and then re-create a new compound of solids
@@ -724,8 +724,8 @@ def readSTLShape(fileName):
 			print sa.friendlyDimensions();
 			builder.Add(newCompound, solid);
 		
-		time.sleep(4);
-		Topology.dumpTopology(newCompound);
+		#time.sleep(4);
+		#Topology.dumpTopology(newCompound);
 		return newCompound;  #return temporarily after the first one
 	else:
 		log.info("Making Solid from the Shell...");
@@ -825,13 +825,14 @@ def main(filename,userOptions):
 			userMessage("***SVG Created, %0.3f seconds."  % t .elapsed() );
 		else:
 			userMessage("*** SVG output is disabled.");
+		
+		
 		userMessage("***Processing Complete.***");
 		userMessage("*** Performance Summary ***" );
 		for k in perfTimes.keys():
 			userMessage( "%s : %0.3f sec." % (k,perfTimes[k] ) );
 			
-		#cProfile.runctx('sliceSet.execute()', globals(), locals(), filename="slicer.prof")	;			
-		
+		#cProfile.runctx('slicer.execute()', globals(), locals(), filename="slicer.prof")	;					
 		#p = pstats.Stats('slicer.prof')
 		#p.sort_stats('time')
 		#p.print_stats(0.2);

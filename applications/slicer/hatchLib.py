@@ -458,21 +458,24 @@ class Hatcher:
 					#TODO need to handle the somewhat unusual cases that the intersection is
 					#on a vertex
 					for k in range(1,brp.NbSolution()+1):
-						#make the node
-						if brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsOnEdge:
-							newNode = boundary.newIntersectionNode(
-								Wrappers.cast(brp.SupportOnShape1(k)),
-								brp.ParOnEdgeS1(k),
-								brp.PointOnShape1(k) );
-						elif brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsVertex:
-							#how on earth to handle this one?
-							#this actually means that a vertex can also have an infill node attached to it!
-							#for right now let's just ignore it.
-							pass;
-						else:
-							raise ValueError("I dont know how to handle this kind of intersection");
+						try:
+							#make the node
+							if brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsOnEdge:
+								newNode = boundary.newIntersectionNode(
+									Wrappers.cast(brp.SupportOnShape1(k)),
+									brp.ParOnEdgeS1(k),
+									brp.PointOnShape1(k) );
+							elif brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsVertex:
+								#how on earth to handle this one?
+								#this actually means that a vertex can also have an infill node attached to it!
+								#for right now let's just ignore it.
+								pass;
+							else:
+								raise ValueError("I dont know how to handle this kind of intersection");
 
-						interSections.append(newNode);
+							interSections.append(newNode);
+						except:
+							log.warn("Problem Creating an intersection node... Ignoring.");
 					
 				else:
 					log.debug( "No Intersections Found");

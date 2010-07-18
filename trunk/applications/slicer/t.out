@@ -1,0 +1,31 @@
+Display3d class initialization starting ...
+WNT Graphic device created.
+WNT window created.
+Viewer created.
+Interactive context created.
+Display3d class successfully initialized.
+2010-04-18 14:03:52,875 [readSTLShape] INFO Reading STL:'parts\SimpleTwoBody.STL'...
+binary
+2010-04-18 14:03:53,108 [readSTLShape] INFO Fixing holes and degenerated Meshes...
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Complete.
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 0 --> 0
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 1 --> 0
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 2 --> 0
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 3 --> 0
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 4 --> 1
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 5 --> 0
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 6 --> 0
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 7 --> 0
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 8 --> 0
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 9 --> 1
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 10 --> 0
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 11 --> 0
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 12 --> 0
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 13 --> 0
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 14 --> 0
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 15 --> 0
+2010-04-18 14:03:53,250 [readSTLShape] INFO ShapeFix Status 16 --> 0
+2010-04-18 14:03:53,265 [readSTLShape] INFO ShapeFix Status 17 --> 0
+2010-04-18 14:03:53,265 [readSTLShape] WARNING Shape is a compound. Creating solids for each shell.
+x:60.15 y:60.12 z:6.35 (mm)
+x:42.69 y:39.50 z:6.35 (mm)

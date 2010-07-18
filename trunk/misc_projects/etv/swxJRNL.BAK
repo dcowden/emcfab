@@ -1,0 +1,23 @@
+' ******************************************************************************
+' swxJRNL.swj - journal recorded on 06/17/10 by dcowden
+' *****************************************************************************
+Dim swApp As Object
+Dim Part As Object
+Dim boolstatus As Boolean
+Dim longstatus As Long
+Dim Annotation As Object
+Dim Gtol As Object
+Dim DatumTag As Object
+Dim FeatureData As Object
+Dim Feature As Object
+Dim Component As Object
+Sub main()
+
+Set swApp = Application.SldWorks
+
+Set Part = swApp.OpenDoc4 ("C:\data\emcfab\misc_projects\etv\RearLiveAxleRight.SLDASM", 2, 0, "", longstatus)
+' MSGBOX
+'  C:\data\emcfab\misc_projects\etv\RearLiveAxleRight.SLDASM is being used by another user.  Do you want to open a copy?
+
+swApp.ExitApp
+End Sub

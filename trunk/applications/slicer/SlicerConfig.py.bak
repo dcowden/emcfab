@@ -1,0 +1,234 @@
+"""
+	Configuration Classes
+	This product is highly configurable, and 
+	as such configuration is an important part of the 
+	product.
+	
+	There are validation and configuration frameworks out there,
+	but I need to keep dependencies down, and stay flexible.
+	
+"""
+
+UNITS_MM = "mm";
+UNITS_IN = "in";
+UNITS_UNKNOWN = "units";
+
+"""
+	Options for Slicing 
+"""
+class SlicerOptions:
+	
+def repeat(char,count):
+	s = char;
+	for i in range(1,count):
+		s += char;
+	return s;
+"""
+	Base Class: for later addition of 
+	functionality to read from http requests or files
+"""
+class BaseConfigItem:
+	def __init__(self,name,doc):
+		"documentation for this configuration"
+		self.doc = doc;
+		self.name = name;
+
+"""
+	A single configuration item
+"""
+class ConfigItem:
+	def __init__(self,name,type,doc,defaultBehaviorDoc):
+		self.doc = doc;
+		self.name = name;
+		self.defaultDoc = defaultBehaviorDoc;
+		self.type = type;
+		self.value = None;
+		self.defaultValue = None;
+	
+	def hasValue(self):
+		return self.value != None;
+
+	#TODO: type checking
+	def getValue(self):
+		if self.value:
+			return self.value;
+		else:
+			return self.defaultValue;
+	
+	def readFromDict(self,dict):
+		"reads a value for this item from a dictionary"
+		if dict.has_key(self.name):
+			self.value = dict[self.name];
+
+	def __str__(self):
+		s = self.name.ljust(30) + (str(self.getValue() ) + "").ljust(10);
+		if self.value != None:
+			s += " [User Selected]";
+		return s;
+
+	def help(self):
+		return  self.name.ljust(20) + self.type.ljust(10) + str(self.value).ljust(10) +  self.doc.ljust(30) + self.defaultDoc.ljust(30) ;
+		
+		
+"""
+	a group of configuration items.
+"""
+class ConfigGroup(dict):
+	def __init__(self,name,doc):
+		self.doc = doc;
+		self.name = name;
+	
+	def addItem(self,name,vartype,doc,defaultBehaviorDoc,defaultValue=None):
+		ci = ConfigItem( name,vartype,doc,defaultBehaviorDoc);
+		ci.defaultValue = defaultValue;
+		self.addConfigItem( ci);
+	
+	
+	def addConfigItem(self,configItem):
+		self[configItem.name] = configItem;
+
+	def readFromDict(self,dict):
+		"read all items from a dictionary"
+		if self.has_key(self.name):
+			myItems = dict[self.name];
+			
+			if type(myItems).__name__  == 'dict':
+				for [k,v] in self.iteritems():
+					#if the item is a single, it will look for its value
+					#if the items is a group, it will expect to find a key
+					#with its name in it.
+					v.readFromDict(myItems);
+
+	def hasDetailItems(self):
+		"determine if this group has any headers"
+		for [k,v] in self.iteritems():
+			if isinstance(v,ConfigItem):
+				return True;
+		
+		return False;
+				
+	def __str__(self):
+		o = [];
+		#print out detail items
+		for [k,v] in self.iteritems():
+			if isinstance(v,ConfigItem):
+				o.append(str(v) );		
+		return "\n".join(o);
+
+	def help(self,indent=0):
+		"print out all options, quick and dirty style"
+		
+		output = [];
+		pad = repeat('\t',indent);
+		output.append('\n');
+		output.append(pad + '-  ' + self.name.ljust(20) + self.doc.ljust(80));
+		output.append(pad + repeat('-',80 ));
+		
+		if self.hasDetailItems():
+			output.append(pad + pad + "Name".ljust(20) + "type".ljust(10) + "Value".ljust(10) + "Description".ljust(30) + "Default Behavior".ljust(30) );
+			output.append(pad + pad + "".rjust(80,"-"));
+			
+			#print out detail items
+			for [k,v] in self.iteritems():
+				if isinstance(v,ConfigItem):
+					output.append(pad + pad + help(v) );
+		
+		for [k,v] in self.iteritems():
+			if isinstance(v,ConfigGroup):
+				output.append(v.help(indent + 1 ) );
+		
+		return "\n".join(output );
+		
+
+class SlicingOptions(ConfigGroup):
+	def __init__(self):
+		doc = "Options Related to Slicing."
+		ConfigGroup.__init__(self,"SlicingOptions",doc);
+		self.addItem("units","string","Model Unit of Measure","AutoDetect from Model" );
+		self.addItem("nozzleDiameter","float","Nozzle Diameter","0.3 mm or 0.012 In" );
+		self.addItem("zMin","float","Value to Start slicing from","Minimum Model  Value" );
+		self.addItem("zMax","float","Value to stop slicing","Maximum Model Value" );
+		self.addItem("numSlices","int","Number of Slices to generate","Compute from layerHeight");
+		self.addItem("layerHeight","float","Height of each slice layer","same as nozzle diameter" );
+		self.addItem("translateToPositiveSpace","boolean","Should the object be moved to positive coordinates?","True" ,True);		
+		self.addItem("enabled","boolean","Enable Filling of Slices.","True" ,True);
+		self.addItem("fillWidth","float","Width of filling, in model units.","Use LayerHeight" );
+		self.addItem("numExtraShells","int","Number of extra shells to compute after the first border","Generate as many shells as possible before switching to infill",99999999);
+		self.addItem("checkFillInterference","boolean","Check For Fills that are too close to other fills. Use for irregular shapes. Improved performance if disabled","True" ,True);
+		self.DEFAULT_RESOLUTION = { UNITS_MM : 0.3, UNITS_IN : 0.012 };
+		
+
+"""
+	Options for Creating Gcode
+"""
+class GcodeOptions(ConfigGroup):
+	def __init__(self):
+		doc="""Gcode Output Options"""
+		ConfigGroup.__init__(self,"GcodeOptions",doc );
+		self.addItem("enabled","boolean","Output Gcode Files.","True" ,True);
+		self.addItem("useArcs","boolean","Output Gcode Arcs (G02/G03). Much more compact if your machine can handle it.","True" ,True);
+		self.addItem("numberFormat","string","python string format for numbers","%0.3f" ,'%0.3f');
+		self.addItem("computeExtruderAxis","boolean","Should an extra axis be created that computes the total distance of each move?","True" ,True);
+		self.addItem("extruderAxisName","string","If computExtruderAxis is true, what is the name of the axis?","A" ,'A');
+		self.addItem("machineResolution","float","What value is small enough that your machine considers two points closer the same value?","0.0005" ,0.0005);
+		self.addItem("fileExtension","string","What file extension should be used to append to files for gcode output?",".nc" ,".nc");
+		self.addItem("curveApproximationTolerance","float","If usearcs is false, what deflection is acceptable when approximating with line segments?","0.0005",0.0005);
+		self.addItem("commentFormat","string","Python format string for creating comments.","'( %s )'","'( %s )'" );
+		self.addItem("feedRate","float","Feedrate to use for moves.","100 Units/Min",100.0 );
+"""
+	Defines Options associated with creating SVG output
+"""
+class SVGOptions(ConfigGroup):
+	def __init__(self):
+		doc="""SVG Output Options"""
+		ConfigGroup.__init__(self,"SVGOptions",doc );
+		self.addItem("enabled","boolean","Output SVG Files.","True" );
+		self.addItem("numberFormat","string","python string format for numbers","%0.3f" );
+		self.addItem("fileExtension","string","What file extension should be used to append to files for svg output?",".nc" );
+		
+"""
+	Aggregated Options
+"""
+class SlicerOptions(ConfigGroup):
+	def __init__(self):
+		doc="Occ Slicer Library Options";
+		ConfigGroup.__init__(self,"OccSlicer",doc );
+		
+		self.slicingOptions = SlicingOptions();
+
+		self.gcodeOptions = GcodeOptions();
+		self.svgOptions = SVGOptions();
+		
+		#add them to the local collection
+		self.addConfigItem( self.slicingOptions  );
+		self.addConfigItem( self.gcodeOptions  );
+		self.addConfigItem( self.svgOptions  );
+
+
+
+
+if __name__=='__main__':
+	"make sure these objects work correctly."
+	
+	allOptions = SlicerOptions();
+	
+	#print defaults
+	print str(allOptions);
+	
+	#add some options
+	d = {
+		'OccSlicer' : {
+			'SVGOptions' : {
+				'enable' : False
+			},
+			'SlicingOptions' : {
+				'layerHeight': 2.0,
+				'zMin':0.0005,
+				'zMax':0.1,
+				'units':'in'
+			}
+		}
+	};
+	allOptions.readFromDict(d);
+	print str(allOptions );
+	

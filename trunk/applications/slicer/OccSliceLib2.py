@@ -88,9 +88,9 @@ from OCC import GProp
 from OCC import BRepGProp
 from OCC import VrmlAPI
 from OCC import gce
-
-from OCC.SMESH import *
-from OCC.StdMeshers import *
+from OCC import Voxel
+#from OCC.SMESH import *
+#from OCC.StdMeshers import *
 from OCC.MeshVS import *	
 
 #my libraries
@@ -313,6 +313,108 @@ class SolidAnalyzer:
 		
 		return UNITS_MM;	
 
+def displayPixelGrid(pixelGrid):
+	"show all the points in a pixel grid"
+	l = [];
+	for k in pixelGrid.keys():
+		l.append(Wrappers.make_vertex(gp.gp_Pnt(k[0],k[1],0.00)));
+		
+	display.DisplayShape(l);
+
+	
+#makes a pixel grid of a face
+def computePixelGrid(face, resolution=0.1):
+	"""
+	   makes a pixel grid of a face at the requested resolution."
+		A dictionary is used to store the values.
+	"""
+	box = Bnd.Bnd_Box();
+	b = BRepBndLib.BRepBndLib();
+	b.Add(face,box);
+	TOLERANCE = 5;
+	bounds = box.Get();
+	xMin = bounds[0];
+	xMax = bounds[3];
+	xDim = abs(xMax - xMin);
+	yMin = bounds[1];
+	yMax = bounds[4];
+	yDim = abs(yMax - yMin);
+	zMin = bounds[2];
+	pixelTable = {};
+	
+	for y in Wrappers.frange6(yMin,yMax,resolution):
+		#create a horizontal scan line
+		edge =  Wrappers.edgeFromTwoPoints(
+		 gp.gp_Pnt(xMin - TOLERANCE,y,zMin),
+			gp.gp_Pnt(xMax + TOLERANCE,y,zMin) );
+			
+		#get list of wires from the face
+		#TODO:// this should be encapsulated by a face abstraction
+		wires = []
+		ow = brt.OuterWire(face);
+		wires.append(ow);
+		for w in Topo(face).wires():
+			if not w.IsSame(ow):
+				wires.append(w);
+				
+		
+		#compute intersection points with each wire
+		#this is a hack because i know how to make edges from lines
+		#but really, it would be better to do 2d here and use
+		#Geom2dAPI_InterCurveCurve
+		xIntersections = [];		
+		for w in wires:
+			#display.DisplayShape(w);
+			brp = BRepExtrema.BRepExtrema_DistShapeShape();
+			#display.DisplayShape(edge);
+			brp.LoadS1(w);
+			brp.LoadS2(edge);
+
+			if brp.Perform() and brp.Value() < 0.01:
+				for k in range(1,brp.NbSolution()+1):
+					if brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsOnEdge:
+						xIntersections.append(brp.PointOnShape1(k).X() );
+		
+		
+		if len(xIntersections) == 0:
+			print "No intersection found.";
+			continue;
+		#else:
+			#print "there are %d intersections " % len(xIntersections);
+		#sort intersection points by x value
+		xIntersections.sort();
+		
+		#fill pixel table with values on surface based on scanlines
+		#TODO: for now ignore horizontals and edge vertices, this is just a test
+		#better to use a generator here too
+		#also need to implement edge table of scanline fill
+		if (len(xIntersections) % 2 == 0) :
+			i = 0;
+			inside = False;
+			cx = xMin;
+			
+			#print xIntersections;
+			while i < len(xIntersections):
+				cint = xIntersections[i];
+				if inside:
+					while cx < cint:
+						key = ( cx, y );
+						pixelTable[key] = 1;
+						#print cx;
+						cx += resolution;
+				else:
+					while cx<cint:
+						cx += resolution;
+						#print cx;
+						continue;
+						
+				i += 1;
+				inside = not inside;
+		else:
+			print "Odd number of intersections encountred."
+
+	#displayPixelGrid(pixelTable);
+	return pixelTable;
 		
 """
 	a set of slices that together make a part
@@ -381,7 +483,9 @@ class Slicer:
 
 		userMessage("Slicing Complete: " + t.finishedString() );
 		userMessage("Throughput: %0.3f slices/sec" % (sliceNumber/t.elapsed() ) );
-			
+	
+	
+
 	#fills a slice with the appropriate toolpaths.
 	#returns: void
 	#a number of wires are added to the slice as paths.
@@ -391,6 +495,12 @@ class Slicer:
 		log.info("There are %d faces" % slice.faces.Length() );
 		
 		for f in hSeqIterator(slice.faces):
+		
+			print("computing pixel grid of face...");
+			t4=Timer();
+			grid = computePixelGrid(f,0.05);
+			print("done computing grid. it has %d points" % len(grid) );
+			print ("total time %0.3f ms" % ( t4.elapsed()*1000) );
 			log.info("Filling Face..");
 			#TestDisplay.display.eraseAll();
 			#time.sleep(3);			
@@ -762,7 +872,9 @@ def readStepShape(fileName):
 	shape = stepReader.OneShape();
 	print "Step file is of type %d" % shape.ShapeType();
 	log.info("Done.");
-	
+	#runProfiled('vm = makeVoxelModel(shape)');
+	vm = makeVoxelModel(shape);
+	#puke
 	return shape;
 
 def readSTLShape(fileName):
@@ -796,6 +908,84 @@ def showSlice(s):
 	
 	for e in hSeqIterator(s.fillEdges):
 		TestDisplay.display.showShape(e);
+
+def fillVolume(vm):
+	"fills the volume of a voxel model"
+	"cast rays through each pix in z direction"
+	mX = vm.GetNbX();
+	mY = vm.GetNbY();
+	mZ = vm.GetNbZ();
+	
+
+	for x in range(0,mX):
+		for y in range(0,mY):
+			inVolume = False;
+			onSurface=False;
+			for z in range(0,mZ):
+				current =  vm.Get(x,y,z);
+				if current:
+					if onSurface:
+						continue;
+					else:
+						onSurface = True;
+						inVolume = (not inVolume);
+				else:
+					if onSurface:
+						inVolume = (not inVolume);
+						onSurface = False;
+					if inVolume:
+						vm.Set(x,y,z,1);
+
+			
+
+		
+def makeVoxelModel(shape):
+	size=100
+	"make a voxel model of a solid shape"
+	print "trying to make voxel model"
+	b = time.clock();
+
+	voxModel = Voxel.Voxel_BoolDS();
+	converter = Voxel.Voxel_FastConverter(shape,voxModel,0.01,size,size,size)
+	progress = 1
+	print "Computing Voxels";
+	converter.Convert(progress);
+	print "done computing voxels";
+	#converter.FillInVolume(3);
+	fillVolume(voxModel);
+	print "done filling volume with 1s"
+	t = time.clock() -b ;
+	print "done gettint voxels and filling: %0.3f sec, %0.5f ms/voxel " % (  t, t/math.pow(size,3)*1000 ) 
+	
+	print "model has %s x %s y %s z voxels" % (  voxModel.GetNbX(), voxModel.GetNbY(), voxModel.GetNbZ()  );
+	print "model x,y,z = %0.3f %0.3f %0.3f" % ( voxModel.GetX(), voxModel.GetY(), voxModel.GetZ() );
+	
+	"""
+	print "getting values of all points"
+	x=y=z=f=0;
+	for i in range(0,size):
+		print "z = %d" % ( i )
+		for j in range(0,voxModel.GetNbX() ):
+			r=[]
+			for k in range(0,voxModel.GetNbY()):
+				if (voxModel.Get(j,k,i )):
+					r.append("+")
+				else:
+					r.append(" ")
+			print "".join(r);
+		print "--------------"
+	"""	
+		
+
+	
+	return voxModel;
+
+def runProfiled(cmd):
+	"run a command profiled and output results"
+	cProfile.runctx(cmd, globals(), locals(), filename="slicer.prof")
+	p = pstats.Stats('slicer.prof')
+	p.sort_stats('time')
+	p.print_stats(1.0);	
 	
 def main(filename,userOptions):
 	t = Timer();
@@ -839,6 +1029,7 @@ def main(filename,userOptions):
 		userMessage( "*** Beginning Slicing... ");
 		t = Timer();
 		slicer.execute()
+		
 		userMessage("*** Slicing Complete, %0.1f seconds" % t.elapsed() );
 		perfTimes['slice'] = t.elapsed();
 		sliceTime = t.elapsed();
@@ -876,9 +1067,7 @@ def main(filename,userOptions):
 			userMessage( "%s : %0.3f sec." % (k,perfTimes[k] ) );
 			
 		#cProfile.runctx('slicer.execute()', globals(), locals(), filename="slicer.prof")	;					
-		#p = pstats.Stats('slicer.prof')
-		#p.sort_stats('time')
-		#p.print_stats(0.2);
+
 	except:
 		#TestDisplay.display.showShapes(sliceSet.slices.pop().faces );
 		traceback.print_exc(file=sys.stdout);

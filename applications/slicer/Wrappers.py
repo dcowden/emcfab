@@ -10,7 +10,7 @@ import time,os,sys,string,logging;
 brepTool = BRep.BRep_Tool();
 topoDS = TopoDS.TopoDS();
 import TestDisplay
-
+import itertools
 
 #topexp = TopExp.TopExp()
 #texp = TopExp.TopExp_Explorer();
@@ -35,7 +35,13 @@ class Timer:
 	def finishedString(self):
 		return "%0.3f sec" % ( self.elapsed() );
 
-		
+
+def pairwise(iterable):
+    "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+    a, b = itertools.tee(iterable)
+    next(b, None)
+    return itertools.izip(a, b)
+	
 def ntuples(lst, n,wrap=True):
 	B = 0;
 	if not wrap:

@@ -2,279 +2,279 @@
 <CADFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="DustShoe2" units="Inches">
   <layers>
     <layer name="0" color="255,255,255">
-      <ModificationCount>0</ModificationCount>
+      <ModificationCount>1</ModificationCount>
       <mat />
       <objects>
         <circle id="1" c="9.7383754672,3.5432130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="2" c="5.798517973,1.6280732799,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="3" c="6.487352759,1.9247324068,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="4" c="7.176187545,2.2213915337,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="5" c="7.865022331,2.5180506606,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="6" c="8.553857117,2.8147097875,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="7" c="9.242691903,3.1113689145,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="8" c="5.4842429702,1.495955083,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="9" c="1.4915162504,6.477572224,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="10" c="9.7383754672,4.2932130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="11" c="9.7383754672,5.0432130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="12" c="9.7383754672,5.7932130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="13" c="1.3633754672,2.4182130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="14" c="1.3633754672,3.1682130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="15" c="1.3633754672,3.9182130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="16" c="1.3633754672,4.6682130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="17" c="1.3633754672,5.4182130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="18" c="1.3633754672,6.1682130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="19" c="4.8008754672,1.4807130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="20" c="4.0508754672,1.4807130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="21" c="3.3008754672,1.4807130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="22" c="2.5508754672,1.4807130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="23" c="9.7383754672,6.1682130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="24" c="8.9258754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="25" c="8.1758754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="26" c="7.4258754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="27" c="6.6758754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="28" c="5.9258754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="29" c="5.1758754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="30" c="4.4258754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="31" c="3.6758754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="32" c="2.9258754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="33" c="2.1758754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="34" c="1.8008754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="53" c="1.8008754672,1.4807130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="54" c="2.5508754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="55" c="3.3008754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="56" c="4.0508754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="57" c="4.8008754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="58" c="5.5508754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="59" c="6.3008754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="60" c="7.0508754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="61" c="7.8008754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="62" c="8.5508754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="63" c="9.3008754672,6.6057130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="64" c="2.9258754672,1.4807130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="65" c="3.6758754672,1.4807130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="66" c="4.4258754672,1.4807130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="67" c="5.1758754672,1.4807130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="68" c="1.3633754672,5.7932130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="69" c="1.3633754672,5.0432130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="70" c="1.3633754672,4.2932130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="71" c="1.3633754672,3.5432130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="72" c="1.3633754672,2.7932130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="73" c="1.3633754672,2.0432130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="74" c="9.7383754672,5.4182130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="75" c="9.7383754672,4.6682130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="76" c="1.4561207625,1.6488611118,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="77" c="9.6102346839,6.477572224,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="78" c="9.587109296,3.2596984779,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="79" c="8.89827451,2.963039351,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="80" c="8.209439724,2.6663802241,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="81" c="7.520604938,2.3697210972,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="82" c="6.831770152,2.0730619702,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="83" c="6.142935366,1.7764028433,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="84" c="9.7383754672,3.9182130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <circle id="85" c="2.1758754672,1.4807130073,0" d="0.125">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
         </circle>
         <line id="86">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
           <pts>
             <p>1.8008754672,6.1682130073</p>
@@ -282,7 +282,7 @@
           </pts>
         </line>
         <line id="87">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
           <pts>
             <p>1.8008754672,6.1682130073</p>
@@ -290,7 +290,7 @@
           </pts>
         </line>
         <line id="88">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
           <pts>
             <p>1.8008754672,6.1682130073</p>
@@ -298,7 +298,7 @@
           </pts>
         </line>
         <line id="89">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
           <pts>
             <p>1.8008754672,6.1682130073</p>
@@ -306,7 +306,7 @@
           </pts>
         </line>
         <line id="90">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
           <pts>
             <p>1.8008754672,1.9182130073</p>
@@ -314,7 +314,7 @@
           </pts>
         </line>
         <line id="91">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
           <pts>
             <p>1.8008754672,1.9182130073</p>
@@ -322,7 +322,7 @@
           </pts>
         </line>
         <line id="92">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
           <pts>
             <p>1.8008754672,1.9182130073</p>
@@ -330,7 +330,7 @@
           </pts>
         </line>
         <line id="93">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
           <pts>
             <p>1.8008754672,1.9182130073</p>
@@ -338,7 +338,7 @@
           </pts>
         </line>
         <line id="94">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
           <pts>
             <p>9.2011398176,2.1082066869</p>
@@ -346,7 +346,7 @@
           </pts>
         </line>
         <line id="95">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
           <pts>
             <p>9.2011398176,2.1082066869</p>
@@ -354,7 +354,7 @@
           </pts>
         </line>
         <line id="96">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
           <pts>
             <p>9.2011398176,2.1082066869</p>
@@ -362,7 +362,7 @@
           </pts>
         </line>
         <line id="97">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
           <pts>
             <p>9.2011398176,2.1082066869</p>
@@ -370,7 +370,7 @@
           </pts>
         </line>
         <line id="98">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
           <pts>
             <p>9.2011398176,6.3582066869</p>
@@ -378,7 +378,7 @@
           </pts>
         </line>
         <line id="99">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
           <pts>
             <p>9.2011398176,6.3582066869</p>
@@ -386,7 +386,7 @@
           </pts>
         </line>
         <line id="100">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
           <pts>
             <p>9.2011398176,6.3582066869</p>
@@ -394,7 +394,7 @@
           </pts>
         </line>
         <line id="101">
-          <ModificationCount>0</ModificationCount>
+          <ModificationCount>1</ModificationCount>
           <mat />
           <pts>
             <p>9.2011398176,6.3582066869</p>
@@ -402,7 +402,7 @@
           </pts>
         </line>
         <pline id="102" Closed="true">
-          <ModificationCount>2</ModificationCount>
+          <ModificationCount>4</ModificationCount>
           <mat />
           <pts>
             <p>5.6076602562,1.2088585426,0</p>
@@ -418,7 +418,7 @@
           </pts>
         </pline>
         <pline id="103" Closed="true">
-          <ModificationCount>2</ModificationCount>
+          <ModificationCount>4</ModificationCount>
           <mat />
           <pts>
             <p>9.4258754672,3.5305384132,0</p>
@@ -438,170 +438,15 @@
     <OutFile>DustShoe2.nc</OutFile>
   </MachiningOptions>
   <machineops>
-    <mop xsi:type="MOPProfile">
-      <ToolDiameter>0.125</ToolDiameter>
-      <PlungeFeedrate>40</PlungeFeedrate>
-      <CutFeedrate>140</CutFeedrate>
-      <StartPoint>Default</StartPoint>
-      <Name>prof-rough</Name>
-      <StockSurface>0</StockSurface>
-      <Stock>0.02</Stock>
-      <ClearancePlane>0.5</ClearancePlane>
-      <primitive>
-        <prim>102</prim>
-      </primitive>
-      <mat />
-      <MaxCutWidth>0</MaxCutWidth>
-      <TargetDepth>-0.38</TargetDepth>
-      <DepthIncrement>0.25</DepthIncrement>
-      <FinalDepthIncrement>0.005</FinalDepthIncrement>
-      <CutOrdering>LevelFirst</CutOrdering>
-      <CutWidth>0.01</CutWidth>
-      <StepOver>0.4</StepOver>
-      <StepoverFeedrate>Default</StepoverFeedrate>
-      <LeadInMove>
-        <LeadInType>Spiral</LeadInType>
-        <SpiralAngle>10</SpiralAngle>
-        <TangentRadius>0</TangentRadius>
-        <LeadInFeedrate>120</LeadInFeedrate>
-      </LeadInMove>
-      <HoldingTabs>
-        <TabMethod>None</TabMethod>
-        <Width>3</Width>
-        <Height>0.2</Height>
-        <MinimumTabs>2</MinimumTabs>
-        <MaximumTabs>6</MaximumTabs>
-        <TabDistance>0</TabDistance>
-        <UseLeadIns>true</UseLeadIns>
-        <Tabs />
-      </HoldingTabs>
-      <SideProfile />
-    </mop>
-    <mop xsi:type="MOPProfile">
-      <ToolDiameter>0.125</ToolDiameter>
-      <PlungeFeedrate>40</PlungeFeedrate>
-      <CutFeedrate>140</CutFeedrate>
-      <StartPoint>Default</StartPoint>
-      <Name>prof-finish</Name>
-      <StockSurface>0</StockSurface>
-      <ClearancePlane>0.5</ClearancePlane>
-      <primitive>
-        <prim>102</prim>
-      </primitive>
-      <mat />
-      <MaxCutWidth>0</MaxCutWidth>
-      <TargetDepth>-0.38</TargetDepth>
-      <DepthIncrement>0.25</DepthIncrement>
-      <FinalDepthIncrement>0.005</FinalDepthIncrement>
-      <CutOrdering>LevelFirst</CutOrdering>
-      <CutWidth>0.01</CutWidth>
-      <StepOver>0.4</StepOver>
-      <StepoverFeedrate>Default</StepoverFeedrate>
-      <LeadInMove>
-        <LeadInType>Spiral</LeadInType>
-        <SpiralAngle>10</SpiralAngle>
-        <TangentRadius>0</TangentRadius>
-        <LeadInFeedrate>120</LeadInFeedrate>
-      </LeadInMove>
-      <HoldingTabs>
-        <TabMethod>None</TabMethod>
-        <Width>3</Width>
-        <Height>0.2</Height>
-        <MinimumTabs>2</MinimumTabs>
-        <MaximumTabs>6</MaximumTabs>
-        <TabDistance>0</TabDistance>
-        <UseLeadIns>true</UseLeadIns>
-        <Tabs />
-      </HoldingTabs>
-      <SideProfile />
-    </mop>
-    <mop xsi:type="MOPProfile">
-      <ToolDiameter>0.125</ToolDiameter>
-      <PlungeFeedrate>40</PlungeFeedrate>
-      <CutFeedrate>140</CutFeedrate>
-      <StartPoint>Default</StartPoint>
-      <Name>innerprof-rough</Name>
-      <StockSurface>0</StockSurface>
-      <Stock>0.02</Stock>
-      <ClearancePlane>0.5</ClearancePlane>
-      <primitive>
-        <prim>103</prim>
-      </primitive>
-      <mat />
-      <MaxCutWidth>0</MaxCutWidth>
-      <TargetDepth>-0.38</TargetDepth>
-      <DepthIncrement>0.25</DepthIncrement>
-      <FinalDepthIncrement>0.005</FinalDepthIncrement>
-      <CutOrdering>LevelFirst</CutOrdering>
-      <CutWidth>0.01</CutWidth>
-      <StepOver>0.4</StepOver>
-      <StepoverFeedrate>Default</StepoverFeedrate>
-      <InsideOutside>Inside</InsideOutside>
-      <LeadInMove>
-        <LeadInType>Spiral</LeadInType>
-        <SpiralAngle>10</SpiralAngle>
-        <TangentRadius>0</TangentRadius>
-        <LeadInFeedrate>120</LeadInFeedrate>
-      </LeadInMove>
-      <HoldingTabs>
-        <TabMethod>None</TabMethod>
-        <Width>3</Width>
-        <Height>0.2</Height>
-        <MinimumTabs>2</MinimumTabs>
-        <MaximumTabs>6</MaximumTabs>
-        <TabDistance>0</TabDistance>
-        <UseLeadIns>true</UseLeadIns>
-        <Tabs />
-      </HoldingTabs>
-      <SideProfile />
-    </mop>
-    <mop xsi:type="MOPProfile">
-      <ToolDiameter>0.125</ToolDiameter>
-      <PlungeFeedrate>40</PlungeFeedrate>
-      <CutFeedrate>140</CutFeedrate>
-      <StartPoint>Default</StartPoint>
-      <Name>innerprof-finish</Name>
-      <StockSurface>0</StockSurface>
-      <ClearancePlane>0.5</ClearancePlane>
-      <primitive>
-        <prim>103</prim>
-      </primitive>
-      <mat />
-      <MaxCutWidth>0</MaxCutWidth>
-      <TargetDepth>-0.38</TargetDepth>
-      <DepthIncrement>0.25</DepthIncrement>
-      <FinalDepthIncrement>0.005</FinalDepthIncrement>
-      <CutOrdering>LevelFirst</CutOrdering>
-      <CutWidth>0.01</CutWidth>
-      <StepOver>0.4</StepOver>
-      <StepoverFeedrate>Default</StepoverFeedrate>
-      <InsideOutside>Inside</InsideOutside>
-      <LeadInMove>
-        <LeadInType>Spiral</LeadInType>
-        <SpiralAngle>10</SpiralAngle>
-        <TangentRadius>0</TangentRadius>
-        <LeadInFeedrate>120</LeadInFeedrate>
-      </LeadInMove>
-      <HoldingTabs>
-        <TabMethod>None</TabMethod>
-        <Width>3</Width>
-        <Height>0.2</Height>
-        <MinimumTabs>2</MinimumTabs>
-        <MaximumTabs>6</MaximumTabs>
-        <TabDistance>0</TabDistance>
-        <UseLeadIns>true</UseLeadIns>
-        <Tabs />
-      </HoldingTabs>
-      <SideProfile />
-    </mop>
     <mop xsi:type="MOPDrill">
       <ToolDiameter>0.125</ToolDiameter>
-      <PlungeFeedrate>40</PlungeFeedrate>
+      <PlungeFeedrate>60</PlungeFeedrate>
       <CutFeedrate>140</CutFeedrate>
       <StartPoint>Default</StartPoint>
       <Name>bristleholes</Name>
       <StockSurface>0</StockSurface>
-      <ClearancePlane>0.25</ClearancePlane>
+      <ClearancePlane>0.125</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
       <primitive>
         <prim>9</prim>
         <prim>34</prim>
@@ -672,9 +517,173 @@
         <prim>18</prim>
       </primitive>
       <mat />
-      <TargetDepth>-0.38</TargetDepth>
-      <PeckDistance>0.1</PeckDistance>
+      <TargetDepth>-0.39</TargetDepth>
+      <PeckDistance>0.18</PeckDistance>
       <CustomScript />
+    </mop>
+    <mop xsi:type="MOPProfile">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>60</PlungeFeedrate>
+      <CutFeedrate>140</CutFeedrate>
+      <StartPoint>Default</StartPoint>
+      <Name>innerprof-rough</Name>
+      <StockSurface>0</StockSurface>
+      <Stock>0.02</Stock>
+      <ClearancePlane>0.5</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
+      <primitive>
+        <prim>103</prim>
+      </primitive>
+      <mat />
+      <MaxCutWidth>0</MaxCutWidth>
+      <TargetDepth>-0.37</TargetDepth>
+      <DepthIncrement>0.125</DepthIncrement>
+      <FinalDepthIncrement>0.005</FinalDepthIncrement>
+      <CutOrdering>LevelFirst</CutOrdering>
+      <CutWidth>0.01</CutWidth>
+      <StepOver>0.4</StepOver>
+      <StepoverFeedrate>Default</StepoverFeedrate>
+      <InsideOutside>Inside</InsideOutside>
+      <MillingDirection>Climb</MillingDirection>
+      <LeadInMove>
+        <LeadInType>Spiral</LeadInType>
+        <SpiralAngle>10</SpiralAngle>
+        <TangentRadius>0</TangentRadius>
+        <LeadInFeedrate>120</LeadInFeedrate>
+      </LeadInMove>
+      <HoldingTabs>
+        <TabMethod>None</TabMethod>
+        <Width>3</Width>
+        <Height>0.2</Height>
+        <MinimumTabs>2</MinimumTabs>
+        <MaximumTabs>6</MaximumTabs>
+        <TabDistance>0</TabDistance>
+        <UseLeadIns>true</UseLeadIns>
+        <Tabs />
+      </HoldingTabs>
+      <SideProfile />
+    </mop>
+    <mop xsi:type="MOPProfile">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>60</PlungeFeedrate>
+      <CutFeedrate>140</CutFeedrate>
+      <StartPoint>Default</StartPoint>
+      <Name>innerprof-finish</Name>
+      <StockSurface>0</StockSurface>
+      <ClearancePlane>0.5</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
+      <primitive>
+        <prim>103</prim>
+      </primitive>
+      <mat />
+      <MaxCutWidth>0</MaxCutWidth>
+      <TargetDepth>-0.39</TargetDepth>
+      <DepthIncrement>0.25</DepthIncrement>
+      <FinalDepthIncrement>0.01</FinalDepthIncrement>
+      <CutOrdering>LevelFirst</CutOrdering>
+      <CutWidth>0.01</CutWidth>
+      <StepOver>0.4</StepOver>
+      <StepoverFeedrate>Default</StepoverFeedrate>
+      <InsideOutside>Inside</InsideOutside>
+      <MillingDirection>Climb</MillingDirection>
+      <LeadInMove>
+        <LeadInType>Spiral</LeadInType>
+        <SpiralAngle>10</SpiralAngle>
+        <TangentRadius>0</TangentRadius>
+        <LeadInFeedrate>120</LeadInFeedrate>
+      </LeadInMove>
+      <HoldingTabs>
+        <TabMethod>None</TabMethod>
+        <Width>3</Width>
+        <Height>0.2</Height>
+        <MinimumTabs>2</MinimumTabs>
+        <MaximumTabs>6</MaximumTabs>
+        <TabDistance>0</TabDistance>
+        <UseLeadIns>true</UseLeadIns>
+        <Tabs />
+      </HoldingTabs>
+      <SideProfile />
+    </mop>
+    <mop xsi:type="MOPProfile">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>60</PlungeFeedrate>
+      <CutFeedrate>140</CutFeedrate>
+      <StartPoint>Default</StartPoint>
+      <Name>prof-rough</Name>
+      <StockSurface>0</StockSurface>
+      <Stock>0.02</Stock>
+      <ClearancePlane>0.5</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
+      <primitive>
+        <prim>102</prim>
+      </primitive>
+      <mat />
+      <MaxCutWidth>0</MaxCutWidth>
+      <TargetDepth>-0.37</TargetDepth>
+      <DepthIncrement>0.125</DepthIncrement>
+      <FinalDepthIncrement>0.005</FinalDepthIncrement>
+      <CutOrdering>LevelFirst</CutOrdering>
+      <CutWidth>0.01</CutWidth>
+      <StepOver>0.4</StepOver>
+      <StepoverFeedrate>Default</StepoverFeedrate>
+      <MillingDirection>Climb</MillingDirection>
+      <LeadInMove>
+        <LeadInType>Spiral</LeadInType>
+        <SpiralAngle>10</SpiralAngle>
+        <TangentRadius>0</TangentRadius>
+        <LeadInFeedrate>120</LeadInFeedrate>
+      </LeadInMove>
+      <HoldingTabs>
+        <TabMethod>None</TabMethod>
+        <Width>3</Width>
+        <Height>0.2</Height>
+        <MinimumTabs>2</MinimumTabs>
+        <MaximumTabs>6</MaximumTabs>
+        <TabDistance>0</TabDistance>
+        <UseLeadIns>true</UseLeadIns>
+        <Tabs />
+      </HoldingTabs>
+      <SideProfile />
+    </mop>
+    <mop xsi:type="MOPProfile">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>60</PlungeFeedrate>
+      <CutFeedrate>140</CutFeedrate>
+      <StartPoint>Default</StartPoint>
+      <Name>prof-finish</Name>
+      <StockSurface>0</StockSurface>
+      <ClearancePlane>0.5</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
+      <primitive>
+        <prim>102</prim>
+      </primitive>
+      <mat />
+      <MaxCutWidth>0</MaxCutWidth>
+      <TargetDepth>-0.39</TargetDepth>
+      <DepthIncrement>0.25</DepthIncrement>
+      <FinalDepthIncrement>0.015</FinalDepthIncrement>
+      <CutOrdering>LevelFirst</CutOrdering>
+      <CutWidth>0.01</CutWidth>
+      <StepOver>0.4</StepOver>
+      <StepoverFeedrate>Default</StepoverFeedrate>
+      <MillingDirection>Climb</MillingDirection>
+      <LeadInMove>
+        <LeadInType>Spiral</LeadInType>
+        <SpiralAngle>10</SpiralAngle>
+        <TangentRadius>0</TangentRadius>
+        <LeadInFeedrate>120</LeadInFeedrate>
+      </LeadInMove>
+      <HoldingTabs>
+        <TabMethod>None</TabMethod>
+        <Width>3</Width>
+        <Height>0.2</Height>
+        <MinimumTabs>2</MinimumTabs>
+        <MaximumTabs>6</MaximumTabs>
+        <TabDistance>0</TabDistance>
+        <UseLeadIns>true</UseLeadIns>
+        <Tabs />
+      </HoldingTabs>
+      <SideProfile />
     </mop>
   </machineops>
   <ActiveLayer>0</ActiveLayer>

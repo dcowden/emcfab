@@ -2,19 +2,19 @@
 <CADFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="DustShoe" units="Inches">
   <layers>
     <layer name="0" color="255,255,255">
-      <ModificationCount>1</ModificationCount>
+      <ModificationCount>2</ModificationCount>
       <mat />
       <objects>
         <circle id="1" c="3.6420241074,4.0504407295,0" d="3.975">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
         </circle>
         <circle id="12" c="7.7670212766,4.8254407295,0" d="1.675">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
         </circle>
         <line id="13">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
           <pts>
             <p>1.7670212766,6.4504407295</p>
@@ -22,7 +22,7 @@
           </pts>
         </line>
         <line id="14">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
           <pts>
             <p>1.7670212766,6.4504407295</p>
@@ -30,7 +30,7 @@
           </pts>
         </line>
         <line id="15">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
           <pts>
             <p>1.7670212766,6.4504407295</p>
@@ -38,7 +38,7 @@
           </pts>
         </line>
         <line id="16">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
           <pts>
             <p>1.7670212766,6.4504407295</p>
@@ -46,7 +46,7 @@
           </pts>
         </line>
         <line id="17">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
           <pts>
             <p>1.7670212766,2.2004407295</p>
@@ -54,7 +54,7 @@
           </pts>
         </line>
         <line id="18">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
           <pts>
             <p>1.7670212766,2.2004407295</p>
@@ -62,7 +62,7 @@
           </pts>
         </line>
         <line id="19">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
           <pts>
             <p>1.7670212766,2.2004407295</p>
@@ -70,7 +70,7 @@
           </pts>
         </line>
         <line id="20">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
           <pts>
             <p>1.7670212766,2.2004407295</p>
@@ -78,7 +78,7 @@
           </pts>
         </line>
         <line id="21">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
           <pts>
             <p>9.2670212766,2.2004407295</p>
@@ -86,7 +86,7 @@
           </pts>
         </line>
         <line id="22">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
           <pts>
             <p>9.2670212766,2.2004407295</p>
@@ -94,7 +94,7 @@
           </pts>
         </line>
         <line id="23">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
           <pts>
             <p>9.2670212766,2.2004407295</p>
@@ -102,7 +102,7 @@
           </pts>
         </line>
         <line id="24">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
           <pts>
             <p>9.2670212766,2.2004407295</p>
@@ -110,7 +110,7 @@
           </pts>
         </line>
         <line id="25">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
           <pts>
             <p>9.2670212766,6.4504407295</p>
@@ -118,7 +118,7 @@
           </pts>
         </line>
         <line id="26">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
           <pts>
             <p>9.2670212766,6.4504407295</p>
@@ -126,7 +126,7 @@
           </pts>
         </line>
         <line id="27">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
           <pts>
             <p>9.2670212766,6.4504407295</p>
@@ -134,7 +134,7 @@
           </pts>
         </line>
         <line id="28">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat />
           <pts>
             <p>9.2670212766,6.4504407295</p>
@@ -142,7 +142,7 @@
           </pts>
         </line>
         <pline id="29" Closed="true">
-          <ModificationCount>4</ModificationCount>
+          <ModificationCount>6</ModificationCount>
           <mat />
           <pts>
             <p>5.6139832844,1.4935349552,0</p>
@@ -166,25 +166,28 @@
   <machineops>
     <mop xsi:type="MOPProfile">
       <ToolDiameter>0.125</ToolDiameter>
-      <PlungeFeedrate>40</PlungeFeedrate>
-      <CutFeedrate>140</CutFeedrate>
+      <PlungeFeedrate>60</PlungeFeedrate>
+      <CutFeedrate>125</CutFeedrate>
       <StartPoint>Default</StartPoint>
-      <Name>prof-rough</Name>
+      <Name>hole1-rough</Name>
       <StockSurface>0</StockSurface>
       <Stock>0.02</Stock>
       <ClearancePlane>0.5</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
       <primitive>
-        <prim>29</prim>
+        <prim>1</prim>
       </primitive>
       <mat />
       <MaxCutWidth>0</MaxCutWidth>
-      <TargetDepth>-0.38</TargetDepth>
-      <DepthIncrement>0.25</DepthIncrement>
+      <TargetDepth>-0.37</TargetDepth>
+      <DepthIncrement>0.125</DepthIncrement>
       <FinalDepthIncrement>0.005</FinalDepthIncrement>
       <CutOrdering>LevelFirst</CutOrdering>
       <CutWidth>0.01</CutWidth>
       <StepOver>0.4</StepOver>
       <StepoverFeedrate>Default</StepoverFeedrate>
+      <InsideOutside>Inside</InsideOutside>
+      <MillingDirection>Climb</MillingDirection>
       <LeadInMove>
         <LeadInType>Spiral</LeadInType>
         <SpiralAngle>10</SpiralAngle>
@@ -205,12 +208,178 @@
     </mop>
     <mop xsi:type="MOPProfile">
       <ToolDiameter>0.125</ToolDiameter>
-      <PlungeFeedrate>40</PlungeFeedrate>
-      <CutFeedrate>140</CutFeedrate>
+      <PlungeFeedrate>60</PlungeFeedrate>
+      <CutFeedrate>125</CutFeedrate>
+      <StartPoint>Default</StartPoint>
+      <Name>hole1-finish</Name>
+      <StockSurface>0</StockSurface>
+      <ClearancePlane>0.5</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
+      <primitive>
+        <prim>1</prim>
+      </primitive>
+      <mat />
+      <MaxCutWidth>0</MaxCutWidth>
+      <TargetDepth>-0.38</TargetDepth>
+      <DepthIncrement>0.38</DepthIncrement>
+      <FinalDepthIncrement>0.005</FinalDepthIncrement>
+      <CutOrdering>LevelFirst</CutOrdering>
+      <CutWidth>0.01</CutWidth>
+      <StepOver>0.4</StepOver>
+      <StepoverFeedrate>Default</StepoverFeedrate>
+      <InsideOutside>Inside</InsideOutside>
+      <MillingDirection>Climb</MillingDirection>
+      <LeadInMove>
+        <LeadInType>Spiral</LeadInType>
+        <SpiralAngle>10</SpiralAngle>
+        <TangentRadius>0</TangentRadius>
+        <LeadInFeedrate>120</LeadInFeedrate>
+      </LeadInMove>
+      <HoldingTabs>
+        <TabMethod>None</TabMethod>
+        <Width>3</Width>
+        <Height>0.2</Height>
+        <MinimumTabs>2</MinimumTabs>
+        <MaximumTabs>6</MaximumTabs>
+        <TabDistance>0</TabDistance>
+        <UseLeadIns>true</UseLeadIns>
+        <Tabs />
+      </HoldingTabs>
+      <SideProfile />
+    </mop>
+    <mop xsi:type="MOPProfile">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>60</PlungeFeedrate>
+      <CutFeedrate>125</CutFeedrate>
+      <StartPoint>Default</StartPoint>
+      <Name>hole2-rough</Name>
+      <StockSurface>0</StockSurface>
+      <Stock>0.02</Stock>
+      <ClearancePlane>0.5</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
+      <primitive>
+        <prim>12</prim>
+      </primitive>
+      <mat />
+      <MaxCutWidth>0</MaxCutWidth>
+      <TargetDepth>-0.37</TargetDepth>
+      <DepthIncrement>0.125</DepthIncrement>
+      <FinalDepthIncrement>0.005</FinalDepthIncrement>
+      <CutOrdering>LevelFirst</CutOrdering>
+      <CutWidth>0.01</CutWidth>
+      <StepOver>0.4</StepOver>
+      <StepoverFeedrate>Default</StepoverFeedrate>
+      <InsideOutside>Inside</InsideOutside>
+      <MillingDirection>Climb</MillingDirection>
+      <LeadInMove>
+        <LeadInType>Spiral</LeadInType>
+        <SpiralAngle>10</SpiralAngle>
+        <TangentRadius>0</TangentRadius>
+        <LeadInFeedrate>120</LeadInFeedrate>
+      </LeadInMove>
+      <HoldingTabs>
+        <TabMethod>None</TabMethod>
+        <Width>3</Width>
+        <Height>0.2</Height>
+        <MinimumTabs>2</MinimumTabs>
+        <MaximumTabs>6</MaximumTabs>
+        <TabDistance>0</TabDistance>
+        <UseLeadIns>true</UseLeadIns>
+        <Tabs />
+      </HoldingTabs>
+      <SideProfile />
+    </mop>
+    <mop xsi:type="MOPProfile">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>60</PlungeFeedrate>
+      <CutFeedrate>125</CutFeedrate>
+      <StartPoint>Default</StartPoint>
+      <Name>hole2-finish</Name>
+      <StockSurface>0</StockSurface>
+      <ClearancePlane>0.5</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
+      <primitive>
+        <prim>12</prim>
+      </primitive>
+      <mat />
+      <MaxCutWidth>0</MaxCutWidth>
+      <TargetDepth>-0.38</TargetDepth>
+      <DepthIncrement>0.38</DepthIncrement>
+      <FinalDepthIncrement>0.005</FinalDepthIncrement>
+      <CutOrdering>LevelFirst</CutOrdering>
+      <CutWidth>0.01</CutWidth>
+      <StepOver>0.4</StepOver>
+      <StepoverFeedrate>Default</StepoverFeedrate>
+      <InsideOutside>Inside</InsideOutside>
+      <MillingDirection>Climb</MillingDirection>
+      <LeadInMove>
+        <LeadInType>Spiral</LeadInType>
+        <SpiralAngle>10</SpiralAngle>
+        <TangentRadius>0</TangentRadius>
+        <LeadInFeedrate>120</LeadInFeedrate>
+      </LeadInMove>
+      <HoldingTabs>
+        <TabMethod>None</TabMethod>
+        <Width>3</Width>
+        <Height>0.2</Height>
+        <MinimumTabs>2</MinimumTabs>
+        <MaximumTabs>6</MaximumTabs>
+        <TabDistance>0</TabDistance>
+        <UseLeadIns>true</UseLeadIns>
+        <Tabs />
+      </HoldingTabs>
+      <SideProfile />
+    </mop>
+    <mop xsi:type="MOPProfile">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>60</PlungeFeedrate>
+      <CutFeedrate>125</CutFeedrate>
+      <StartPoint>Default</StartPoint>
+      <Name>prof-rough</Name>
+      <StockSurface>0</StockSurface>
+      <Stock>0.02</Stock>
+      <ClearancePlane>0.5</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
+      <primitive>
+        <prim>29</prim>
+      </primitive>
+      <mat />
+      <MaxCutWidth>0</MaxCutWidth>
+      <TargetDepth>-0.37</TargetDepth>
+      <DepthIncrement>0.125</DepthIncrement>
+      <FinalDepthIncrement>0.005</FinalDepthIncrement>
+      <CutOrdering>LevelFirst</CutOrdering>
+      <CutWidth>0.01</CutWidth>
+      <StepOver>0.4</StepOver>
+      <StepoverFeedrate>Default</StepoverFeedrate>
+      <MillingDirection>Climb</MillingDirection>
+      <LeadInMove>
+        <LeadInType>Spiral</LeadInType>
+        <SpiralAngle>10</SpiralAngle>
+        <TangentRadius>0</TangentRadius>
+        <LeadInFeedrate>120</LeadInFeedrate>
+      </LeadInMove>
+      <HoldingTabs>
+        <TabMethod>None</TabMethod>
+        <Width>3</Width>
+        <Height>0.2</Height>
+        <MinimumTabs>2</MinimumTabs>
+        <MaximumTabs>6</MaximumTabs>
+        <TabDistance>0</TabDistance>
+        <UseLeadIns>true</UseLeadIns>
+        <Tabs />
+      </HoldingTabs>
+      <SideProfile />
+    </mop>
+    <mop xsi:type="MOPProfile">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>60</PlungeFeedrate>
+      <CutFeedrate>125</CutFeedrate>
       <StartPoint>Default</StartPoint>
       <Name>prof-finish</Name>
       <StockSurface>0</StockSurface>
       <ClearancePlane>0.5</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
       <primitive>
         <prim>29</prim>
       </primitive>
@@ -223,164 +392,7 @@
       <CutWidth>0.01</CutWidth>
       <StepOver>0.4</StepOver>
       <StepoverFeedrate>Default</StepoverFeedrate>
-      <LeadInMove>
-        <LeadInType>Spiral</LeadInType>
-        <SpiralAngle>10</SpiralAngle>
-        <TangentRadius>0</TangentRadius>
-        <LeadInFeedrate>120</LeadInFeedrate>
-      </LeadInMove>
-      <HoldingTabs>
-        <TabMethod>None</TabMethod>
-        <Width>3</Width>
-        <Height>0.2</Height>
-        <MinimumTabs>2</MinimumTabs>
-        <MaximumTabs>6</MaximumTabs>
-        <TabDistance>0</TabDistance>
-        <UseLeadIns>true</UseLeadIns>
-        <Tabs />
-      </HoldingTabs>
-      <SideProfile />
-    </mop>
-    <mop xsi:type="MOPProfile">
-      <ToolDiameter>0.125</ToolDiameter>
-      <PlungeFeedrate>40</PlungeFeedrate>
-      <CutFeedrate>140</CutFeedrate>
-      <StartPoint>Default</StartPoint>
-      <Name>hole1-rough</Name>
-      <StockSurface>0</StockSurface>
-      <Stock>0.02</Stock>
-      <ClearancePlane>0.5</ClearancePlane>
-      <primitive>
-        <prim>1</prim>
-      </primitive>
-      <mat />
-      <MaxCutWidth>0</MaxCutWidth>
-      <TargetDepth>-0.38</TargetDepth>
-      <DepthIncrement>0.25</DepthIncrement>
-      <FinalDepthIncrement>0.005</FinalDepthIncrement>
-      <CutOrdering>LevelFirst</CutOrdering>
-      <CutWidth>0.01</CutWidth>
-      <StepOver>0.4</StepOver>
-      <StepoverFeedrate>Default</StepoverFeedrate>
-      <InsideOutside>Inside</InsideOutside>
-      <LeadInMove>
-        <LeadInType>Spiral</LeadInType>
-        <SpiralAngle>10</SpiralAngle>
-        <TangentRadius>0</TangentRadius>
-        <LeadInFeedrate>120</LeadInFeedrate>
-      </LeadInMove>
-      <HoldingTabs>
-        <TabMethod>None</TabMethod>
-        <Width>3</Width>
-        <Height>0.2</Height>
-        <MinimumTabs>2</MinimumTabs>
-        <MaximumTabs>6</MaximumTabs>
-        <TabDistance>0</TabDistance>
-        <UseLeadIns>true</UseLeadIns>
-        <Tabs />
-      </HoldingTabs>
-      <SideProfile />
-    </mop>
-    <mop xsi:type="MOPProfile">
-      <ToolDiameter>0.125</ToolDiameter>
-      <PlungeFeedrate>40</PlungeFeedrate>
-      <CutFeedrate>140</CutFeedrate>
-      <StartPoint>Default</StartPoint>
-      <Name>hole1-finish</Name>
-      <StockSurface>0</StockSurface>
-      <ClearancePlane>0.5</ClearancePlane>
-      <primitive>
-        <prim>1</prim>
-      </primitive>
-      <mat />
-      <MaxCutWidth>0</MaxCutWidth>
-      <TargetDepth>-0.38</TargetDepth>
-      <DepthIncrement>0.25</DepthIncrement>
-      <FinalDepthIncrement>0.005</FinalDepthIncrement>
-      <CutOrdering>LevelFirst</CutOrdering>
-      <CutWidth>0.01</CutWidth>
-      <StepOver>0.4</StepOver>
-      <StepoverFeedrate>Default</StepoverFeedrate>
-      <InsideOutside>Inside</InsideOutside>
-      <LeadInMove>
-        <LeadInType>Spiral</LeadInType>
-        <SpiralAngle>10</SpiralAngle>
-        <TangentRadius>0</TangentRadius>
-        <LeadInFeedrate>120</LeadInFeedrate>
-      </LeadInMove>
-      <HoldingTabs>
-        <TabMethod>None</TabMethod>
-        <Width>3</Width>
-        <Height>0.2</Height>
-        <MinimumTabs>2</MinimumTabs>
-        <MaximumTabs>6</MaximumTabs>
-        <TabDistance>0</TabDistance>
-        <UseLeadIns>true</UseLeadIns>
-        <Tabs />
-      </HoldingTabs>
-      <SideProfile />
-    </mop>
-    <mop xsi:type="MOPProfile">
-      <ToolDiameter>0.125</ToolDiameter>
-      <PlungeFeedrate>40</PlungeFeedrate>
-      <CutFeedrate>140</CutFeedrate>
-      <StartPoint>Default</StartPoint>
-      <Name>hole2-rough</Name>
-      <StockSurface>0</StockSurface>
-      <Stock>0.02</Stock>
-      <ClearancePlane>0.5</ClearancePlane>
-      <primitive>
-        <prim>12</prim>
-      </primitive>
-      <mat />
-      <MaxCutWidth>0</MaxCutWidth>
-      <TargetDepth>-0.38</TargetDepth>
-      <DepthIncrement>0.25</DepthIncrement>
-      <FinalDepthIncrement>0.005</FinalDepthIncrement>
-      <CutOrdering>LevelFirst</CutOrdering>
-      <CutWidth>0.01</CutWidth>
-      <StepOver>0.4</StepOver>
-      <StepoverFeedrate>Default</StepoverFeedrate>
-      <InsideOutside>Inside</InsideOutside>
-      <LeadInMove>
-        <LeadInType>Spiral</LeadInType>
-        <SpiralAngle>10</SpiralAngle>
-        <TangentRadius>0</TangentRadius>
-        <LeadInFeedrate>120</LeadInFeedrate>
-      </LeadInMove>
-      <HoldingTabs>
-        <TabMethod>None</TabMethod>
-        <Width>3</Width>
-        <Height>0.2</Height>
-        <MinimumTabs>2</MinimumTabs>
-        <MaximumTabs>6</MaximumTabs>
-        <TabDistance>0</TabDistance>
-        <UseLeadIns>true</UseLeadIns>
-        <Tabs />
-      </HoldingTabs>
-      <SideProfile />
-    </mop>
-    <mop xsi:type="MOPProfile">
-      <ToolDiameter>0.125</ToolDiameter>
-      <PlungeFeedrate>40</PlungeFeedrate>
-      <CutFeedrate>140</CutFeedrate>
-      <StartPoint>Default</StartPoint>
-      <Name>hole2-finish</Name>
-      <StockSurface>0</StockSurface>
-      <ClearancePlane>0.5</ClearancePlane>
-      <primitive>
-        <prim>12</prim>
-      </primitive>
-      <mat />
-      <MaxCutWidth>0</MaxCutWidth>
-      <TargetDepth>-0.38</TargetDepth>
-      <DepthIncrement>0.25</DepthIncrement>
-      <FinalDepthIncrement>0.005</FinalDepthIncrement>
-      <CutOrdering>LevelFirst</CutOrdering>
-      <CutWidth>0.01</CutWidth>
-      <StepOver>0.4</StepOver>
-      <StepoverFeedrate>Default</StepoverFeedrate>
-      <InsideOutside>Inside</InsideOutside>
+      <MillingDirection>Climb</MillingDirection>
       <LeadInMove>
         <LeadInType>Spiral</LeadInType>
         <SpiralAngle>10</SpiralAngle>

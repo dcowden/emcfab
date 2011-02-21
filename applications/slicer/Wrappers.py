@@ -6,7 +6,7 @@
 """
 from OCC import BRep,gp,GeomAbs,GeomAPI,GCPnts,TopoDS,BRepTools,GeomAdaptor,TopAbs,TopTools,TopExp
 from OCC import BRepGProp,BRepLProp, BRepBuilderAPI,BRepPrimAPI,GeomAdaptor,GeomAbs,BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI,BRepAdaptor
-import time,os,sys,string,logging;
+import time,os,sys,string;
 brepTool = BRep.BRep_Tool();
 topoDS = TopoDS.TopoDS();
 import TestDisplay
@@ -15,7 +15,7 @@ import itertools
 #topexp = TopExp.TopExp()
 #texp = TopExp.TopExp_Explorer();
 #brt = BRepTools.BRepTools();
-log = logging.getLogger('Wrapper');
+#log = logging.getLogger('Wrapper');
 
 """
 	Utility class to provide timing information
@@ -140,12 +140,12 @@ def makeWiresFromOffsetShape(shape):
 	"get all the wires from the offset shape"
 	resultWires = TopTools.TopTools_HSequenceOfShape();
 	if shape.ShapeType() == TopAbs.TopAbs_WIRE:
-		log.info( "offset result is a wire" );
+		#log.info( "offset result is a wire" );
 		wire = topoDS.Wire(shape);
 		#resultWires.append(wire);
 		resultWires.Append(wire);
 	elif shape.ShapeType() == TopAbs.TopAbs_COMPOUND:
-		log.info( "offset result is a compound");
+		#log.info( "offset result is a compound");
 
 		bb = TopExp.TopExp_Explorer();
 		bb.Init(shape,TopAbs.TopAbs_WIRE);
@@ -171,22 +171,40 @@ def wireFromEdges(edgeList):
 		return mw.Wire();
 	else:
 		raise ValueError,"Error %d Building Wire" % mw.Error();
+
+def pointAtParameterList(edge,paramList):
+	"compute the point on the edge at the supplied parameter"
+	hc = brepTool.Curve(edge);
+	c = GeomAdaptor.GeomAdaptor_Curve(hc[0]);
+	r = [];
+	for p in paramList:
+		r.append(c.Value(p));
+	return r;
+
+		
+
+def pointAtParameter(edge,param):
+	hc = brepTool.Curve(edge);
+	c = GeomAdaptor.GeomAdaptor_Curve(hc[0]);
+	return c.Value(param);
+
+def trimmedEdge(edge,p1, p2):
+	"returns a new edge that is a trimmed version of the underlying one"
+	hc = BRep.BRep_Tool().Curve(edge);
+	return edgeFromTwoPointsOnCurve(hc[0],p1,p2);
 	
 def edgeFromTwoPointsOnCurve(handleCurve,p1,p2):
 	"make an edge from a curve and two parameters"
-	log.info("Making Edge from Parameters %0.2f, %0.2f" %( p1, p2) );
+	#log.info("Making Edge from Parameters %0.2f, %0.2f" %( p1, p2) );
 	
 	a = p1;
 	b = p2;
+	rev = False;
 	if p1 > p2:
 		a = p2;
 		b = p1;
-		log.info("Parameters are inverted, so we'll reverse the resulting edge");
+		#log.info("Parameters are inverted, so we'll reverse the resulting edge");
 		rev = True;		
-	else:
-		a = p1;
-		b = p2;
-		rev = False;
 	
 	builder = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(handleCurve,a,b);
 	builder.Build();
@@ -196,26 +214,28 @@ def edgeFromTwoPointsOnCurve(handleCurve,p1,p2):
 			e.Reverse();
 		return e;
 	else:
-		log.error( "Error building Edge: Error Number %d" % builder.Error());
+		#log.error( "Error building Edge: Error Number %d" % builder.Error());
 		raise ValueError,"Error building Edge: Error Number %d" % builder.Error();
 		
 def cast(shape):
+	"these names have changed between occ 0.4 and occ 0.5!!!"
+
 	type = shape.ShapeType();
 	"cast a shape as its correct type"
 	if type == TopAbs.TopAbs_WIRE:
-		return topoDS.Wire(shape);
+		return topoDS.wire(shape);
 	elif type == TopAbs.TopAbs_EDGE:
-		return topoDS.Edge(shape);
+		return topoDS.edge(shape);
 	elif type == TopAbs.TopAbs_VERTEX:
-		return topoDS.Vertex(shape);
+		return topoDS.vertex(shape);
 	elif type == TopAbs.TopAbs_SOLID:
-		return topoDS.Solid(shape);
+		return topoDS.solid(shape);
 	elif type == TopAbs.TopAbs_FACE:
-		return topoDS.Face(shape);
+		return topoDS.face(shape);
 	elif type == TopAbs.TopAbs_SHELL:
-		return topoDS.Shell(shape);
+		return topoDS.shell(shape);
 	elif type == TopAbs.TopAbs_COMPOUND:
-		return topoDS.Compound(shape);
+		return topoDS.compound(shape);
 	return shape;
 
 
@@ -240,7 +260,8 @@ class Edge:
 		self.curve = GeomAdaptor.GeomAdaptor_Curve(hc[0]); 
 		self.handleCurve  = hc[0];
 		self.firstParameter = hc[1];
-		self.lastParameter = hc[2];		
+		self.lastParameter = hc[2];
+
 		p1 = self.curve.Value(self.firstParameter);
 		p2 = self.curve.Value(self.lastParameter);
 
@@ -253,10 +274,28 @@ class Edge:
 			self.reversed = True;
 			self.firstPoint = p2;
 			self.lastPoint = p1;
+	
+	def distanceBetweenEnds(self):
+		"length of the edge, assuming it is a straight line"
+		return self.firstPoint.Distance(self.lastPoint);
 		
 	def isLine(self):
 		return self.curve.GetType() == GeomAbs.GeomAbs_Line;
 	
+	def pointAtParameter(self,p):
+		"return the point corresponding to the desired parameter"
+		if p < self.firstParameter or p > self.lastParameter:
+			raise ValueError,"Expected parameter between first and last."
+		return self.curve.Value(p);
+
+	def splitAtParameter(self,p):
+		"""
+		  split this edge at the supplied parameter.
+		  returns two EdgeWwrappers
+		"""
+		e1 = self.trimmedEdge(self.firstParameter,p);
+		e2 = self.trimmedEdge(p,self.lastParameter);
+		return [e1,e2];
 	
 	def trimmedEdge(self,parameter1, parameter2):
 		"make a trimmed edge based on a start and end parameter on the same curve"
@@ -289,7 +328,8 @@ class Edge:
 		else:
 			s = "Curve:\t"; 
 		return s + str(Point(self.firstPoint)) + "-->" + str(Point(self.lastPoint));
-	
+
+
 """
 	Follow a wire's edges in order
 """
@@ -320,7 +360,7 @@ class Wire():
 		
 	def edgesAsList(self):
 		edges = [];
-		for e in self.edges():
+		for e in self.edges2():
 			edges.append(e);
 		return edges;
 
@@ -329,24 +369,24 @@ class Wire():
 		bb = TopExp.TopExp_Explorer();
 		bb.Init(self.wire,TopAbs.TopAbs_EDGE);
 		while bb.More():
-			e = topoDS.Edge(bb.Current());
+			e = topoDS.edge(bb.Current());
 			yield e;	
 			bb.Next();		
 		bb.ReInit();		
-	
+		
 	def assertHeadToTail(self):
 		"checks that a wire is head to tail."
-		log.info("Asserting Wire..");
+		#log.info("Asserting Wire..");
 		seq = self.edgesAsSequence();
 		list  = listFromHSequenceOfShape(seq);
 		wrapAround = self.wire.Closed();
-		if wrapAround:
-			log.info("Wire is closed.");
+		#if wrapAround:
+			#log.info("Wire is closed.");
 		for (edge1,edge2) in ntuples(list,2,wrapAround):
 			ew1 = Edge(edge1);
 			ew2 = Edge(edge2);
 			assert ew1.lastPoint.Distance(ew2.firstPoint) < 0.0001;
-		log.info("Wire is valid.");
+		#log.info("Wire is valid.");
 		
 	def __str__(self):
 		"print the points in a wire"
@@ -365,5 +405,21 @@ class Wire():
 		
 if __name__=='__main__':
 	print "Basic Wrappers and Utilities Module"
-	print "No Test Cases Yet";
+
+	w = TestDisplay.makeSquareWire();
+	
+	el = EdgeLinkedList(w);
+
+	#TestDisplay.display.showShape(w);
+	#TestDisplay.display.showShape(el.first().edge);
+	#TestDisplay.display.showShape(el.last().edge);
+	
+	#for e in el.nodesForward():
+	#	TestDisplay.display.showShape(e.edge);
+	
+	for e in el.nodesBackward():
+		TestDisplay.display.showShape(e.edge);
+		
+	TestDisplay.display.run();
+	
 

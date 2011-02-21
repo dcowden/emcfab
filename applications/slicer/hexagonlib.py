@@ -182,7 +182,7 @@ class Hexagon:
 			bottomLeftCenter is the center of the top left hex, as a three-element tuple
 			countX is the number of hexes in the x direction
 			countY is the number of hexes in the y direction
-			
+			returns a list of wires representing a hexagon fill pattern
 		"""
 		pattern = self.makePeriodic(bottomLeftCenter);
 		wireBuilder = BRepBuilderAPI.BRepBuilderAPI_MakeWire(pattern);
@@ -210,7 +210,7 @@ class Hexagon:
 		####TODO// performance note.  This method takes about 31ms to compute 1000x1000 hex.
 		# pretty good, except that nearly 50% of the time is spent in makeTransform!!!
 		# a much better method would be to use the same transform object somehow
-		for i in range(1,countY*2):
+		for i in range(1,int(countY*2)):
 			if i % 2 == 0:
 				t = makeTransform(0,dY*i,0);
 			else:
@@ -234,7 +234,7 @@ if __name__=='__main__':
 	h = Hexagon(2,0 );
 	w1 = h.makePeriodic((0,0,0));
 	
-	h2 = Hexagon(10,2);
+	h2 = Hexagon(10,.2);
 	w2 = h2.makePeriodic((0,0,0));
 	
 	#display.DisplayShape(w1);

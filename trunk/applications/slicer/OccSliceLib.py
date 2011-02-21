@@ -394,7 +394,7 @@ class Slicer:
 			log.info("Filling Face..");
 			#TestDisplay.display.eraseAll();
 			#time.sleep(3);			
-			TestDisplay.display.showShape(f);
+			#TestDisplay.display.showShape(f);
 			#time.sleep(3);
 			numShells = 0;
 			t3=Timer();
@@ -437,7 +437,8 @@ class Slicer:
 				try:
 					newOffset = self._offsetFace(f,currentOffset);
 					if newOffset and self.options.filling.checkFillInterference:					
-						r = checkMinimumDistanceForOffset(newOffset,self.options.nozzleDiameter);						
+						#r = checkMinimumDistanceForOffset(newOffset,self.options.nozzleDiameter);
+						r = True;
 						if not r:
 							log.warn("Shell is too close to other shells.");
 							break;
@@ -488,8 +489,8 @@ class Slicer:
 				#time.sleep(.1);
 				slice.fillEdges.Append(e);
 		
-			display.DisplayShape(tlst,update=False);
-			display.FitAll();
+			#display.DisplayShape(tlst,update=False);
+			#display.FitAll();
 		log.warn("Filling Complete, Created %d paths." % slice.fillWires.Length()  );
 
 
@@ -503,7 +504,7 @@ class Slicer:
 		
 		for w in Topo(face).wires():
 			if not w.IsSame(ow):
-				TestDisplay.display.showShape(w);
+				#TestDisplay.display.showShape(w);
 				bo.AddWire(w);
 		
 		#print "about to offset by %0.2f" % offset;
@@ -550,7 +551,7 @@ class Slicer:
 				foundFace = True;
 				log.debug( "Face is at zlevel" + str(zLevel) );
 				s.addFace(face);
-				TestDisplay.display.showShape(face);
+				#TestDisplay.display.showShape(face);
 				
 				log.debug("Face" + str(face) );
 

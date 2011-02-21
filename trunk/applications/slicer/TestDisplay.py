@@ -5,7 +5,7 @@ import os
 import sys
 import os.path
 import wx
-import logging
+
 import time
 import traceback
 from OCC import STEPControl,TopoDS, TopExp, TopAbs,BRep,gp,GeomAbs,GeomAPI
@@ -89,6 +89,7 @@ def makeCircleWire():
 	mw.Add(e1);
 	return mw.Wire();	
 
+	
 def makeEdgeIndicator(edge):
 	"makes an indicator showing which way the edge goes"
 	ew = Wrappers.Edge(edge);

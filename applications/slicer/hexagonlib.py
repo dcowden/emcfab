@@ -162,7 +162,7 @@ class Hexagon:
 			
 			The algo guarantees that full hexes cover the specified bounding box
 		"""
-		print "makehexboundingbox"
+		
 		dX = abs(bottomLeftCorner[0] - topRightCorner[0] );
 		dY = abs(bottomLeftCorner[1] - topRightCorner[1] );
 		

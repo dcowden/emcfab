@@ -166,6 +166,31 @@ class EdgeGraph:
 		n2 = tP(edgeSegment.lastPoint);
 		self.g.remove_edge(n1,n2,edgeSegment.key() );
 		#print "Removing %s Edge (%0.3f, %0.3f ) <--> (%0.3f %0.3f ) " % ( edgeSegment.type, edgeSegment.firstPoint.X(), edgeSegment.firstPoint.Y(), edgeSegment.lastPoint.X(), edgeSegment.lastPoint.Y()  ) ;
+	
+	def addEdgeListAsSingleEdge(self,edgeList,type):
+		"""
+			adds a list of edges in the graph as a single edge.
+			The list of edges becomes a 'pseudo-edge' with a single start and endpoint.
+			The edge cannot be divided, and its vertices are not stored in the edge graph
+		"""
+		
+		#TODO: adding this method has broken the EdgeSegment intervace.
+		#what is needed is an object that exposes first and last point, and a container for the underlying object
+		# an edgesegment ( a portion of an edge between two parameters ), a full edge ( requring no trimming ), 
+		# and a gropu of edges combined are all special subcases.
+		
+		firstEdge = edgeList[0];
+		lastEdge = edgeList[-1];
+		(f,l) = brepTool.Range(firstEdge);
+		(n,m) = brepTool.Range(lastEdge);
+		
+		#todo, this can be optimized, the underlying curve is computed twice here.
+		p1 = tP( Wrappers.pointAtParameter( firstEdge,f));
+		p2 = tP(Wrappers.pointAtParameter(lastEdge,m ));
+		
+		#todo, i dont think we care about this key do we, as long as it is unique?
+		self.g.add_edge(p1,p2,(p1,p2),{'edgeList': edgeList} );
+
 		
 	def addWire(self,wire,type):
 		"add all the edges of a wire. They will be connected together."
@@ -199,14 +224,68 @@ class EdgeGraph:
 			#each edge is a tuple of nodes.
 			#then we have to extract the edge dict and get the node value
 			#print e[2].keys();#
-			yield e[2]['node'];
-	
+			yield e[2];
 
-def splitWire(wire, ipoints):
+	
+def splitWire(wire,ipoints):
+
+	topexp = TopExp.TopExp_Explorer();
+	topexp.Init(wire,TopAbs.TopAbs_EDGE);
+
+	#sort intersection points by ascending X location
+	ix = sorted(ipoints,key = lambda p: p.point.X() );	
+
+	edges = []; #a list of edges for the current wire.
+	assert (len(ipoints) % 2) == 0;
+	
+	for i in range(0,len(ipoints),2):
+		#process intersection points in pairs
+		currentIntersection = ix[i];
+		nextIntersection = ix[i+1];
+		
+		#if they are on the same edge, simply add a trimmed edge
+		#TODO: could optimize a little to avoid re-computing the edge object when there are
+		#lots of intersections per edge
+		if currentIntersection.hash == nextIntersection.hash:
+			edges.append( Wrappers.trimmedEdge(currentIntersection.edge, currentIntersection.param, nextIntersection.param ) );
+		else:
+			#intersections are not on the same edge.
+			#add the fraction of the first edge
+			(bp,ep) = brepTool.Range(currentIntersection.edge);
+			#print "adding piece of start edge."
+			edges.append( Wrappers.trimmedEdge(currentIntersection.edge,currentIntersection.param, ep));
+	
+			#pick up whole edges between the first intersection and the next one
+			#loop till current edge is same as current intersection
+			while topexp.Current().__hash__() != currentIntersection.hash:
+				topexp.Next();
+			
+			#advance to next edge
+			topexp.Next();
+			
+			#add edges till current edge is same as next intersection
+			while topexp.Current().__hash__() != nextIntersection.hash:
+				edge = Wrappers.cast(topexp.Current() );
+				edges.append(edge);
+				#print "adding middle edge"
+				topexp.Next();
+	
+			#add the last edge
+			(bp,ep) = brepTool.Range(nextIntersection.edge);
+			edges.append( Wrappers.trimmedEdge(nextIntersection.edge,bp,nextIntersection.param));
+			#print "adding last piece of edge"
+			
+	return edges;
+
+	
+def splitWireOld(wire, ipoints):
 	"""
 		ipoints is a list of intersection points.
 		returns a list of wires inside the intersection point
 		
+		this method must also work for a 'wire' consisting of a single
+		edge. more than one intersection point can be on each edge, 
+		but all of the ipoints are expected to be on edges in the provided wire.
 		BASELINE PERFORMANCE: 11 ms per call for splitwiretest
 	"""
 	
@@ -433,17 +512,17 @@ def splitPerfTest():
 	p2 = PointOnAnEdge(e2.edge,e2p ,e2.pointAtParameter(e2p));
 	TestDisplay.display.showShape( Wrappers.make_vertex(p1.point));
 	TestDisplay.display.showShape( Wrappers.make_vertex(p2.point));
-	cProfile.runctx('for i in range(1,2): ee=splitWire(w,[p2,p1])', globals(), locals(), filename="slicer.prof")
+	cProfile.runctx('for i in range(1,20): ee=splitWire(w,[p2,p1])', globals(), locals(), filename="slicer.prof")
 	p = pstats.Stats('slicer.prof')
 	p.sort_stats('cum')
 	p.print_stats(.98);		
 
 	t = Wrappers.Timer();
 	ee = [];
-	for i in range(1,2):
+	for i in range(1,1000):
 		ee = splitWire(w,[p2,p1]);
 	
-	print "Elapsed for 100splits:",t.finishedString();
+	print "Elapsed for 1000splits:",t.finishedString();
 	#TestDisplay.display.showShape(ee);
 	
 def runProfiled(cmd,level=1.0):
@@ -474,10 +553,10 @@ if __name__=='__main__':
 	
 	#testDivideWire();
 	print "Testing One Edge Lots of parms.."
-	#testSplitWire1();
+	testSplitWire1();
 	
 	print "Testing lots of edges"
-	#testSplitWire2();
+	testSplitWire2();
 	#runProfiled('splitPerfTest()');
 	splitPerfTest();
 	print "Tests Complete.";

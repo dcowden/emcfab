@@ -226,6 +226,7 @@ def cast(shape):
 		return topoDS.wire(shape);
 	elif type == TopAbs.TopAbs_EDGE:
 		return topoDS.edge(shape);
+		#return TopoDS.TopoDS_edge(shape);
 	elif type == TopAbs.TopAbs_VERTEX:
 		return topoDS.vertex(shape);
 	elif type == TopAbs.TopAbs_SOLID:

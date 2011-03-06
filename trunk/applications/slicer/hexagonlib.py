@@ -22,7 +22,9 @@ from OCC import TopTools
 from OCC import TopoDS
 from OCC import TopAbs
 from OCC import BRepTools
-
+from OCC import Approx
+from OCC import GeomAbs
+from  OCC import BRepLib
 import cProfile
 import pstats
 
@@ -160,6 +162,7 @@ class Hexagon:
 			
 			The algo guarantees that full hexes cover the specified bounding box
 		"""
+		print "makehexboundingbox"
 		dX = abs(bottomLeftCorner[0] - topRightCorner[0] );
 		dY = abs(bottomLeftCorner[1] - topRightCorner[1] );
 		
@@ -201,7 +204,9 @@ class Hexagon:
 
 		#create an array by alternately offsetting one cell right and 
 		#moving down
-		topHalf = wireBuilder.Wire();
+		topHalf = wireBuilder.Wire();		
+		#topHalf= approximatedWire(topHalf);
+		
 		wires=[];
 		wires.append(topHalf);
 		dY = self.cartesianSpacing()[1]/2.0;
@@ -217,11 +222,32 @@ class Hexagon:
 				t = makeTransform(dX,dY*i,0);
 			t.Perform(topHalf,False);
 			w = Wrappers.cast(t.Shape());
+			
+			#approximate the wire
+			#wires.append ( approximatedWire(w));
 			wires.append( w);
 		
 		#display.DisplayShape(wires);
 		return wires;
 
+		
+def approximatedWire(wire):
+	"returns a bezier approximation of the specified wire as an edge"
+	#make a parameterized approximation of the wire
+	adaptor = BRepAdaptor.BRepAdaptor_CompCurve (wire);
+	curve = BRepAdaptor.BRepAdaptor_HCompCurve(adaptor);
+	curveHandle = curve.GetHandle();
+	
+	#approximate the curve using a tolerance
+	approx = Approx.Approx_Curve3d(curveHandle,0.01,GeomAbs.GeomAbs_C2,1000,8);
+	if approx.IsDone() and  approx.HasResult():
+		# have the result
+		anApproximatedCurve=approx.Curve();
+
+		builder =  BRepLib.BRepLib_MakeEdge(anApproximatedCurve);
+		e = builder.Edge();
+		return Wrappers.wireFromEdges([e]);
+		
 def runProfiled(cmd,level=1.0):
 	"run a command profiled and output results"
 	cProfile.runctx(cmd, globals(), locals(), filename="slicer.prof")

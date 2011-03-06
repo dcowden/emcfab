@@ -11,6 +11,8 @@ import time,os,sys,string;
 from OCC.Geom import *
 brepTool = BRep.BRep_Tool();
 topoDS = TopoDS.TopoDS();
+from OCC.Utils.Topology import Topo
+from OCC.Utils.Topology import WireExplorer
 
 import TestDisplay
 import itertools
@@ -19,20 +21,18 @@ import time
 import networkx as nx
 import cProfile
 import pstats
+import hexagonlib
 
 def tP(point):
 	"return a tuple for a point"
 	return (point.X(), point.Y() );
-	
-def hashE(edge):
-	return edge.HashCode(1000000);
-
 	
 	
 class PointOnAnEdge:
 	"stores an intersection point"
 	def __init__(self,edge,param,point):
 		self.edge = edge;
+		self.hash = self.edge.__hash__();
 		self.param = param;
 		self.point = point;
 
@@ -68,7 +68,7 @@ class EdgeGraph:
 
 		#graph for the edges and nodes. nodes are 2d tuples ( x,y)
 		#edges are nx edges with EdgeSegment objects in the attributes
-		self.g = nx.Graph();
+		self.g = nx.MultiGraph();
 	
 	def firstNode(self):
 		return self.edges.values()[0].values()[0];
@@ -92,7 +92,7 @@ class EdgeGraph:
 		n2 = tP(original.lastPoint);
 		
 		#add new node and edges
-		n3 = tP( Wrappers.pointAtParameter(edge,param));
+		#n3 = tP( Wrappers.pointAtParameter(edge,param));
 		newNode1 = EdgeSegment(edge,original.p1,param,original.type);
 		newNode2 = EdgeSegment(edge,param,original.p2, original.type );
 
@@ -116,7 +116,7 @@ class EdgeGraph:
 		#do this,ie, to hash by parameter or sort instead
 		#of looping through all
 		
-		for n in self.edges[hashE(edge)].values():
+		for n in self.edges[edge.__hash__()].values():
 			if param >= n.p1 and param <= n.p2:
 				return n;
 			#else:
@@ -127,15 +127,18 @@ class EdgeGraph:
 	def addEdgeSegment(self,edgeSegment):
 		"adds an EdgeSegment to the structure"
 		#adds the nodes and the edges all in one shot to the graph
-		self.g.add_edge(tP(edgeSegment.firstPoint),tP(edgeSegment.lastPoint),{ 'node':edgeSegment} );
+		#print "Adding Edge :%d " % edgeSegment.edge.__hash__();
+		#TestDisplay.display.showShape(edgeSegment.edge);
+		self.g.add_edge(tP(edgeSegment.firstPoint),tP(edgeSegment.lastPoint),edgeSegment.key(),{'node': edgeSegment} );
 		
 		#store the edge in a dict by edge hash.
 		#the key of the second dict is hash+p1+p2-- ie, each distint edge, and paramter pair are stored
-		eh = hashE(edgeSegment.edge);
-		if not self.edges.has_key(eh):
-			self.edges[eh] = {};		
-		l = self.edges[eh];
-		
+		eh = edgeSegment.hash;
+		l = self.edges.setdefault(eh,{});
+		#if not self.edges.has_key(eh):
+		#	self.edges[eh] = {};		
+		#l = self.edges[eh];
+
 		l[edgeSegment] = edgeSegment;
 		
 	def addEdge(self,edge,type):
@@ -144,19 +147,25 @@ class EdgeGraph:
 		(f,l) = brepTool.Range(edge);
 		newEdge = EdgeSegment(edge,f,l,type);
 		self.addEdgeSegment(newEdge);
+		#print "Adding %s Edge (%0.3f, %0.3f ) <--> (%0.3f %0.3f ) " % ( type, newEdge.firstPoint.X(), newEdge.firstPoint.Y(), newEdge.lastPoint.X(), newEdge.lastPoint.Y()  ) ;
+
 
 	def removeEdge(self,edgeSegment):
 		"remove an EdgeSegment from the structure"
-		
+		#print "Removing Edge %s " % str(edgeSegment.key());
 		#remove from hash to find by original edge
 		e = edgeSegment.edge;
-		d =  self.edges[hashE(e)];
+		d =  self.edges[e.__hash__()];
+		#print edgeSegment.type 
 		d.pop(edgeSegment);
 		
+		assert edgeSegment.type == 'BOUND'
+			
 		#remove edge from nested graph
 		n1 = tP(edgeSegment.firstPoint);
 		n2 = tP(edgeSegment.lastPoint);
-		self.g.remove_edge(n1,n2);
+		self.g.remove_edge(n1,n2,edgeSegment.key() );
+		#print "Removing %s Edge (%0.3f, %0.3f ) <--> (%0.3f %0.3f ) " % ( edgeSegment.type, edgeSegment.firstPoint.X(), edgeSegment.firstPoint.Y(), edgeSegment.lastPoint.X(), edgeSegment.lastPoint.Y()  ) ;
 		
 	def addWire(self,wire,type):
 		"add all the edges of a wire. They will be connected together."
@@ -178,27 +187,27 @@ class EdgeGraph:
 		#	self.linkPrev( firstNode,lastNode);
 		#	self.linkNext( lastNode,firstNode);			
 
+	def allNodesRandomOrder(self):
+		for n in self.g.nodes_iter():
+			yield n;
+			
 	def allEdgesRandomOrder(self):
 		"return all the edges"
-		for e in self.g.edges_iter():
+
+		for e in self.g.edges_iter(data=True):
 			#wow, python perl-like hell
 			#each edge is a tuple of nodes.
 			#then we have to extract the edge dict and get the node value
-			yield self.g[e[0]][e[1]]['node'];
+			#print e[2].keys();#
+			yield e[2]['node'];
 	
 
-"""
-	use intersection points along a wire
-	to divide it into individual pieces
-	using scanline algorithm.
-	
-	The result is a list of edges that should be included.
-	No effort is made to assemble these edges into wires. the
-	result could be a disjointed set of wires.
-"""
 def splitWire(wire, ipoints):
 	"""
 		ipoints is a list of intersection points.
+		returns a list of wires inside the intersection point
+		
+		BASELINE PERFORMANCE: 11 ms per call for splitwiretest
 	"""
 	
 	#load original wire
@@ -208,8 +217,9 @@ def splitWire(wire, ipoints):
 	#wr = Wrappers.Wire(wire);
 	
 	#assume edges are in ascending x order also
-	#eS = wr.edgesAsList();	
-	wireExp = BRepTools.BRepTools_WireExplorer(wire);
+	#very interesting OCC weird thing: topexp is much faster than wireexplorer
+	topexp = TopExp.TopExp_Explorer();
+	topexp.Init(wire,TopAbs.TopAbs_EDGE);
 
 
 	#sort intersection points by ascending X location
@@ -217,6 +227,7 @@ def splitWire(wire, ipoints):
 	
 	inside = False;		
 	edges = []; #a list of edges for the current wire.	
+
 	iEdge = 0;
 	iIntersection=0;
 	
@@ -225,20 +236,21 @@ def splitWire(wire, ipoints):
 	#the last parameter on the current edge.
 	#it is either the first parameter on the current edge,
 	#or the last intersection point on the edge.
-	currentEdge = wireExp.Current();
+	currentEdge = Wrappers.cast(topexp.Current());
 	currentEdgeBounds = brepTool.Range(currentEdge);
 	startParam = currentEdgeBounds[0];
-	
-	while iIntersection < len(ix) and ( wireExp.More()  ) :
+	#print "handling %d intersections" % len(ix)
+	while iIntersection < len(ix) and ( topexp.More()  ) :
 		currentIntersection = ix[iIntersection];
 
-		if hashE(currentEdge) == hashE(currentIntersection.edge):
+		if currentEdge.__hash__()  == currentIntersection.hash:
 						
 			#current edge matches intersection point
 			if inside:
 				#transition to outside: add this part edge
 				currentEdgeBounds = brepTool.Range(currentEdge);
 				newEdge = Wrappers.trimmedEdge(currentEdge,startParam,currentIntersection.param);
+				#TestDisplay.display.showShape(newEdge);
 				edges.append(newEdge);
 							
 			#move to next point, store last intersection
@@ -254,15 +266,14 @@ def splitWire(wire, ipoints):
 					edges.append(currentEdge);
 				else:
 					newEdge = Wrappers.trimmedEdge(currentEdge,startParam, currentEdgeBounds[1] );
-
 					edges.append(newEdge);
 			
 			#move to next edge
-			wireExp.Next();
-			currentEdge = wireExp.Current();
+			topexp.Next();
+			currentEdge = Wrappers.cast(topexp.Current());
 			startParam = currentEdgeBounds[0];			
-
-	return edges;
+	#print "returning %d edges" % len(edges)
+	return edges;	
 
 	
 "an edge in a connected set of edges."
@@ -276,8 +287,9 @@ class EdgeSegment:
 		self.p2 = p2;
 		self.type =type;
 		
+		self.hash = self.edge.__hash__();
 		#precompute to save time
-		self.myKey = ( hashE(self.edge),self.p1, self.p2);
+		self.myKey = ( self.hash,self.p1, self.p2);
 		
 		#todo, this can be optimized, the underlying curve is computed twice here.
 		[self.firstPoint, self.lastPoint] = Wrappers.pointAtParameterList(edge, [self.p1,self.p2] );
@@ -304,7 +316,7 @@ class EdgeSegment:
 		#return ( hashE(self.edge),self.p1,self.p2);
 
 	def __repr__(self):
-		return  "EdgeSegment: %d ( %0.3f - %0.3f )" % ( hashE(self.edge),self.p1, self.p2);
+		return  "EdgeSegment: %d ( %0.3f - %0.3f )" % ( self.edge.__hash__(),self.p1, self.p2);
 
 			
 
@@ -349,7 +361,7 @@ def testSplitWire2():
 	
 	w = Wrappers.wireFromEdges([e1,e2,e3]);
 	ee = Wrappers.Wire(w).edgesAsList();
-	print "Original Edges: %d %d %d " % ( hashE(ee[0]),hashE(ee[1]),hashE(ee[2]));
+	#print "Original Edges: %d %d %d " % ( ee[0].__hash__(),ee[1].__hash__(),ee[2].__hash__());
 	p1 = PointOnAnEdge(ee[0],1.0,gp.gp_Pnt(1.0,0,0));
 	p2 = PointOnAnEdge(ee[2],0.5,gp.gp_Pnt(5.0,0,0));
 	
@@ -363,7 +375,7 @@ def testSplitWire2():
 		ew = Wrappers.Edge(e);
 		length += ew.distanceBetweenEnds();
 		TestDisplay.display.showShape(e);
-	print "length=%0.3f" % length;
+	#print "length=%0.3f" % length;
 	assert length == 4.5;
 
 	
@@ -402,42 +414,43 @@ def splitPerfTest():
 	
 	WIDTH=0.1
 	edges = [];
-	for i in range(1,50):
-		e = Wrappers.edgeFromTwoPoints(gp.gp_Pnt(i*WIDTH,0,0),gp.gp_Pnt((i+1)*WIDTH,0,0))
-		TestDisplay.display.showShape(e);
-		edges.append(e);
+
 		
 	
 	#trick here. after building a wire, the edges change identity.
 	#evidently, BRepBuilder_MakeWire makes copies of the underliying edges.
-	
-	w = Wrappers.wireFromEdges(edges);
+	h = hexagonlib.Hexagon(2.0,0 );
+	wirelist = h.makeHexForBoundingBox((0,0,0), (100,100,0));
+	w = wirelist[0];
 	ee = Wrappers.Wire(w).edgesAsList();
-	
+	TestDisplay.display.showShape(w);
 	#compute two intersections
 	e1 = Wrappers.Edge(ee[5]);
-	e2 = Wrappers.Edge(ee[30]);
+	e2 = Wrappers.Edge(ee[60]);
 	e1p = (e1.lastParameter - e1.firstParameter )/ 2;
 	e2p = (e2.lastParameter - e2.firstParameter )/ 2;
 	p1 = PointOnAnEdge(e1.edge,e1p ,e1.pointAtParameter(e1p));
 	p2 = PointOnAnEdge(e2.edge,e2p ,e2.pointAtParameter(e2p));
-	
-	#cProfile.runctx('for i in range(1,100): ee=splitWire(w,[p2,p1])', globals(), locals(), filename="slicer.prof")
-	#p = pstats.Stats('slicer.prof')
-	#p.sort_stats('time')
-	#p.print_stats(.98);		
+	TestDisplay.display.showShape( Wrappers.make_vertex(p1.point));
+	TestDisplay.display.showShape( Wrappers.make_vertex(p2.point));
+	cProfile.runctx('for i in range(1,2): ee=splitWire(w,[p2,p1])', globals(), locals(), filename="slicer.prof")
+	p = pstats.Stats('slicer.prof')
+	p.sort_stats('cum')
+	p.print_stats(.98);		
 
 	t = Wrappers.Timer();
-	for i in range(1,100):
+	ee = [];
+	for i in range(1,2):
 		ee = splitWire(w,[p2,p1]);
-	print "Elapsed for 100 splits:",t.finishedString();
 	
+	print "Elapsed for 100splits:",t.finishedString();
+	#TestDisplay.display.showShape(ee);
 	
 def runProfiled(cmd,level=1.0):
 	"run a command profiled and output results"
 	cProfile.runctx(cmd, globals(), locals(), filename="slicer.prof")
 	p = pstats.Stats('slicer.prof')
-	p.sort_stats('tot')
+	p.sort_stats('cum')
 	p.print_stats(level);	
 	
 if __name__=='__main__':
@@ -461,10 +474,11 @@ if __name__=='__main__':
 	
 	#testDivideWire();
 	print "Testing One Edge Lots of parms.."
-	testSplitWire1();
+	#testSplitWire1();
 	
 	print "Testing lots of edges"
-	testSplitWire2();
+	#testSplitWire2();
+	#runProfiled('splitPerfTest()');
 	splitPerfTest();
 	print "Tests Complete.";
 	

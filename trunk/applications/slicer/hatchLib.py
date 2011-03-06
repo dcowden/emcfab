@@ -186,9 +186,13 @@ class Hatcher:
 			# TODO: a speedup here is possible. why add all edges to the graph when only the
 			#first and last in the set will do?
 			
-			for e in edgesInside:
-				#fTestDisplay.display.showShape(e);
-				self.graph.addEdge(e,'FILL');
+			#for e in edgesInside:
+			#	#fTestDisplay.display.showShape(e);
+			#	self.graph.addEdge(e,'FILL');
+			if len(edgesInside) > 1:
+				self.graph.addEdgeListAsSingleEdge(edgesInside,'FILL');
+			if len(edgesInside) == 1:
+				self.graph.addEdge(edgesInside[0],'FILL');
 			
 			#test to see if we can break out of the loop.
 			#we can stop if we've hit each boundary at least once
@@ -281,10 +285,18 @@ if __name__=='__main__':
 	i=0;
 	for en in h.graph.allEdgesRandomOrder():
 		i+=1;
-		e = en.newEdge();
-		#TestDisplay.display.showShape( TestDisplay.makeEdgeIndicator(e) );
-		TestDisplay.display.showShape(e );	
-
+		if en.has_key('node'):
+			#these are partial segments of edges"
+			e = en['node'].newEdge();
+			#TestDisplay.display.showShape( TestDisplay.makeEdgeIndicator(e) );
+			TestDisplay.display.showShape(e );	
+		if en.has_key('edgeList'):
+			#print "Found EdgeList"
+			#these are full edges
+			el = en['edgeList'];
+			for e in el:
+				TestDisplay.display.showShape(e);
+	
 	print "%d edges total" % i
 
 	for n in h.graph.allNodesRandomOrder():

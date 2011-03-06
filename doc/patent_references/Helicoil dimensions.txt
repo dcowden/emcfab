@@ -1,0 +1,31 @@
+helicoil id 0.080 - 0.090, 
+average coil diamter 0.010, 
+thread pitch 30 - 50
+
+minor diameters:
+
+	#6-32 :0.098
+	#4-40 :0.081
+	#5-40 :0.094
+
+#6-32 helicoil is probably closest
+
+$6 for 10 at mcmaster
+
+pressure = 2000psi at the surface of the helicoil
+
+material of metal, but lowest friction coefficient possible is good:
+	steel->al = .45
+	steel->cu = .22
+	steel->bronze = 0.35
+	steel->steel 0.8
+
+	teflon 0.04
+	
+
+diy applied coating for very low friction:
+http://www.moldreleasenanotechnology.com/nano_mold_release_coating_order.html
+
+nonstick repair spray for super smoothness
+
+http://www.buyasyoufly.com/2537/product_detail.html

@@ -314,3 +314,65 @@ hatch with 0.25mm hexagons.
         1    0.000    0.000    0.000    0.000 c:\data\emcfab\applications\slicer\Wrappers.py:164(wireFromEdges)
        48    0.000    0.000    0.000    0.000 {_BRepExtrema.BRepExtrema_DistShapeShape_NbSolution}
         2    0.000    0.000    0.000    0.000 C:\python266\lib\site-packages\OCC\BRepBuilderAPI.py:458(__del__)
+		
+removed adding edges to graph. real time 0.984 sec.
+   Ordered by: cumulative time
+   List reduced from 143 to 129 due to restriction <0.90000000000000002>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    1.513    1.513 <string>:1(<module>)
+        1    0.021    0.021    1.511    1.511 c:\data\emcfab\applications\slicer\hatchlib.py:90(hatch)
+       58    0.095    0.002    0.652    0.011 c:\data\emcfab\applications\slicer\edgegraph3.py:203(splitWire)
+       58    0.331    0.006    0.331    0.006 {_BRepExtrema.BRepExtrema_DistShapeShape_Perform}
+       58    0.001    0.000    0.259    0.004 C:\python266\lib\site-packages\OCC\BRepTools.py:1030(__init__)
+       58    0.258    0.004    0.258    0.004 {_BRepTools.new_BRepTools_WireExplorer}
+     5811    0.043    0.000    0.203    0.000 C:\python266\lib\site-packages\OCC\TopoDS.py:1572(__del__)
+       58    0.203    0.004    0.203    0.004 {_BRepExtrema.BRepExtrema_DistShapeShape_LoadS1}
+     8694    0.096    0.000    0.183    0.000 C:\python266\lib\site-packages\OCC\GarbageCollector.py:75(collect_object)
+      152    0.008    0.000    0.121    0.001 c:\data\emcfab\applications\slicer\edgegraph3.py:77(divideEdge)
+     5436    0.051    0.000    0.051    0.000 {_BRepTools.BRepTools_WireExplorer_Next}
+     6348    0.029    0.000    0.050    0.000 c:\data\emcfab\applications\slicer\edgegraph3.py:27(hashE)
+    16780    0.050    0.000    0.050    0.000 {hasattr}
+      304    0.005    0.000    0.048    0.000 c:\data\emcfab\applications\slicer\edgegraph3.py:277(__init__)
+     5811    0.026    0.000    0.037    0.000 C:\python266\lib\site-packages\OCC\TopoDS.py:1560(<lambda>)
+        1    0.000    0.000    0.032    0.032 c:\data\emcfab\applications\slice\hatchlib.py:176(_makeHatchLines)
+        1    0.001    0.001    0.032    0.032 c:\data\emcfab\applications\slicer\hexagonlib.py:157(makeHexForBoundingBox)
+        1    0.002    0.002    0.032    0.032 c:\data\emcfab\applications\slicer\hexagonlib.py:182(makeHexArray)
+      750    0.006    0.000    0.027    0.000 C:\python266\lib\site-packages\OCC\gp.py:1730(__del__)
+      152    0.003    0.000    0.026    0.000 c:\data\emcfab\applications\slicer\Wrappers.py:191(trimmedEdge)
+    12239    0.025    0.000    0.025    0.000 {method 'append' of 'list' objects}
+      304    0.005    0.000    0.022    0.000 c:\data\emcfab\applications\slicer\edgegraph3.py:128(addEdgeSegment)
+     6348    0.021    0.000    0.021    0.000 {_TopoDS.TopoDS_Shape_HashCode}
+     2770    0.012    0.000    0.020    0.000 C:\python266\lib\site-packages\OCC\BRep.py:1876(Range)
+      304    0.006    0.000    0.020    0.000 c:\data\emcfab\applications\slicer\Wrappers.py:175(pointAtParameterList)
+      608    0.005    0.000    0.019    0.000 C:\python266\lib\site-packages\OCC\Geom.py:579(__del__)
+     5494    0.019    0.000    0.019    0.000 {_BRepTools.BRepTools_WireExplorer_Current}
+     8694    0.019    0.000    0.019    0.000 {method 'startswith' of 'str' objects}
+      456    0.003    0.000    0.017    0.000 C:\python266\lib\site-packages\OCC\GeomAdaptor.py:602(__del__)
+     1368    0.010    0.000    0.016    0.000 c:\data\emcfab\applications\slicer\edgegraph3.py:23(tP)
+      404    0.003    0.000    0.015    0.000 C:\python266\lib\site-packages\OCC\TopoDS.py:928(__del__)
+     5588    0.012    0.000    0.012    0.000 {_BRepTools.BRepTools_WireExplorer_More}
+     5840    0.012    0.000    0.012    0.000 {len}
+     5552    0.011    0.000    0.011    0.000 {method 'own' of 'SwigPyObject' objects}
+      152    0.002    0.000    0.010    0.000 c:\data\emcfab\applications\slicer\edgegraph3.py:151(removeEdge)
+       67    0.002    0.000    0.009    0.000 c:\data\emcfab\applications\slicer
+
+	   
+splitwire seems to be composed mostly of creating edge objects and then throwing them away.
+in this case, there are 121 edges in the wire, two intersectin points. we are building a single wire
+of the edges in between.
+
+this process takes 11ms.  
+	4ms is in the edge constructor
+	2ms is in removing the object later on in the garbage collector
+	2ms is in splitwire itself
+	3ms is spread across other stuff
+	
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.011    0.011 <string>:1(<module>)
+        1    0.002    0.002    0.011    0.011 edgegraph3.py:193(splitWire)
+       61    0.000    0.000    0.005    0.000 C:\data\emcfab\applications\slicer\Wrappers.py:220(cast)
+       61    0.000    0.000    0.004    0.000 c:\python266\lib\site-packages\OCC\TopoDS.py:1399(edge)
+       61    0.004    0.000    0.004    0.000 {_TopoDS.TopoDS_edge}
+       61    0.000    0.000    0.002    0.000 c:\python266\lib\site-packages\OCC\TopoDS.py:928(__del__)
+       75    0.001    0.000    0.002    0.000 c:\python266\lib\site-packages\OCC\GarbageCollector.py:75(collect_object)

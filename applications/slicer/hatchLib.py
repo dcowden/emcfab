@@ -86,74 +86,114 @@ class Hatcher:
 		self.bounds = bounds;
 		self.zLevel = zLevel;
 		self.HATCH_PADDING = 1; #TODO, should be based on unit of measure
-		
+	
+	def  displayAllEdges(self):
+		TestDisplay.display.eraseAll();
+		#for en in h.graph.allEdgesRandomOrder():
+		#	e = en.newEdge();
+		#	TestDisplay.display.showShape(e );
+		#time.sleep(2);
 	def  hatch(self):
-		"take the a slice and compute hatches"
+		"""take the a slice and compute hatches
+		
+			computing the intersections of wires is very expensive, 
+			so it is important to do this as efficently as possible.
+			
+			Inputs: a set of boundary wires that define a face,
+			        a set of filling wires that cover a bounding box around the face.
+			
+			Outputs: 
+				trim covering wires/edges by the boundaries, 
+				trim boundaries by intersections with wires
+				
+			optimizations so far:
+				* use active wire table to detect when to stop computing intersections with wires.
+				 each boundary must be activated before computation stops, and a boundary is finished
+				 after intersections have been found, and then stop occurring.
+			
+		"""
 		log.info("Hatching...");
 		
 		hatchWires = self._makeHatchLines();
-		#for h in hatchWires:
-		#	TestDisplay.display.showShape(h);
 		
-		#log.warn( "Created %d Hatch Wires" % len(hatchWires));
-		boundariesFound = {};
+		activeBoundaries = {};
+		
+		for b in self.boundaryWires:
+			activeBoundaries[b] = 0;
+		
+
 		#intersect each line with each boundary
-		continueHatching = True;
-		
+
+				
 		for hatchLine in hatchWires:
-			if not continueHatching:
-				break;
-			else:
-				log.debug( "Moving to next Hatch Line");
+		
+			if len(activeBoundaries) == 0:
+				break; #finished hatching, no more active boundaries.
 
 			interSections = [];	#list of intersections for just this single hatch line	
 			#TestDisplay.display.showShape(hatchLine);
-			for boundary in self.boundaryWires:
+			for boundary in activeBoundaries.keys():
 				brp = BRepExtrema.BRepExtrema_DistShapeShape();
-				brp.LoadS2(boundary);
-				brp.LoadS1(hatchLine );
-				
+				brp.LoadS1(boundary);
+				brp.LoadS2(hatchLine );
+
 				if brp.Perform() and brp.Value() < 0.001:
 					#print "intersection found!"
 					#TODO need to handle the somewhat unusual cases that the intersection is
 					#on a vertex
 					for k in range(1,brp.NbSolution()+1):
-						boundariesFound[boundary] = 1;
+						activeBoundaries[boundary] = 1;
 						#try:
 						#make the node
-						if brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsOnEdge:
-							poe = eg.PointOnAnEdge(Wrappers.cast(brp.SupportOnShape1(k)),brp.ParOnEdgeS1(k),brp.PointOnShape1(k));
+						if brp.SupportTypeShape2(k) == BRepExtrema.BRepExtrema_IsOnEdge:
+							poe = eg.PointOnAnEdge(Wrappers.cast(brp.SupportOnShape2(k)),brp.ParOnEdgeS2(k),brp.PointOnShape2(k));
 							interSections.append(poe);
 							
-							#also divide the edge in the graph as this point
-							self.graph.divideEdge(Wrappers.cast(brp.SupportOnShape2(k)),brp.ParOnEdgeS2(k));
-							
-						elif brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsVertex:
+						elif brp.SupportTypeShape2(k) == BRepExtrema.BRepExtrema_IsVertex:
 							#how on earth to handle this one?
 							#this actually means that a vertex can also have an infill node attached to it!
 							#for right now let's just ignore it.
+							print "WARNING: intersection on vertex of hatch line!"
 							pass;
 						else:
 							raise ValueError("I dont know how to handle this kind of intersection");
+							
+						if brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsOnEdge:
+							#also divide the  in the graph as this point
+							self.graph.divideEdge(Wrappers.cast(brp.SupportOnShape1(k)),brp.ParOnEdgeS1(k));
+						elif brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsVertex:
+							print "WARNING: intersection on vertex of boundary!"
+							pass;
+						else:
+							raise ValueError("Cannot handle this kind of boundary intersection");
 						#except:
 						#	log.warn("Problem Creating an intersection node... Ignoring.");
 					
 				else:
-					log.debug( "No Intersections Found");
+					if activeBoundaries[boundary] == 1:
+						#finished with this wire. 
+						print "Finished with wire %d" % boundary.__hash__();
+						del activeBoundaries[boundary];
+					
 
 			#at this point we have all the intersections for this hatch line.
 			#add the edges 'inside' the shape to the graph
 			#print "Splitting wire by %d intersection points" % len(interSections )
+			edgesInside = [];
 			edgesInside = eg.splitWire(hatchLine,interSections);
+			
 			#print "Split returned %d edges" % len(edgesInside);
+			# TODO: a speedup here is possible. why add all edges to the graph when only the
+			#first and last in the set will do?
 			
 			for e in edgesInside:
+				#fTestDisplay.display.showShape(e);
 				self.graph.addEdge(e,'FILL');
 			
 			#test to see if we can break out of the loop.
 			#we can stop if we've hit each boundary at least once
-			if len(interSections) == 0 and (len(boundariesFound) ==  len(self.boundaryWires)):
-				continueHatching = False;
+			#if len(interSections) == 0 and (len(boundariesFound) ==  len(self.boundaryWires)):
+			#	continueHatching = False;
 			
 			if len(interSections) % 2 == 1:
 				log.warn( "Detected Odd Number of intersection points. This is ignored for now.");
@@ -172,21 +212,24 @@ class Hatcher:
 		xMin = self.bounds[0] - ( self.HATCH_PADDING);
 		yMin = self.bounds[1] - ( self.HATCH_PADDING);		 
 		xMax = self.bounds[2] + (self.HATCH_PADDING);
-		yMax = self.bounds[3] + (self.HATCH_PADDING) ;		
-		
+		yMax = self.bounds[3] + (self.HATCH_PADDING) ;				
 		wires = hex.makeHexForBoundingBox(( xMin,yMin,self.zLevel),(xMax,yMax,self.zLevel ));
-		print "made %d hex wires." % ( len(wires) );
-		#edges = [];
-		#allEdges = TopTools.TopTools_HSequenceOfShape();
-		#for w in wires:
-		#	ww = Wrappers.Wire(w);
-		#	for e in ww.edges():
-		#		allEdges.Append(e);
 
 		return wires;	
-
-
-		
+	
+	def _makeHatchLines2(self):
+		"make straight hatch lines."
+		xMin = self.bounds[0] - ( self.HATCH_PADDING);
+		yMin = self.bounds[1] - ( self.HATCH_PADDING);		 
+		xMax = self.bounds[2] + (self.HATCH_PADDING);
+		yMax = self.bounds[3] + (self.HATCH_PADDING) ;
+		wires = [];
+		for y in Wrappers.frange6(yMin,yMax,0.34):
+			e = Wrappers.edgeFromTwoPoints(gp.gp_Pnt(xMin,y,self.zLevel),gp.gp_Pnt(xMax,y,self.zLevel));
+			#TestDisplay.display.showShape(e);
+			wires.append(Wrappers.wireFromEdges([e]));
+		return wires;
+	
 def makeHeartWire():
 	"make a heart wire"
 	e1 = Wrappers.edgeFromTwoPoints(gp.gp_Pnt(0,0,0), gp.gp_Pnt(4.0,4.0,0));
@@ -197,6 +240,10 @@ def makeHeartWire():
 	e4 = Wrappers.edgeFromTwoPoints(gp.gp_Pnt(-4,4,0), gp.gp_Pnt(0,0,0));
 	return Wrappers.wireFromEdges([e1,e2,e3,e4]);
 
+def makeCircleWire():
+	circle = gp.gp_Circ(gp.gp_Ax2(gp.gp_Pnt(0,2,0),gp.gp().DZ()),.75);
+	e2 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(circle, gp.gp_Pnt(0,1.25,0),gp.gp_Pnt(0,1.25,0)).Edge();
+	return Wrappers.wireFromEdges([e2]);
 	
 def runProfiled(cmd,level=1.0):
 	"run a command profiled and output results"
@@ -220,7 +267,8 @@ if __name__=='__main__':
 	#h = Hatcher([w,w2],0.0,( 0,0,5.0,5.0) );
 
 	w = makeHeartWire();
-	h = Hatcher([w],0.0,( -6,0,6.0,6.0) );
+	w2=makeCircleWire();
+	h = Hatcher([w,w2],0.0,( -6,0,10.0,10.0) );
 	
 	#TestDisplay.display.showShape(w);
 	#TestDisplay.display.showShape(w2);
@@ -230,12 +278,18 @@ if __name__=='__main__':
 	h.hatch();
 	print "Hatching Finished",t.finishedString();
 	#display all edges in the graph
+	i=0;
 	for en in h.graph.allEdgesRandomOrder():
+		i+=1;
 		e = en.newEdge();
 		#TestDisplay.display.showShape( TestDisplay.makeEdgeIndicator(e) );
 		TestDisplay.display.showShape(e );	
 
-	
+	print "%d edges total" % i
+
+	for n in h.graph.allNodesRandomOrder():
+		p = gp.gp_Pnt(n[0],n[1],0);
+		TestDisplay.display.showShape(Wrappers.make_vertex(p));
 
 	print "Done.";
 	TestDisplay.display.run();

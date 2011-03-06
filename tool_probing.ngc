@@ -1,0 +1,43 @@
+o<first-tool> sub
+G90 G53 G0 Z0
+G53 G0 X0 Y0
+G91 G38.3 Z-180 F500
+G38.5 Z10 F15
+#1000=#5063
+G90 G53 G0 Z100
+G90 G53 G0 X50 Y50
+o<first-tool> endsub
+M02
+
+first-tool.ngc should be in nc-files dir.
+
+example: o<touchoff> call [0.080] [0.02][0.06] 
+
+o<touchoff> sub
+(#1 pierce height, #2 pierce delay, #3 cut height)
+F10
+G38.2 Z-1.75 (Probe to find the surface)
+G91
+G1 Z0.070 (Raise up to Z0)
+G90
+G92 Z0 (Set Z0)
+G1 Z#1
+M3 S1
+M66 P0 L1 Q5 (Wait for Arc OK from Torch)
+G4 P#2 (Pause for pierce delay)
+F25
+Z#3 (goto cut height)
+o<touchoff> endsub
+M2
+
+another example:
+o<auto-tool-change> sub
+G90 G53 G0 Z0
+G90 G53 G0 X0 Y0
+G91 G38.3 Z-100 F500
+G91 G38.5 Z10 F15
+G43.1 k[#5063-#1000]
+G90 G53 G0 Z0
+G90 G53 G0 X50 Y50
+o<auto-tool-change> endsub
+M02

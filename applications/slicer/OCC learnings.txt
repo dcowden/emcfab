@@ -3,7 +3,7 @@ OCC Learnings
 Performance
 	BRep_Tool.Range( ) is much faster than using Wrappers.Edge
 	beware creating objects-- garbage collection times are significant.
-	
+
 Weird things
 	strange things happen when you try to use native python lists for occ objects
 	when you build edges into a wire, the hash code of the edges changes.

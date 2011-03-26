@@ -4,7 +4,7 @@
  and behave more pythonically
  
 """
-from OCC import BRep,gp,GeomAbs,GeomAPI,GCPnts,TopoDS,BRepTools,GeomAdaptor,TopAbs,TopTools,TopExp
+from OCC import BRep,gp,GeomAbs,GeomAPI,GCPnts,TopoDS,BRepTools,GeomAdaptor,TopAbs,TopTools,TopExp,Approx,BRepLib
 from OCC import BRepGProp,BRepLProp, BRepBuilderAPI,BRepPrimAPI,GeomAdaptor,GeomAbs,BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI,BRepAdaptor
 import time,os,sys,string;
 brepTool = BRep.BRep_Tool();
@@ -123,7 +123,125 @@ def findParameterOnCurve(point,handleCurve,tolerance):
 		#log.error( "Projection Failed.");
 		return None;
 
+def approximatedWire(wire):
+	"returns a bezier approximation of the specified wire as an edge"
+	#TODO: this is also duplicated in hexagonlib, and should be factored here.
+	
+	#make a parameterized approximation of the wire
+	adaptor = BRepAdaptor.BRepAdaptor_CompCurve (wire);
+	curve = BRepAdaptor.BRepAdaptor_HCompCurve(adaptor);
+	curveHandle = curve.GetHandle();
+	
+	#approximate the curve using a tolerance
+	approx = Approx.Approx_Curve3d(curveHandle,0.01,GeomAbs.GeomAbs_C2,1000,8);
+	if approx.IsDone() and  approx.HasResult():
+		# have the result
+		anApproximatedCurve=approx.Curve();
+
+		builder =  BRepLib.BRepLib_MakeEdge(anApproximatedCurve);
+		e = builder.Edge();
+		return Wrappers.wireFromEdges([e]);		
+
+def isEdgeLocalMinimum(edge,param,point):
+	"""
+		checks to see if the location on an edge is a local minimum or max.
+		see notes below: this must be changed if the coordinate system is rotated--
 		
+		TODO: fix assumption that scanlines are in the x direction
+	"""
+	ALITTLEBIT=0.01;
+	
+	p1 = pointAtParameter(edge,param-ALITTLEBIT);
+	p2 = pointAtParameter(edge,param+ALITTLEBIT);
+	
+	d1 = p1.Y() - point.Y();
+	d2 = p2.Y() - point.Y();
+	
+	if d1*d2 < 0:
+		#edge counts as an intersection
+		return False;
+	else:
+		#TestDisplay.display.showShape(make_vertex(point));
+		return True;
+	
+	
+	
+def isLocalMinimum ( wire, vertex ):
+	"""
+		The vertex is assumed to exist on the wire.
+		
+		The method determines if the vertex is situated such that the 
+		location is a local minimum or maxiumum on the boundary.
+		
+		The method is needed for teh scanline algorithm: in the case
+		that a filling line intersects a boundary at a vertex, the
+		vertex counts as boundary if it does, and does not count otherwise.
+	
+		This method is slow, hopefully it is very rarely used.
+		
+		TODO: right now, this assumes that scanlines are always oriented parallel
+		with the x axis ( horizontal ). this algorithm needs a direction vector
+		in order to be generalized for the situation where the fill lines can be
+		oriented in any direction
+	"""
+	#print "Determining if the specified point is a local minimum or not..."
+	topexp = TopExp.TopExp_Explorer();
+	topexp.Init(wire,TopAbs.TopAbs_EDGE);
+	te = TopExp.TopExp();
+	
+	#find two edges that contain the vertex
+	edges = [];
+	while topexp.More():
+		e = cast(topexp.Current() );
+		if te.LastVertex(e).__hash__() == vertex.__hash__():
+			#print "found a last vertex"
+			edges.append(e);
+		if te.FirstVertex(e).__hash__() == vertex.__hash__():
+			edges.append(e);
+			#print "found a first vertex"
+		topexp.Next();
+		
+	assert  len(edges)  ==  2;
+	
+	#move a little away from the vertex in each direction
+	
+	ALITTLEBIT = d1 = d2 = 0.01;
+	e1 = edges[0];
+	e2 = edges[1];
+	p1 = brepTool.Parameter( vertex, e1);
+	p2 = brepTool.Parameter(vertex, e2) ;
+	
+	(bp1,ep1 ) = brepTool.Range(e1 );
+	(bp2, ep2 ) = brepTool.Range(e2 );
+	
+	if p1 == ep1: d1 = d1*(-1);
+	if p2 == ep2: d2 = d2*(-1);
+	
+	pnt1 = pointAtParameter(e1, p1  + d1);
+	pnt2 = pointAtParameter(e2, p2 + d2 );
+	
+	#TestDisplay.display.showShape(vertex);	
+	#TestDisplay.display.showShape(wire);	
+	#TestDisplay.display.showShape(make_vertex(pnt1));
+	#TestDisplay.display.showShape(make_vertex(pnt2));
+	#TestDisplay.display.run();
+	#finally! compare y values. this is the part that needs to change later
+	#to account for rotated filling lines
+	y = brepTool.Pnt(vertex).Y();
+	
+	dy1 = pnt1.Y() - y;
+	dy2 = pnt2.Y() - y;
+	
+	if  dy1 * dy2 > 0:
+		#print "local min/max detected."
+		return True;
+	else:
+		#print "vertex is not a local min/max"
+		return False;
+	
+	
+	
+
 def findPointOnCurve(point,handleCurve,tolerance):
 	"return the closest parameter on the curve for the provided point"
 	"returns none if a point is not within tolerance"

@@ -1,0 +1,142 @@
+Display3d class initialization starting ...
+WNT Graphic device created.
+WNT window created.
+Viewer created.
+Interactive context created.
+Display3d class successfully initialized.
+[OccSlicer]:Loading File...
+      ...    Step File Reading : parts\slicetest_ap214.step
+      ...    STEP File   Read    ... 
+Elapsed time:  0 Hour(s) 0 Minute(s) 0 Second(s)
+CPU user   time: 0 seconds 
+CPU kernel time: 0 seconds 
+      ... Step File loaded  ... 
+Elapsed time:  0 Hour(s) 0 Minute(s) 0 Second(s)
+CPU user   time: 0 seconds 
+CPU kernel time: 0 seconds 
+   1053 records (entities,sub-lists,scopes), 3091 parameters
+
+      ... Parameters prepared ... Elapsed time:  0 Hour(s) 0 Minute(s) 0 Second(s)
+CPU user   time: 0 seconds 
+CPU kernel time: 0 seconds 
+      ...   Objets analysed  ... 
+Elapsed time:  0 Hour(s) 0 Minute(s) 0 Second(s)
+CPU user   time: 0 seconds 
+CPU kernel time: 0 seconds 
+  STEP Loading done : 711 Entities
+Step file is of type 0
+[OccSlicer]:Object Loaded: x:96.44 y:72.22 z:5.08 (mm) 
+[OccSlicer]:** Recommended Slicing Options: **
+nozzleDiameter: 0.3
+zMax: 5.0800002
+gcode: feedRate: 100
+commentFormat: ( %s )
+numberFormat: %0.3f
+useArcs: True
+enabled: True
+machineResolution: 5e-05
+fileExtension: .nc
+curveApproximationTolerance: 0.0001
+computeExtraAxis: True
+extraAxisName: A
+zMin: 0
+layerHeight: 0.3
+translateToPositiveSpace: True
+filling: fillWidth: 0.3
+enabled: True
+numExtraShells: 5
+checkFillInterference: True
+svg: fileExtension: .svg
+enabled: True
+numberFormat: %0.3f
+units: mm
+useSliceFactoring: True
+DEFAULT_RESOLUTION: {'mm': 0.29999999999999999, 'in': 0.012}
+[OccSlicer]:** User Selected Slicing Options...
+nozzleDiameter: 0.3
+zMax: 5.0800002
+gcode: feedRate: 100
+commentFormat: ( %s )
+numberFormat: %0.3f
+useArcs: True
+enabled: True
+machineResolution: 5e-05
+fileExtension: .nc
+curveApproximationTolerance: 0.0001
+computeExtraAxis: True
+extraAxisName: A
+zMin: 0
+layerHeight: 0.3
+translateToPositiveSpace: True
+filling: fillWidth: 0.3
+enabled: True
+numExtraShells: 5
+checkFillInterference: True
+svg: fileExtension: .svg
+enabled: True
+numberFormat: %0.3f
+units: mm
+useSliceFactoring: True
+DEFAULT_RESOLUTION: {'mm': 0.29999999999999999, 'in': 0.012}
+[OccSlicer]:*** Beginning Slicing... 
+[OccSlicer]:Translating Object to Positive Space...
+[OccSlicer]:Slicing Started.
+2011-01-22 07:59:35,944 [checkMinimumDistanceForOffset] WARNING Distance 0.17345 is less than expected value
+2011-01-22 07:59:35,944 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 0 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 07:59:36,476 [_fillSlice] WARNING Filling Complete, Created 7 paths.
+[OccSlicer]:6 % complete.
+2011-01-22 07:59:36,757 [checkMinimumDistanceForOffset] WARNING Distance 0.19430 is less than expected value
+2011-01-22 07:59:36,773 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 0 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 07:59:37,335 [_fillSlice] WARNING Filling Complete, Created 7 paths.
+[OccSlicer]:12 % complete.
+[OccSlicer]:18 % complete.
+[OccSlicer]:24 % complete.
+[OccSlicer]:30 % complete.
+[OccSlicer]:35 % complete.
+[OccSlicer]:41 % complete.
+[OccSlicer]:47 % complete.
+[OccSlicer]:53 % complete.
+[OccSlicer]:59 % complete.
+[OccSlicer]:65 % complete.
+[OccSlicer]:71 % complete.
+[OccSlicer]:77 % complete.
+[OccSlicer]:83 % complete.
+[OccSlicer]:89 % complete.
+[OccSlicer]:95 % complete.
+[OccSlicer]:100 % complete.
+[OccSlicer]:Slicing Complete: 4.375 sec
+[OccSlicer]:Throughput: 4.114 slices/sec
+[OccSlicer]:*** Slicing Complete, 4.4 seconds
+[OccSlicer]:*** Exporting Gcode... 
+2011-01-22 07:59:39,976 [export] WARNING Slice zLevel 0.001
+2011-01-22 07:59:40,180 [export] WARNING Slice zLevel 0.301
+2011-01-22 07:59:40,430 [export] WARNING Slice zLevel 0.601
+2011-01-22 07:59:40,648 [export] WARNING Slice zLevel 0.901
+2011-01-22 07:59:41,007 [export] WARNING Slice zLevel 1.201
+2011-01-22 07:59:41,210 [export] WARNING Slice zLevel 1.501
+2011-01-22 07:59:41,476 [export] WARNING Slice zLevel 1.801
+2011-01-22 07:59:41,680 [export] WARNING Slice zLevel 2.101
+2011-01-22 07:59:41,930 [export] WARNING Slice zLevel 2.401
+2011-01-22 07:59:42,289 [export] WARNING Slice zLevel 2.701
+2011-01-22 07:59:42,539 [export] WARNING Slice zLevel 3.001
+2011-01-22 07:59:42,742 [export] WARNING Slice zLevel 3.301
+2011-01-22 07:59:42,992 [export] WARNING Slice zLevel 3.601
+2011-01-22 07:59:43,210 [export] WARNING Slice zLevel 3.901
+2011-01-22 07:59:43,617 [export] WARNING Slice zLevel 4.201
+2011-01-22 07:59:43,835 [export] WARNING Slice zLevel 4.501
+2011-01-22 07:59:44,085 [export] WARNING Slice zLevel 4.801
+[OccSlicer]:*** Gcode Created: 4.313 seconds ***
+[OccSlicer]:*** Creating SVG ***
+Exporting 17 slices to file'parts\slicetest_ap214.svg'...
+SVG Export Complete.
+[OccSlicer]:***SVG Created, 3.766 seconds.
+[OccSlicer]:***Processing Complete.***
+[OccSlicer]:*** Performance Summary ***
+[OccSlicer]:loadObject : 0.078 sec.
+[OccSlicer]:slice : 4.375 sec.
+[OccSlicer]:svgExport : 3.766 sec.
+[OccSlicer]:gcodeExport : 4.313 sec.

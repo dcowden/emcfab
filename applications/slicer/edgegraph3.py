@@ -129,7 +129,7 @@ class EdgeGraph:
 		#adds the nodes and the edges all in one shot to the graph
 		#print "Adding Edge :%d " % edgeSegment.edge.__hash__();
 		#TestDisplay.display.showShape(edgeSegment.edge);
-		self.g.add_edge(tP(edgeSegment.firstPoint),tP(edgeSegment.lastPoint),edgeSegment.key(),{'node': edgeSegment} );
+		self.g.add_edge(tP(edgeSegment.firstPoint),tP(edgeSegment.lastPoint),edgeSegment.key(),{'node': edgeSegment, 'type': edgeSegment.type} );
 		
 		#store the edge in a dict by edge hash.
 		#the key of the second dict is hash+p1+p2-- ie, each distint edge, and paramter pair are stored
@@ -189,7 +189,7 @@ class EdgeGraph:
 		p2 = tP(Wrappers.pointAtParameter(lastEdge,m ));
 		
 		#todo, i dont think we care about this key do we, as long as it is unique?
-		self.g.add_edge(p1,p2,(p1,p2),{'edgeList': edgeList} );
+		self.g.add_edge(p1,p2,(p1,p2),{'edgeList': edgeList,"type":type} );
 
 		
 	def addWire(self,wire,type):
@@ -228,7 +228,15 @@ class EdgeGraph:
 
 	
 def splitWire(wire,ipoints):
-
+	"""
+		ipoints is a list of intersection points.
+		returns a list of wires inside the intersection point
+		
+		this method must also work for a 'wire' consisting of a single
+		edge. more than one intersection point can be on each edge, 
+		but all of the ipoints are expected to be on edges in the provided wire.
+		BASELINE PERFORMANCE: 11 ms per call for splitwiretest
+	"""
 	topexp = TopExp.TopExp_Explorer();
 	topexp.Init(wire,TopAbs.TopAbs_EDGE);
 
@@ -244,8 +252,6 @@ def splitWire(wire,ipoints):
 		nextIntersection = ix[i+1];
 		
 		#if they are on the same edge, simply add a trimmed edge
-		#TODO: could optimize a little to avoid re-computing the edge object when there are
-		#lots of intersections per edge
 		if currentIntersection.hash == nextIntersection.hash:
 			edges.append( Wrappers.trimmedEdge(currentIntersection.edge, currentIntersection.param, nextIntersection.param ) );
 		else:
@@ -264,6 +270,8 @@ def splitWire(wire,ipoints):
 			topexp.Next();
 			
 			#add edges till current edge is same as next intersection
+			#most of the performance suckage is happening here, with gc associated with these
+			#edge objects.  If that gets fixed, we'll get a huge speed boost. about 33% of total time is saved.
 			while topexp.Current().__hash__() != nextIntersection.hash:
 				edge = Wrappers.cast(topexp.Current() );
 				edges.append(edge);
@@ -505,17 +513,17 @@ def splitPerfTest():
 	TestDisplay.display.showShape(w);
 	#compute two intersections
 	e1 = Wrappers.Edge(ee[5]);
-	e2 = Wrappers.Edge(ee[60]);
+	e2 = Wrappers.Edge(ee[55]);
 	e1p = (e1.lastParameter - e1.firstParameter )/ 2;
 	e2p = (e2.lastParameter - e2.firstParameter )/ 2;
 	p1 = PointOnAnEdge(e1.edge,e1p ,e1.pointAtParameter(e1p));
 	p2 = PointOnAnEdge(e2.edge,e2p ,e2.pointAtParameter(e2p));
 	TestDisplay.display.showShape( Wrappers.make_vertex(p1.point));
 	TestDisplay.display.showShape( Wrappers.make_vertex(p2.point));
-	cProfile.runctx('for i in range(1,20): ee=splitWire(w,[p2,p1])', globals(), locals(), filename="slicer.prof")
-	p = pstats.Stats('slicer.prof')
-	p.sort_stats('cum')
-	p.print_stats(.98);		
+	#cProfile.runctx('for i in range(1,20): ee=splitWire(w,[p2,p1])', globals(), locals(), filename="slicer.prof")
+	#p = pstats.Stats('slicer.prof')
+	#p.sort_stats('cum')
+	#p.print_stats(.98);		
 
 	t = Wrappers.Timer();
 	ee = [];

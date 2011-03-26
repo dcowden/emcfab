@@ -1,0 +1,333 @@
+Display3d class initialization starting ...
+WNT Graphic device created.
+WNT window created.
+Viewer created.
+Interactive context created.
+Display3d class successfully initialized.
+[OccSlicer]:Loading File...
+      ...    Step File Reading : parts\RepRapTest.step
+      ...    STEP File   Read    ... 
+Elapsed time:  0 Hour(s) 0 Minute(s) 0.016 Second(s)
+CPU user   time: 0.015625 seconds 
+CPU kernel time: 0 seconds 
+      ... Step File loaded  ... 
+Elapsed time:  0 Hour(s) 0 Minute(s) 0.016 Second(s)
+CPU user   time: 0.015625 seconds 
+CPU kernel time: 0 seconds 
+   879 records (entities,sub-lists,scopes), 2597 parameters
+
+      ... Parameters prepared ... Elapsed time:  0 Hour(s) 0 Minute(s) 0.016 Second(s)
+CPU user   time: 0.015625 seconds 
+CPU kernel time: 0 seconds 
+      ...   Objets analysed  ... 
+Elapsed time:  0 Hour(s) 0 Minute(s) 0.016 Second(s)
+CPU user   time: 0.015625 seconds 
+CPU kernel time: 0 seconds 
+  STEP Loading done : 619 Entities
+Step file is of type 2
+[OccSlicer]:Object Loaded: x:25.40 y:25.40 z:25.40 (mm) 
+[OccSlicer]:** Recommended Slicing Options: **
+nozzleDiameter: 0.3
+zMax: 25.4000002
+gcode: feedRate: 100
+commentFormat: ( %s )
+numberFormat: %0.3f
+useArcs: True
+enabled: True
+machineResolution: 5e-05
+fileExtension: .nc
+curveApproximationTolerance: 0.0001
+computeExtraAxis: True
+extraAxisName: A
+zMin: 0
+layerHeight: 0.3
+translateToPositiveSpace: True
+filling: fillWidth: 0.3
+enabled: True
+numExtraShells: 5
+checkFillInterference: True
+svg: fileExtension: .svg
+enabled: True
+numberFormat: %0.3f
+units: mm
+useSliceFactoring: True
+DEFAULT_RESOLUTION: {'mm': 0.29999999999999999, 'in': 0.012}
+[OccSlicer]:** User Selected Slicing Options...
+nozzleDiameter: 0.3
+zMax: 25.4000002
+gcode: feedRate: 100
+commentFormat: ( %s )
+numberFormat: %0.3f
+useArcs: True
+enabled: True
+machineResolution: 5e-05
+fileExtension: .nc
+curveApproximationTolerance: 0.0001
+computeExtraAxis: True
+extraAxisName: A
+zMin: 0
+layerHeight: 0.3
+translateToPositiveSpace: True
+filling: fillWidth: 0.3
+enabled: True
+numExtraShells: 5
+checkFillInterference: True
+svg: fileExtension: .svg
+enabled: True
+numberFormat: %0.3f
+units: mm
+useSliceFactoring: True
+DEFAULT_RESOLUTION: {'mm': 0.29999999999999999, 'in': 0.012}
+[OccSlicer]:*** Beginning Slicing... 
+[OccSlicer]:Translating Object to Positive Space...
+[OccSlicer]:Slicing Started.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:07,257 [_fillSlice] WARNING Filling Complete, Created 8 paths.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:07,523 [_fillSlice] WARNING Filling Complete, Created 8 paths.
+[OccSlicer]:2 % complete.
+[OccSlicer]:6 % complete.
+[OccSlicer]:9 % complete.
+[OccSlicer]:13 % complete.
+[OccSlicer]:17 % complete.
+[OccSlicer]:20 % complete.
+[OccSlicer]:24 % complete.
+[OccSlicer]:27 % complete.
+[OccSlicer]:31 % complete.
+[OccSlicer]:34 % complete.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:10,148 [_fillSlice] WARNING Filling Complete, Created 8 paths.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:10,476 [_fillSlice] WARNING Filling Complete, Created 8 paths.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:10,867 [_fillSlice] WARNING Filling Complete, Created 8 paths.
+[OccSlicer]:38 % complete.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:11,289 [_fillSlice] WARNING Filling Complete, Created 12 paths.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:11,680 [_fillSlice] WARNING Filling Complete, Created 12 paths.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:12,085 [_fillSlice] WARNING Filling Complete, Created 12 paths.
+[OccSlicer]:41 % complete.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:12,476 [_fillSlice] WARNING Filling Complete, Created 12 paths.
+2011-01-22 08:00:12,805 [checkMinimumDistanceForOffset] WARNING Distance 0.28917 is less than expected value
+2011-01-22 08:00:12,805 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 1 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:12,914 [edges] WARNING No Intersection Nodes were found!
+2011-01-22 08:00:12,914 [_fillSlice] WARNING Filling Complete, Created 8 paths.
+2011-01-22 08:00:13,117 [checkMinimumDistanceForOffset] WARNING Distance 0.27941 is less than expected value
+2011-01-22 08:00:13,117 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 0 of the requested 5 shells:
+2011-01-22 08:00:13,226 [checkMinimumDistanceForOffset] WARNING Distance 0.24941 is less than expected value
+2011-01-22 08:00:13,226 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 1 of the requested 5 shells:
+2011-01-22 08:00:13,242 [_fillSlice] WARNING Filling Complete, Created 4 paths.
+[OccSlicer]:45 % complete.
+2011-01-22 08:00:13,476 [checkMinimumDistanceForOffset] WARNING Distance 0.22867 is less than expected value
+2011-01-22 08:00:13,476 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 0 of the requested 5 shells:
+2011-01-22 08:00:13,617 [checkMinimumDistanceForOffset] WARNING Distance 0.24574 is less than expected value
+2011-01-22 08:00:13,617 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 1 of the requested 5 shells:
+2011-01-22 08:00:13,648 [_fillSlice] WARNING Filling Complete, Created 4 paths.
+2011-01-22 08:00:13,851 [checkMinimumDistanceForOffset] WARNING Distance 0.13451 is less than expected value
+2011-01-22 08:00:13,851 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 0 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:13,960 [edges] WARNING No Intersection Nodes were found!
+2011-01-22 08:00:13,960 [_fillSlice] WARNING Filling Complete, Created 5 paths.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:14,492 [edges] WARNING No Intersection Nodes were found!
+2011-01-22 08:00:14,492 [_fillSlice] WARNING Filling Complete, Created 9 paths.
+[OccSlicer]:48 % complete.
+2011-01-22 08:00:14,710 [checkMinimumDistanceForOffset] WARNING Distance 0.21365 is less than expected value
+2011-01-22 08:00:14,710 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 0 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:14,805 [edges] WARNING No Intersection Nodes were found!
+2011-01-22 08:00:14,805 [_fillSlice] WARNING Filling Complete, Created 5 paths.
+2011-01-22 08:00:15,023 [checkMinimumDistanceForOffset] WARNING Distance 0.23465 is less than expected value
+2011-01-22 08:00:15,023 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 0 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:15,132 [edges] WARNING No Intersection Nodes were found!
+2011-01-22 08:00:15,132 [_fillSlice] WARNING Filling Complete, Created 5 paths.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:15,569 [edges] WARNING No Intersection Nodes were found!
+2011-01-22 08:00:15,569 [_fillSlice] WARNING Filling Complete, Created 9 paths.
+[OccSlicer]:52 % complete.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:15,960 [edges] WARNING No Intersection Nodes were found!
+2011-01-22 08:00:15,960 [_fillSlice] WARNING Filling Complete, Created 9 paths.
+2011-01-22 08:00:16,194 [checkMinimumDistanceForOffset] WARNING Distance 0.21107 is less than expected value
+2011-01-22 08:00:16,194 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 0 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:16,430 [edges] WARNING No Intersection Nodes were found!
+2011-01-22 08:00:16,430 [_fillSlice] WARNING Filling Complete, Created 5 paths.
+2011-01-22 08:00:16,664 [checkMinimumDistanceForOffset] WARNING Distance 0.23780 is less than expected value
+2011-01-22 08:00:16,664 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 0 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:16,789 [edges] WARNING No Intersection Nodes were found!
+2011-01-22 08:00:16,789 [_fillSlice] WARNING Filling Complete, Created 6 paths.
+[OccSlicer]:56 % complete.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:17,226 [checkMinimumDistanceForOffset] WARNING Distance 0.22537 is less than expected value
+2011-01-22 08:00:17,226 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 1 of the requested 5 shells:
+2011-01-22 08:00:17,242 [_fillSlice] WARNING Filling Complete, Created 9 paths.
+2011-01-22 08:00:17,492 [checkMinimumDistanceForOffset] WARNING Distance 0.29022 is less than expected value
+2011-01-22 08:00:17,492 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 0 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:17,617 [edges] WARNING No Intersection Nodes were found!
+2011-01-22 08:00:17,617 [_fillSlice] WARNING Filling Complete, Created 6 paths.
+2011-01-22 08:00:17,960 [checkMinimumDistanceForOffset] WARNING Distance 0.28043 is less than expected value
+2011-01-22 08:00:17,960 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 2 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:18,069 [edges] WARNING No Intersection Nodes were found!
+2011-01-22 08:00:18,085 [_fillSlice] WARNING Filling Complete, Created 10 paths.
+[OccSlicer]:59 % complete.
+2011-01-22 08:00:18,382 [checkMinimumDistanceForOffset] WARNING Distance 0.27175 is less than expected value
+2011-01-22 08:00:18,382 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 1 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:18,539 [_fillSlice] WARNING Filling Complete, Created 8 paths.
+2011-01-22 08:00:18,914 [checkMinimumDistanceForOffset] WARNING Distance 0.28506 is less than expected value
+2011-01-22 08:00:18,914 [_fillSlice] WARNING Shell is too close to other shells.
+[OccSlicer]:Could only create 2 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:19,055 [_fillSlice] WARNING Filling Complete, Created 10 paths.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:19,726 [_fillSlice] WARNING Filling Complete, Created 12 paths.
+[OccSlicer]:63 % complete.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:20,164 [_fillSlice] WARNING Filling Complete, Created 8 paths.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:21,117 [_fillSlice] WARNING Filling Complete, Created 8 paths.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:21,617 [_fillSlice] WARNING Filling Complete, Created 8 paths.
+[OccSlicer]:66 % complete.
+[OccSlicer]:Could only create 3 of the requested 5 shells:
+2011-01-22 08:00:22,210 [_fillSlice] WARNING Filling Complete, Created 8 paths.
+[OccSlicer]:70 % complete.
+[OccSlicer]:73 % complete.
+[OccSlicer]:77 % complete.
+[OccSlicer]:80 % complete.
+[OccSlicer]:84 % complete.
+[OccSlicer]:87 % complete.
+[OccSlicer]:91 % complete.
+[OccSlicer]:94 % complete.
+[OccSlicer]:98 % complete.
+[OccSlicer]:Slicing Complete: 18.078 sec
+[OccSlicer]:Throughput: 4.757 slices/sec
+[OccSlicer]:*** Slicing Complete, 18.1 seconds
+[OccSlicer]:*** Exporting Gcode... 
+2011-01-22 08:00:25,039 [export] WARNING Slice zLevel 0.001
+2011-01-22 08:00:25,117 [export] WARNING Slice zLevel 0.301
+2011-01-22 08:00:25,194 [export] WARNING Slice zLevel 0.601
+2011-01-22 08:00:25,430 [export] WARNING Slice zLevel 0.901
+2011-01-22 08:00:25,507 [export] WARNING Slice zLevel 1.201
+2011-01-22 08:00:25,585 [export] WARNING Slice zLevel 1.501
+2011-01-22 08:00:25,664 [export] WARNING Slice zLevel 1.801
+2011-01-22 08:00:25,742 [export] WARNING Slice zLevel 2.101
+2011-01-22 08:00:25,819 [export] WARNING Slice zLevel 2.401
+2011-01-22 08:00:25,898 [export] WARNING Slice zLevel 2.701
+2011-01-22 08:00:25,976 [export] WARNING Slice zLevel 3.001
+2011-01-22 08:00:26,055 [export] WARNING Slice zLevel 3.301
+2011-01-22 08:00:26,132 [export] WARNING Slice zLevel 3.601
+2011-01-22 08:00:26,210 [export] WARNING Slice zLevel 3.901
+2011-01-22 08:00:26,289 [export] WARNING Slice zLevel 4.201
+2011-01-22 08:00:26,367 [export] WARNING Slice zLevel 4.501
+2011-01-22 08:00:26,444 [export] WARNING Slice zLevel 4.801
+2011-01-22 08:00:26,523 [export] WARNING Slice zLevel 5.101
+2011-01-22 08:00:26,773 [export] WARNING Slice zLevel 5.401
+2011-01-22 08:00:26,851 [export] WARNING Slice zLevel 5.701
+2011-01-22 08:00:26,944 [export] WARNING Slice zLevel 6.001
+2011-01-22 08:00:27,023 [export] WARNING Slice zLevel 6.301
+2011-01-22 08:00:27,101 [export] WARNING Slice zLevel 6.601
+2011-01-22 08:00:27,194 [export] WARNING Slice zLevel 6.901
+2011-01-22 08:00:27,273 [export] WARNING Slice zLevel 7.201
+2011-01-22 08:00:27,351 [export] WARNING Slice zLevel 7.501
+2011-01-22 08:00:27,430 [export] WARNING Slice zLevel 7.801
+2011-01-22 08:00:27,507 [export] WARNING Slice zLevel 8.101
+2011-01-22 08:00:27,585 [export] WARNING Slice zLevel 8.401
+2011-01-22 08:00:27,664 [export] WARNING Slice zLevel 8.701
+2011-01-22 08:00:27,742 [export] WARNING Slice zLevel 9.001
+2011-01-22 08:00:27,819 [export] WARNING Slice zLevel 9.301
+2011-01-22 08:00:28,085 [export] WARNING Slice zLevel 9.601
+2011-01-22 08:00:28,180 [export] WARNING Slice zLevel 9.901
+2011-01-22 08:00:28,273 [export] WARNING Slice zLevel 10.201
+2011-01-22 08:00:28,351 [export] WARNING Slice zLevel 10.501
+2011-01-22 08:00:28,444 [export] WARNING Slice zLevel 10.801
+2011-01-22 08:00:28,507 [export] WARNING Slice zLevel 11.101
+2011-01-22 08:00:28,585 [export] WARNING Slice zLevel 11.401
+2011-01-22 08:00:28,664 [export] WARNING Slice zLevel 11.701
+2011-01-22 08:00:28,726 [export] WARNING Slice zLevel 12.001
+2011-01-22 08:00:28,789 [export] WARNING Slice zLevel 12.301
+2011-01-22 08:00:28,851 [export] WARNING Slice zLevel 12.601
+2011-01-22 08:00:28,914 [export] WARNING Slice zLevel 12.901
+2011-01-22 08:00:28,960 [export] WARNING Slice zLevel 13.201
+2011-01-22 08:00:29,023 [export] WARNING Slice zLevel 13.501
+2011-01-22 08:00:29,085 [export] WARNING Slice zLevel 13.801
+2011-01-22 08:00:29,148 [export] WARNING Slice zLevel 14.101
+2011-01-22 08:00:29,444 [export] WARNING Slice zLevel 14.401
+2011-01-22 08:00:29,507 [export] WARNING Slice zLevel 14.701
+2011-01-22 08:00:29,569 [export] WARNING Slice zLevel 15.001
+2011-01-22 08:00:29,648 [export] WARNING Slice zLevel 15.301
+2011-01-22 08:00:29,742 [export] WARNING Slice zLevel 15.601
+2011-01-22 08:00:29,835 [export] WARNING Slice zLevel 15.901
+2011-01-22 08:00:29,914 [export] WARNING Slice zLevel 16.201
+2011-01-22 08:00:29,992 [export] WARNING Slice zLevel 16.501
+2011-01-22 08:00:30,069 [export] WARNING Slice zLevel 16.801
+2011-01-22 08:00:30,148 [export] WARNING Slice zLevel 17.101
+2011-01-22 08:00:30,226 [export] WARNING Slice zLevel 17.401
+2011-01-22 08:00:30,305 [export] WARNING Slice zLevel 17.701
+2011-01-22 08:00:30,382 [export] WARNING Slice zLevel 18.001
+2011-01-22 08:00:30,460 [export] WARNING Slice zLevel 18.301
+2011-01-22 08:00:30,539 [export] WARNING Slice zLevel 18.601
+2011-01-22 08:00:30,851 [export] WARNING Slice zLevel 18.901
+2011-01-22 08:00:30,930 [export] WARNING Slice zLevel 19.201
+2011-01-22 08:00:31,007 [export] WARNING Slice zLevel 19.501
+2011-01-22 08:00:31,085 [export] WARNING Slice zLevel 19.801
+2011-01-22 08:00:31,164 [export] WARNING Slice zLevel 20.101
+2011-01-22 08:00:31,242 [export] WARNING Slice zLevel 20.401
+2011-01-22 08:00:31,319 [export] WARNING Slice zLevel 20.701
+2011-01-22 08:00:31,398 [export] WARNING Slice zLevel 21.001
+2011-01-22 08:00:31,476 [export] WARNING Slice zLevel 21.301
+2011-01-22 08:00:31,555 [export] WARNING Slice zLevel 21.601
+2011-01-22 08:00:31,632 [export] WARNING Slice zLevel 21.901
+2011-01-22 08:00:31,710 [export] WARNING Slice zLevel 22.201
+2011-01-22 08:00:31,789 [export] WARNING Slice zLevel 22.501
+2011-01-22 08:00:31,867 [export] WARNING Slice zLevel 22.801
+2011-01-22 08:00:32,210 [export] WARNING Slice zLevel 23.101
+2011-01-22 08:00:32,273 [export] WARNING Slice zLevel 23.401
+2011-01-22 08:00:32,367 [export] WARNING Slice zLevel 23.701
+2011-01-22 08:00:32,430 [export] WARNING Slice zLevel 24.001
+2011-01-22 08:00:32,507 [export] WARNING Slice zLevel 24.301
+2011-01-22 08:00:32,585 [export] WARNING Slice zLevel 24.601
+2011-01-22 08:00:32,680 [export] WARNING Slice zLevel 24.901
+2011-01-22 08:00:32,742 [export] WARNING Slice zLevel 25.201
+[OccSlicer]:*** Gcode Created: 7.797 seconds ***
+[OccSlicer]:*** Creating SVG ***
+Exporting 85 slices to file'parts\RepRapTest.svg'...
+SVG Export Complete.
+[OccSlicer]:***SVG Created, 6.844 seconds.
+[OccSlicer]:***Processing Complete.***
+[OccSlicer]:*** Performance Summary ***
+[OccSlicer]:loadObject : 0.063 sec.
+[OccSlicer]:slice : 18.078 sec.
+[OccSlicer]:svgExport : 6.844 sec.
+[OccSlicer]:gcodeExport : 7.797 sec.

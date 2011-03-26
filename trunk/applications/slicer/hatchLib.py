@@ -121,10 +121,7 @@ class Hatcher:
 		for b in self.boundaryWires:
 			activeBoundaries[b] = 0;
 		
-
-		#intersect each line with each boundary
-
-				
+		#intersect each line with each boundary				
 		for hatchLine in hatchWires:
 		
 			if len(activeBoundaries) == 0:
@@ -145,7 +142,28 @@ class Hatcher:
 						activeBoundaries[boundary] = 1;
 						#try:
 						#make the node
+						#quite complex depending on where exactly the intersection is.
+						if brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsOnEdge:
+							#well this sux-- have to check to ensure that the edge is not a local
+							#minimum or maximum also.
+							if Wrappers.isEdgeLocalMinimum(Wrappers.cast(brp.SupportOnShape1(k)),brp.ParOnEdgeS1(k),brp.PointOnShape1(k)):
+								#print "Warning: edge appears to be a local min/max.  Is it a tangent?"
+								continue;
+							else:
+								self.graph.divideEdge(Wrappers.cast(brp.SupportOnShape1(k)),brp.ParOnEdgeS1(k));
+						
 						if brp.SupportTypeShape2(k) == BRepExtrema.BRepExtrema_IsOnEdge:
+							
+
+							
+							if brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsVertex:
+								#the intersection is on a vertex of the boundary.
+								vertex = Wrappers.cast(brp.SupportOnShape1(k));
+								if Wrappers.isLocalMinimum(boundary, vertex):
+									print "vertex encountered that is a local minimum, skipping it"	
+									continue;
+							
+							#otherwise, vertex was not a local minimum, or was on an edge
 							poe = eg.PointOnAnEdge(Wrappers.cast(brp.SupportOnShape2(k)),brp.ParOnEdgeS2(k),brp.PointOnShape2(k));
 							interSections.append(poe);
 							
@@ -157,22 +175,12 @@ class Hatcher:
 							pass;
 						else:
 							raise ValueError("I dont know how to handle this kind of intersection");
-							
-						if brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsOnEdge:
-							#also divide the  in the graph as this point
-							self.graph.divideEdge(Wrappers.cast(brp.SupportOnShape1(k)),brp.ParOnEdgeS1(k));
-						elif brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsVertex:
-							print "WARNING: intersection on vertex of boundary!"
-							pass;
-						else:
-							raise ValueError("Cannot handle this kind of boundary intersection");
-						#except:
-						#	log.warn("Problem Creating an intersection node... Ignoring.");
+
 					
 				else:
 					if activeBoundaries[boundary] == 1:
 						#finished with this wire. 
-						print "Finished with wire %d" % boundary.__hash__();
+						#print "Finished with wire %d" % boundary.__hash__();
 						del activeBoundaries[boundary];
 					
 
@@ -209,9 +217,9 @@ class Hatcher:
 		log.info("Finished Hatching.");
 
 	
-	def _makeHatchLines(self):
+	def _makeHatchLines2(self):
 		"make hatch lines using hexlib"
-		hex = hexagonlib.Hexagon(0.25,0.05);
+		hex = hexagonlib.Hexagon(0.5,0.01);
 		
 		xMin = self.bounds[0] - ( self.HATCH_PADDING);
 		yMin = self.bounds[1] - ( self.HATCH_PADDING);		 
@@ -221,18 +229,21 @@ class Hatcher:
 
 		return wires;	
 	
-	def _makeHatchLines2(self):
+	def _makeHatchLines(self):
 		"make straight hatch lines."
 		xMin = self.bounds[0] - ( self.HATCH_PADDING);
 		yMin = self.bounds[1] - ( self.HATCH_PADDING);		 
 		xMax = self.bounds[2] + (self.HATCH_PADDING);
 		yMax = self.bounds[3] + (self.HATCH_PADDING) ;
 		wires = [];
-		for y in Wrappers.frange6(yMin,yMax,0.34):
+		for y in Wrappers.frange6(yMin,yMax,0.01):
 			e = Wrappers.edgeFromTwoPoints(gp.gp_Pnt(xMin,y,self.zLevel),gp.gp_Pnt(xMax,y,self.zLevel));
 			#TestDisplay.display.showShape(e);
 			wires.append(Wrappers.wireFromEdges([e]));
 		return wires;
+
+
+	
 	
 def makeHeartWire():
 	"make a heart wire"
@@ -243,6 +254,7 @@ def makeHeartWire():
 	e3 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(circle, gp.gp_Pnt(0,4,0),gp.gp_Pnt(-4,4,0)).Edge();
 	e4 = Wrappers.edgeFromTwoPoints(gp.gp_Pnt(-4,4,0), gp.gp_Pnt(0,0,0));
 	return Wrappers.wireFromEdges([e1,e2,e3,e4]);
+
 
 def makeCircleWire():
 	circle = gp.gp_Circ(gp.gp_Ax2(gp.gp_Pnt(0,2,0),gp.gp().DZ()),.75);
@@ -299,9 +311,9 @@ if __name__=='__main__':
 	
 	print "%d edges total" % i
 
-	for n in h.graph.allNodesRandomOrder():
-		p = gp.gp_Pnt(n[0],n[1],0);
-		TestDisplay.display.showShape(Wrappers.make_vertex(p));
+	#for n in h.graph.allNodesRandomOrder():
+	#	p = gp.gp_Pnt(n[0],n[1],0);
+	#	TestDisplay.display.showShape(Wrappers.make_vertex(p));
 
 	print "Done.";
 	TestDisplay.display.run();

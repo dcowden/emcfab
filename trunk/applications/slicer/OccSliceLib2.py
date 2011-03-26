@@ -940,19 +940,19 @@ def fillVolume(vm):
 
 		
 def makeVoxelModel(shape):
-	size=100
+	size=50
 	"make a voxel model of a solid shape"
 	print "trying to make voxel model"
 	b = time.clock();
 
-	voxModel = Voxel.Voxel_BoolDS();
-	converter = Voxel.Voxel_FastConverter(shape,voxModel,0.01,size,size,size)
+	voxModel = Voxel.Voxel_BoolDS(0,0,1.0,25,25,1,size,size,1);
+	converter = Voxel.Voxel_FastConverter(shape,voxModel,0.01,size,size,1)
 	progress = 1
 	print "Computing Voxels";
 	converter.Convert(progress);
 	print "done computing voxels";
 	#converter.FillInVolume(3);
-	fillVolume(voxModel);
+	#fillVolume(voxModel);
 	print "done filling volume with 1s"
 	t = time.clock() -b ;
 	print "done gettint voxels and filling: %0.3f sec, %0.5f ms/voxel " % (  t, t/math.pow(size,3)*1000 ) 
@@ -960,10 +960,10 @@ def makeVoxelModel(shape):
 	print "model has %s x %s y %s z voxels" % (  voxModel.GetNbX(), voxModel.GetNbY(), voxModel.GetNbZ()  );
 	print "model x,y,z = %0.3f %0.3f %0.3f" % ( voxModel.GetX(), voxModel.GetY(), voxModel.GetZ() );
 	
-	"""
+	
 	print "getting values of all points"
 	x=y=z=f=0;
-	for i in range(0,size):
+	for i in range(0,1):
 		print "z = %d" % ( i )
 		for j in range(0,voxModel.GetNbX() ):
 			r=[]
@@ -974,7 +974,7 @@ def makeVoxelModel(shape):
 					r.append(" ")
 			print "".join(r);
 		print "--------------"
-	"""	
+	
 		
 
 	

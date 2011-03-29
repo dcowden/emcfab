@@ -33,6 +33,10 @@ import edgegraph3 as eg
 import cProfile
 import pstats
 
+#20% speed boost from psyco
+#import psyco
+#psyco.full()
+
 log = logging.getLogger('hatchLib');
 
 ts = TopoDS.TopoDS();
@@ -217,9 +221,9 @@ class Hatcher:
 		log.info("Finished Hatching.");
 
 	
-	def _makeHatchLines2(self):
+	def _makeHatchLines22(self):
 		"make hatch lines using hexlib"
-		hex = hexagonlib.Hexagon(0.5,0.01);
+		hex = hexagonlib.Hexagon(0.12,0.01);
 		
 		xMin = self.bounds[0] - ( self.HATCH_PADDING);
 		yMin = self.bounds[1] - ( self.HATCH_PADDING);		 

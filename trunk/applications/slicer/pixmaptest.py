@@ -27,8 +27,8 @@ class pixmap:
 		self.max = max;
 		self.step = step;
 		
-		self.nX = int((max[0] - min[0] ) / step );
-		self.nY = int((max[1]- min[1] ) / step );
+		self.nX = int((max[0] - min[0] ) / step ) + 2;
+		self.nY = int((max[1]- min[1] ) / step ) + 2;
 
 		self.p = np.zeros( (self.nX,self.nY),dtype=np.uint8 );
 		#self.p.shape = self.nY,self.nX;
@@ -60,8 +60,54 @@ class pixmap:
 		p2 = self.index(max);
 		v = self.p[p1[0]:p2[0], p1[1]:p2[1]];
 		return  v
+	
+	def drawLine(self,p1,p2,value=1):
+		"""
+			Draws a line between the two points		
+		"""
 		
-	def fillTriangle(self,p1,p2,p3):
+		#TODO: a lot of this code is similar to fillTriangle.
+		#TODO: should be refactored.
+		i1 = self.index(p1);
+		i2 = self.index(p2);
+		(min,max) = getBoundingBoxForPoints([i1,i2] );
+		v = self.p[min[0]:max[0]+1,min[1]:max[1]+1];
+
+		i = Image.new('L',v.shape, 0 );
+		
+		#adjust coordinates of the points to coordinates local to the bounding box
+		a = subtractTuple(i1,min);
+		b = subtractTuple(i2,min);
+
+		#draw a polygon on the image
+		ImageDraw.Draw(i).line([a,b] ,fill=value,width=1.5);
+		
+		#copy values into windowed box
+		#must or the values to avoid overwriting previously set pixels
+		#m = np.array(i);
+		#print "image array shape is",m.shape
+		#m /= 255;
+		m = np.array(i).T;
+		#print m;
+		
+		#print m.shape;
+		#m /= 255;
+		v[:] = np.maximum(v,m);
+
+	def tileOnto(self,arrayToTile):
+		"tiles the supplied array over the underlying array"
+		(hl, hw ) = arrayToTile.shape;
+
+		(bl, bw ) = self.p.shape;
+		numwide = round(bw / hw ) + 1;
+		numtall = round(bl / hl ) + 1;
+
+		pattern = np.tile(arrayToTile,(numtall,numwide));
+		pattern = pattern[:bl,:bw];
+
+		self.p = np.bitwise_and(self.p,pattern);
+		
+	def fillTriangle(self,p1,p2,p3,value=1):
 		"""
 			Draws a closed polygon defined by the set of points.
 			
@@ -92,7 +138,7 @@ class pixmap:
 		b = subtractTuple(i2,min);
 		c = subtractTuple(i3,min);
 		#draw a polygon on the image
-		ImageDraw.Draw(i).polygon([a,b,c ],outline=1, fill=1 );
+		ImageDraw.Draw(i).polygon([a,b,c ],outline=value, fill=value);
 		
 		#copy values into windowed box
 		#must or the values to avoid overwriting previously set pixels

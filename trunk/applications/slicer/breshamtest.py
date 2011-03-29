@@ -1,106 +1,116 @@
 import sys,time
 import numpy as np
 
-def rm(d,keys):
-	for k in keys:
-		if d.has_key(k): del d[k];
 
-"given a starting point as a tuple, find the end point of the segement"
-def findSegment(array,(x0,y0) ):
-	"""
-		attempts to find a string of pixels that makes the longest possible
-		line. 
-		The assumption is that the pixels were created using bresenham's line
-		alogrithm, interpolating a line.
+# test bits for the various connected pixels
+#      432
+#      501
+#      678	
+Q1 = 0b00000001
+Q2 = 0b00000010
+Q3 = 0b00000100
+Q4 = 0b00001000
+Q5=  0b00010000
+Q6 = 0b00100000
+Q7=  0b01000000
+Q8 = 0b10000000
 
-		integer math is assumed.
-		
-		assumes the starting point is set, and that it is valid in the array
-	"""
-	dy  =0;
-	dx = 0;
-	x = x0;
-	y = y0;
-	slopeAccumulator = [0,0 ];
-	lastSlopes = None;	
-	currentDir = None;
+# combinations, computed ahead for performance
+EAST = ( Q2 | Q1 | Q8 );
+NORTH  = (Q4 | Q3 | Q2 );
+WEST = ( Q4 | Q5 | Q6 );
+SOUTH = ( Q6 | Q7 | Q8 );
+NE = ( Q1 | Q2 | Q3 );
+NW = ( Q3 | Q4 | Q5 );
+SW = ( Q5 | Q6 | Q7 );
+SE = ( Q7 | Q8 | Q1 );
 
-	dirs =  { 'n': (0,1), 's' : (0,-1) , 'e' : (1,0), 'w' : (-1,0), 'ne':(1,1) ,'se':(-1,1),'sw':(-1,-1 ),'nw':(1,-1) };
+VERTEX = 0b00000010
+EDGE = 0b00000001
+
+"""
+	find a bresenham sequence.
+	returns: the end point of the bresenham sequence starting at x0,y0 in the given array,
+	or None if no sequnce can be found.
 	
-	assert array[x,y] == 1,'Initial Point must be set';
+	array values with the second bit set are vertex-- we are done when we find one of these
+	array values with the first bit set are an edge
+	array values of zero are not part of the desired pattern.
 	
-	while True:
-		#search for a neighboring pixel
-		#d is index offsets from current location
-		foundNext = False;
-		for (k,v) in dirs.iteritems(): #after two loop iterations there will only be two choices left
-			nx = x + v[0];
-			ny = y + v[1];
-			t = array[(nx,ny)];
-			if t == 1:
-				dx = v[0];
-				dy = v[1];
-			
-				foundNext = True;
-				#print "Next Point:",(nx,ny);
-				#is there a better way to do this? ideally we dont have to test these every time
-				#but this is ok to test the algo in general
-				if len(dirs) >2:					
-					if k == 'e':
-						rm(dirs,['w','n','s','nw','sw'] );				
-					elif k == 'w':
-						rm(dirs,['e','n','s','ne','se']);				
-					elif k == 's':
-						rm(dirs,['n','e','nw','ne']);				
-					elif k == 'n':
-						rm(dirs,['s','e','w','sw','se']);
-					elif k == 'ne':
-						rm(dirs,['s','w','sw','se','nw']);				
-					elif k == 'nw':
-						rm(dirs,['s','e','sw','se','ne']);
-					elif k == 'sw':
-						rm(dirs,['n','e','nw','ne','se']);
-					elif k == 'se':
-						rm(dirs,['n','w','ne','nw','sw']);						
-					#print "Dirs Left:",dirs;
-				
-				#decrement slope accumulators
-				if lastSlopes != None:
+	dirs is an 8-bit value used to track which directions in which the search will proceed.
+	
+	the code for the function is a lot more complex due to the functionality that 
+    clears the underlying buffer, only if a line is found.
+	
+"""
+def reverse_bresenham(array,x,y,dirs=0b11111111 ):
 
-					if lastSlopes[0] < -2:
-						print "Next Pixel was out of bounds for x"
-						return (x,y);
-					if lastSlopes[1] < -2:
-						print "next Pixel was out of bounds for y"
-						return (x,y);
-						
-					lastSlopes[0] -= dx;
-					lastSlopes[1] -= dy;
-						
-				if currentDir != None and currentDir != k:
-					#switch direction. store accumulated slopes.
-					#print "Switching Direction"
-					#check accumulators to ensure that we switched about the right time
-					if lastSlopes != None:
-						if lastSlopes[0] > 2:
-							print "Next pixel out of bounds for x: unexpected move"
-							return (x,y)
-						if lastSlopes[1] > 2:
-							print "Next pixel out of bounds for y: unexpected move"
-							return (x,y)
-
-					lastSlopes = slopeAccumulator;
-					slopeAccumulator = [ 0,  0 ];
-				
-				slopeAccumulator[0] += dx;
-				slopeAccumulator[1] += dy;	
-				currentDir = k;
-				x = nx;
-				y = ny;
-				break;
-		if not foundNext:
-			#print "No Neigboring Pixel. Stopping."
+	#disable ending conditions if we are just starting.
+	#one search forward is guaranteed to filter some directions
+	if dirs != 0b11111111:		
+		if array[x,y] == 0:
+			return None;			
+		if array[x,y] > VERTEX: #value is a vertex.	
+			array[x,y] = 0;
 			return (x,y);
+		
+	#else, we are on the starting vertex, or on an edge
+	#search each candidate direction for a match, and, if found, continue that way
+	
+	#i cannot figure out how to avoid one if statement per direction.
+	#each time we limit the choices to the appropriate quadrants. generally within just a couple of moves,
+	#we will be down to running only two branches of this code
+	if dirs &  Q1 :
+		r = reverse_bresenham(array,x+1,y,dirs & EAST );
+		if r != None: 
+			array[x,y] = 0;
+			return r;
+
+	if dirs & Q2:
+		r = reverse_bresenham(array,x+1,y+1,dirs & NE );
+		if r != None: 
+			array[x,y] = 0;
+			return r;
+
+	if dirs & Q3:
+		r = reverse_bresenham(array,x,y+1,dirs & NORTH);
+		if r != None: 
+			array[x,y] = 0;
+			return r;
+			
+	if dirs & Q4:
+		r = reverse_bresenham(array,x-1,y+1,dirs & NW );
+		if r != None: 
+			array[x,y] = 0;
+			return r;		
+	if dirs & Q5:
+		r = reverse_bresenham(array,x-1,y,dirs & WEST );
+		if r != None: 
+			array[x,y] = 0;
+			return r;
+
+	if dirs & Q6:
+		r = reverse_bresenham(array,x-1,y-1,dirs & SW );
+		if r != None: 
+			array[x,y] = 0;
+			return r;
+			
+	if dirs & Q7:
+		r = reverse_bresenham(array,x,y-1,dirs & SOUTH );
+		if r != None: 
+			array[x,y] = 0;
+			return r;				
+	if dirs & Q8:
+		r = reverse_bresenham(array,x+1,y-1,dirs & SE );
+		if r != None: 
+			array[x,y] = 0;
+			return r;			
+	#Couldnt find any remaining pixels
+	#returning None here means a line will not terminate unless a vertex is found
+	#returning x,y here means that a line is found if it is the end of a line of pixels
+	#with no terminating vertex
+	return (x,y);
+
 				
 """
 	Performance Note: The c-extension version of this code runs 10x faster, even without
@@ -231,28 +241,43 @@ def testPieceWiseBresenham():
 	lines = piecewise_bresenham_line(a,P1,P2);
 	assert len(lines) == 0, "Should be no entries in this line"
 	
-def testCorrectSegments():
+
+def testReverseBresenhamPerformance():
+	startPoint = (1,1);
+	endPoint = (9,1) ;
+	el = 0;
+	LOOPS = 1000;
+	for i in range(LOOPS):
+		a = np.zeros((12,12),dtype=np.uint8 );
+		piecewise_bresenham_line(a,startPoint,endPoint );
+		s = time.clock();
+		q = reverse_bresenham ( a, startPoint[0],startPoint[1] );
+		el += ( time.clock() - s );
+	
+	print "%d iters, %0.5f ms/iter" % ( LOOPS, el );
+	
+def testReverseBresenham():
 	"test cases for finding segments,where the segment is valid"
 	startPoint = (1,1);
 	endPoints = [ ( 2,2 ),(6,6), (1,9), (9,1) ,(3,8), (8,3), (2,5),(9,7),(2,8),(9,8),(8,9) ];
-	#endPoints = [ (9,8) ];
+	#endPoints = [ (9,1) ];
 	for p in endPoints:
 		print "Test Case %s --> %s " % ( str(startPoint), str(p) ),;
 		a = np.zeros((12,12),dtype=np.uint8 );
-		line(a,startPoint,p );
-		q = findSegment ( a, startPoint );
+		piecewise_bresenham_line(a,startPoint,p );
+		q = reverse_bresenham ( a, startPoint[0],startPoint[1] );
 		if q != p:
 			print "Did not find end point" + str(p);
+			print q;
 			print a;
 		else:
 			print "Passed."
-			
 
 if __name__=='__main__':
-	#testCorrectSegments();
-	print "Running Tests....."
-	testPieceWiseBresenham();
-	print "Testing Performance..."
-	testPieceWiseBresenhamPerformance();
+	print "Running Tests....."	
+	print "Reverse Bresenham..."; testReverseBresenham();
+	print "Reverse Bresenham Performance...";  testReverseBresenhamPerformance();
+	print "Piecewise Bresenham...";  testPieceWiseBresenham();
+	print "Piecewise Bresenham Performance..."; testPieceWiseBresenhamPerformance();
 	
 	

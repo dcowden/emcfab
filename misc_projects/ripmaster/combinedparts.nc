@@ -4,7 +4,6 @@
 G20 G90 G64 G40
 G0 Z0.25
 ( T0 : 0.125 )
-T0 M6
 ( HoleCounterSinks )
 G17
 M3 S2000

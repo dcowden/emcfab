@@ -1,0 +1,6 @@
+fixturepocket -- mill a pocket for 1x0.1875 stock for metal pieces
+drillbasegrid -- mill a series of holes for machine base
+flattenmill -- mill the entire surface of the mill flat, removing 0.001
+slide arm -- mill slide arm
+clampmount -- mill clamp mount
+combinedparts.nc -- mill plastic parts from a single blank 7x16"

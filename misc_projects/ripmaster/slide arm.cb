@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CADFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="slide arm" units="Inches">
+  <layers>
+    <layer name="0" color="255,255,255">
+      <ModificationCount>3</ModificationCount>
+      <mat />
+      <objects>
+        <circle id="5" c="6.77,0.775,0" d="0.19">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+        </circle>
+        <line id="6">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>7.52,1.025</p>
+            <p>0.02,1.025</p>
+          </pts>
+        </line>
+        <line id="7">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>7.52,0.025</p>
+            <p>7.52,1.025</p>
+          </pts>
+        </line>
+        <line id="8">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>0.02,0.025</p>
+            <p>7.52,0.025</p>
+          </pts>
+        </line>
+        <line id="9">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>0.02,1.025</p>
+            <p>0.02,0.025</p>
+          </pts>
+        </line>
+        <circle id="10" c="7.27,0.275,0" d="0.19">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+        </circle>
+        <line id="11">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>6.77,0.775</p>
+            <p>6.77,0.875</p>
+          </pts>
+        </line>
+        <line id="12">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>6.77,0.775</p>
+            <p>6.67,0.775</p>
+          </pts>
+        </line>
+        <line id="13">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>6.77,0.775</p>
+            <p>6.77,0.675</p>
+          </pts>
+        </line>
+        <line id="14">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>6.77,0.775</p>
+            <p>6.87,0.775</p>
+          </pts>
+        </line>
+        <line id="15">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>6.77,0.875</p>
+            <p>6.77,0.97</p>
+          </pts>
+        </line>
+        <line id="16">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>6.67,0.775</p>
+            <p>6.575,0.775</p>
+          </pts>
+        </line>
+        <line id="17">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>6.77,0.675</p>
+            <p>6.77,0.58</p>
+          </pts>
+        </line>
+        <line id="18">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>6.87,0.775</p>
+            <p>6.965,0.775</p>
+          </pts>
+        </line>
+        <line id="19">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>7.27,0.275</p>
+            <p>7.27,0.375</p>
+          </pts>
+        </line>
+        <line id="20">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>7.27,0.275</p>
+            <p>7.17,0.275</p>
+          </pts>
+        </line>
+        <line id="21">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>7.27,0.275</p>
+            <p>7.27,0.175</p>
+          </pts>
+        </line>
+        <line id="22">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>7.27,0.275</p>
+            <p>7.37,0.275</p>
+          </pts>
+        </line>
+        <line id="23">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>7.27,0.375</p>
+            <p>7.27,0.47</p>
+          </pts>
+        </line>
+        <line id="24">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>7.17,0.275</p>
+            <p>7.075,0.275</p>
+          </pts>
+        </line>
+        <line id="25">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>7.27,0.175</p>
+            <p>7.27,0.08</p>
+          </pts>
+        </line>
+        <line id="26">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>7.37,0.275</p>
+            <p>7.465,0.275</p>
+          </pts>
+        </line>
+        <line id="27">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>0.27,0.525</p>
+            <p>0.27,0.625</p>
+          </pts>
+        </line>
+        <line id="28">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>0.27,0.525</p>
+            <p>0.17,0.525</p>
+          </pts>
+        </line>
+        <line id="29">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>0.27,0.525</p>
+            <p>0.27,0.425</p>
+          </pts>
+        </line>
+        <line id="30">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>0.27,0.525</p>
+            <p>0.37,0.525</p>
+          </pts>
+        </line>
+        <line id="31">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>6.02,0.525</p>
+            <p>6.02,0.625</p>
+          </pts>
+        </line>
+        <line id="32">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>6.02,0.525</p>
+            <p>5.92,0.525</p>
+          </pts>
+        </line>
+        <line id="33">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>6.02,0.525</p>
+            <p>6.02,0.425</p>
+          </pts>
+        </line>
+        <line id="34">
+          <ModificationCount>3</ModificationCount>
+          <mat />
+          <pts>
+            <p>6.02,0.525</p>
+            <p>6.12,0.525</p>
+          </pts>
+        </line>
+        <pline id="35" Closed="true">
+          <ModificationCount>8</ModificationCount>
+          <mat />
+          <pts>
+            <p b="0.99999999999999989">6.02,0.427,0</p>
+            <p>6.02,0.623,0</p>
+            <p b="0.99999999999999989">0.27,0.623,0</p>
+            <p>0.27,0.427,0</p>
+          </pts>
+        </pline>
+      </objects>
+    </layer>
+  </layers>
+  <MachiningOptions>
+    <OutFile>slide arm.nc</OutFile>
+  </MachiningOptions>
+  <machineops>
+    <mop xsi:type="MOPPocket">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>40</PlungeFeedrate>
+      <CutFeedrate>75</CutFeedrate>
+      <StartPoint>Default</StartPoint>
+      <Name>Slot</Name>
+      <StockSurface>0</StockSurface>
+      <ClearancePlane>0.25</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
+      <primitive>
+        <prim>35</prim>
+      </primitive>
+      <mat />
+      <TargetDepth>-0.2</TargetDepth>
+      <DepthIncrement>0.04</DepthIncrement>
+      <FinalDepthIncrement>0.01</FinalDepthIncrement>
+      <CutOrdering>DepthFirst</CutOrdering>
+      <StepOver>0.4</StepOver>
+      <StepoverFeedrate>Default</StepoverFeedrate>
+      <LeadInMove>
+        <LeadInType>Spiral</LeadInType>
+        <SpiralAngle>10</SpiralAngle>
+        <TangentRadius>0</TangentRadius>
+      </LeadInMove>
+      <FinishStepover>0.005</FinishStepover>
+    </mop>
+    <mop xsi:type="MOPPocket">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>20</PlungeFeedrate>
+      <CutFeedrate>75</CutFeedrate>
+      <StartPoint>Default</StartPoint>
+      <Name>Clr Holes</Name>
+      <StockSurface>0</StockSurface>
+      <ClearancePlane>0.25</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
+      <primitive>
+        <prim>5</prim>
+        <prim>10</prim>
+      </primitive>
+      <mat />
+      <TargetDepth>-0.2</TargetDepth>
+      <DepthIncrement>0.05</DepthIncrement>
+      <FinalDepthIncrement>0.005</FinalDepthIncrement>
+      <CutOrdering>DepthFirst</CutOrdering>
+      <StepOver>0.4</StepOver>
+      <StepoverFeedrate>Default</StepoverFeedrate>
+      <LeadInMove>
+        <LeadInType>Spiral</LeadInType>
+        <SpiralAngle>10</SpiralAngle>
+        <TangentRadius>0</TangentRadius>
+      </LeadInMove>
+      <FinishStepover>0.002</FinishStepover>
+    </mop>
+    <mop xsi:type="MOPProfile">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>20</PlungeFeedrate>
+      <CutFeedrate>75</CutFeedrate>
+      <StartPoint>Default</StartPoint>
+      <Name>Sides</Name>
+      <StockSurface>0</StockSurface>
+      <ClearancePlane>0.25</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
+      <primitive>
+        <prim>7</prim>
+        <prim>9</prim>
+      </primitive>
+      <mat />
+      <MaxCutWidth>0</MaxCutWidth>
+      <TargetDepth>-0.2</TargetDepth>
+      <DepthIncrement>0.04</DepthIncrement>
+      <FinalDepthIncrement>0.01</FinalDepthIncrement>
+      <CutWidth>0.01</CutWidth>
+      <StepOver>0.4</StepOver>
+      <StepoverFeedrate>Default</StepoverFeedrate>
+      <LeadInMove>
+        <LeadInType>Spiral</LeadInType>
+        <SpiralAngle>10</SpiralAngle>
+        <TangentRadius>0</TangentRadius>
+      </LeadInMove>
+      <HoldingTabs>
+        <TabMethod>None</TabMethod>
+        <Width>3</Width>
+        <Height>0.2</Height>
+        <MinimumTabs>2</MinimumTabs>
+        <MaximumTabs>6</MaximumTabs>
+        <TabDistance>0</TabDistance>
+        <UseLeadIns>true</UseLeadIns>
+        <Tabs />
+      </HoldingTabs>
+      <SideProfile />
+    </mop>
+  </machineops>
+  <ActiveLayer>0</ActiveLayer>
+</CADFile>

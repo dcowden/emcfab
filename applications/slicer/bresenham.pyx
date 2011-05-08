@@ -31,7 +31,7 @@ def piecewise_bresenham_line(np.ndarray[DTYPE_t,ndim=2] array not None,start,end
     cdef int segX = 0
     cdef int segY = 0
      
-    dx = abs(x2 - x)
+    dx = (int)(abs(x2 - x))
      
     if (x2 - x) > 0: sx = 1
     else: sx = -1
@@ -59,7 +59,7 @@ def piecewise_bresenham_line(np.ndarray[DTYPE_t,ndim=2] array not None,start,end
                c0 = x 
                c1=y; 
                
-          if array[c0,c1] > 0:
+          if array[c0,c1] == 0:
                if writing:
                     #end segment if not too short
                     if minSegmentLength > 1:
@@ -70,7 +70,7 @@ def piecewise_bresenham_line(np.ndarray[DTYPE_t,ndim=2] array not None,start,end
                          lines.append( [ (segX, segY),(lastc0,lastc1) ] )
                     writing = 0;
           else:
-               array[c0,c1] = 1;
+               #array[c0,c1] = 1;
                if not writing:
                     #start segment
                     writing = 1;
@@ -88,7 +88,7 @@ def piecewise_bresenham_line(np.ndarray[DTYPE_t,ndim=2] array not None,start,end
     #finish up
     if writing:
     #end segment
-        array[x2,y2] = 1;
+        #array[x2,y2] = 1;
         lines.append( [(segX,segY),(x2,y2)] );
     
     return lines;

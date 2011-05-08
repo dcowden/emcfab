@@ -29,6 +29,82 @@ VERTEX = 0b00000010
 EDGE = 0b00000001
 
 """
+	follows the edge number specified, starting with the supplied location.
+	marks the used pixels followed when it returns.
+	
+"""
+def follow_edge(array,x,y,edgeToFollow, dirs=0b11111111,endingValue=0 ):
+
+	#disable ending conditions if we are just starting.
+	#one search forward is guaranteed to filter some directions
+	if dirs != 0b11111111:		
+		if array[x,y] == 0 or array[x,y] != edgeToFollow:
+			return None;			
+		if array[x,y] == endingValue: #value is a vertex.	
+			return (x,y);
+	else:
+		#starting value
+		endingValue = array[x,y];
+		
+	#else, we are on the starting vertex, or on an edge
+	#search each candidate direction for a match, and, if found, continue that way
+	
+	#i cannot figure out how to avoid one if statement per direction.
+	#each time we limit the choices to the appropriate quadrants. generally within just a couple of moves,
+	#we will be down to running only two branches of this code
+	if dirs &  Q1 :
+		r = follow_edge(array,x+1,y,edgeToFollow,dirs & EAST ,endingValue);
+		if r != None: 
+			array[x,y] = 0;
+			return r;
+
+	if dirs & Q2:
+		r = follow_edge(array,x+1,y+1,edgeToFollow,dirs & NE ,endingValue);
+		if r != None: 
+			array[x,y] = 0;
+			return r;
+
+	if dirs & Q3:
+		r = follow_edge(array,x,y+1,edgeToFollow,dirs & NORTH,endingValue);
+		if r != None: 
+			array[x,y] = 0;
+			return r;
+			
+	if dirs & Q4:
+		r = follow_edge(array,x-1,y+1,edgeToFollow,dirs & NW ,endingValue);
+		if r != None: 
+			array[x,y] = 0;
+			return r;		
+	if dirs & Q5:
+		r = follow_edge(array,x-1,y,edgeToFollow,dirs & WEST ,endingValue);
+		if r != None: 
+			array[x,y] = 0;
+			return r;
+
+	if dirs & Q6:
+		r = follow_edge(array,x-1,y-1,edgeToFollow,dirs & SW ,endingValue);
+		if r != None: 
+			array[x,y] = 0;
+			return r;
+			
+	if dirs & Q7:
+		r = follow_edge(array,x,y-1,edgeToFollow,dirs & SOUTH ,endingValue);
+		if r != None: 
+			array[x,y] = 0;
+			return r;				
+	if dirs & Q8:
+		r = follow_edge(array,x+1,y-1,edgeToFollow,dirs & SE ,endingValue);
+		if r != None: 
+			array[x,y] = 0;
+			return r;			
+	#Couldnt find any remaining pixels
+	#returning None here means a line will not terminate unless a vertex is found
+	#returning x,y here means that a line is found if it is the end of a line of pixels
+	#with no terminating vertex
+	return (x,y);
+
+
+"""
 	find a bresenham sequence.
 	returns: the end point of the bresenham sequence starting at x0,y0 in the given array,
 	or None if no sequnce can be found.
@@ -111,7 +187,58 @@ def reverse_bresenham(array,x,y,dirs=0b11111111 ):
 	#with no terminating vertex
 	return (x,y);
 
-				
+	
+"""
+	Performance Note: The c-extension version of this code runs 10x faster, even without
+	disabling bounds checking.  this version takes 1ms to plot a 200 point line, 
+	the c version plots the same line in 0.1 ms.
+
+"""
+
+def setArray(array,newVertices, x,y,vertexValue,lineValue):
+	"utility function"
+	if array[x,y] > 0:
+		newVertices.append((x,y,array[x,y]));
+		array[x,y] = vertexValue;
+	else:
+		array[x,y] = lineValue;
+
+def drawLineReturnVertices(array,(x0,y0),(x1,y1),lineValue,vertexValue=9):
+	"""
+		Brensenham line algorithm, but slightly modified:
+		  draws on the provided numpy array
+		  marks pixels that have already been drawn as vertices.
+		  returns a list of new vertices ( ends are not included)
+	"""
+	newVertices = [];
+	dx = abs(x1 - x0)
+	dy = abs(y1 - y0)
+	x, y = x0, y0
+	sx = -1 if x0 > x1 else 1
+	sy = -1 if y0 > y1 else 1
+	if dx > dy:
+		err = dx / 2.0
+		while x != x1:
+			setArray(array,newVertices,x,y,vertexValue,lineValue);
+			err -= dy
+			if err < 0:
+				y += sy
+				err += dx
+			x += sx
+	else:
+		err = dy / 2.0
+		while y != y1:
+			setArray(array,newVertices,x,y,vertexValue,lineValue);
+			err -= dx
+			if err < 0:
+				x += sx
+				err += dy
+			y += sy		
+	setArray(array,newVertices,x,y,vertexValue,lineValue);
+
+	return newVertices;	
+	
+		
 """
 	Performance Note: The c-extension version of this code runs 10x faster, even without
 	disabling bounds checking.  this version takes 1ms to plot a 200 point line, 
@@ -128,6 +255,8 @@ def piecewise_bresenham_line(array,(x0,y0),(x2,y2),minSegmentLength=0):
 		minSegmentLength is the minimum length of a segment that will be generated
 		Typically this is used to eliminate single pixels length segments
   """
+
+	
     steep = 0
     writing=0
     lines = []
@@ -135,7 +264,7 @@ def piecewise_bresenham_line(array,(x0,y0),(x2,y2),minSegmentLength=0):
     x,y = x0,y0
     segX = 0;
     segY = 0;
-    dx = abs(x2 - x)
+    dx = (int)(abs(x2 - x))
     if (x2 - x) > 0: sx = 1
     else: sx = -1
     dy = abs(y2 - y)
@@ -189,7 +318,47 @@ def piecewise_bresenham_line(array,(x0,y0),(x2,y2),minSegmentLength=0):
 	lines.append( [(segX,segY),(x2,y2)] );
     
     return lines;
-	
+
+def bline(array,x0,y0,x1,y1):
+	"""
+	void line(int x0, int y0, int x1, int y1) {
+	 
+	  int dx = abs(x1-x0), sx = x0<x1 ? 1 : -1;
+	  int dy = abs(y1-y0), sy = y0<y1 ? 1 : -1; 
+	  int err = (dx>dy ? dx : -dy)/2, e2;
+	 
+	  for(;;){
+		setPixel(x0,y0);
+		if (x0==x1 && y0==y1) break;
+		e2 = err;
+		if (e2 >-dx) { err -= dy; x0 += sx; }
+		if (e2 < dy) { err += dx; y0 += sy; }
+	  }
+	}
+	"""
+	dx = abs(x1-x0);
+	dy = abs(y1-y0);
+	e2 = 0;
+	if x0<x1: sx = 1
+	else: sx = -1;
+	if y0<y1: sy = 1;
+	else: sy = -1;
+	if dx>dy:
+		err = dx/2;
+	else:
+		err = dy/2;
+		
+	while 1:
+		array[x,y] = 1;
+		if x0==x1 and y0==y1: break;
+		e2 = err;
+		if e2 >-dx:
+			err -= dy;
+			x0 += sx;
+		if e2 < dy:
+			err += dx;
+			y0 += sy;
+
 
 def testPieceWiseBresenhamPerformance():
 	"test performance"

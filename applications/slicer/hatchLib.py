@@ -9,6 +9,7 @@ import wx
 import logging
 import time
 import traceback
+import gc
 
 import math
 from OCC  import gp
@@ -19,6 +20,8 @@ from OCC import Approx
 from OCC import GeomAbs
 from OCC import BRepExtrema
 from OCC import Geom
+from OCC import GeomAPI
+from OCC import Geom2dAPI
 from OCC import BRepBndLib 
 from OCC import Bnd;
 from OCC import BRep;
@@ -73,6 +76,34 @@ def ntuples(lst, n,wrap=True):
 		B = 1;
 	return zip(*[lst[i:]+lst[:(i-B)] for i in range(n)])
 
+	
+"""
+	A faster way to compute things, since we know we are dealing with a flat face:
+	get the curves from the face into pcurves, which are 2d curves in the parametric space on the face:
+	
+		The wire W is a set of edges Ei (i=1,2...nE). 
+		1. Explore it onto edges Ei. Use the class TopoDS_Iterator.
+		2. Check whether the edge Ei has p-curve on surface. Use the method:
+
+		Handle(Geom2d_Curve) BRep_Tool::CurveOnSurface(const TopoDS_Edge& E, 
+								   const TopoDS_Face& F,
+								  Standard_Real& First,
+								  Standard_Real& Last)
+
+	then, you have a Geom2d_Curve
+
+	make another with this:
+		Geom2d_Line (const gp_Pnt2d &P, const gp_Dir2d &V)
+			Constructs a line passing through point P and parallel to 
+		vector V (P and V are, respectively, the origin 
+		and the unit vector of the positioning axis of the line). 	
+		
+	then, compute intersections with this:
+		Geom2dAPI_InterCurveCurve (const Handle(Geom2d_Curve)&C1, const Handle(Geom2d_Curve)&C2, const Standard_Real Tol=1.0e-6)
+			Creates an object and computes the 
+		intersections between the curves C1 and C2. 	
+	
+"""
 class Hatcher:
 	"class that accepts a shape and produces a set of edges from it"
 	"usage: Hatcher(...) then hatch() then edges()"
@@ -117,9 +148,9 @@ class Hatcher:
 			
 		"""
 		log.info("Hatching...");
-		
-		hatchWires = self._makeHatchLines();
-		
+		q = time.clock();
+		hatchWires = self._makeHatchLines22();
+		print "Time to Make hatch Lines: %0.3f" % ( time.clock() - q )
 		activeBoundaries = {};
 		
 		for b in self.boundaryWires:
@@ -220,10 +251,74 @@ class Hatcher:
 
 		log.info("Finished Hatching.");
 
+	def  hatch2(self):
+		"""take the a slice and compute hatches
+			a copy to try to find a better way to perform.
+			with very small hexes, BrepExtremaDistShapeShape was very expensive.
+			it was also in 3d.
+			total time for a 4" solid with .125" hexagons was 8 seconds: too slow!
+			
+		"""
+		log.info("Hatching...");
+		q = time.clock();
+		hatchWires = self._makeHatchLines22();
+		print "Time to Make hatch Lines: %0.3f" % ( time.clock() - q )
+		activeBoundaries = {};
+		
+		#compute 2d curves on the face for the wires in the edges
+		#make a plane
+		plane = gp.gp_Pln( gp.gp_Pnt(0,0,0), gp.gp_Dir(1,0,0) );
+		gapi = GeomAPI.GeomAPI();
+		intcc = Geom2dAPI.Geom2dAPI_InterCurveCurve();
+		print "Computing 2d curves from wires..."
+		q = time.clock();
+		curves = []
+		for b in self.boundaryWires:
+			for e in Wrappers.Wire(b).edges2():
+				#get curve and project onto plane
+				(hc,p1,p2) =  btool.Curve(e);
+				#get 2d curve
+				h2d = gapi.To2d(hc,plane);
+				curves.append(h2d);
+			activeBoundaries[b] = 0;
+		print "Complete %0.3f sec, %d curves" % ( (time.clock() - q),len(curves ));
+	
+		#make a list of 2d curves that correspond to the hexagons. 
+		#this might be slow now, but we wont care, we can do this much faster later on
+		q = time.clock();
+		hatchCurves = [];
+		for w in hatchWires:
+			clist = [];
+			for e in Wrappers.Wire(w).edges2():
+				(c,p1,p2) = btool.Curve(e);				
+				clist.append ( gapi.To2d(c,plane));
+			hatchCurves.append(clist);
+		print "Completed projecting curves for hatching %0.3f sec, %d curves" % ( (time.clock() - q),len(hatchCurves ));
+
+		#for each wire, intersect with each curve. for now, just find out how long it takes
+		q = time.clock();
+		pnts = [];
+		count = 0;
+		for hc in hatchCurves: #for each wire
+			for cc in hc: #for each edge
+				for c in curves: #for each curve
+					count+=1;
+					ic = Geom2dAPI.Geom2dAPI_InterCurveCurve(c,cc);
+					if ic.NbPoints() > 0:
+						pnts.append( ic.Point(1) );
+		
+		#intersect each line with each boundary  using 2d computations.
+		print "Computed %d intersections %0.3f sec, %d points found" % ( count, (time.clock() - q ) , len(pnts ) );
+
+
+
+		log.info("Finished Hatching.");
+		
+		
 	
 	def _makeHatchLines22(self):
 		"make hatch lines using hexlib"
-		hex = hexagonlib.Hexagon(0.12,0.01);
+		hex = hexagonlib.Hexagon(0.350,0.01);
 		
 		xMin = self.bounds[0] - ( self.HATCH_PADDING);
 		yMin = self.bounds[1] - ( self.HATCH_PADDING);		 
@@ -285,7 +380,7 @@ if __name__=='__main__':
 	#w = TestDisplay.makeSquareWire(); #box around 0,0 <--> 5,5 
 	#w2=TestDisplay.makeCircleWire(); #circle centered at 2,2, radius 1
 	#h = Hatcher([w,w2],0.0,( 0,0,5.0,5.0) );
-
+	gc.disable();
 	w = makeHeartWire();
 	w2=makeCircleWire();
 	h = Hatcher([w,w2],0.0,( -6,0,10.0,10.0) );
@@ -296,6 +391,7 @@ if __name__=='__main__':
 	#runProfiled('h.hatch()',0.9);
 	t = Wrappers.Timer();
 	h.hatch();
+	#h.hatch2();
 	print "Hatching Finished",t.finishedString();
 	#display all edges in the graph
 	i=0;
@@ -315,9 +411,9 @@ if __name__=='__main__':
 	
 	print "%d edges total" % i
 
-	#for n in h.graph.allNodesRandomOrder():
-	#	p = gp.gp_Pnt(n[0],n[1],0);
-	#	TestDisplay.display.showShape(Wrappers.make_vertex(p));
+	for n in h.graph.allNodesRandomOrder():
+		p = gp.gp_Pnt(n[0],n[1],0);
+		TestDisplay.display.showShape(Wrappers.make_vertex(p));
 
 	print "Done.";
 	TestDisplay.display.run();

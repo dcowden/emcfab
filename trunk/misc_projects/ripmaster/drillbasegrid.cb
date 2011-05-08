@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CADFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="drillbasegrid" units="Inches">
+  <layers>
+    <layer name="Default" color="127,255,0">
+      <ModificationCount>0</ModificationCount>
+      <mat />
+      <objects>
+        <points id="7">
+          <ModificationCount>0</ModificationCount>
+          <mat />
+          <pts>
+            <p>10,0</p>
+            <p>11,0</p>
+            <p>12,0</p>
+            <p>0,0</p>
+            <p>1,0</p>
+            <p>2,0</p>
+            <p>3,0</p>
+            <p>4,0</p>
+            <p>5,0</p>
+            <p>6,0</p>
+            <p>7,0</p>
+            <p>8,0</p>
+            <p>9,0</p>
+            <p>13,0</p>
+            <p>14,0</p>
+            <p>15,0</p>
+            <p>16,0</p>
+            <p>17,0</p>
+          </pts>
+        </points>
+        <points id="17">
+          <ModificationCount>1</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 0 1 0 1" />
+          <pts>
+            <p>10,0</p>
+            <p>11,0</p>
+            <p>12,0</p>
+            <p>0,0</p>
+            <p>1,0</p>
+            <p>2,0</p>
+            <p>3,0</p>
+            <p>4,0</p>
+            <p>5,0</p>
+            <p>6,0</p>
+            <p>7,0</p>
+            <p>8,0</p>
+            <p>9,0</p>
+            <p>13,0</p>
+            <p>14,0</p>
+            <p>15,0</p>
+            <p>16,0</p>
+            <p>17,0</p>
+          </pts>
+        </points>
+        <points id="18">
+          <ModificationCount>1</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 0 2 0 1" />
+          <pts>
+            <p>10,0</p>
+            <p>11,0</p>
+            <p>12,0</p>
+            <p>0,0</p>
+            <p>1,0</p>
+            <p>2,0</p>
+            <p>3,0</p>
+            <p>4,0</p>
+            <p>5,0</p>
+            <p>6,0</p>
+            <p>7,0</p>
+            <p>8,0</p>
+            <p>9,0</p>
+            <p>13,0</p>
+            <p>14,0</p>
+            <p>15,0</p>
+            <p>16,0</p>
+            <p>17,0</p>
+          </pts>
+        </points>
+        <points id="19">
+          <ModificationCount>1</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 0 3 0 1" />
+          <pts>
+            <p>10,0</p>
+            <p>11,0</p>
+            <p>12,0</p>
+            <p>0,0</p>
+            <p>1,0</p>
+            <p>2,0</p>
+            <p>3,0</p>
+            <p>4,0</p>
+            <p>5,0</p>
+            <p>6,0</p>
+            <p>7,0</p>
+            <p>8,0</p>
+            <p>9,0</p>
+            <p>13,0</p>
+            <p>14,0</p>
+            <p>15,0</p>
+            <p>16,0</p>
+            <p>17,0</p>
+          </pts>
+        </points>
+        <points id="20">
+          <ModificationCount>1</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 0 4 0 1" />
+          <pts>
+            <p>10,0</p>
+            <p>11,0</p>
+            <p>12,0</p>
+            <p>0,0</p>
+            <p>1,0</p>
+            <p>2,0</p>
+            <p>3,0</p>
+            <p>4,0</p>
+            <p>5,0</p>
+            <p>6,0</p>
+            <p>7,0</p>
+            <p>8,0</p>
+            <p>9,0</p>
+            <p>13,0</p>
+            <p>14,0</p>
+            <p>15,0</p>
+            <p>16,0</p>
+            <p>17,0</p>
+          </pts>
+        </points>
+        <points id="21">
+          <ModificationCount>1</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 0 5 0 1" />
+          <pts>
+            <p>10,0</p>
+            <p>11,0</p>
+            <p>12,0</p>
+            <p>0,0</p>
+            <p>1,0</p>
+            <p>2,0</p>
+            <p>3,0</p>
+            <p>4,0</p>
+            <p>5,0</p>
+            <p>6,0</p>
+            <p>7,0</p>
+            <p>8,0</p>
+            <p>9,0</p>
+            <p>13,0</p>
+            <p>14,0</p>
+            <p>15,0</p>
+            <p>16,0</p>
+            <p>17,0</p>
+          </pts>
+        </points>
+        <points id="22">
+          <ModificationCount>1</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 0 6 0 1" />
+          <pts>
+            <p>10,0</p>
+            <p>11,0</p>
+            <p>12,0</p>
+            <p>0,0</p>
+            <p>1,0</p>
+            <p>2,0</p>
+            <p>3,0</p>
+            <p>4,0</p>
+            <p>5,0</p>
+            <p>6,0</p>
+            <p>7,0</p>
+            <p>8,0</p>
+            <p>9,0</p>
+            <p>13,0</p>
+            <p>14,0</p>
+            <p>15,0</p>
+            <p>16,0</p>
+            <p>17,0</p>
+          </pts>
+        </points>
+        <points id="23">
+          <ModificationCount>1</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 0 7 0 1" />
+          <pts>
+            <p>10,0</p>
+            <p>11,0</p>
+            <p>12,0</p>
+            <p>0,0</p>
+            <p>1,0</p>
+            <p>2,0</p>
+            <p>3,0</p>
+            <p>4,0</p>
+            <p>5,0</p>
+            <p>6,0</p>
+            <p>7,0</p>
+            <p>8,0</p>
+            <p>9,0</p>
+            <p>13,0</p>
+            <p>14,0</p>
+            <p>15,0</p>
+            <p>16,0</p>
+            <p>17,0</p>
+          </pts>
+        </points>
+        <points id="24">
+          <ModificationCount>1</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 0 8 0 1" />
+          <pts>
+            <p>10,0</p>
+            <p>11,0</p>
+            <p>12,0</p>
+            <p>0,0</p>
+            <p>1,0</p>
+            <p>2,0</p>
+            <p>3,0</p>
+            <p>4,0</p>
+            <p>5,0</p>
+            <p>6,0</p>
+            <p>7,0</p>
+            <p>8,0</p>
+            <p>9,0</p>
+            <p>13,0</p>
+            <p>14,0</p>
+            <p>15,0</p>
+            <p>16,0</p>
+            <p>17,0</p>
+          </pts>
+        </points>
+        <points id="25">
+          <ModificationCount>37</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 0 9 0 1" />
+          <pts>
+            <p>10,0</p>
+            <p>11,0</p>
+            <p>12,0</p>
+            <p>0,0</p>
+            <p>1,0</p>
+            <p>2,0</p>
+            <p>3,0</p>
+            <p>4,0</p>
+            <p>5,0</p>
+            <p>6,0</p>
+            <p>7,0</p>
+            <p>8,0</p>
+            <p>9,0</p>
+            <p>13,0</p>
+            <p>14,0</p>
+            <p>15,0</p>
+            <p>16,0</p>
+            <p>17,0</p>
+          </pts>
+        </points>
+      </objects>
+    </layer>
+  </layers>
+  <MachiningOptions>
+    <OutFile>drillbasegrid.nc</OutFile>
+  </MachiningOptions>
+  <machineops>
+    <mop xsi:type="MOPDrill">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>15</PlungeFeedrate>
+      <CutFeedrate>70</CutFeedrate>
+      <StartPoint>Default</StartPoint>
+      <Name>Holes</Name>
+      <StockSurface>0</StockSurface>
+      <ClearancePlane>0.1</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
+      <primitive>
+        <prim>7</prim>
+        <prim>17</prim>
+        <prim>18</prim>
+        <prim>19</prim>
+        <prim>20</prim>
+        <prim>21</prim>
+        <prim>22</prim>
+        <prim>23</prim>
+        <prim>24</prim>
+        <prim>25</prim>
+      </primitive>
+      <mat />
+      <TargetDepth>-0.7</TargetDepth>
+      <PeckDistance>0.05</PeckDistance>
+      <CustomScript />
+    </mop>
+  </machineops>
+  <ActiveLayer>Default</ActiveLayer>
+</CADFile>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CADFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="fixturepocket" units="Inches">
+  <layers>
+    <layer name="Default" color="127,255,0">
+      <ModificationCount>0</ModificationCount>
+      <mat />
+      <objects>
+        <pline xsi:type="PolyRectangle" id="1" Closed="true" w="8" h="1">
+          <ModificationCount>1</ModificationCount>
+          <mat />
+          <pts>
+            <p>0,0,0</p>
+            <p>8,0,0</p>
+            <p>8,1,0</p>
+            <p>0,1,0</p>
+          </pts>
+        </pline>
+      </objects>
+    </layer>
+  </layers>
+  <MachiningOptions>
+    <OutFile>fixturepocket.nc</OutFile>
+  </MachiningOptions>
+  <machineops>
+    <mop xsi:type="MOPPocket">
+      <ToolDiameter>0.25</ToolDiameter>
+      <PlungeFeedrate>20</PlungeFeedrate>
+      <CutFeedrate>120</CutFeedrate>
+      <StartPoint>Default</StartPoint>
+      <Name>Pocket1</Name>
+      <StockSurface>0</StockSurface>
+      <Stock>0.002</Stock>
+      <ClearancePlane>0.1</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
+      <primitive>
+        <prim>1</prim>
+      </primitive>
+      <mat />
+      <TargetDepth>-0.18</TargetDepth>
+      <DepthIncrement>0.1</DepthIncrement>
+      <FinalDepthIncrement>0.01</FinalDepthIncrement>
+      <CutOrdering>DepthFirst</CutOrdering>
+      <StepOver>0.4</StepOver>
+      <StepoverFeedrate>Default</StepoverFeedrate>
+      <MillingDirection>Climb</MillingDirection>
+      <LeadInMove>
+        <LeadInType>Spiral</LeadInType>
+        <SpiralAngle>10</SpiralAngle>
+        <TangentRadius>0</TangentRadius>
+      </LeadInMove>
+      <FinishStepover>0.005</FinishStepover>
+    </mop>
+  </machineops>
+  <ActiveLayer>Default</ActiveLayer>
+</CADFile>

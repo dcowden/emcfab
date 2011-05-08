@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CADFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="FlattenMill" units="Inches">
+  <layers>
+    <layer name="Default" color="127,255,0">
+      <ModificationCount>0</ModificationCount>
+      <mat />
+      <objects>
+        <pline xsi:type="PolyRectangle" id="2" Closed="true" w="17.25" h="9.5">
+          <ModificationCount>1</ModificationCount>
+          <mat />
+          <pts>
+            <p>0,0,0</p>
+            <p>17.25,0,0</p>
+            <p>17.25,9.5,0</p>
+            <p>0,9.5,0</p>
+          </pts>
+        </pline>
+        <pline xsi:type="PolyRectangle" id="3" Closed="true" p="3.6875,-1.5625,0" w="0.875" h="0.5625">
+          <ModificationCount>1</ModificationCount>
+          <mat />
+          <pts>
+            <p>3.6875,-1.5625,0</p>
+            <p>4.5625,-1.5625,0</p>
+            <p>4.5625,-1,0</p>
+            <p>3.6875,-1,0</p>
+          </pts>
+        </pline>
+      </objects>
+    </layer>
+  </layers>
+  <MachiningOptions>
+    <OutFile>FlattenMill.nc</OutFile>
+  </MachiningOptions>
+  <machineops>
+    <mop xsi:type="MOPPocket">
+      <ToolDiameter>0.25</ToolDiameter>
+      <PlungeFeedrate>40</PlungeFeedrate>
+      <CutFeedrate>90</CutFeedrate>
+      <StartPoint>Default</StartPoint>
+      <Name>Pocket1</Name>
+      <StockSurface>0</StockSurface>
+      <ClearancePlane>0.25</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
+      <primitive>
+        <prim>2</prim>
+      </primitive>
+      <mat />
+      <TargetDepth>-0.001</TargetDepth>
+      <DepthIncrement>0.05</DepthIncrement>
+      <FinalDepthIncrement>0.001</FinalDepthIncrement>
+      <StepOver>0.4</StepOver>
+      <StepoverFeedrate>Default</StepoverFeedrate>
+      <LeadInMove>
+        <LeadInType>Spiral</LeadInType>
+        <SpiralAngle>10</SpiralAngle>
+        <TangentRadius>0</TangentRadius>
+      </LeadInMove>
+    </mop>
+  </machineops>
+  <ActiveLayer>Default</ActiveLayer>
+</CADFile>

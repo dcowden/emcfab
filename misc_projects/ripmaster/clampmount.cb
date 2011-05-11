@@ -479,7 +479,7 @@
         <prim>66</prim>
       </primitive>
       <mat />
-      <TargetDepth>-0.2</TargetDepth>
+      <TargetDepth>-0.27</TargetDepth>
       <DepthIncrement>0.02</DepthIncrement>
       <FinalDepthIncrement>0.005</FinalDepthIncrement>
       <CutOrdering>DepthFirst</CutOrdering>
@@ -499,7 +499,7 @@
       <StartPoint>Default</StartPoint>
       <Name>Clamp Holes</Name>
       <StockSurface>0</StockSurface>
-      <ClearancePlane>0.25</ClearancePlane>
+      <ClearancePlane>0.1</ClearancePlane>
       <SpindleSpeed>2000</SpindleSpeed>
       <primitive>
         <prim>6</prim>
@@ -508,7 +508,7 @@
         <prim>5</prim>
       </primitive>
       <mat />
-      <TargetDepth>-0.2</TargetDepth>
+      <TargetDepth>-0.27</TargetDepth>
       <PeckDistance>0.05</PeckDistance>
       <CustomScript />
     </mop>
@@ -527,7 +527,7 @@
       </primitive>
       <mat />
       <MaxCutWidth>0</MaxCutWidth>
-      <TargetDepth>-0.2</TargetDepth>
+      <TargetDepth>-0.27</TargetDepth>
       <DepthIncrement>0.02</DepthIncrement>
       <FinalDepthIncrement>0.01</FinalDepthIncrement>
       <CutWidth>0.01</CutWidth>

@@ -467,8 +467,8 @@
   <machineops>
     <mop xsi:type="MOPPocket">
       <ToolDiameter>0.125</ToolDiameter>
-      <PlungeFeedrate>40</PlungeFeedrate>
-      <CutFeedrate>75</CutFeedrate>
+      <PlungeFeedrate>20</PlungeFeedrate>
+      <CutFeedrate>40</CutFeedrate>
       <StartPoint>Default</StartPoint>
       <Name>Slots-Rough</Name>
       <StockSurface>0</StockSurface>
@@ -480,7 +480,7 @@
       </primitive>
       <mat />
       <TargetDepth>-0.2</TargetDepth>
-      <DepthIncrement>0.05</DepthIncrement>
+      <DepthIncrement>0.02</DepthIncrement>
       <FinalDepthIncrement>0.005</FinalDepthIncrement>
       <CutOrdering>DepthFirst</CutOrdering>
       <StepOver>0.4</StepOver>
@@ -494,7 +494,7 @@
     </mop>
     <mop xsi:type="MOPDrill">
       <ToolDiameter>0.125</ToolDiameter>
-      <PlungeFeedrate>20</PlungeFeedrate>
+      <PlungeFeedrate>10</PlungeFeedrate>
       <CutFeedrate>20</CutFeedrate>
       <StartPoint>Default</StartPoint>
       <Name>Clamp Holes</Name>
@@ -514,8 +514,8 @@
     </mop>
     <mop xsi:type="MOPProfile">
       <ToolDiameter>0.125</ToolDiameter>
-      <PlungeFeedrate>40</PlungeFeedrate>
-      <CutFeedrate>75</CutFeedrate>
+      <PlungeFeedrate>20</PlungeFeedrate>
+      <CutFeedrate>45</CutFeedrate>
       <StartPoint>Default</StartPoint>
       <Name>Ends</Name>
       <StockSurface>0</StockSurface>
@@ -528,7 +528,7 @@
       <mat />
       <MaxCutWidth>0</MaxCutWidth>
       <TargetDepth>-0.2</TargetDepth>
-      <DepthIncrement>0.04</DepthIncrement>
+      <DepthIncrement>0.02</DepthIncrement>
       <FinalDepthIncrement>0.01</FinalDepthIncrement>
       <CutWidth>0.01</CutWidth>
       <StepOver>0.4</StepOver>

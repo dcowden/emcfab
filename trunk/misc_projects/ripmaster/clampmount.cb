@@ -2,444 +2,444 @@
 <CADFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="clampmount" units="Inches">
   <layers>
     <layer name="0" color="255,255,255">
-      <ModificationCount>1</ModificationCount>
+      <ModificationCount>2</ModificationCount>
       <mat />
       <objects>
         <circle id="5" c="2.8325,0.238,0" d="0.125">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
         </circle>
         <circle id="6" c="2.2075,0.772,0" d="0.125">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
         </circle>
         <line id="7">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>5.02,1.005</p>
             <p>0.02,1.005</p>
           </pts>
         </line>
         <line id="8">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>5.02,0.005</p>
             <p>5.02,1.005</p>
           </pts>
         </line>
         <line id="9">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>0.02,0.005</p>
             <p>5.02,0.005</p>
           </pts>
         </line>
         <line id="10">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>0.02,1.005</p>
             <p>0.02,0.005</p>
           </pts>
         </line>
         <circle id="15" c="2.2075,0.238,0" d="0.125">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
         </circle>
         <circle id="16" c="2.8325,0.772,0" d="0.125">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
         </circle>
         <line id="17">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>0.27,0.505</p>
             <p>0.27,0.605</p>
           </pts>
         </line>
         <line id="18">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>0.27,0.505</p>
             <p>0.17,0.505</p>
           </pts>
         </line>
         <line id="19">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>0.27,0.505</p>
             <p>0.27,0.405</p>
           </pts>
         </line>
         <line id="20">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>0.27,0.505</p>
             <p>0.37,0.505</p>
           </pts>
         </line>
         <line id="21">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.02,0.505</p>
             <p>2.02,0.605</p>
           </pts>
         </line>
         <line id="22">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.02,0.505</p>
             <p>1.92,0.505</p>
           </pts>
         </line>
         <line id="23">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.02,0.505</p>
             <p>2.02,0.405</p>
           </pts>
         </line>
         <line id="24">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.02,0.505</p>
             <p>2.12,0.505</p>
           </pts>
         </line>
         <line id="25">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.2075,0.772</p>
             <p>2.2075,0.872</p>
           </pts>
         </line>
         <line id="26">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.2075,0.772</p>
             <p>2.1075,0.772</p>
           </pts>
         </line>
         <line id="27">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.2075,0.772</p>
             <p>2.2075,0.672</p>
           </pts>
         </line>
         <line id="28">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.2075,0.772</p>
             <p>2.3075,0.772</p>
           </pts>
         </line>
         <line id="29">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.2075,0.872</p>
             <p>2.2075,0.9345</p>
           </pts>
         </line>
         <line id="30">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.1075,0.772</p>
             <p>2.045,0.772</p>
           </pts>
         </line>
         <line id="31">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.2075,0.672</p>
             <p>2.2075,0.6095</p>
           </pts>
         </line>
         <line id="32">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.3075,0.772</p>
             <p>2.37,0.772</p>
           </pts>
         </line>
         <line id="33">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.2075,0.238</p>
             <p>2.2075,0.338</p>
           </pts>
         </line>
         <line id="34">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.2075,0.238</p>
             <p>2.1075,0.238</p>
           </pts>
         </line>
         <line id="35">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.2075,0.238</p>
             <p>2.2075,0.138</p>
           </pts>
         </line>
         <line id="36">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.2075,0.238</p>
             <p>2.3075,0.238</p>
           </pts>
         </line>
         <line id="37">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.2075,0.338</p>
             <p>2.2075,0.4005</p>
           </pts>
         </line>
         <line id="38">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.1075,0.238</p>
             <p>2.045,0.238</p>
           </pts>
         </line>
         <line id="39">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.2075,0.138</p>
             <p>2.2075,0.0755</p>
           </pts>
         </line>
         <line id="40">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.3075,0.238</p>
             <p>2.37,0.238</p>
           </pts>
         </line>
         <line id="41">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.8325,0.238</p>
             <p>2.8325,0.338</p>
           </pts>
         </line>
         <line id="42">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.8325,0.238</p>
             <p>2.7325,0.238</p>
           </pts>
         </line>
         <line id="43">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.8325,0.238</p>
             <p>2.8325,0.138</p>
           </pts>
         </line>
         <line id="44">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.8325,0.238</p>
             <p>2.9325,0.238</p>
           </pts>
         </line>
         <line id="45">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.8325,0.338</p>
             <p>2.8325,0.4005</p>
           </pts>
         </line>
         <line id="46">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.7325,0.238</p>
             <p>2.67,0.238</p>
           </pts>
         </line>
         <line id="47">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.8325,0.138</p>
             <p>2.8325,0.0755</p>
           </pts>
         </line>
         <line id="48">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.9325,0.238</p>
             <p>2.995,0.238</p>
           </pts>
         </line>
         <line id="49">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.8325,0.772</p>
             <p>2.8325,0.872</p>
           </pts>
         </line>
         <line id="50">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.8325,0.772</p>
             <p>2.7325,0.772</p>
           </pts>
         </line>
         <line id="51">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.8325,0.772</p>
             <p>2.8325,0.672</p>
           </pts>
         </line>
         <line id="52">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.8325,0.772</p>
             <p>2.9325,0.772</p>
           </pts>
         </line>
         <line id="53">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.8325,0.872</p>
             <p>2.8325,0.9345</p>
           </pts>
         </line>
         <line id="54">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.7325,0.772</p>
             <p>2.67,0.772</p>
           </pts>
         </line>
         <line id="55">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.8325,0.672</p>
             <p>2.8325,0.6095</p>
           </pts>
         </line>
         <line id="56">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>2.9325,0.772</p>
             <p>2.995,0.772</p>
           </pts>
         </line>
         <line id="57">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>3.02,0.505</p>
             <p>3.02,0.605</p>
           </pts>
         </line>
         <line id="58">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>3.02,0.505</p>
             <p>2.92,0.505</p>
           </pts>
         </line>
         <line id="59">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>3.02,0.505</p>
             <p>3.02,0.405</p>
           </pts>
         </line>
         <line id="60">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>3.02,0.505</p>
             <p>3.12,0.505</p>
           </pts>
         </line>
         <line id="61">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>4.77,0.505</p>
             <p>4.77,0.605</p>
           </pts>
         </line>
         <line id="62">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>4.77,0.505</p>
             <p>4.67,0.505</p>
           </pts>
         </line>
         <line id="63">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>4.77,0.505</p>
             <p>4.77,0.405</p>
           </pts>
         </line>
         <line id="64">
-          <ModificationCount>1</ModificationCount>
-          <mat />
+          <ModificationCount>10</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p>4.77,0.505</p>
             <p>4.87,0.505</p>
           </pts>
         </line>
         <pline id="65" Closed="true">
-          <ModificationCount>4</ModificationCount>
-          <mat />
+          <ModificationCount>14</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p b="0.99999999999999989">2.02,0.407,0</p>
             <p>2.02,0.603,0</p>
@@ -448,8 +448,8 @@
           </pts>
         </pline>
         <pline id="66" Closed="true">
-          <ModificationCount>4</ModificationCount>
-          <mat />
+          <ModificationCount>14</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 -0.02 -0.005 0 1" />
           <pts>
             <p b="0.99999999999999989">4.77,0.407,0</p>
             <p>4.77,0.603,0</p>

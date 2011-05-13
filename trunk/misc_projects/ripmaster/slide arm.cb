@@ -247,42 +247,18 @@
             <p>0.27,0.427,0</p>
           </pts>
         </pline>
+        <text id="1" p1="1.0625,0.125,0" Height="0.35" Font="Neuropol" align="bottom,left">
+          <ModificationCount>52</ModificationCount>
+          <mat m="1 0 0 0 0 1 0 0 0 0 1 0 0.375 0.5625 0 1" />www.RipRunner.com</text>
       </objects>
     </layer>
   </layers>
   <MachiningOptions>
-    <OutFile>slide arm.nc</OutFile>
+    <OutFile>slidarmtext.nc</OutFile>
     <PostProcessor>EMC2-DAVE</PostProcessor>
   </MachiningOptions>
   <machineops>
-    <mop xsi:type="MOPPocket">
-      <ToolDiameter>0.125</ToolDiameter>
-      <PlungeFeedrate>40</PlungeFeedrate>
-      <CutFeedrate>75</CutFeedrate>
-      <StartPoint>Default</StartPoint>
-      <Name>Slot</Name>
-      <StockSurface>0</StockSurface>
-      <ClearancePlane>0.2</ClearancePlane>
-      <SpindleSpeed>2000</SpindleSpeed>
-      <primitive>
-        <prim>35</prim>
-      </primitive>
-      <mat />
-      <TargetDepth>-0.25</TargetDepth>
-      <DepthIncrement>0.02</DepthIncrement>
-      <FinalDepthIncrement>0.02</FinalDepthIncrement>
-      <CutOrdering>DepthFirst</CutOrdering>
-      <StepOver>0.4</StepOver>
-      <StepoverFeedrate>Default</StepoverFeedrate>
-      <LeadInMove>
-        <LeadInType>Spiral</LeadInType>
-        <SpiralAngle>10</SpiralAngle>
-        <TangentRadius>0</TangentRadius>
-      </LeadInMove>
-      <FinishStepover>0.004</FinishStepover>
-      <FinishStepoverAtTargetDepth>true</FinishStepoverAtTargetDepth>
-    </mop>
-    <mop xsi:type="MOPPocket">
+    <mop xsi:type="MOPPocket" Enabled="false">
       <ToolDiameter>0.125</ToolDiameter>
       <PlungeFeedrate>20</PlungeFeedrate>
       <CutFeedrate>40</CutFeedrate>
@@ -310,7 +286,34 @@
       <FinishStepover>0.004</FinishStepover>
       <FinishStepoverAtTargetDepth>true</FinishStepoverAtTargetDepth>
     </mop>
-    <mop xsi:type="MOPProfile">
+    <mop xsi:type="MOPPocket" Enabled="false">
+      <ToolDiameter>0.125</ToolDiameter>
+      <PlungeFeedrate>40</PlungeFeedrate>
+      <CutFeedrate>75</CutFeedrate>
+      <StartPoint>Default</StartPoint>
+      <Name>Slot</Name>
+      <StockSurface>0</StockSurface>
+      <ClearancePlane>0.2</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
+      <primitive>
+        <prim>35</prim>
+      </primitive>
+      <mat />
+      <TargetDepth>-0.25</TargetDepth>
+      <DepthIncrement>0.02</DepthIncrement>
+      <FinalDepthIncrement>0.02</FinalDepthIncrement>
+      <CutOrdering>DepthFirst</CutOrdering>
+      <StepOver>0.4</StepOver>
+      <StepoverFeedrate>Default</StepoverFeedrate>
+      <LeadInMove>
+        <LeadInType>Spiral</LeadInType>
+        <SpiralAngle>10</SpiralAngle>
+        <TangentRadius>0</TangentRadius>
+      </LeadInMove>
+      <FinishStepover>0.004</FinishStepover>
+      <FinishStepoverAtTargetDepth>true</FinishStepoverAtTargetDepth>
+    </mop>
+    <mop xsi:type="MOPProfile" Enabled="false">
       <ToolDiameter>0.125</ToolDiameter>
       <PlungeFeedrate>20</PlungeFeedrate>
       <CutFeedrate>75</CutFeedrate>
@@ -348,6 +351,22 @@
         <Tabs />
       </HoldingTabs>
       <SideProfile />
+    </mop>
+    <mop xsi:type="MOPEngrave">
+      <ToolDiameter>0</ToolDiameter>
+      <ToolProfile>BullNose</ToolProfile>
+      <PlungeFeedrate>10</PlungeFeedrate>
+      <CutFeedrate>120</CutFeedrate>
+      <StartPoint>Default</StartPoint>
+      <Name>Engrave1</Name>
+      <StockSurface>0</StockSurface>
+      <ClearancePlane>0.2</ClearancePlane>
+      <SpindleSpeed>2000</SpindleSpeed>
+      <primitive>
+        <prim>1</prim>
+      </primitive>
+      <mat />
+      <TargetDepth>0.005</TargetDepth>
     </mop>
   </machineops>
   <ActiveLayer>0</ActiveLayer>

@@ -356,7 +356,7 @@
       <ToolDiameter>0</ToolDiameter>
       <ToolProfile>BullNose</ToolProfile>
       <PlungeFeedrate>10</PlungeFeedrate>
-      <CutFeedrate>120</CutFeedrate>
+      <CutFeedrate>80</CutFeedrate>
       <StartPoint>Default</StartPoint>
       <Name>Engrave1</Name>
       <StockSurface>0</StockSurface>
@@ -366,7 +366,7 @@
         <prim>1</prim>
       </primitive>
       <mat />
-      <TargetDepth>0.005</TargetDepth>
+      <TargetDepth>-0.005</TargetDepth>
     </mop>
   </machineops>
   <ActiveLayer>0</ActiveLayer>

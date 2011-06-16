@@ -1906,7 +1906,7 @@
           <CustomMOPFooter state="Default" />
           <Name>RoughInnerPocket</Name>
           <StockSurface state="Value">0</StockSurface>
-          <RoughingClearance state="Value">0.01</RoughingClearance>
+          <RoughingClearance state="Value">0</RoughingClearance>
           <ClearancePlane state="Value">0.25</ClearancePlane>
           <SpindleDirection state="Default">CW</SpindleDirection>
           <SpindleSpeed state="Value">2000</SpindleSpeed>
@@ -1915,7 +1915,7 @@
           <primitive>
             <prim>205</prim>
           </primitive>
-          <TargetDepth state="Value">-0.36</TargetDepth>
+          <TargetDepth state="Value">-0.34</TargetDepth>
           <DepthIncrement state="Value">0.1</DepthIncrement>
           <FinalDepthIncrement state="Value">0.1</FinalDepthIncrement>
           <CutOrdering state="Default">DepthFirst</CutOrdering>
@@ -1979,7 +1979,7 @@
           <CustomMOPFooter state="Default" />
           <Name>RoughOuterProfile</Name>
           <StockSurface state="Value">0</StockSurface>
-          <RoughingClearance state="Value">0.01</RoughingClearance>
+          <RoughingClearance state="Value">0</RoughingClearance>
           <ClearancePlane state="Value">0.25</ClearancePlane>
           <SpindleDirection state="Default">CW</SpindleDirection>
           <SpindleSpeed state="Value">2000</SpindleSpeed>
@@ -1989,7 +1989,7 @@
             <prim>203</prim>
             <prim>2</prim>
           </primitive>
-          <TargetDepth state="Value">-0.36</TargetDepth>
+          <TargetDepth state="Value">-0.34</TargetDepth>
           <DepthIncrement state="Value">0.1</DepthIncrement>
           <FinalDepthIncrement state="Value">0.1</FinalDepthIncrement>
           <CutOrdering state="Default">DepthFirst</CutOrdering>
@@ -2062,7 +2062,7 @@
           <CollisionDetection state="Default">True</CollisionDetection>
           <CornerOvercut state="Default">False</CornerOvercut>
           <LeadInMove state="Value">
-            <LeadInType>Spiral</LeadInType>
+            <LeadInType>None</LeadInType>
             <SpiralAngle>10</SpiralAngle>
             <TangentRadius>0</TangentRadius>
             <LeadInFeedrate>0</LeadInFeedrate>
@@ -2118,7 +2118,7 @@
           <CollisionDetection state="Default">True</CollisionDetection>
           <CornerOvercut state="Default">False</CornerOvercut>
           <LeadInMove state="Value">
-            <LeadInType>Spiral</LeadInType>
+            <LeadInType>None</LeadInType>
             <SpiralAngle>10</SpiralAngle>
             <TangentRadius>0</TangentRadius>
             <LeadInFeedrate>0</LeadInFeedrate>

@@ -7,10 +7,15 @@
         <text id="1" p1="0.0104166666666667,0.00520833333333333,0" Height="0.5" Font="Neuropol" align="bottom,left" style="bold">
           <ModificationCount>0</ModificationCount>
           <mat m="Identity" />www.riprunner.com</text>
+        <text id="2" p1="-0.90625,-0.796875,0" Height="0.5" Font="Neuropol" align="bottom,left">
+          <ModificationCount>0</ModificationCount>
+          <mat m="Identity" />
+        </text>
       </objects>
     </layer>
   </layers>
   <MachiningOptions>
+    <OutFile>{$cbfile.name}.nc</OutFile>
     <Stock>
       <PMin>0,0</PMin>
       <PMax>0,0</PMax>

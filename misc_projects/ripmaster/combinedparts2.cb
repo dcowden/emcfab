@@ -2057,7 +2057,7 @@
           <CutWidth state="Value">0.01</CutWidth>
           <StepOver state="Value">0.4</StepOver>
           <StepoverFeedrate state="Default">PlungeFeedrate</StepoverFeedrate>
-          <InsideOutside state="Value">Inside</InsideOutside>
+          <InsideOutside state="Value">Outside</InsideOutside>
           <MillingDirection state="Value">Climb</MillingDirection>
           <CollisionDetection state="Default">True</CollisionDetection>
           <CornerOvercut state="Default">False</CornerOvercut>
@@ -2113,7 +2113,7 @@
           <CutWidth state="Value">0.01</CutWidth>
           <StepOver state="Value">0.4</StepOver>
           <StepoverFeedrate state="Default">PlungeFeedrate</StepoverFeedrate>
-          <InsideOutside state="Default">Outside</InsideOutside>
+          <InsideOutside state="Value">Inside</InsideOutside>
           <MillingDirection state="Value">Climb</MillingDirection>
           <CollisionDetection state="Default">True</CollisionDetection>
           <CornerOvercut state="Default">False</CornerOvercut>

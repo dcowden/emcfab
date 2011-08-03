@@ -1,0 +1,212 @@
+[DeskProto Project]
+Version = 5.0
+CADFile = C:\data\emcfab\cadFiles\2mm_extruder\Heater_Definition--bottomhalf.STL
+CADFileUnit = 1
+FlipNormals = 0
+SkipBackfaces = 0
+NumberOfParts = 1
+ActivePartIndex = 0
+SaveToolPaths = 0
+
+[Part0]
+Name = Part set by wizard
+Machine = EMC-- Dave's Machine
+OperationsType = 0
+ScaleX = 1.000000
+ScaleY = 1.000000
+ScaleZ = 1.000000
+MirrorX = 0
+MirrorY = 0
+MirrorZ = 0
+RotationX = 0.000000
+RotationY = 0.000000
+RotationZ = 0.000000
+InverseMilling = 0
+CentreAroundRotationAxis = 0
+SegmentMethod = 1
+SegmentMinimumX = 16.319500
+SegmentMinimumY = 2.085340
+SegmentMinimumZ = 11.488420
+SegmentMaximumX = 20.091400
+SegmentMaximumY = 71.729600
+SegmentMaximumZ = 12.707620
+SegmentMinimumAngle = 0.000000
+SegmentMaximumAngle = 360.000000
+DisplayRelativeSegmentValues = 0
+AmbientlevelMethod = 1
+AmbientlevelZ = 12.707620
+TranslationMethodX = 1
+TranslationMethodY = 1
+TranslationMethodZ = 1
+TranslationCustomX = -16.319500
+TranslationCustomY = -2.085340
+TranslationCustomZ = -12.707620
+WindowLayout = 0
+NumberOfOperations = 1
+SupportBlockType = 0
+
+[Part0 Operation0]
+Name = Operation for part set by Wizard.
+Cutter = Ball Nose 1/16 diameter
+Visible = 1
+Feedrate = 75.000000
+Spindlespeed = 6000
+ChainPart = NULL
+ChainOperation = NULL
+UseRoughingLayers = 1
+RoughingLayerMethod = 1
+RoughingLayer = 0.254000
+OperationType = 1
+ToolpathDistance = 0.028331
+ToolpathStepsize = 0.204611
+ToolpathSubSamplingFactor = 1
+SegmentMethod = 0
+SegmentMinimumX = 16.319500
+SegmentMinimumY = 2.085340
+SegmentMinimumZ = 11.488420
+SegmentMaximumX = 20.091400
+SegmentMaximumY = 71.729600
+SegmentMaximumZ = 12.707620
+SegmentMinimumAngle = 0.000000
+SegmentMaximumAngle = 360.000000
+DisplayRelativeSegmentValues = 0
+BordersizeMethod = 0
+BordersizeStartX = 0.000000
+BordersizeStartY = 0.000000
+BordersizeEndX = 0.000000
+BordersizeEndY = 0.000000
+Strategy = 1
+StrategyParallelAngle = 0.000000
+SmoothContour = 0
+CrosswiseFirstXthenY = 1
+StrategyCircularSpiral = 0
+StrategyMachineCorners = 1
+StrategyCentreMethod = 1
+StrategyCentreX = 18.205450
+StrategyCentreY = 36.907470
+WaterlineDistance = 1.000000
+FillHorizontalWaterlinePlanes = 0
+RoughingSkin = 0.127000
+RoughingVerticalPlaneCheck = 0
+Direction = 0
+PlungeRate = 100
+StartRate = 50
+SkipAmbient = 2
+SkipAmbientIgnoreEnclosed = 0
+ColletDiameter = 0
+CheckForVerticalPlanes = 0
+VerticalPlaneRatio = 20
+FreeMovementHeight = 2.540000
+AlwaysStayLow = 0
+SimulationDetailMethod = 2
+UseSimulationPrecisionAsToleranceForRemoved = 1
+UseSimulationPrecisionAsToleranceForRest = 1
+UseSimulationToleranceRemoved = 0
+SimulationToleranceRemoved = 0.028331
+UseSimulationToleranceRest = 0
+SimulationToleranceRest = 0.028331
+TiltAngle = 0.000000
+
+[Part0 View0]
+Name = 
+ShowName = 1
+ShowOrientator = 1
+ShowOriginOrientator = 1
+ShowGeometryWireframe = 0
+RemoveHiddenLines = 0
+ShowGeometryRendered = 1
+ShowDownwardFaces = 0
+ShowGeometryPoints = 0
+ShowSegment = 1
+ShowSegmentTranslucent = 0
+ShowSubsegments = 1
+ShowSubsegmentTranslucent = 0
+ShowWorkingArea = 0
+RotationX = -86.725251
+RotationY = -6.838237
+RotationZ = -5.279938
+PanningX = 348.482680
+PanningY = -730.504073
+Zooming = 1083.470594
+
+[Part0 View0 Operation0]
+ShowSubsegments = 1
+ShowSubsegmentTranslucent = 0
+
+[Part0 View1]
+Name = 
+ShowName = 1
+ShowOrientator = 1
+ShowOriginOrientator = 1
+ShowGeometryWireframe = 0
+RemoveHiddenLines = 0
+ShowGeometryRendered = 1
+ShowDownwardFaces = 0
+ShowGeometryPoints = 0
+ShowSegment = 1
+ShowSegmentTranslucent = 0
+ShowSubsegments = 1
+ShowSubsegmentTranslucent = 0
+ShowWorkingArea = 0
+RotationX = 0.000000
+RotationY = 0.000000
+RotationZ = 0.000000
+PanningX = 0.000000
+PanningY = 0.000000
+Zooming = 100.000000
+
+[Part0 View1 Operation0]
+ShowSubsegments = 1
+ShowSubsegmentTranslucent = 0
+
+[Part0 View2]
+Name = 
+ShowName = 1
+ShowOrientator = 1
+ShowOriginOrientator = 1
+ShowGeometryWireframe = 0
+RemoveHiddenLines = 0
+ShowGeometryRendered = 1
+ShowDownwardFaces = 0
+ShowGeometryPoints = 0
+ShowSegment = 1
+ShowSegmentTranslucent = 0
+ShowSubsegments = 1
+ShowSubsegmentTranslucent = 0
+ShowWorkingArea = 0
+RotationX = -90.000000
+RotationY = 0.000000
+RotationZ = 0.000000
+PanningX = 0.000000
+PanningY = 0.000000
+Zooming = 100.000000
+
+[Part0 View2 Operation0]
+ShowSubsegments = 1
+ShowSubsegmentTranslucent = 0
+
+[Part0 View3]
+Name = 
+ShowName = 1
+ShowOrientator = 1
+ShowOriginOrientator = 1
+ShowGeometryWireframe = 0
+RemoveHiddenLines = 0
+ShowGeometryRendered = 1
+ShowDownwardFaces = 0
+ShowGeometryPoints = 0
+ShowSegment = 1
+ShowSegmentTranslucent = 0
+ShowSubsegments = 1
+ShowSubsegmentTranslucent = 0
+ShowWorkingArea = 0
+RotationX = -90.000000
+RotationY = -90.000000
+RotationZ = 0.000000
+PanningX = 0.000000
+PanningY = 0.000000
+Zooming = 100.000000
+
+[Part0 View3 Operation0]
+ShowSubsegments = 1
+ShowSubsegmentTranslucent = 0

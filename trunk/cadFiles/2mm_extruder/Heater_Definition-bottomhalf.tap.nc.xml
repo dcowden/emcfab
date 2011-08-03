@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<nccode>
+	<ncblock>
+		<text col="program">O123</text>
+		<text col="comment"><![CDATA[(Test program)]]></text>
+	</ncblock>
+	<ncblock>
+		<text col="blocknum">N10</text>
+		<text>G10</text>
+		<text>L1</text>
+		<text>P1</text>
+		<text><![CDATA[ ]]></text>
+		<text col="axis">R1.500</text>
+		<text col="axis">Z15.000</text>
+	</ncblock>
+	<ncblock>
+		<text col="blocknum">N20</text>
+		<text>G10</text>
+		<text>L1</text>
+		<text>P2</text>
+		<text><![CDATA[ ]]></text>
+		<text col="axis">R3.000</text>
+		<text col="axis">Z63.500</text>
+	</ncblock>
+	<ncblock>
+		<text col="blocknum">N30</text>
+		<text>G10</text>
+		<text>L1</text>
+		<text>P3</text>
+		<text><![CDATA[ ]]></text>
+		<text col="axis">R3.000</text>
+		<text col="axis">Z63.500</text>
+	</ncblock>
+	<ncblock>
+		<text col="blocknum">N40</text>
+		<text>G10</text>
+		<text>L1</text>
+		<text>P4</text>
+		<text><![CDATA[ ]]></text>
+		<text col="axis">R1.500</text>
+		<text col="axis">Z63.500</text>
+	</ncblock>
+	<ncblock>
+		<text col="blocknum">N50</text>
+		<text>G10</text>
+		<text>L1</text>
+		<text>P5</text>
+		<text><![CDATA[ ]]></text>
+		<text col="axis">R7.990</text>
+		<text col="axis">Z63.500</text>
+	</ncblock>
+	<ncblock>
+		<text col="blocknum">N60</text>
+		<text col="misc">M02</text>
+	</ncblock>
+</nccode>

@@ -1,0 +1,2002 @@
+﻿<liml>
+  <analysis type="T30" />
+  <physics />
+  <output stress="true" gp="false" reaction="true" outfile="false" inmodel="true" elementvalues="false" />
+  <node nid="1" x="-0.914399999999999" y="0" z="0" />
+  <node nid="2" x="0.914399999999999" y="1E-16" z="0" />
+  <node nid="3" x="-0.8001" y="0" z="0" />
+  <node nid="4" x="0.8001" y="1E-16" z="0" />
+  <node nid="5" x="0.8001" y="1E-16" z="12.7" />
+  <node nid="6" x="-0.8001" y="0" z="12.7" />
+  <node nid="7" x="0.914399999999999" y="1E-16" z="12.7" />
+  <node nid="8" x="-0.914399999999999" y="0" z="12.7" />
+  <node nid="9" x="-0.792849449144809" y="-0.45554046032243" z="0" />
+  <node nid="10" x="-0.46051305557574" y="-0.789971572681128" z="0" />
+  <node nid="11" x="0.008617889383267" y="-0.914359388852423" z="0" />
+  <node nid="12" x="0.462992547843704" y="-0.788520932278398" z="0" />
+  <node nid="13" x="0.794276656802281" y="-0.453047406414593" z="0" />
+  <node nid="14" x="0.784122374423475" y="0.470403509689809" z="0" />
+  <node nid="15" x="0.422789071551883" y="0.810787741012588" z="0" />
+  <node nid="16" x="-0.0287219981010405" y="0.913948798798424" z="0" />
+  <node nid="17" x="-0.470403509689809" y="0.784122374423475" z="0" />
+  <node nid="18" x="-0.79851118867819" y="0.445541514963244" z="0" />
+  <node nid="19" x="-0.704734572749895" y="-0.378826070870291" z="0" />
+  <node nid="20" x="-0.41590585583083" y="-0.683507373102606" z="0" />
+  <node nid="21" x="-0.0326675645180061" y="-0.799432824087466" z="0" />
+  <node nid="22" x="0.356502895193754" y="-0.716286043224682" z="0" />
+  <node nid="23" x="0.671476286167171" y="-0.435062762271312" z="0" />
+  <node nid="24" x="0.699918586355196" y="0.387651883104603" z="0" />
+  <node nid="25" x="0.407284036741872" y="0.688679695805855" z="0" />
+  <node nid="26" x="0.0075406532103586" y="0.800064465245871" z="0" />
+  <node nid="27" x="-0.396416480612769" y="0.694992074701997" z="0" />
+  <node nid="28" x="-0.689955815743599" y="0.405118479363242" z="0" />
+  <node nid="29" x="0.8001" y="1E-16" z="11.9126" />
+  <node nid="30" x="0.8001" y="1E-16" z="10.8966" />
+  <node nid="31" x="0.8001" y="1E-16" z="9.8679" />
+  <node nid="32" x="0.8001" y="1E-16" z="8.8519" />
+  <node nid="33" x="0.8001" y="1E-16" z="7.8232" />
+  <node nid="34" x="0.8001" y="1E-16" z="6.8072" />
+  <node nid="35" x="0.8001" y="1E-16" z="5.7785" />
+  <node nid="36" x="0.8001" y="1E-16" z="4.7625" />
+  <node nid="37" x="0.8001" y="1E-16" z="3.7338" />
+  <node nid="38" x="0.8001" y="1E-16" z="2.7178" />
+  <node nid="39" x="0.8001" y="1E-16" z="1.6891" />
+  <node nid="40" x="0.8001" y="1E-16" z="0.6731" />
+  <node nid="41" x="-0.8001" y="0" z="11.9253" />
+  <node nid="42" x="-0.8001" y="0" z="10.8966" />
+  <node nid="43" x="-0.8001" y="0" z="9.8552" />
+  <node nid="44" x="-0.8001" y="0" z="8.8265" />
+  <node nid="45" x="-0.8001" y="0" z="7.7851" />
+  <node nid="46" x="-0.8001" y="0" z="6.7564" />
+  <node nid="47" x="-0.8001" y="0" z="5.715" />
+  <node nid="48" x="-0.8001" y="0" z="4.6736" />
+  <node nid="49" x="-0.8001" y="0" z="3.6449" />
+  <node nid="50" x="-0.8001" y="0" z="2.6035" />
+  <node nid="51" x="-0.8001" y="0" z="1.5748" />
+  <node nid="52" x="-0.8001" y="0" z="0.5334" />
+  <node nid="53" x="0.687396778877545" y="0.409445574391487" z="12.7" />
+  <node nid="54" x="0.392041920430554" y="0.697469097971461" z="12.7" />
+  <node nid="55" x="-0.0075406532103585" y="0.800064465245871" z="12.7" />
+  <node nid="56" x="-0.405118479363242" y="0.689955815743599" z="12.7" />
+  <node nid="57" x="-0.694992074701997" y="0.396416480612769" z="12.7" />
+  <node nid="58" x="0.826146651477566" y="0.391929930283977" z="12.7" />
+  <node nid="59" x="0.571721884953368" y="0.713625564470168" z="12.7" />
+  <node nid="60" x="0.182614806182374" y="0.895979459900155" z="12.7" />
+  <node nid="61" x="-0.205073183812114" y="0.891107372476045" z="12.7" />
+  <node nid="62" x="-0.564970830209801" y="0.718982142345724" z="12.7" />
+  <node nid="63" x="-0.812111968795104" y="0.420239824552288" z="12.7" />
+  <node nid="64" x="0.914399999999999" y="1E-16" z="11.9126" />
+  <node nid="65" x="0.914399999999999" y="1E-16" z="10.8966" />
+  <node nid="66" x="0.914399999999999" y="1E-16" z="9.8679" />
+  <node nid="67" x="0.914399999999999" y="1E-16" z="8.8519" />
+  <node nid="68" x="0.914399999999999" y="1E-16" z="7.8232" />
+  <node nid="69" x="0.914399999999999" y="1E-16" z="6.8072" />
+  <node nid="70" x="0.914399999999999" y="1E-16" z="5.7785" />
+  <node nid="71" x="0.914399999999999" y="1E-16" z="4.7625" />
+  <node nid="72" x="0.914399999999999" y="1E-16" z="3.7338" />
+  <node nid="73" x="0.914399999999999" y="1E-16" z="2.7178" />
+  <node nid="74" x="0.914399999999999" y="1E-16" z="1.6891" />
+  <node nid="75" x="0.914399999999999" y="1E-16" z="0.6731" />
+  <node nid="76" x="-0.914399999999999" y="0" z="11.8999" />
+  <node nid="77" x="-0.914399999999999" y="0" z="10.8839" />
+  <node nid="78" x="-0.914399999999999" y="0" z="9.8552" />
+  <node nid="79" x="-0.914399999999999" y="0" z="8.8265" />
+  <node nid="80" x="-0.914399999999999" y="0" z="7.7978" />
+  <node nid="81" x="-0.914399999999999" y="0" z="6.7691" />
+  <node nid="82" x="-0.914399999999999" y="0" z="5.7404" />
+  <node nid="83" x="-0.914399999999999" y="0" z="4.7117" />
+  <node nid="84" x="-0.914399999999999" y="0" z="3.683" />
+  <node nid="85" x="-0.914399999999999" y="0" z="2.6543" />
+  <node nid="86" x="-0.914399999999999" y="0" z="1.6256" />
+  <node nid="87" x="-0.914399999999999" y="0" z="0.5969" />
+  <node nid="88" x="-0.792849449144809" y="-0.45554046032243" z="12.7" />
+  <node nid="89" x="-0.46051305557574" y="-0.789971572681128" z="12.7" />
+  <node nid="90" x="0.008617889383267" y="-0.914359388852423" z="12.7" />
+  <node nid="91" x="0.462992547843704" y="-0.788520932278398" z="12.7" />
+  <node nid="92" x="0.794276656802281" y="-0.453047406414593" z="12.7" />
+  <node nid="93" x="-0.704734572749895" y="-0.378826070870291" z="12.7" />
+  <node nid="94" x="-0.41375650520954" y="-0.684810604763673" z="12.7" />
+  <node nid="95" x="-0.030155915154215" y="-0.799531507059735" z="12.7" />
+  <node nid="96" x="0.358751411193634" y="-0.715162523463426" z="12.7" />
+  <node nid="97" x="0.672839760296765" y="-0.432951113826713" z="12.7" />
+  <node nid="98" x="0.468277660942276" y="0.648749599046066" z="11.4498647795986" />
+  <node nid="99" x="0.36590268176381" y="0.711530208408647" z="10.5922212387204" />
+  <node nid="100" x="0.374887465053834" y="0.706837604082798" z="9.38054947369068" />
+  <node nid="101" x="0.374874208754014" y="0.706844634704864" z="8.32708750874021" />
+  <node nid="102" x="0.374858472417402" y="0.706852980227778" z="7.29398023906993" />
+  <node nid="103" x="0.374838282512661" y="0.70686368697434" z="6.26413206330438" />
+  <node nid="104" x="0.374333886190677" y="0.707130929637069" z="5.23317410615303" />
+  <node nid="105" x="0.375358344298997" y="0.70658766148661" z="4.20361237590893" />
+  <node nid="106" x="0.374603493897511" y="0.706988141597706" z="3.16496701971444" />
+  <node nid="107" x="0.372050555083972" y="0.708334945108392" z="2.13501874264342" />
+  <node nid="108" x="0.362506585804849" y="0.713266419543295" z="1.05467102771391" />
+  <node nid="109" x="0.663272201005041" y="0.447470666495502" z="0.362590609597483" />
+  <node nid="110" x="0.275203927114803" y="0.75128077873761" z="0.363410174227266" />
+  <node nid="111" x="-0.167945252430065" y="0.782275144809166" z="0.461397343526814" />
+  <node nid="112" x="-0.541152127628522" y="0.589333848309363" z="0.305794995157461" />
+  <node nid="113" x="-0.735186686795641" y="0.31569058515966" z="0.320408761033049" />
+  <node nid="114" x="-0.37756936474866" y="0.705408665103636" z="11.4463893224963" />
+  <node nid="115" x="0.569323883933317" y="0.562165745295" z="12.1571258516081" />
+  <node nid="116" x="-0.413349099706519" y="0.685056590196613" z="12.2146280545568" />
+  <node nid="117" x="0.123763195823331" y="0.790469911735795" z="12.0965461618022" />
+  <node nid="118" x="-0.574160121929588" y="0.557225416134082" z="0.952741781038798" />
+  <node nid="119" x="0.696630075518707" y="0.592312331361419" z="12.3619941754023" />
+  <node nid="120" x="0.373828901497807" y="0.834493446591968" z="12.2552796275801" />
+  <node nid="121" x="-0.0175033173250392" y="0.91423246162156" z="12.3091660480764" />
+  <node nid="122" x="-0.434115430823828" y="0.804780189070681" z="12.1800637080944" />
+  <node nid="123" x="-0.797993654400995" y="0.446467790031648" z="12.2478408760931" />
+  <node nid="124" x="0.523510327846863" y="0.74970947482186" z="10.3857514062098" />
+  <node nid="125" x="0.490567151673893" y="0.771667823417928" z="8.48319700655805" />
+  <node nid="126" x="0.488894125911997" y="0.772728861664131" z="6.44897040293248" />
+  <node nid="127" x="0.488531603140985" y="0.77295810541872" z="4.39881764974231" />
+  <node nid="128" x="0.482455282504959" y="0.776765254361354" z="2.35980884983151" />
+  <node nid="129" x="0.705091516147208" y="0.582214147764574" z="0.709465866546667" />
+  <node nid="130" x="-0.263033124107434" y="0.875751640376586" z="0.45636390745174" />
+  <node nid="131" x="-0.478426776157525" y="0.77925296268639" z="10.1051371583908" />
+  <node nid="132" x="-0.490381907659156" y="0.771785556123309" z="9.1419326170954" />
+  <node nid="133" x="-0.491151346312465" y="0.771296126669551" z="8.13837873206101" />
+  <node nid="134" x="-0.49115796166385" y="0.771291914059917" z="7.11919787595398" />
+  <node nid="135" x="-0.490869362425193" y="0.771475617911728" z="6.09468531692103" />
+  <node nid="136" x="-0.491018544437914" y="0.771380677109604" z="5.06720595017839" />
+  <node nid="137" x="-0.490953036381415" y="0.77142237202966" z="4.03712381361347" />
+  <node nid="138" x="-0.492268571277171" y="0.770583554024306" z="2.99607990083152" />
+  <node nid="139" x="-0.497799574802163" y="0.767022127012503" z="1.89008506302488" />
+  <node nid="140" x="0.872659808596944" y="0.273115760181545" z="12.2758359832371" />
+  <node nid="141" x="0.603715394991096" y="0.686771491728321" z="11.1704876002131" />
+  <node nid="142" x="0.49650073883508" y="0.767863514132699" z="9.46683087669518" />
+  <node nid="143" x="0.483353149698536" y="0.776206862039046" z="7.46985208005193" />
+  <node nid="144" x="0.482845423416342" y="0.776522798819128" z="5.4249421477203" />
+  <node nid="145" x="0.481616656482875" y="0.777285504945419" z="3.37395417872856" />
+  <node nid="146" x="0.466043203393777" y="0.786721737700482" z="1.44450946828533" />
+  <node nid="147" x="0.242161164975242" y="0.881751285895196" z="0.568349975642972" />
+  <node nid="148" x="-0.698107762956285" y="0.590569988485844" z="0.785703285544619" />
+  <node nid="149" x="-0.352749428645777" y="0.843620294083823" z="10.9319335976471" />
+  <node nid="150" x="0.053695128477089" y="0.912822103795601" z="11.6494034101363" />
+  <node nid="151" x="-0.670925604978823" y="0.621277870669638" z="11.5603389580077" />
+  <node nid="152" x="-0.146948461613572" y="0.9025151021614" z="1.11069301855018" />
+  <node nid="153" x="0.633098135295606" y="0.659783381940789" z="11.8140675263404" />
+  <node nid="154" x="0.616923958648925" y="-0.674931247791165" z="11.4196474141425" />
+  <node nid="155" x="0.510418112557123" y="-0.758683537697782" z="10.5221289784848" />
+  <node nid="156" x="0.491260440114285" y="-0.771226646310096" z="9.52227793885086" />
+  <node nid="157" x="0.490187284040316" y="-0.771909182848071" z="8.50161435115545" />
+  <node nid="158" x="0.490183432068948" y="-0.771911628960923" z="7.47720071166011" />
+  <node nid="159" x="0.490611703568579" y="-0.77163949893816" z="6.45302270878017" />
+  <node nid="160" x="0.490333852715836" y="-0.771816087472167" z="5.42943537377909" />
+  <node nid="161" x="0.490825195418942" y="-0.771503718423934" z="4.40930116290078" />
+  <node nid="162" x="0.49051763338366" y="-0.771699301113907" z="3.3985557740816" />
+  <node nid="163" x="0.485422851190679" y="-0.774914198825851" z="2.41382047897742" />
+  <node nid="164" x="0.414313960047007" y="-0.815151091829095" z="1.50836566103291" />
+  <node nid="165" x="-0.700425903882619" y="-0.587818775789116" z="11.908874972217" />
+  <node nid="166" x="-0.239366660630285" y="-0.882514000896702" z="12.1329186876809" />
+  <node nid="167" x="0.282439745057832" y="-0.869686811680886" z="12.0473197839683" />
+  <node nid="168" x="0.756508415519537" y="-0.513636425157054" z="12.200033299914" />
+  <node nid="169" x="-0.47962071836431" y="-0.778518674481031" z="10.2145640904333" />
+  <node nid="170" x="-0.489599603826869" y="-0.772282065007709" z="8.15173534999632" />
+  <node nid="171" x="-0.489146200029131" y="-0.772569320512444" z="6.09879922496352" />
+  <node nid="172" x="-0.489855529977189" y="-0.772119757389206" z="4.05508514254051" />
+  <node nid="173" x="-0.494280497452907" y="-0.769294579363267" z="2.08924155938239" />
+  <node nid="174" x="-0.713434871125297" y="-0.571959827839708" z="0.589507390139572" />
+  <node nid="175" x="0.220395074527382" y="-0.88744203817718" z="0.672781624214387" />
+  <node nid="176" x="-0.489357470315212" y="-0.772435515914885" z="9.1792287623552" />
+  <node nid="177" x="-0.337839055597071" y="-0.84970120190175" z="11.2685760939514" />
+  <node nid="178" x="-0.483731681758014" y="-0.775971017540966" z="7.12409749255666" />
+  <node nid="179" x="-0.483906281091433" y="-0.775862146982476" z="5.07375160783154" />
+  <node nid="180" x="-0.486425305329424" y="-0.774285336510498" z="3.05133221646869" />
+  <node nid="181" x="-0.425035878470496" y="-0.809612167653632" z="1.21423649929594" />
+  <node nid="182" x="-0.270006316914857" y="-0.873626893373866" z="0.459449116818577" />
+  <node nid="183" x="0.705222557820042" y="-0.582055413119538" z="0.757337615687472" />
+  <node nid="184" x="-0.496607976503932" y="-0.627328086150038" z="12.1974169268783" />
+  <node nid="185" x="0.0753421656054293" y="-0.796544768410341" z="12.0785388814552" />
+  <node nid="186" x="-0.36509649556268" y="-0.711944210544513" z="10.6056903013627" />
+  <node nid="187" x="-0.375805812017565" y="-0.706349772884382" z="9.38191573680315" />
+  <node nid="188" x="-0.375999004676564" y="-0.706246952901202" z="8.32731174999658" />
+  <node nid="189" x="-0.376020917153116" y="-0.70623528647564" z="7.29397811552428" />
+  <node nid="190" x="-0.376040491955418" y="-0.706224863913702" z="6.26391249966856" />
+  <node nid="191" x="-0.376538563651473" y="-0.705959432321211" z="5.23196146230778" />
+  <node nid="192" x="-0.375515929278712" y="-0.706503925578581" z="4.19701909490683" />
+  <node nid="193" x="-0.376461100695264" y="-0.706000743387222" z="3.13591333493942" />
+  <node nid="194" x="-0.333257006851478" y="-0.727392450733711" z="1.84457571140169" />
+  <node nid="195" x="-0.571188460299106" y="-0.560271142234844" z="1.05328945211129" />
+  <node nid="196" x="-0.625295755530673" y="-0.49916453010538" z="0.39077680220608" />
+  <node nid="197" x="-0.262509014038697" y="-0.755810179574495" z="0.46766770133909" />
+  <node nid="198" x="0.193517885074898" y="-0.776344535728911" z="0.487915676156687" />
+  <node nid="199" x="0.584854131132911" y="-0.54599052674636" z="0.4483042078108" />
+  <node nid="200" x="0.412698342673137" y="-0.685448822272565" z="11.416046325251" />
+  <node nid="201" x="0.548838826623126" y="-0.582182061206758" z="12.135766635557" />
+  <node nid="202" x="-0.440783912846734" y="-0.667734642036433" z="11.4704726763106" />
+  <node nid="203" x="0.506439411761353" y="-0.619418382206094" z="1.15316938150001" />
+  <node nid="204" x="-0.055558449454064" y="-0.798168696889486" z="1.05620991697166" />
+  <node nid="205" x="-0.484177475946564" y="0.369896649236897" z="1.15680275936885" />
+  <node nid="206" x="0.322163559367879" y="-0.665371501531517" z="10.7878508859639" />
+  <elset name="Default Group" color="10066329">
+    <elem eid="1" shape="tet4" nodes="150 117 114 98" mid="1" />
+    <elem eid="2" shape="tet4" nodes="4 75 40 13" mid="1" />
+    <elem eid="3" shape="tet4" nodes="71 104 35 144" mid="1" />
+    <elem eid="4" shape="tet4" nodes="89 184 95 166" mid="1" />
+    <elem eid="5" shape="tet4" nodes="137 106 138 145" mid="1" />
+    <elem eid="6" shape="tet4" nodes="176 157 170 188" mid="1" />
+    <elem eid="7" shape="tet4" nodes="129 15 14 109" mid="1" />
+    <elem eid="8" shape="tet4" nodes="41 6 57 123" mid="1" />
+    <elem eid="9" shape="tet4" nodes="6 8 63 123" mid="1" />
+    <elem eid="10" shape="tet4" nodes="78 44 187 176" mid="1" />
+    <elem eid="11" shape="tet4" nodes="76 42 41 202" mid="1" />
+    <elem eid="12" shape="tet4" nodes="1 113 3 18" mid="1" />
+    <elem eid="13" shape="tet4" nodes="100 125 132 142" mid="1" />
+    <elem eid="14" shape="tet4" nodes="6 41 8 123" mid="1" />
+    <elem eid="15" shape="tet4" nodes="70 34 159 69" mid="1" />
+    <elem eid="16" shape="tet4" nodes="65 154 30 155" mid="1" />
+    <elem eid="17" shape="tet4" nodes="34 103 70 35" mid="1" />
+    <elem eid="18" shape="tet4" nodes="161 179 191 192" mid="1" />
+    <elem eid="19" shape="tet4" nodes="131 100 99 43" mid="1" />
+    <elem eid="20" shape="tet4" nodes="150 153 117 98" mid="1" />
+    <elem eid="21" shape="tet4" nodes="33 102 101 143" mid="1" />
+    <elem eid="22" shape="tet4" nodes="120 54 55 117" mid="1" />
+    <elem eid="23" shape="tet4" nodes="20 196 9 10" mid="1" />
+    <elem eid="24" shape="tet4" nodes="98 99 114 149" mid="1" />
+    <elem eid="25" shape="tet4" nodes="26 15 16 110" mid="1" />
+    <elem eid="26" shape="tet4" nodes="203 183 40 74" mid="1" />
+    <elem eid="27" shape="tet4" nodes="74 183 40 75" mid="1" />
+    <elem eid="28" shape="tet4" nodes="147 16 15 110" mid="1" />
+    <elem eid="29" shape="tet4" nodes="103 144 35 104" mid="1" />
+    <elem eid="30" shape="tet4" nodes="65 30 66 155" mid="1" />
+    <elem eid="31" shape="tet4" nodes="24 4 2 109" mid="1" />
+    <elem eid="32" shape="tet4" nodes="137 105 127 136" mid="1" />
+    <elem eid="33" shape="tet4" nodes="136 135 47 104" mid="1" />
+    <elem eid="34" shape="tet4" nodes="77 149 43 131" mid="1" />
+    <elem eid="35" shape="tet4" nodes="13 183 40 199" mid="1" />
+    <elem eid="36" shape="tet4" nodes="201 29 97 168" mid="1" />
+    <elem eid="37" shape="tet4" nodes="176 44 79 78" mid="1" />
+    <elem eid="38" shape="tet4" nodes="53 115 140 29" mid="1" />
+    <elem eid="39" shape="tet4" nodes="123 41 8 76" mid="1" />
+    <elem eid="40" shape="tet4" nodes="206 186 30 155" mid="1" />
+    <elem eid="41" shape="tet4" nodes="114 42 151 149" mid="1" />
+    <elem eid="42" shape="tet4" nodes="192 172 49 193" mid="1" />
+    <elem eid="43" shape="tet4" nodes="172 49 48 192" mid="1" />
+    <elem eid="44" shape="tet4" nodes="171 190 47 82" mid="1" />
+    <elem eid="45" shape="tet4" nodes="206 177 186 155" mid="1" />
+    <elem eid="46" shape="tet4" nodes="123 151 41 76" mid="1" />
+    <elem eid="47" shape="tet4" nodes="168 167 91 201" mid="1" />
+    <elem eid="48" shape="tet4" nodes="160 171 190 191" mid="1" />
+    <elem eid="49" shape="tet4" nodes="155 169 177 186" mid="1" />
+    <elem eid="50" shape="tet4" nodes="64 7 29 168" mid="1" />
+    <elem eid="51" shape="tet4" nodes="136 48 83 137" mid="1" />
+    <elem eid="52" shape="tet4" nodes="168 7 29 5" mid="1" />
+    <elem eid="53" shape="tet4" nodes="121 60 55 120" mid="1" />
+    <elem eid="54" shape="tet4" nodes="64 153 141 98" mid="1" />
+    <elem eid="55" shape="tet4" nodes="116 151 150 114" mid="1" />
+    <elem eid="56" shape="tet4" nodes="195 87 86 51" mid="1" />
+    <elem eid="57" shape="tet4" nodes="4 40 75 109" mid="1" />
+    <elem eid="58" shape="tet4" nodes="52 196 9 19" mid="1" />
+    <elem eid="59" shape="tet4" nodes="111 152 108 147" mid="1" />
+    <elem eid="60" shape="tet4" nodes="11 21 10 182" mid="1" />
+    <elem eid="61" shape="tet4" nodes="82 190 81 171" mid="1" />
+    <elem eid="62" shape="tet4" nodes="173 193 194 50" mid="1" />
+    <elem eid="63" shape="tet4" nodes="199 183 40 203" mid="1" />
+    <elem eid="64" shape="tet4" nodes="139 108 118 152" mid="1" />
+    <elem eid="65" shape="tet4" nodes="202 185 177 200" mid="1" />
+    <elem eid="66" shape="tet4" nodes="194 204 181 195" mid="1" />
+    <elem eid="67" shape="tet4" nodes="47 171 179 191" mid="1" />
+    <elem eid="68" shape="tet4" nodes="149 42 151 77" mid="1" />
+    <elem eid="69" shape="tet4" nodes="124 66 31 142" mid="1" />
+    <elem eid="70" shape="tet4" nodes="131 149 43 99" mid="1" />
+    <elem eid="71" shape="tet4" nodes="79 80 188 170" mid="1" />
+    <elem eid="72" shape="tet4" nodes="78 187 43 169" mid="1" />
+    <elem eid="73" shape="tet4" nodes="5 53 140 29" mid="1" />
+    <elem eid="74" shape="tet4" nodes="53 5 140 58" mid="1" />
+    <elem eid="75" shape="tet4" nodes="44 80 188 79" mid="1" />
+    <elem eid="76" shape="tet4" nodes="21 197 10 182" mid="1" />
+    <elem eid="77" shape="tet4" nodes="206 30 154 155" mid="1" />
+    <elem eid="78" shape="tet4" nodes="101 125 100 32" mid="1" />
+    <elem eid="79" shape="tet4" nodes="125 68 101 143" mid="1" />
+    <elem eid="80" shape="tet4" nodes="102 33 69 143" mid="1" />
+    <elem eid="81" shape="tet4" nodes="200 185 167 201" mid="1" />
+    <elem eid="82" shape="tet4" nodes="103 47 135 104" mid="1" />
+    <elem eid="83" shape="tet4" nodes="133 79 80 44" mid="1" />
+    <elem eid="84" shape="tet4" nodes="124 30 66 65" mid="1" />
+    <elem eid="85" shape="tet4" nodes="101 125 132 100" mid="1" />
+    <elem eid="86" shape="tet4" nodes="202 177 186 200" mid="1" />
+    <elem eid="87" shape="tet4" nodes="194 204 164 181" mid="1" />
+    <elem eid="88" shape="tet4" nodes="188 157 158 33" mid="1" />
+    <elem eid="89" shape="tet4" nodes="7 5 140 29" mid="1" />
+    <elem eid="90" shape="tet4" nodes="151 149 150 114" mid="1" />
+    <elem eid="91" shape="tet4" nodes="153 115 64 140" mid="1" />
+    <elem eid="92" shape="tet4" nodes="152 139 108 146" mid="1" />
+    <elem eid="93" shape="tet4" nodes="114 41 151 42" mid="1" />
+    <elem eid="94" shape="tet4" nodes="181 86 173 194" mid="1" />
+    <elem eid="95" shape="tet4" nodes="107 139 108 51" mid="1" />
+    <elem eid="96" shape="tet4" nodes="82 47 179 83" mid="1" />
+    <elem eid="97" shape="tet4" nodes="47 179 48 191" mid="1" />
+    <elem eid="98" shape="tet4" nodes="135 134 81 46" mid="1" />
+    <elem eid="99" shape="tet4" nodes="32 67 125 142" mid="1" />
+    <elem eid="100" shape="tet4" nodes="103 102 134 46" mid="1" />
+    <elem eid="101" shape="tet4" nodes="88 41 8 93" mid="1" />
+    <elem eid="102" shape="tet4" nodes="136 48 47 83" mid="1" />
+    <elem eid="103" shape="tet4" nodes="189 81 45 46" mid="1" />
+    <elem eid="104" shape="tet4" nodes="123 62 63 57" mid="1" />
+    <elem eid="105" shape="tet4" nodes="181 173 164 194" mid="1" />
+    <elem eid="106" shape="tet4" nodes="71 160 36 161" mid="1" />
+    <elem eid="107" shape="tet4" nodes="71 36 127 72" mid="1" />
+    <elem eid="108" shape="tet4" nodes="111 147 108 110" mid="1" />
+    <elem eid="109" shape="tet4" nodes="58 119 53 59" mid="1" />
+    <elem eid="110" shape="tet4" nodes="97 168 92 91" mid="1" />
+    <elem eid="111" shape="tet4" nodes="163 73 38 162" mid="1" />
+    <elem eid="112" shape="tet4" nodes="99 149 43 42" mid="1" />
+    <elem eid="113" shape="tet4" nodes="179 171 47 82" mid="1" />
+    <elem eid="114" shape="tet4" nodes="75 40 74 129" mid="1" />
+    <elem eid="115" shape="tet4" nodes="117 114 116 150" mid="1" />
+    <elem eid="116" shape="tet4" nodes="175 203 199 198" mid="1" />
+    <elem eid="117" shape="tet4" nodes="77 76 165 202" mid="1" />
+    <elem eid="118" shape="tet4" nodes="25 109 15 110" mid="1" />
+    <elem eid="119" shape="tet4" nodes="194 173 164 163" mid="1" />
+    <elem eid="120" shape="tet4" nodes="5 7 140 58" mid="1" />
+    <elem eid="121" shape="tet4" nodes="156 155 187 169" mid="1" />
+    <elem eid="122" shape="tet4" nodes="160 190 171 159" mid="1" />
+    <elem eid="123" shape="tet4" nodes="172 179 48 83" mid="1" />
+    <elem eid="124" shape="tet4" nodes="116 121 150 122" mid="1" />
+    <elem eid="125" shape="tet4" nodes="84 49 172 180" mid="1" />
+    <elem eid="126" shape="tet4" nodes="90 185 166 95" mid="1" />
+    <elem eid="127" shape="tet4" nodes="189 188 80 170" mid="1" />
+    <elem eid="128" shape="tet4" nodes="51 139 86 50" mid="1" />
+    <elem eid="129" shape="tet4" nodes="194 203 164 204" mid="1" />
+    <elem eid="130" shape="tet4" nodes="200 201 154 29" mid="1" />
+    <elem eid="131" shape="tet4" nodes="163 38 74 39" mid="1" />
+    <elem eid="132" shape="tet4" nodes="161 36 191 160" mid="1" />
+    <elem eid="133" shape="tet4" nodes="161 37 36 72" mid="1" />
+    <elem eid="134" shape="tet4" nodes="88 41 184 165" mid="1" />
+    <elem eid="135" shape="tet4" nodes="98 115 64 153" mid="1" />
+    <elem eid="136" shape="tet4" nodes="161 191 179 160" mid="1" />
+    <elem eid="137" shape="tet4" nodes="165 41 184 202" mid="1" />
+    <elem eid="138" shape="tet4" nodes="71 161 36 72" mid="1" />
+    <elem eid="139" shape="tet4" nodes="162 180 193 163" mid="1" />
+    <elem eid="140" shape="tet4" nodes="150 121 116 117" mid="1" />
+    <elem eid="141" shape="tet4" nodes="4 2 75 13" mid="1" />
+    <elem eid="142" shape="tet4" nodes="29 201 154 168" mid="1" />
+    <elem eid="143" shape="tet4" nodes="121 56 122 116" mid="1" />
+    <elem eid="144" shape="tet4" nodes="168 201 154 167" mid="1" />
+    <elem eid="145" shape="tet4" nodes="39 38 74 107" mid="1" />
+    <elem eid="146" shape="tet4" nodes="167 201 154 200" mid="1" />
+    <elem eid="147" shape="tet4" nodes="136 105 48 137" mid="1" />
+    <elem eid="148" shape="tet4" nodes="139 107 108 146" mid="1" />
+    <elem eid="149" shape="tet4" nodes="204 198 182 197" mid="1" />
+    <elem eid="150" shape="tet4" nodes="124 100 99 131" mid="1" />
+    <elem eid="151" shape="tet4" nodes="175 12 11 198" mid="1" />
+    <elem eid="152" shape="tet4" nodes="91 97 168 201" mid="1" />
+    <elem eid="153" shape="tet4" nodes="169 155 187 186" mid="1" />
+    <elem eid="154" shape="tet4" nodes="182 198 204 175" mid="1" />
+    <elem eid="155" shape="tet4" nodes="39 40 146 74" mid="1" />
+    <elem eid="156" shape="tet4" nodes="148 86 118 139" mid="1" />
+    <elem eid="157" shape="tet4" nodes="95 184 89 94" mid="1" />
+    <elem eid="158" shape="tet4" nodes="197 182 204 195" mid="1" />
+    <elem eid="159" shape="tet4" nodes="159 190 171 178" mid="1" />
+    <elem eid="160" shape="tet4" nodes="39 40 74 203" mid="1" />
+    <elem eid="161" shape="tet4" nodes="116 123 56 122" mid="1" />
+    <elem eid="162" shape="tet4" nodes="91 96 97 201" mid="1" />
+    <elem eid="163" shape="tet4" nodes="176 187 78 169" mid="1" />
+    <elem eid="164" shape="tet4" nodes="195 182 204 181" mid="1" />
+    <elem eid="165" shape="tet4" nodes="59 119 54 120" mid="1" />
+    <elem eid="166" shape="tet4" nodes="62 56 122 61" mid="1" />
+    <elem eid="167" shape="tet4" nodes="107 39 108 146" mid="1" />
+    <elem eid="168" shape="tet4" nodes="31 100 99 124" mid="1" />
+    <elem eid="169" shape="tet4" nodes="26 16 27 111" mid="1" />
+    <elem eid="170" shape="tet4" nodes="85 50 180 173" mid="1" />
+    <elem eid="171" shape="tet4" nodes="105 36 72 127" mid="1" />
+    <elem eid="172" shape="tet4" nodes="189 170 158 188" mid="1" />
+    <elem eid="173" shape="tet4" nodes="181 182 204 175" mid="1" />
+    <elem eid="174" shape="tet4" nodes="129 15 109 110" mid="1" />
+    <elem eid="175" shape="tet4" nodes="130 112 27 111" mid="1" />
+    <elem eid="176" shape="tet4" nodes="143 68 101 33" mid="1" />
+    <elem eid="177" shape="tet4" nodes="186 155 187 31" mid="1" />
+    <elem eid="178" shape="tet4" nodes="112 130 118 111" mid="1" />
+    <elem eid="179" shape="tet4" nodes="110 147 16 111" mid="1" />
+    <elem eid="180" shape="tet4" nodes="74 38 128 107" mid="1" />
+    <elem eid="181" shape="tet4" nodes="155 30 66 31" mid="1" />
+    <elem eid="182" shape="tet4" nodes="33 158 34 69" mid="1" />
+    <elem eid="183" shape="tet4" nodes="130 152 118 111" mid="1" />
+    <elem eid="184" shape="tet4" nodes="160 35 190 159" mid="1" />
+    <elem eid="185" shape="tet4" nodes="188 157 170 158" mid="1" />
+    <elem eid="186" shape="tet4" nodes="167 177 166 185" mid="1" />
+    <elem eid="187" shape="tet4" nodes="68 158 157 33" mid="1" />
+    <elem eid="188" shape="tet4" nodes="159 178 158 189" mid="1" />
+    <elem eid="189" shape="tet4" nodes="26 110 16 111" mid="1" />
+    <elem eid="190" shape="tet4" nodes="136 47 82 83" mid="1" />
+    <elem eid="191" shape="tet4" nodes="84 49 138 137" mid="1" />
+    <elem eid="192" shape="tet4" nodes="129 147 15 110" mid="1" />
+    <elem eid="193" shape="tet4" nodes="179 191 171 160" mid="1" />
+    <elem eid="194" shape="tet4" nodes="17 27 112 28" mid="1" />
+    <elem eid="195" shape="tet4" nodes="174 9 52 196" mid="1" />
+    <elem eid="196" shape="tet4" nodes="49 50 180 85" mid="1" />
+    <elem eid="197" shape="tet4" nodes="193 50 180 49" mid="1" />
+    <elem eid="198" shape="tet4" nodes="173 50 180 193" mid="1" />
+    <elem eid="199" shape="tet4" nodes="84 83 48 137" mid="1" />
+    <elem eid="200" shape="tet4" nodes="103 135 144 104" mid="1" />
+    <elem eid="201" shape="tet4" nodes="117 55 120 121" mid="1" />
+    <elem eid="202" shape="tet4" nodes="142 131 100 124" mid="1" />
+    <elem eid="203" shape="tet4" nodes="130 16 147 111" mid="1" />
+    <elem eid="204" shape="tet4" nodes="148 139 118 152" mid="1" />
+    <elem eid="205" shape="tet4" nodes="81 80 189 45" mid="1" />
+    <elem eid="206" shape="tet4" nodes="205 108 139 51" mid="1" />
+    <elem eid="207" shape="tet4" nodes="106 137 105 145" mid="1" />
+    <elem eid="208" shape="tet4" nodes="130 16 27 17" mid="1" />
+    <elem eid="209" shape="tet4" nodes="124 141 149 99" mid="1" />
+    <elem eid="210" shape="tet4" nodes="171 190 81 178" mid="1" />
+    <elem eid="211" shape="tet4" nodes="175 164 203 204" mid="1" />
+    <elem eid="212" shape="tet4" nodes="202 165 177 166" mid="1" />
+    <elem eid="213" shape="tet4" nodes="75 129 14 109" mid="1" />
+    <elem eid="214" shape="tet4" nodes="72 161 37 162" mid="1" />
+    <elem eid="215" shape="tet4" nodes="169 77 186 43" mid="1" />
+    <elem eid="216" shape="tet4" nodes="87 86 118 148" mid="1" />
+    <elem eid="217" shape="tet4" nodes="195 196 174 52" mid="1" />
+    <elem eid="218" shape="tet4" nodes="45 80 188 44" mid="1" />
+    <elem eid="219" shape="tet4" nodes="32 125 100 142" mid="1" />
+    <elem eid="220" shape="tet4" nodes="32 157 67 156" mid="1" />
+    <elem eid="221" shape="tet4" nodes="77 165 177 202" mid="1" />
+    <elem eid="222" shape="tet4" nodes="141 65 98 30" mid="1" />
+    <elem eid="223" shape="tet4" nodes="30 65 98 29" mid="1" />
+    <elem eid="224" shape="tet4" nodes="33 68 158 69" mid="1" />
+    <elem eid="225" shape="tet4" nodes="65 29 154 64" mid="1" />
+    <elem eid="226" shape="tet4" nodes="65 29 30 154" mid="1" />
+    <elem eid="227" shape="tet4" nodes="43 132 131 100" mid="1" />
+    <elem eid="228" shape="tet4" nodes="169 156 176 187" mid="1" />
+    <elem eid="229" shape="tet4" nodes="26 25 15 110" mid="1" />
+    <elem eid="230" shape="tet4" nodes="78 132 131 43" mid="1" />
+    <elem eid="231" shape="tet4" nodes="90 167 185 96" mid="1" />
+    <elem eid="232" shape="tet4" nodes="103 126 144 135" mid="1" />
+    <elem eid="233" shape="tet4" nodes="122 56 121 61" mid="1" />
+    <elem eid="234" shape="tet4" nodes="140 115 64 29" mid="1" />
+    <elem eid="235" shape="tet4" nodes="130 27 112 17" mid="1" />
+    <elem eid="236" shape="tet4" nodes="168 29 97 5" mid="1" />
+    <elem eid="237" shape="tet4" nodes="159 34 158 69" mid="1" />
+    <elem eid="238" shape="tet4" nodes="40 183 13 75" mid="1" />
+    <elem eid="239" shape="tet4" nodes="10 174 197 196" mid="1" />
+    <elem eid="240" shape="tet4" nodes="90 185 95 96" mid="1" />
+    <elem eid="241" shape="tet4" nodes="176 79 44 188" mid="1" />
+    <elem eid="242" shape="tet4" nodes="159 190 178 189" mid="1" />
+    <elem eid="243" shape="tet4" nodes="20 9 196 19" mid="1" />
+    <elem eid="244" shape="tet4" nodes="174 9 196 10" mid="1" />
+    <elem eid="245" shape="tet4" nodes="78 132 43 44" mid="1" />
+    <elem eid="246" shape="tet4" nodes="78 79 132 44" mid="1" />
+    <elem eid="247" shape="tet4" nodes="13 199 23 12" mid="1" />
+    <elem eid="248" shape="tet4" nodes="130 118 152 148" mid="1" />
+    <elem eid="249" shape="tet4" nodes="142 131 132 100" mid="1" />
+    <elem eid="250" shape="tet4" nodes="178 80 170 189" mid="1" />
+    <elem eid="251" shape="tet4" nodes="52 3 19 1" mid="1" />
+    <elem eid="252" shape="tet4" nodes="46 82 81 135" mid="1" />
+    <elem eid="253" shape="tet4" nodes="69 33 102 34" mid="1" />
+    <elem eid="254" shape="tet4" nodes="187 44 78 43" mid="1" />
+    <elem eid="255" shape="tet4" nodes="146 74 107 39" mid="1" />
+    <elem eid="256" shape="tet4" nodes="184 41 88 93" mid="1" />
+    <elem eid="257" shape="tet4" nodes="142 31 100 32" mid="1" />
+    <elem eid="258" shape="tet4" nodes="166 89 184 165" mid="1" />
+    <elem eid="259" shape="tet4" nodes="55 60 54 120" mid="1" />
+    <elem eid="260" shape="tet4" nodes="140 53 119 115" mid="1" />
+    <elem eid="261" shape="tet4" nodes="121 150 120 117" mid="1" />
+    <elem eid="262" shape="tet4" nodes="59 54 60 120" mid="1" />
+    <elem eid="263" shape="tet4" nodes="31 30 66 124" mid="1" />
+    <elem eid="264" shape="tet4" nodes="50 194 86 51" mid="1" />
+    <elem eid="265" shape="tet4" nodes="77 42 76 202" mid="1" />
+    <elem eid="266" shape="tet4" nodes="128 145 138 106" mid="1" />
+    <elem eid="267" shape="tet4" nodes="194 164 203 39" mid="1" />
+    <elem eid="268" shape="tet4" nodes="200 30 29 154" mid="1" />
+    <elem eid="269" shape="tet4" nodes="195 86 181 194" mid="1" />
+    <elem eid="270" shape="tet4" nodes="45 81 134 46" mid="1" />
+    <elem eid="271" shape="tet4" nodes="87 118 113 148" mid="1" />
+    <elem eid="272" shape="tet4" nodes="129 75 40 109" mid="1" />
+    <elem eid="273" shape="tet4" nodes="75 14 2 109" mid="1" />
+    <elem eid="274" shape="tet4" nodes="84 49 180 85" mid="1" />
+    <elem eid="275" shape="tet4" nodes="202 184 165 166" mid="1" />
+    <elem eid="276" shape="tet4" nodes="129 40 108 109" mid="1" />
+    <elem eid="277" shape="tet4" nodes="117 153 120 115" mid="1" />
+    <elem eid="278" shape="tet4" nodes="117 55 121 116" mid="1" />
+    <elem eid="279" shape="tet4" nodes="115 119 140 153" mid="1" />
+    <elem eid="280" shape="tet4" nodes="101 132 133 44" mid="1" />
+    <elem eid="281" shape="tet4" nodes="32 31 67 142" mid="1" />
+    <elem eid="282" shape="tet4" nodes="64 65 98 141" mid="1" />
+    <elem eid="283" shape="tet4" nodes="115 54 53 119" mid="1" />
+    <elem eid="284" shape="tet4" nodes="163 38 193 162" mid="1" />
+    <elem eid="285" shape="tet4" nodes="119 53 140 58" mid="1" />
+    <elem eid="286" shape="tet4" nodes="98 115 153 117" mid="1" />
+    <elem eid="287" shape="tet4" nodes="153 150 141 98" mid="1" />
+    <elem eid="288" shape="tet4" nodes="142 31 67 66" mid="1" />
+    <elem eid="289" shape="tet4" nodes="140 7 29 64" mid="1" />
+    <elem eid="290" shape="tet4" nodes="77 131 43 78" mid="1" />
+    <elem eid="291" shape="tet4" nodes="162 37 192 161" mid="1" />
+    <elem eid="292" shape="tet4" nodes="33 158 188 189" mid="1" />
+    <elem eid="293" shape="tet4" nodes="103 126 134 102" mid="1" />
+    <elem eid="294" shape="tet4" nodes="163 74 164 39" mid="1" />
+    <elem eid="295" shape="tet4" nodes="137 138 106 49" mid="1" />
+    <elem eid="296" shape="tet4" nodes="66 31 67 156" mid="1" />
+    <elem eid="297" shape="tet4" nodes="141 99 30 98" mid="1" />
+    <elem eid="298" shape="tet4" nodes="39 194 164 163" mid="1" />
+    <elem eid="299" shape="tet4" nodes="129 109 108 110" mid="1" />
+    <elem eid="300" shape="tet4" nodes="160 190 35 191" mid="1" />
+    <elem eid="301" shape="tet4" nodes="24 2 14 109" mid="1" />
+    <elem eid="302" shape="tet4" nodes="102 34 126 69" mid="1" />
+    <elem eid="303" shape="tet4" nodes="73 38 74 163" mid="1" />
+    <elem eid="304" shape="tet4" nodes="45 81 80 134" mid="1" />
+    <elem eid="305" shape="tet4" nodes="46 47 190 82" mid="1" />
+    <elem eid="306" shape="tet4" nodes="189 80 81 178" mid="1" />
+    <elem eid="307" shape="tet4" nodes="3 113 28 18" mid="1" />
+    <elem eid="308" shape="tet4" nodes="159 34 190 189" mid="1" />
+    <elem eid="309" shape="tet4" nodes="162 180 172 193" mid="1" />
+    <elem eid="310" shape="tet4" nodes="190 81 189 46" mid="1" />
+    <elem eid="311" shape="tet4" nodes="159 158 34 189" mid="1" />
+    <elem eid="312" shape="tet4" nodes="39 38 194 163" mid="1" />
+    <elem eid="313" shape="tet4" nodes="175 204 203 198" mid="1" />
+    <elem eid="314" shape="tet4" nodes="175 164 183 203" mid="1" />
+    <elem eid="315" shape="tet4" nodes="113 118 112 148" mid="1" />
+    <elem eid="316" shape="tet4" nodes="195 86 87 174" mid="1" />
+    <elem eid="317" shape="tet4" nodes="176 170 79 188" mid="1" />
+    <elem eid="318" shape="tet4" nodes="52 9 174 87" mid="1" />
+    <elem eid="319" shape="tet4" nodes="198 11 175 182" mid="1" />
+    <elem eid="320" shape="tet4" nodes="7 92 5 168" mid="1" />
+    <elem eid="321" shape="tet4" nodes="119 54 53 59" mid="1" />
+    <elem eid="322" shape="tet4" nodes="196 174 197 195" mid="1" />
+    <elem eid="323" shape="tet4" nodes="70 34 35 159" mid="1" />
+    <elem eid="324" shape="tet4" nodes="143 134 126 102" mid="1" />
+    <elem eid="325" shape="tet4" nodes="69 34 126 70" mid="1" />
+    <elem eid="326" shape="tet4" nodes="143 101 133 102" mid="1" />
+    <elem eid="327" shape="tet4" nodes="90 167 96 91" mid="1" />
+    <elem eid="328" shape="tet4" nodes="127 145 105 137" mid="1" />
+    <elem eid="329" shape="tet4" nodes="33 68 32 157" mid="1" />
+    <elem eid="330" shape="tet4" nodes="32 68 101 125" mid="1" />
+    <elem eid="331" shape="tet4" nodes="72 36 105 37" mid="1" />
+    <elem eid="332" shape="tet4" nodes="67 68 32 125" mid="1" />
+    <elem eid="333" shape="tet4" nodes="141 30 99 124" mid="1" />
+    <elem eid="334" shape="tet4" nodes="12 22 198 199" mid="1" />
+    <elem eid="335" shape="tet4" nodes="12 11 198 22" mid="1" />
+    <elem eid="336" shape="tet4" nodes="114 151 41 116" mid="1" />
+    <elem eid="337" shape="tet4" nodes="74 203 164 39" mid="1" />
+    <elem eid="338" shape="tet4" nodes="128 107 138 139" mid="1" />
+    <elem eid="339" shape="tet4" nodes="199 22 23 12" mid="1" />
+    <elem eid="340" shape="tet4" nodes="202 185 184 166" mid="1" />
+    <elem eid="341" shape="tet4" nodes="188 187 157 32" mid="1" />
+    <elem eid="342" shape="tet4" nodes="32 187 157 156" mid="1" />
+    <elem eid="343" shape="tet4" nodes="4 40 23 13" mid="1" />
+    <elem eid="344" shape="tet4" nodes="156 187 157 176" mid="1" />
+    <elem eid="345" shape="tet4" nodes="11 198 21 182" mid="1" />
+    <elem eid="346" shape="tet4" nodes="149 99 141 98" mid="1" />
+    <elem eid="347" shape="tet4" nodes="70 160 35 71" mid="1" />
+    <elem eid="348" shape="tet4" nodes="29 65 98 64" mid="1" />
+    <elem eid="349" shape="tet4" nodes="51 87 205 52" mid="1" />
+    <elem eid="350" shape="tet4" nodes="176 187 157 188" mid="1" />
+    <elem eid="351" shape="tet4" nodes="1 87 113 18" mid="1" />
+    <elem eid="352" shape="tet4" nodes="200 177 186 206" mid="1" />
+    <elem eid="353" shape="tet4" nodes="199 203 175 183" mid="1" />
+    <elem eid="354" shape="tet4" nodes="31 155 187 156" mid="1" />
+    <elem eid="355" shape="tet4" nodes="157 68 32 67" mid="1" />
+    <elem eid="356" shape="tet4" nodes="160 36 35 71" mid="1" />
+    <elem eid="357" shape="tet4" nodes="162 172 192 193" mid="1" />
+    <elem eid="358" shape="tet4" nodes="109 14 24 25" mid="1" />
+    <elem eid="359" shape="tet4" nodes="195 174 197 182" mid="1" />
+    <elem eid="360" shape="tet4" nodes="118 130 112 148" mid="1" />
+    <elem eid="361" shape="tet4" nodes="122 151 150 116" mid="1" />
+    <elem eid="362" shape="tet4" nodes="71 144 35 70" mid="1" />
+    <elem eid="363" shape="tet4" nodes="101 132 125 133" mid="1" />
+    <elem eid="364" shape="tet4" nodes="70 103 34 126" mid="1" />
+    <elem eid="365" shape="tet4" nodes="85 173 86 50" mid="1" />
+    <elem eid="366" shape="tet4" nodes="17 130 148 112" mid="1" />
+    <elem eid="367" shape="tet4" nodes="86 194 50 173" mid="1" />
+    <elem eid="368" shape="tet4" nodes="74 40 146 129" mid="1" />
+    <elem eid="369" shape="tet4" nodes="35 104 71 36" mid="1" />
+    <elem eid="370" shape="tet4" nodes="109 15 14 25" mid="1" />
+    <elem eid="371" shape="tet4" nodes="187 169 186 43" mid="1" />
+    <elem eid="372" shape="tet4" nodes="196 197 10 20" mid="1" />
+    <elem eid="373" shape="tet4" nodes="162 73 37 72" mid="1" />
+    <elem eid="374" shape="tet4" nodes="162 192 172 161" mid="1" />
+    <elem eid="375" shape="tet4" nodes="117 120 153 150" mid="1" />
+    <elem eid="376" shape="tet4" nodes="38 73 106 37" mid="1" />
+    <elem eid="377" shape="tet4" nodes="187 44 188 176" mid="1" />
+    <elem eid="378" shape="tet4" nodes="143 125 133 101" mid="1" />
+    <elem eid="379" shape="tet4" nodes="103 134 126 135" mid="1" />
+    <elem eid="380" shape="tet4" nodes="102 101 133 45" mid="1" />
+    <elem eid="381" shape="tet4" nodes="183 13 12 199" mid="1" />
+    <elem eid="382" shape="tet4" nodes="177 77 186 169" mid="1" />
+    <elem eid="383" shape="tet4" nodes="139 107 138 50" mid="1" />
+    <elem eid="384" shape="tet4" nodes="65 30 141 124" mid="1" />
+    <elem eid="385" shape="tet4" nodes="202 177 185 166" mid="1" />
+    <elem eid="386" shape="tet4" nodes="48 179 47 83" mid="1" />
+    <elem eid="387" shape="tet4" nodes="38 73 37 162" mid="1" />
+    <elem eid="388" shape="tet4" nodes="139 146 128 107" mid="1" />
+    <elem eid="389" shape="tet4" nodes="205 118 51 139" mid="1" />
+    <elem eid="390" shape="tet4" nodes="103 34 126 102" mid="1" />
+    <elem eid="391" shape="tet4" nodes="139 118 51 86" mid="1" />
+    <elem eid="392" shape="tet4" nodes="88 89 184 94" mid="1" />
+    <elem eid="393" shape="tet4" nodes="104 144 127 136" mid="1" />
+    <elem eid="394" shape="tet4" nodes="202 77 186 177" mid="1" />
+    <elem eid="395" shape="tet4" nodes="171 47 190 191" mid="1" />
+    <elem eid="396" shape="tet4" nodes="88 41 165 76" mid="1" />
+    <elem eid="397" shape="tet4" nodes="88 8 41 76" mid="1" />
+    <elem eid="398" shape="tet4" nodes="74 183 164 203" mid="1" />
+    <elem eid="399" shape="tet4" nodes="64 29 154 168" mid="1" />
+    <elem eid="400" shape="tet4" nodes="84 48 49 137" mid="1" />
+    <elem eid="401" shape="tet4" nodes="103 134 135 46" mid="1" />
+    <elem eid="402" shape="tet4" nodes="70 159 35 160" mid="1" />
+    <elem eid="403" shape="tet4" nodes="180 49 172 193" mid="1" />
+    <elem eid="404" shape="tet4" nodes="129 40 146 108" mid="1" />
+    <elem eid="405" shape="tet4" nodes="98 141 149 150" mid="1" />
+    <elem eid="406" shape="tet4" nodes="106 145 105 37" mid="1" />
+    <elem eid="407" shape="tet4" nodes="85 138 49 50" mid="1" />
+    <elem eid="408" shape="tet4" nodes="37 73 106 145" mid="1" />
+    <elem eid="409" shape="tet4" nodes="72 73 37 145" mid="1" />
+    <elem eid="410" shape="tet4" nodes="166 90 167 185" mid="1" />
+    <elem eid="411" shape="tet4" nodes="98 149 114 150" mid="1" />
+    <elem eid="412" shape="tet4" nodes="1 3 113 52" mid="1" />
+    <elem eid="413" shape="tet4" nodes="115 120 119 153" mid="1" />
+    <elem eid="414" shape="tet4" nodes="149 99 114 42" mid="1" />
+    <elem eid="415" shape="tet4" nodes="72 145 105 127" mid="1" />
+    <elem eid="416" shape="tet4" nodes="136 82 47 135" mid="1" />
+    <elem eid="417" shape="tet4" nodes="50 138 139 85" mid="1" />
+    <elem eid="418" shape="tet4" nodes="145 73 106 128" mid="1" />
+    <elem eid="419" shape="tet4" nodes="128 74 107 146" mid="1" />
+    <elem eid="420" shape="tet4" nodes="134 133 80 45" mid="1" />
+    <elem eid="421" shape="tet4" nodes="46 47 82 135" mid="1" />
+    <elem eid="422" shape="tet4" nodes="189 81 190 178" mid="1" />
+    <elem eid="423" shape="tet4" nodes="46 190 81 82" mid="1" />
+    <elem eid="424" shape="tet4" nodes="131 124 149 99" mid="1" />
+    <elem eid="425" shape="tet4" nodes="192 191 48 179" mid="1" />
+    <elem eid="426" shape="tet4" nodes="186 77 202 42" mid="1" />
+    <elem eid="427" shape="tet4" nodes="192 179 172 161" mid="1" />
+    <elem eid="428" shape="tet4" nodes="89 88 184 165" mid="1" />
+    <elem eid="429" shape="tet4" nodes="93 88 184 94" mid="1" />
+    <elem eid="430" shape="tet4" nodes="129 108 147 110" mid="1" />
+    <elem eid="431" shape="tet4" nodes="4 75 2 109" mid="1" />
+    <elem eid="432" shape="tet4" nodes="20 197 10 21" mid="1" />
+    <elem eid="433" shape="tet4" nodes="130 27 16 111" mid="1" />
+    <elem eid="434" shape="tet4" nodes="104 127 105 136" mid="1" />
+    <elem eid="435" shape="tet4" nodes="50 107 138 106" mid="1" />
+    <elem eid="436" shape="tet4" nodes="195 51 86 194" mid="1" />
+    <elem eid="437" shape="tet4" nodes="52 19 9 1" mid="1" />
+    <elem eid="438" shape="tet4" nodes="52 9 87 1" mid="1" />
+    <elem eid="439" shape="tet4" nodes="175 183 12 199" mid="1" />
+    <elem eid="440" shape="tet4" nodes="115 54 120 117" mid="1" />
+    <elem eid="441" shape="tet4" nodes="6 63 57 123" mid="1" />
+    <elem eid="442" shape="tet4" nodes="104 36 105 127" mid="1" />
+    <elem eid="443" shape="tet4" nodes="48 179 172 192" mid="1" />
+    <elem eid="444" shape="tet4" nodes="29 115 64 98" mid="1" />
+    <elem eid="445" shape="tet4" nodes="128 106 107 38" mid="1" />
+    <elem eid="446" shape="tet4" nodes="50 139 86 85" mid="1" />
+    <elem eid="447" shape="tet4" nodes="198 175 12 199" mid="1" />
+    <elem eid="448" shape="tet4" nodes="106 107 138 128" mid="1" />
+    <elem eid="449" shape="tet4" nodes="155 177 154 206" mid="1" />
+    <elem eid="450" shape="tet4" nodes="200 177 154 167" mid="1" />
+    <elem eid="451" shape="tet4" nodes="122 123 56 62" mid="1" />
+    <elem eid="452" shape="tet4" nodes="124 31 100 142" mid="1" />
+    <elem eid="453" shape="tet4" nodes="89 166 95 90" mid="1" />
+    <elem eid="454" shape="tet4" nodes="169 77 43 78" mid="1" />
+    <elem eid="455" shape="tet4" nodes="91 167 96 201" mid="1" />
+    <elem eid="456" shape="tet4" nodes="167 177 185 200" mid="1" />
+    <elem eid="457" shape="tet4" nodes="193 37 192 162" mid="1" />
+    <elem eid="458" shape="tet4" nodes="62 123 56 57" mid="1" />
+    <elem eid="459" shape="tet4" nodes="102 69 126 143" mid="1" />
+    <elem eid="460" shape="tet4" nodes="102 133 134 45" mid="1" />
+    <elem eid="461" shape="tet4" nodes="71 127 36 104" mid="1" />
+    <elem eid="462" shape="tet4" nodes="136 144 135 104" mid="1" />
+    <elem eid="463" shape="tet4" nodes="156 66 31 155" mid="1" />
+    <elem eid="464" shape="tet4" nodes="121 55 56 116" mid="1" />
+    <elem eid="465" shape="tet4" nodes="42 41 151 76" mid="1" />
+    <elem eid="466" shape="tet4" nodes="70 126 144 103" mid="1" />
+    <elem eid="467" shape="tet4" nodes="113 112 18 148" mid="1" />
+    <elem eid="468" shape="tet4" nodes="178 170 158 189" mid="1" />
+    <elem eid="469" shape="tet4" nodes="198 197 21 182" mid="1" />
+    <elem eid="470" shape="tet4" nodes="198 21 22 11" mid="1" />
+    <elem eid="471" shape="tet4" nodes="72 105 145 37" mid="1" />
+    <elem eid="472" shape="tet4" nodes="121 55 61 56" mid="1" />
+    <elem eid="473" shape="tet4" nodes="151 123 116 122" mid="1" />
+    <elem eid="474" shape="tet4" nodes="148 112 18 17" mid="1" />
+    <elem eid="475" shape="tet4" nodes="17 112 18 28" mid="1" />
+    <elem eid="476" shape="tet4" nodes="70 144 35 103" mid="1" />
+    <elem eid="477" shape="tet4" nodes="28 112 18 113" mid="1" />
+    <elem eid="478" shape="tet4" nodes="85 49 138 84" mid="1" />
+    <elem eid="479" shape="tet4" nodes="71 144 127 104" mid="1" />
+    <elem eid="480" shape="tet4" nodes="128 38 74 73" mid="1" />
+    <elem eid="481" shape="tet4" nodes="80 188 189 45" mid="1" />
+    <elem eid="482" shape="tet4" nodes="156 31 67 32" mid="1" />
+    <elem eid="483" shape="tet4" nodes="121 60 61 55" mid="1" />
+    <elem eid="484" shape="tet4" nodes="104 105 48 136" mid="1" />
+    <elem eid="485" shape="tet4" nodes="206 177 154 200" mid="1" />
+    <elem eid="486" shape="tet4" nodes="200 30 154 206" mid="1" />
+    <elem eid="487" shape="tet4" nodes="31 99 30 124" mid="1" />
+    <elem eid="488" shape="tet4" nodes="57 123 56 116" mid="1" />
+    <elem eid="489" shape="tet4" nodes="45 133 80 44" mid="1" />
+    <elem eid="490" shape="tet4" nodes="33 68 101 32" mid="1" />
+    <elem eid="491" shape="tet4" nodes="133 132 79 44" mid="1" />
+    <elem eid="492" shape="tet4" nodes="33 68 69 143" mid="1" />
+    <elem eid="493" shape="tet4" nodes="163 193 173 180" mid="1" />
+    <elem eid="494" shape="tet4" nodes="195 181 174 182" mid="1" />
+    <elem eid="495" shape="tet4" nodes="182 174 197 10" mid="1" />
+    <elem eid="496" shape="tet4" nodes="113 118 87 52" mid="1" />
+    <elem eid="497" shape="tet4" nodes="195 174 87 52" mid="1" />
+    <elem eid="498" shape="tet4" nodes="108 40 146 39" mid="1" />
+    <elem eid="499" shape="tet4" nodes="147 129 146 108" mid="1" />
+    <elem eid="500" shape="tet4" nodes="163 38 194 193" mid="1" />
+    <elem eid="501" shape="tet4" nodes="128 73 106 38" mid="1" />
+    <elem eid="502" shape="tet4" nodes="48 49 172 84" mid="1" />
+    <elem eid="503" shape="tet4" nodes="57 123 116 41" mid="1" />
+    <elem eid="504" shape="tet4" nodes="41 123 116 151" mid="1" />
+    <elem eid="505" shape="tet4" nodes="143 133 134 102" mid="1" />
+    <elem eid="506" shape="tet4" nodes="115 54 119 120" mid="1" />
+    <elem eid="507" shape="tet4" nodes="76 41 165 202" mid="1" />
+    <elem eid="508" shape="tet4" nodes="97 5 92 168" mid="1" />
+    <elem eid="509" shape="tet4" nodes="201 185 167 96" mid="1" />
+    <elem eid="510" shape="tet4" nodes="166 185 184 95" mid="1" />
+    <elem eid="511" shape="tet4" nodes="18 87 113 148" mid="1" />
+    <elem eid="512" shape="tet4" nodes="163 193 194 173" mid="1" />
+    <elem eid="513" shape="tet4" nodes="6 8 41 93" mid="1" />
+    <elem eid="514" shape="tet4" nodes="84 172 48 83" mid="1" />
+    <elem eid="515" shape="tet4" nodes="43 77 186 42" mid="1" />
+    <elem eid="516" shape="tet4" nodes="1 113 87 52" mid="1" />
+    <elem eid="517" shape="tet4" nodes="77 42 151 76" mid="1" />
+    <elem eid="518" shape="tet4" nodes="130 147 152 111" mid="1" />
+    <elem eid="519" shape="tet4" nodes="195 87 51 52" mid="1" />
+    <elem eid="520" shape="tet4" nodes="111 152 118 108" mid="1" />
+    <elem eid="521" shape="tet4" nodes="13 40 23 199" mid="1" />
+    <elem eid="522" shape="tet4" nodes="105 137 106 49" mid="1" />
+    <elem eid="523" shape="tet4" nodes="152 147 146 108" mid="1" />
+    <elem eid="524" shape="tet4" nodes="175 204 181 164" mid="1" />
+    <elem eid="525" shape="tet4" nodes="30 31 155 186" mid="1" />
+    <elem eid="526" shape="tet4" nodes="31 156 187 32" mid="1" />
+    <elem eid="527" shape="tet4" nodes="32 157 188 33" mid="1" />
+    <elem eid="528" shape="tet4" nodes="33 189 34 158" mid="1" />
+    <elem eid="529" shape="tet4" nodes="34 190 35 159" mid="1" />
+    <elem eid="530" shape="tet4" nodes="35 191 36 160" mid="1" />
+    <elem eid="531" shape="tet4" nodes="36 37 161 192" mid="1" />
+    <elem eid="532" shape="tet4" nodes="36 191 192 161" mid="1" />
+    <elem eid="533" shape="tet4" nodes="37 162 193 38" mid="1" />
+    <elem eid="534" shape="tet4" nodes="42 149 43 77" mid="1" />
+    <elem eid="535" shape="tet4" nodes="43 132 100 44" mid="1" />
+    <elem eid="536" shape="tet4" nodes="44 101 45 133" mid="1" />
+    <elem eid="537" shape="tet4" nodes="44 100 101 132" mid="1" />
+    <elem eid="538" shape="tet4" nodes="45 46 134 102" mid="1" />
+    <elem eid="539" shape="tet4" nodes="46 47 135 103" mid="1" />
+    <elem eid="540" shape="tet4" nodes="47 136 104 48" mid="1" />
+    <elem eid="541" shape="tet4" nodes="48 137 105 49" mid="1" />
+    <elem eid="542" shape="tet4" nodes="49 138 106 50" mid="1" />
+    <elem eid="543" shape="tet4" nodes="50 51 139 107" mid="1" />
+    <elem eid="544" shape="tet4" nodes="51 52 205 108" mid="1" />
+    <elem eid="545" shape="tet4" nodes="86 181 174 195" mid="1" />
+    <elem eid="546" shape="tet4" nodes="118 108 139 205" mid="1" />
+    <elem eid="547" shape="tet4" nodes="205 87 118 52" mid="1" />
+    <elem eid="548" shape="tet4" nodes="86 118 51 87" mid="1" />
+    <elem eid="549" shape="tet4" nodes="87 118 51 205" mid="1" />
+    <elem eid="550" shape="tet4" nodes="205 52 118 108" mid="1" />
+    <elem eid="551" shape="tet4" nodes="200 186 30 206" mid="1" />
+  </elset>
+  <temperature nid="5" value="523" />
+  <temperature nid="6" value="523" />
+  <temperature nid="7" value="523" />
+  <temperature nid="8" value="523" />
+  <temperature nid="53" value="523" />
+  <temperature nid="54" value="523" />
+  <temperature nid="55" value="523" />
+  <temperature nid="56" value="523" />
+  <temperature nid="57" value="523" />
+  <temperature nid="58" value="523" />
+  <temperature nid="59" value="523" />
+  <temperature nid="60" value="523" />
+  <temperature nid="61" value="523" />
+  <temperature nid="62" value="523" />
+  <temperature nid="63" value="523" />
+  <temperature nid="88" value="523" />
+  <temperature nid="89" value="523" />
+  <temperature nid="90" value="523" />
+  <temperature nid="91" value="523" />
+  <temperature nid="92" value="523" />
+  <temperature nid="93" value="523" />
+  <temperature nid="94" value="523" />
+  <temperature nid="95" value="523" />
+  <temperature nid="96" value="523" />
+  <temperature nid="97" value="523" />
+  <convection eid="5" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="6" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="7" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="9" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="13" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="15" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="16" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="27" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="28" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="30" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="32" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="34" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="37" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="39" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="46" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="47" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="49" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="50" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="51" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="53" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="54" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="60" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="61" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="68" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="69" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="71" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="79" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="83" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="84" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="90" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="91" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="92" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="94" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="96" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="98" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="99" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="104" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="105" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="106" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="107" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="109" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="110" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="111" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="113" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="114" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="117" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="119" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="120" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="121" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="122" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="123" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="124" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="125" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="131" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="136" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="138" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="139" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="141" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="144" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="151" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="155" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="156" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="159" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="163" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="165" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="166" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="170" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="173" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="185" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="186" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="187" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="188" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="190" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="191" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="192" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="193" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="199" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="202" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="203" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="204" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="208" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="209" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="210" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="212" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="213" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="214" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="216" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="220" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="221" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="224" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="225" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="228" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="230" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="232" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="233" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="237" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="238" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="244" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="246" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="248" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="249" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="250" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="252" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="258" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="261" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="262" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="266" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="273" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="274" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="279" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="282" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="285" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="287" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="288" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="289" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="290" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="294" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="294" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="294" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="296" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="303" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="304" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="306" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="309" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="314" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="316" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="317" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="318" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="319" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="320" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="324" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="325" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="327" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="328" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="332" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="338" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="344" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="347" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="351" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="355" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="361" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="362" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="363" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="365" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="366" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="368" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="373" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="374" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="375" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="378" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="379" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="381" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="382" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="384" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="388" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="393" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="396" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="397" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="398" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="399" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="402" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="405" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="409" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="410" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="413" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="415" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="416" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="417" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="418" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="419" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="420" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="424" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="427" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="428" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="438" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="439" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="446" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="449" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="450" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="451" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="453" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="454" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="459" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="462" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="463" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="466" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="468" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="473" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="474" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="478" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="479" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="480" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="483" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="491" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="492" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="493" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="494" faceid="3" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="495" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="499" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="505" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="511" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="514" faceid="2" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="517" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="518" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="523" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="524" faceid="4" ambienttemp="293" coefficient="5E-05" />
+  <convection eid="545" faceid="1" ambienttemp="293" coefficient="5E-05" />
+  <mat mid="1" name="sst">
+    <thermal type="Isotropic" thermalconductivity="0.018" />
+  </mat>
+  <mat mid="2" name="Unnamed" />
+  <solution>
+    <analysis type="T30" />
+    <physics />
+    <output stress="true" gp="false" reaction="true" outfile="false" inmodel="true" elementvalues="false" />
+    <node nid="1" x="-0.914399999999999" y="0" z="0" />
+    <node nid="2" x="0.914399999999999" y="1E-16" z="0" />
+    <node nid="3" x="-0.8001" y="0" z="0" />
+    <node nid="4" x="0.8001" y="1E-16" z="0" />
+    <node nid="5" x="0.8001" y="1E-16" z="12.7" />
+    <node nid="6" x="-0.8001" y="0" z="12.7" />
+    <node nid="7" x="0.914399999999999" y="1E-16" z="12.7" />
+    <node nid="8" x="-0.914399999999999" y="0" z="12.7" />
+    <node nid="9" x="-0.792849449144809" y="-0.45554046032243" z="0" />
+    <node nid="10" x="-0.46051305557574" y="-0.789971572681128" z="0" />
+    <node nid="11" x="0.008617889383267" y="-0.914359388852423" z="0" />
+    <node nid="12" x="0.462992547843704" y="-0.788520932278398" z="0" />
+    <node nid="13" x="0.794276656802281" y="-0.453047406414593" z="0" />
+    <node nid="14" x="0.784122374423475" y="0.470403509689809" z="0" />
+    <node nid="15" x="0.422789071551883" y="0.810787741012588" z="0" />
+    <node nid="16" x="-0.0287219981010405" y="0.913948798798424" z="0" />
+    <node nid="17" x="-0.470403509689809" y="0.784122374423475" z="0" />
+    <node nid="18" x="-0.79851118867819" y="0.445541514963244" z="0" />
+    <node nid="19" x="-0.704734572749895" y="-0.378826070870291" z="0" />
+    <node nid="20" x="-0.41590585583083" y="-0.683507373102606" z="0" />
+    <node nid="21" x="-0.0326675645180061" y="-0.799432824087466" z="0" />
+    <node nid="22" x="0.356502895193754" y="-0.716286043224682" z="0" />
+    <node nid="23" x="0.671476286167171" y="-0.435062762271312" z="0" />
+    <node nid="24" x="0.699918586355196" y="0.387651883104603" z="0" />
+    <node nid="25" x="0.407284036741872" y="0.688679695805855" z="0" />
+    <node nid="26" x="0.0075406532103586" y="0.800064465245871" z="0" />
+    <node nid="27" x="-0.396416480612769" y="0.694992074701997" z="0" />
+    <node nid="28" x="-0.689955815743599" y="0.405118479363242" z="0" />
+    <node nid="29" x="0.8001" y="1E-16" z="11.9126" />
+    <node nid="30" x="0.8001" y="1E-16" z="10.8966" />
+    <node nid="31" x="0.8001" y="1E-16" z="9.8679" />
+    <node nid="32" x="0.8001" y="1E-16" z="8.8519" />
+    <node nid="33" x="0.8001" y="1E-16" z="7.8232" />
+    <node nid="34" x="0.8001" y="1E-16" z="6.8072" />
+    <node nid="35" x="0.8001" y="1E-16" z="5.7785" />
+    <node nid="36" x="0.8001" y="1E-16" z="4.7625" />
+    <node nid="37" x="0.8001" y="1E-16" z="3.7338" />
+    <node nid="38" x="0.8001" y="1E-16" z="2.7178" />
+    <node nid="39" x="0.8001" y="1E-16" z="1.6891" />
+    <node nid="40" x="0.8001" y="1E-16" z="0.6731" />
+    <node nid="41" x="-0.8001" y="0" z="11.9253" />
+    <node nid="42" x="-0.8001" y="0" z="10.8966" />
+    <node nid="43" x="-0.8001" y="0" z="9.8552" />
+    <node nid="44" x="-0.8001" y="0" z="8.8265" />
+    <node nid="45" x="-0.8001" y="0" z="7.7851" />
+    <node nid="46" x="-0.8001" y="0" z="6.7564" />
+    <node nid="47" x="-0.8001" y="0" z="5.715" />
+    <node nid="48" x="-0.8001" y="0" z="4.6736" />
+    <node nid="49" x="-0.8001" y="0" z="3.6449" />
+    <node nid="50" x="-0.8001" y="0" z="2.6035" />
+    <node nid="51" x="-0.8001" y="0" z="1.5748" />
+    <node nid="52" x="-0.8001" y="0" z="0.5334" />
+    <node nid="53" x="0.687396778877545" y="0.409445574391487" z="12.7" />
+    <node nid="54" x="0.392041920430554" y="0.697469097971461" z="12.7" />
+    <node nid="55" x="-0.0075406532103585" y="0.800064465245871" z="12.7" />
+    <node nid="56" x="-0.405118479363242" y="0.689955815743599" z="12.7" />
+    <node nid="57" x="-0.694992074701997" y="0.396416480612769" z="12.7" />
+    <node nid="58" x="0.826146651477566" y="0.391929930283977" z="12.7" />
+    <node nid="59" x="0.571721884953368" y="0.713625564470168" z="12.7" />
+    <node nid="60" x="0.182614806182374" y="0.895979459900155" z="12.7" />
+    <node nid="61" x="-0.205073183812114" y="0.891107372476045" z="12.7" />
+    <node nid="62" x="-0.564970830209801" y="0.718982142345724" z="12.7" />
+    <node nid="63" x="-0.812111968795104" y="0.420239824552288" z="12.7" />
+    <node nid="64" x="0.914399999999999" y="1E-16" z="11.9126" />
+    <node nid="65" x="0.914399999999999" y="1E-16" z="10.8966" />
+    <node nid="66" x="0.914399999999999" y="1E-16" z="9.8679" />
+    <node nid="67" x="0.914399999999999" y="1E-16" z="8.8519" />
+    <node nid="68" x="0.914399999999999" y="1E-16" z="7.8232" />
+    <node nid="69" x="0.914399999999999" y="1E-16" z="6.8072" />
+    <node nid="70" x="0.914399999999999" y="1E-16" z="5.7785" />
+    <node nid="71" x="0.914399999999999" y="1E-16" z="4.7625" />
+    <node nid="72" x="0.914399999999999" y="1E-16" z="3.7338" />
+    <node nid="73" x="0.914399999999999" y="1E-16" z="2.7178" />
+    <node nid="74" x="0.914399999999999" y="1E-16" z="1.6891" />
+    <node nid="75" x="0.914399999999999" y="1E-16" z="0.6731" />
+    <node nid="76" x="-0.914399999999999" y="0" z="11.8999" />
+    <node nid="77" x="-0.914399999999999" y="0" z="10.8839" />
+    <node nid="78" x="-0.914399999999999" y="0" z="9.8552" />
+    <node nid="79" x="-0.914399999999999" y="0" z="8.8265" />
+    <node nid="80" x="-0.914399999999999" y="0" z="7.7978" />
+    <node nid="81" x="-0.914399999999999" y="0" z="6.7691" />
+    <node nid="82" x="-0.914399999999999" y="0" z="5.7404" />
+    <node nid="83" x="-0.914399999999999" y="0" z="4.7117" />
+    <node nid="84" x="-0.914399999999999" y="0" z="3.683" />
+    <node nid="85" x="-0.914399999999999" y="0" z="2.6543" />
+    <node nid="86" x="-0.914399999999999" y="0" z="1.6256" />
+    <node nid="87" x="-0.914399999999999" y="0" z="0.5969" />
+    <node nid="88" x="-0.792849449144809" y="-0.45554046032243" z="12.7" />
+    <node nid="89" x="-0.46051305557574" y="-0.789971572681128" z="12.7" />
+    <node nid="90" x="0.008617889383267" y="-0.914359388852423" z="12.7" />
+    <node nid="91" x="0.462992547843704" y="-0.788520932278398" z="12.7" />
+    <node nid="92" x="0.794276656802281" y="-0.453047406414593" z="12.7" />
+    <node nid="93" x="-0.704734572749895" y="-0.378826070870291" z="12.7" />
+    <node nid="94" x="-0.41375650520954" y="-0.684810604763673" z="12.7" />
+    <node nid="95" x="-0.030155915154215" y="-0.799531507059735" z="12.7" />
+    <node nid="96" x="0.358751411193634" y="-0.715162523463426" z="12.7" />
+    <node nid="97" x="0.672839760296765" y="-0.432951113826713" z="12.7" />
+    <node nid="98" x="0.468277660942276" y="0.648749599046066" z="11.4498647795986" />
+    <node nid="99" x="0.36590268176381" y="0.711530208408647" z="10.5922212387204" />
+    <node nid="100" x="0.374887465053834" y="0.706837604082798" z="9.38054947369068" />
+    <node nid="101" x="0.374874208754014" y="0.706844634704864" z="8.32708750874021" />
+    <node nid="102" x="0.374858472417402" y="0.706852980227778" z="7.29398023906993" />
+    <node nid="103" x="0.374838282512661" y="0.70686368697434" z="6.26413206330438" />
+    <node nid="104" x="0.374333886190677" y="0.707130929637069" z="5.23317410615303" />
+    <node nid="105" x="0.375358344298997" y="0.70658766148661" z="4.20361237590893" />
+    <node nid="106" x="0.374603493897511" y="0.706988141597706" z="3.16496701971444" />
+    <node nid="107" x="0.372050555083972" y="0.708334945108392" z="2.13501874264342" />
+    <node nid="108" x="0.362506585804849" y="0.713266419543295" z="1.05467102771391" />
+    <node nid="109" x="0.663272201005041" y="0.447470666495502" z="0.362590609597483" />
+    <node nid="110" x="0.275203927114803" y="0.75128077873761" z="0.363410174227266" />
+    <node nid="111" x="-0.167945252430065" y="0.782275144809166" z="0.461397343526814" />
+    <node nid="112" x="-0.541152127628522" y="0.589333848309363" z="0.305794995157461" />
+    <node nid="113" x="-0.735186686795641" y="0.31569058515966" z="0.320408761033049" />
+    <node nid="114" x="-0.37756936474866" y="0.705408665103636" z="11.4463893224963" />
+    <node nid="115" x="0.569323883933317" y="0.562165745295" z="12.1571258516081" />
+    <node nid="116" x="-0.413349099706519" y="0.685056590196613" z="12.2146280545568" />
+    <node nid="117" x="0.123763195823331" y="0.790469911735795" z="12.0965461618022" />
+    <node nid="118" x="-0.574160121929588" y="0.557225416134082" z="0.952741781038798" />
+    <node nid="119" x="0.696630075518707" y="0.592312331361419" z="12.3619941754023" />
+    <node nid="120" x="0.373828901497807" y="0.834493446591968" z="12.2552796275801" />
+    <node nid="121" x="-0.0175033173250392" y="0.91423246162156" z="12.3091660480764" />
+    <node nid="122" x="-0.434115430823828" y="0.804780189070681" z="12.1800637080944" />
+    <node nid="123" x="-0.797993654400995" y="0.446467790031648" z="12.2478408760931" />
+    <node nid="124" x="0.523510327846863" y="0.74970947482186" z="10.3857514062098" />
+    <node nid="125" x="0.490567151673893" y="0.771667823417928" z="8.48319700655805" />
+    <node nid="126" x="0.488894125911997" y="0.772728861664131" z="6.44897040293248" />
+    <node nid="127" x="0.488531603140985" y="0.77295810541872" z="4.39881764974231" />
+    <node nid="128" x="0.482455282504959" y="0.776765254361354" z="2.35980884983151" />
+    <node nid="129" x="0.705091516147208" y="0.582214147764574" z="0.709465866546667" />
+    <node nid="130" x="-0.263033124107434" y="0.875751640376586" z="0.45636390745174" />
+    <node nid="131" x="-0.478426776157525" y="0.77925296268639" z="10.1051371583908" />
+    <node nid="132" x="-0.490381907659156" y="0.771785556123309" z="9.1419326170954" />
+    <node nid="133" x="-0.491151346312465" y="0.771296126669551" z="8.13837873206101" />
+    <node nid="134" x="-0.49115796166385" y="0.771291914059917" z="7.11919787595398" />
+    <node nid="135" x="-0.490869362425193" y="0.771475617911728" z="6.09468531692103" />
+    <node nid="136" x="-0.491018544437914" y="0.771380677109604" z="5.06720595017839" />
+    <node nid="137" x="-0.490953036381415" y="0.77142237202966" z="4.03712381361347" />
+    <node nid="138" x="-0.492268571277171" y="0.770583554024306" z="2.99607990083152" />
+    <node nid="139" x="-0.497799574802163" y="0.767022127012503" z="1.89008506302488" />
+    <node nid="140" x="0.872659808596944" y="0.273115760181545" z="12.2758359832371" />
+    <node nid="141" x="0.603715394991096" y="0.686771491728321" z="11.1704876002131" />
+    <node nid="142" x="0.49650073883508" y="0.767863514132699" z="9.46683087669518" />
+    <node nid="143" x="0.483353149698536" y="0.776206862039046" z="7.46985208005193" />
+    <node nid="144" x="0.482845423416342" y="0.776522798819128" z="5.4249421477203" />
+    <node nid="145" x="0.481616656482875" y="0.777285504945419" z="3.37395417872856" />
+    <node nid="146" x="0.466043203393777" y="0.786721737700482" z="1.44450946828533" />
+    <node nid="147" x="0.242161164975242" y="0.881751285895196" z="0.568349975642972" />
+    <node nid="148" x="-0.698107762956285" y="0.590569988485844" z="0.785703285544619" />
+    <node nid="149" x="-0.352749428645777" y="0.843620294083823" z="10.9319335976471" />
+    <node nid="150" x="0.053695128477089" y="0.912822103795601" z="11.6494034101363" />
+    <node nid="151" x="-0.670925604978823" y="0.621277870669638" z="11.5603389580077" />
+    <node nid="152" x="-0.146948461613572" y="0.9025151021614" z="1.11069301855018" />
+    <node nid="153" x="0.633098135295606" y="0.659783381940789" z="11.8140675263404" />
+    <node nid="154" x="0.616923958648925" y="-0.674931247791165" z="11.4196474141425" />
+    <node nid="155" x="0.510418112557123" y="-0.758683537697782" z="10.5221289784848" />
+    <node nid="156" x="0.491260440114285" y="-0.771226646310096" z="9.52227793885086" />
+    <node nid="157" x="0.490187284040316" y="-0.771909182848071" z="8.50161435115545" />
+    <node nid="158" x="0.490183432068948" y="-0.771911628960923" z="7.47720071166011" />
+    <node nid="159" x="0.490611703568579" y="-0.77163949893816" z="6.45302270878017" />
+    <node nid="160" x="0.490333852715836" y="-0.771816087472167" z="5.42943537377909" />
+    <node nid="161" x="0.490825195418942" y="-0.771503718423934" z="4.40930116290078" />
+    <node nid="162" x="0.49051763338366" y="-0.771699301113907" z="3.3985557740816" />
+    <node nid="163" x="0.485422851190679" y="-0.774914198825851" z="2.41382047897742" />
+    <node nid="164" x="0.414313960047007" y="-0.815151091829095" z="1.50836566103291" />
+    <node nid="165" x="-0.700425903882619" y="-0.587818775789116" z="11.908874972217" />
+    <node nid="166" x="-0.239366660630285" y="-0.882514000896702" z="12.1329186876809" />
+    <node nid="167" x="0.282439745057832" y="-0.869686811680886" z="12.0473197839683" />
+    <node nid="168" x="0.756508415519537" y="-0.513636425157054" z="12.200033299914" />
+    <node nid="169" x="-0.47962071836431" y="-0.778518674481031" z="10.2145640904333" />
+    <node nid="170" x="-0.489599603826869" y="-0.772282065007709" z="8.15173534999632" />
+    <node nid="171" x="-0.489146200029131" y="-0.772569320512444" z="6.09879922496352" />
+    <node nid="172" x="-0.489855529977189" y="-0.772119757389206" z="4.05508514254051" />
+    <node nid="173" x="-0.494280497452907" y="-0.769294579363267" z="2.08924155938239" />
+    <node nid="174" x="-0.713434871125297" y="-0.571959827839708" z="0.589507390139572" />
+    <node nid="175" x="0.220395074527382" y="-0.88744203817718" z="0.672781624214387" />
+    <node nid="176" x="-0.489357470315212" y="-0.772435515914885" z="9.1792287623552" />
+    <node nid="177" x="-0.337839055597071" y="-0.84970120190175" z="11.2685760939514" />
+    <node nid="178" x="-0.483731681758014" y="-0.775971017540966" z="7.12409749255666" />
+    <node nid="179" x="-0.483906281091433" y="-0.775862146982476" z="5.07375160783154" />
+    <node nid="180" x="-0.486425305329424" y="-0.774285336510498" z="3.05133221646869" />
+    <node nid="181" x="-0.425035878470496" y="-0.809612167653632" z="1.21423649929594" />
+    <node nid="182" x="-0.270006316914857" y="-0.873626893373866" z="0.459449116818577" />
+    <node nid="183" x="0.705222557820042" y="-0.582055413119538" z="0.757337615687472" />
+    <node nid="184" x="-0.496607976503932" y="-0.627328086150038" z="12.1974169268783" />
+    <node nid="185" x="0.0753421656054293" y="-0.796544768410341" z="12.0785388814552" />
+    <node nid="186" x="-0.36509649556268" y="-0.711944210544513" z="10.6056903013627" />
+    <node nid="187" x="-0.375805812017565" y="-0.706349772884382" z="9.38191573680315" />
+    <node nid="188" x="-0.375999004676564" y="-0.706246952901202" z="8.32731174999658" />
+    <node nid="189" x="-0.376020917153116" y="-0.70623528647564" z="7.29397811552428" />
+    <node nid="190" x="-0.376040491955418" y="-0.706224863913702" z="6.26391249966856" />
+    <node nid="191" x="-0.376538563651473" y="-0.705959432321211" z="5.23196146230778" />
+    <node nid="192" x="-0.375515929278712" y="-0.706503925578581" z="4.19701909490683" />
+    <node nid="193" x="-0.376461100695264" y="-0.706000743387222" z="3.13591333493942" />
+    <node nid="194" x="-0.333257006851478" y="-0.727392450733711" z="1.84457571140169" />
+    <node nid="195" x="-0.571188460299106" y="-0.560271142234844" z="1.05328945211129" />
+    <node nid="196" x="-0.625295755530673" y="-0.49916453010538" z="0.39077680220608" />
+    <node nid="197" x="-0.262509014038697" y="-0.755810179574495" z="0.46766770133909" />
+    <node nid="198" x="0.193517885074898" y="-0.776344535728911" z="0.487915676156687" />
+    <node nid="199" x="0.584854131132911" y="-0.54599052674636" z="0.4483042078108" />
+    <node nid="200" x="0.412698342673137" y="-0.685448822272565" z="11.416046325251" />
+    <node nid="201" x="0.548838826623126" y="-0.582182061206758" z="12.135766635557" />
+    <node nid="202" x="-0.440783912846734" y="-0.667734642036433" z="11.4704726763106" />
+    <node nid="203" x="0.506439411761353" y="-0.619418382206094" z="1.15316938150001" />
+    <node nid="204" x="-0.055558449454064" y="-0.798168696889486" z="1.05620991697166" />
+    <node nid="205" x="-0.484177475946564" y="0.369896649236897" z="1.15680275936885" />
+    <node nid="206" x="0.322163559367879" y="-0.665371501531517" z="10.7878508859639" />
+    <elset name="Default Group" color="10066329">
+      <elem eid="1" shape="tet4" nodes="150 117 114 98" mid="1" />
+      <elem eid="2" shape="tet4" nodes="4 75 40 13" mid="1" />
+      <elem eid="3" shape="tet4" nodes="71 104 35 144" mid="1" />
+      <elem eid="4" shape="tet4" nodes="89 184 95 166" mid="1" />
+      <elem eid="5" shape="tet4" nodes="137 106 138 145" mid="1" />
+      <elem eid="6" shape="tet4" nodes="176 157 170 188" mid="1" />
+      <elem eid="7" shape="tet4" nodes="129 15 14 109" mid="1" />
+      <elem eid="8" shape="tet4" nodes="41 6 57 123" mid="1" />
+      <elem eid="9" shape="tet4" nodes="6 8 63 123" mid="1" />
+      <elem eid="10" shape="tet4" nodes="78 44 187 176" mid="1" />
+      <elem eid="11" shape="tet4" nodes="76 42 41 202" mid="1" />
+      <elem eid="12" shape="tet4" nodes="1 113 3 18" mid="1" />
+      <elem eid="13" shape="tet4" nodes="100 125 132 142" mid="1" />
+      <elem eid="14" shape="tet4" nodes="6 41 8 123" mid="1" />
+      <elem eid="15" shape="tet4" nodes="70 34 159 69" mid="1" />
+      <elem eid="16" shape="tet4" nodes="65 154 30 155" mid="1" />
+      <elem eid="17" shape="tet4" nodes="34 103 70 35" mid="1" />
+      <elem eid="18" shape="tet4" nodes="161 179 191 192" mid="1" />
+      <elem eid="19" shape="tet4" nodes="131 100 99 43" mid="1" />
+      <elem eid="20" shape="tet4" nodes="150 153 117 98" mid="1" />
+      <elem eid="21" shape="tet4" nodes="33 102 101 143" mid="1" />
+      <elem eid="22" shape="tet4" nodes="120 54 55 117" mid="1" />
+      <elem eid="23" shape="tet4" nodes="20 196 9 10" mid="1" />
+      <elem eid="24" shape="tet4" nodes="98 99 114 149" mid="1" />
+      <elem eid="25" shape="tet4" nodes="26 15 16 110" mid="1" />
+      <elem eid="26" shape="tet4" nodes="203 183 40 74" mid="1" />
+      <elem eid="27" shape="tet4" nodes="74 183 40 75" mid="1" />
+      <elem eid="28" shape="tet4" nodes="147 16 15 110" mid="1" />
+      <elem eid="29" shape="tet4" nodes="103 144 35 104" mid="1" />
+      <elem eid="30" shape="tet4" nodes="65 30 66 155" mid="1" />
+      <elem eid="31" shape="tet4" nodes="24 4 2 109" mid="1" />
+      <elem eid="32" shape="tet4" nodes="137 105 127 136" mid="1" />
+      <elem eid="33" shape="tet4" nodes="136 135 47 104" mid="1" />
+      <elem eid="34" shape="tet4" nodes="77 149 43 131" mid="1" />
+      <elem eid="35" shape="tet4" nodes="13 183 40 199" mid="1" />
+      <elem eid="36" shape="tet4" nodes="201 29 97 168" mid="1" />
+      <elem eid="37" shape="tet4" nodes="176 44 79 78" mid="1" />
+      <elem eid="38" shape="tet4" nodes="53 115 140 29" mid="1" />
+      <elem eid="39" shape="tet4" nodes="123 41 8 76" mid="1" />
+      <elem eid="40" shape="tet4" nodes="206 186 30 155" mid="1" />
+      <elem eid="41" shape="tet4" nodes="114 42 151 149" mid="1" />
+      <elem eid="42" shape="tet4" nodes="192 172 49 193" mid="1" />
+      <elem eid="43" shape="tet4" nodes="172 49 48 192" mid="1" />
+      <elem eid="44" shape="tet4" nodes="171 190 47 82" mid="1" />
+      <elem eid="45" shape="tet4" nodes="206 177 186 155" mid="1" />
+      <elem eid="46" shape="tet4" nodes="123 151 41 76" mid="1" />
+      <elem eid="47" shape="tet4" nodes="168 167 91 201" mid="1" />
+      <elem eid="48" shape="tet4" nodes="160 171 190 191" mid="1" />
+      <elem eid="49" shape="tet4" nodes="155 169 177 186" mid="1" />
+      <elem eid="50" shape="tet4" nodes="64 7 29 168" mid="1" />
+      <elem eid="51" shape="tet4" nodes="136 48 83 137" mid="1" />
+      <elem eid="52" shape="tet4" nodes="168 7 29 5" mid="1" />
+      <elem eid="53" shape="tet4" nodes="121 60 55 120" mid="1" />
+      <elem eid="54" shape="tet4" nodes="64 153 141 98" mid="1" />
+      <elem eid="55" shape="tet4" nodes="116 151 150 114" mid="1" />
+      <elem eid="56" shape="tet4" nodes="195 87 86 51" mid="1" />
+      <elem eid="57" shape="tet4" nodes="4 40 75 109" mid="1" />
+      <elem eid="58" shape="tet4" nodes="52 196 9 19" mid="1" />
+      <elem eid="59" shape="tet4" nodes="111 152 108 147" mid="1" />
+      <elem eid="60" shape="tet4" nodes="11 21 10 182" mid="1" />
+      <elem eid="61" shape="tet4" nodes="82 190 81 171" mid="1" />
+      <elem eid="62" shape="tet4" nodes="173 193 194 50" mid="1" />
+      <elem eid="63" shape="tet4" nodes="199 183 40 203" mid="1" />
+      <elem eid="64" shape="tet4" nodes="139 108 118 152" mid="1" />
+      <elem eid="65" shape="tet4" nodes="202 185 177 200" mid="1" />
+      <elem eid="66" shape="tet4" nodes="194 204 181 195" mid="1" />
+      <elem eid="67" shape="tet4" nodes="47 171 179 191" mid="1" />
+      <elem eid="68" shape="tet4" nodes="149 42 151 77" mid="1" />
+      <elem eid="69" shape="tet4" nodes="124 66 31 142" mid="1" />
+      <elem eid="70" shape="tet4" nodes="131 149 43 99" mid="1" />
+      <elem eid="71" shape="tet4" nodes="79 80 188 170" mid="1" />
+      <elem eid="72" shape="tet4" nodes="78 187 43 169" mid="1" />
+      <elem eid="73" shape="tet4" nodes="5 53 140 29" mid="1" />
+      <elem eid="74" shape="tet4" nodes="53 5 140 58" mid="1" />
+      <elem eid="75" shape="tet4" nodes="44 80 188 79" mid="1" />
+      <elem eid="76" shape="tet4" nodes="21 197 10 182" mid="1" />
+      <elem eid="77" shape="tet4" nodes="206 30 154 155" mid="1" />
+      <elem eid="78" shape="tet4" nodes="101 125 100 32" mid="1" />
+      <elem eid="79" shape="tet4" nodes="125 68 101 143" mid="1" />
+      <elem eid="80" shape="tet4" nodes="102 33 69 143" mid="1" />
+      <elem eid="81" shape="tet4" nodes="200 185 167 201" mid="1" />
+      <elem eid="82" shape="tet4" nodes="103 47 135 104" mid="1" />
+      <elem eid="83" shape="tet4" nodes="133 79 80 44" mid="1" />
+      <elem eid="84" shape="tet4" nodes="124 30 66 65" mid="1" />
+      <elem eid="85" shape="tet4" nodes="101 125 132 100" mid="1" />
+      <elem eid="86" shape="tet4" nodes="202 177 186 200" mid="1" />
+      <elem eid="87" shape="tet4" nodes="194 204 164 181" mid="1" />
+      <elem eid="88" shape="tet4" nodes="188 157 158 33" mid="1" />
+      <elem eid="89" shape="tet4" nodes="7 5 140 29" mid="1" />
+      <elem eid="90" shape="tet4" nodes="151 149 150 114" mid="1" />
+      <elem eid="91" shape="tet4" nodes="153 115 64 140" mid="1" />
+      <elem eid="92" shape="tet4" nodes="152 139 108 146" mid="1" />
+      <elem eid="93" shape="tet4" nodes="114 41 151 42" mid="1" />
+      <elem eid="94" shape="tet4" nodes="181 86 173 194" mid="1" />
+      <elem eid="95" shape="tet4" nodes="107 139 108 51" mid="1" />
+      <elem eid="96" shape="tet4" nodes="82 47 179 83" mid="1" />
+      <elem eid="97" shape="tet4" nodes="47 179 48 191" mid="1" />
+      <elem eid="98" shape="tet4" nodes="135 134 81 46" mid="1" />
+      <elem eid="99" shape="tet4" nodes="32 67 125 142" mid="1" />
+      <elem eid="100" shape="tet4" nodes="103 102 134 46" mid="1" />
+      <elem eid="101" shape="tet4" nodes="88 41 8 93" mid="1" />
+      <elem eid="102" shape="tet4" nodes="136 48 47 83" mid="1" />
+      <elem eid="103" shape="tet4" nodes="189 81 45 46" mid="1" />
+      <elem eid="104" shape="tet4" nodes="123 62 63 57" mid="1" />
+      <elem eid="105" shape="tet4" nodes="181 173 164 194" mid="1" />
+      <elem eid="106" shape="tet4" nodes="71 160 36 161" mid="1" />
+      <elem eid="107" shape="tet4" nodes="71 36 127 72" mid="1" />
+      <elem eid="108" shape="tet4" nodes="111 147 108 110" mid="1" />
+      <elem eid="109" shape="tet4" nodes="58 119 53 59" mid="1" />
+      <elem eid="110" shape="tet4" nodes="97 168 92 91" mid="1" />
+      <elem eid="111" shape="tet4" nodes="163 73 38 162" mid="1" />
+      <elem eid="112" shape="tet4" nodes="99 149 43 42" mid="1" />
+      <elem eid="113" shape="tet4" nodes="179 171 47 82" mid="1" />
+      <elem eid="114" shape="tet4" nodes="75 40 74 129" mid="1" />
+      <elem eid="115" shape="tet4" nodes="117 114 116 150" mid="1" />
+      <elem eid="116" shape="tet4" nodes="175 203 199 198" mid="1" />
+      <elem eid="117" shape="tet4" nodes="77 76 165 202" mid="1" />
+      <elem eid="118" shape="tet4" nodes="25 109 15 110" mid="1" />
+      <elem eid="119" shape="tet4" nodes="194 173 164 163" mid="1" />
+      <elem eid="120" shape="tet4" nodes="5 7 140 58" mid="1" />
+      <elem eid="121" shape="tet4" nodes="156 155 187 169" mid="1" />
+      <elem eid="122" shape="tet4" nodes="160 190 171 159" mid="1" />
+      <elem eid="123" shape="tet4" nodes="172 179 48 83" mid="1" />
+      <elem eid="124" shape="tet4" nodes="116 121 150 122" mid="1" />
+      <elem eid="125" shape="tet4" nodes="84 49 172 180" mid="1" />
+      <elem eid="126" shape="tet4" nodes="90 185 166 95" mid="1" />
+      <elem eid="127" shape="tet4" nodes="189 188 80 170" mid="1" />
+      <elem eid="128" shape="tet4" nodes="51 139 86 50" mid="1" />
+      <elem eid="129" shape="tet4" nodes="194 203 164 204" mid="1" />
+      <elem eid="130" shape="tet4" nodes="200 201 154 29" mid="1" />
+      <elem eid="131" shape="tet4" nodes="163 38 74 39" mid="1" />
+      <elem eid="132" shape="tet4" nodes="161 36 191 160" mid="1" />
+      <elem eid="133" shape="tet4" nodes="161 37 36 72" mid="1" />
+      <elem eid="134" shape="tet4" nodes="88 41 184 165" mid="1" />
+      <elem eid="135" shape="tet4" nodes="98 115 64 153" mid="1" />
+      <elem eid="136" shape="tet4" nodes="161 191 179 160" mid="1" />
+      <elem eid="137" shape="tet4" nodes="165 41 184 202" mid="1" />
+      <elem eid="138" shape="tet4" nodes="71 161 36 72" mid="1" />
+      <elem eid="139" shape="tet4" nodes="162 180 193 163" mid="1" />
+      <elem eid="140" shape="tet4" nodes="150 121 116 117" mid="1" />
+      <elem eid="141" shape="tet4" nodes="4 2 75 13" mid="1" />
+      <elem eid="142" shape="tet4" nodes="29 201 154 168" mid="1" />
+      <elem eid="143" shape="tet4" nodes="121 56 122 116" mid="1" />
+      <elem eid="144" shape="tet4" nodes="168 201 154 167" mid="1" />
+      <elem eid="145" shape="tet4" nodes="39 38 74 107" mid="1" />
+      <elem eid="146" shape="tet4" nodes="167 201 154 200" mid="1" />
+      <elem eid="147" shape="tet4" nodes="136 105 48 137" mid="1" />
+      <elem eid="148" shape="tet4" nodes="139 107 108 146" mid="1" />
+      <elem eid="149" shape="tet4" nodes="204 198 182 197" mid="1" />
+      <elem eid="150" shape="tet4" nodes="124 100 99 131" mid="1" />
+      <elem eid="151" shape="tet4" nodes="175 12 11 198" mid="1" />
+      <elem eid="152" shape="tet4" nodes="91 97 168 201" mid="1" />
+      <elem eid="153" shape="tet4" nodes="169 155 187 186" mid="1" />
+      <elem eid="154" shape="tet4" nodes="182 198 204 175" mid="1" />
+      <elem eid="155" shape="tet4" nodes="39 40 146 74" mid="1" />
+      <elem eid="156" shape="tet4" nodes="148 86 118 139" mid="1" />
+      <elem eid="157" shape="tet4" nodes="95 184 89 94" mid="1" />
+      <elem eid="158" shape="tet4" nodes="197 182 204 195" mid="1" />
+      <elem eid="159" shape="tet4" nodes="159 190 171 178" mid="1" />
+      <elem eid="160" shape="tet4" nodes="39 40 74 203" mid="1" />
+      <elem eid="161" shape="tet4" nodes="116 123 56 122" mid="1" />
+      <elem eid="162" shape="tet4" nodes="91 96 97 201" mid="1" />
+      <elem eid="163" shape="tet4" nodes="176 187 78 169" mid="1" />
+      <elem eid="164" shape="tet4" nodes="195 182 204 181" mid="1" />
+      <elem eid="165" shape="tet4" nodes="59 119 54 120" mid="1" />
+      <elem eid="166" shape="tet4" nodes="62 56 122 61" mid="1" />
+      <elem eid="167" shape="tet4" nodes="107 39 108 146" mid="1" />
+      <elem eid="168" shape="tet4" nodes="31 100 99 124" mid="1" />
+      <elem eid="169" shape="tet4" nodes="26 16 27 111" mid="1" />
+      <elem eid="170" shape="tet4" nodes="85 50 180 173" mid="1" />
+      <elem eid="171" shape="tet4" nodes="105 36 72 127" mid="1" />
+      <elem eid="172" shape="tet4" nodes="189 170 158 188" mid="1" />
+      <elem eid="173" shape="tet4" nodes="181 182 204 175" mid="1" />
+      <elem eid="174" shape="tet4" nodes="129 15 109 110" mid="1" />
+      <elem eid="175" shape="tet4" nodes="130 112 27 111" mid="1" />
+      <elem eid="176" shape="tet4" nodes="143 68 101 33" mid="1" />
+      <elem eid="177" shape="tet4" nodes="186 155 187 31" mid="1" />
+      <elem eid="178" shape="tet4" nodes="112 130 118 111" mid="1" />
+      <elem eid="179" shape="tet4" nodes="110 147 16 111" mid="1" />
+      <elem eid="180" shape="tet4" nodes="74 38 128 107" mid="1" />
+      <elem eid="181" shape="tet4" nodes="155 30 66 31" mid="1" />
+      <elem eid="182" shape="tet4" nodes="33 158 34 69" mid="1" />
+      <elem eid="183" shape="tet4" nodes="130 152 118 111" mid="1" />
+      <elem eid="184" shape="tet4" nodes="160 35 190 159" mid="1" />
+      <elem eid="185" shape="tet4" nodes="188 157 170 158" mid="1" />
+      <elem eid="186" shape="tet4" nodes="167 177 166 185" mid="1" />
+      <elem eid="187" shape="tet4" nodes="68 158 157 33" mid="1" />
+      <elem eid="188" shape="tet4" nodes="159 178 158 189" mid="1" />
+      <elem eid="189" shape="tet4" nodes="26 110 16 111" mid="1" />
+      <elem eid="190" shape="tet4" nodes="136 47 82 83" mid="1" />
+      <elem eid="191" shape="tet4" nodes="84 49 138 137" mid="1" />
+      <elem eid="192" shape="tet4" nodes="129 147 15 110" mid="1" />
+      <elem eid="193" shape="tet4" nodes="179 191 171 160" mid="1" />
+      <elem eid="194" shape="tet4" nodes="17 27 112 28" mid="1" />
+      <elem eid="195" shape="tet4" nodes="174 9 52 196" mid="1" />
+      <elem eid="196" shape="tet4" nodes="49 50 180 85" mid="1" />
+      <elem eid="197" shape="tet4" nodes="193 50 180 49" mid="1" />
+      <elem eid="198" shape="tet4" nodes="173 50 180 193" mid="1" />
+      <elem eid="199" shape="tet4" nodes="84 83 48 137" mid="1" />
+      <elem eid="200" shape="tet4" nodes="103 135 144 104" mid="1" />
+      <elem eid="201" shape="tet4" nodes="117 55 120 121" mid="1" />
+      <elem eid="202" shape="tet4" nodes="142 131 100 124" mid="1" />
+      <elem eid="203" shape="tet4" nodes="130 16 147 111" mid="1" />
+      <elem eid="204" shape="tet4" nodes="148 139 118 152" mid="1" />
+      <elem eid="205" shape="tet4" nodes="81 80 189 45" mid="1" />
+      <elem eid="206" shape="tet4" nodes="205 108 139 51" mid="1" />
+      <elem eid="207" shape="tet4" nodes="106 137 105 145" mid="1" />
+      <elem eid="208" shape="tet4" nodes="130 16 27 17" mid="1" />
+      <elem eid="209" shape="tet4" nodes="124 141 149 99" mid="1" />
+      <elem eid="210" shape="tet4" nodes="171 190 81 178" mid="1" />
+      <elem eid="211" shape="tet4" nodes="175 164 203 204" mid="1" />
+      <elem eid="212" shape="tet4" nodes="202 165 177 166" mid="1" />
+      <elem eid="213" shape="tet4" nodes="75 129 14 109" mid="1" />
+      <elem eid="214" shape="tet4" nodes="72 161 37 162" mid="1" />
+      <elem eid="215" shape="tet4" nodes="169 77 186 43" mid="1" />
+      <elem eid="216" shape="tet4" nodes="87 86 118 148" mid="1" />
+      <elem eid="217" shape="tet4" nodes="195 196 174 52" mid="1" />
+      <elem eid="218" shape="tet4" nodes="45 80 188 44" mid="1" />
+      <elem eid="219" shape="tet4" nodes="32 125 100 142" mid="1" />
+      <elem eid="220" shape="tet4" nodes="32 157 67 156" mid="1" />
+      <elem eid="221" shape="tet4" nodes="77 165 177 202" mid="1" />
+      <elem eid="222" shape="tet4" nodes="141 65 98 30" mid="1" />
+      <elem eid="223" shape="tet4" nodes="30 65 98 29" mid="1" />
+      <elem eid="224" shape="tet4" nodes="33 68 158 69" mid="1" />
+      <elem eid="225" shape="tet4" nodes="65 29 154 64" mid="1" />
+      <elem eid="226" shape="tet4" nodes="65 29 30 154" mid="1" />
+      <elem eid="227" shape="tet4" nodes="43 132 131 100" mid="1" />
+      <elem eid="228" shape="tet4" nodes="169 156 176 187" mid="1" />
+      <elem eid="229" shape="tet4" nodes="26 25 15 110" mid="1" />
+      <elem eid="230" shape="tet4" nodes="78 132 131 43" mid="1" />
+      <elem eid="231" shape="tet4" nodes="90 167 185 96" mid="1" />
+      <elem eid="232" shape="tet4" nodes="103 126 144 135" mid="1" />
+      <elem eid="233" shape="tet4" nodes="122 56 121 61" mid="1" />
+      <elem eid="234" shape="tet4" nodes="140 115 64 29" mid="1" />
+      <elem eid="235" shape="tet4" nodes="130 27 112 17" mid="1" />
+      <elem eid="236" shape="tet4" nodes="168 29 97 5" mid="1" />
+      <elem eid="237" shape="tet4" nodes="159 34 158 69" mid="1" />
+      <elem eid="238" shape="tet4" nodes="40 183 13 75" mid="1" />
+      <elem eid="239" shape="tet4" nodes="10 174 197 196" mid="1" />
+      <elem eid="240" shape="tet4" nodes="90 185 95 96" mid="1" />
+      <elem eid="241" shape="tet4" nodes="176 79 44 188" mid="1" />
+      <elem eid="242" shape="tet4" nodes="159 190 178 189" mid="1" />
+      <elem eid="243" shape="tet4" nodes="20 9 196 19" mid="1" />
+      <elem eid="244" shape="tet4" nodes="174 9 196 10" mid="1" />
+      <elem eid="245" shape="tet4" nodes="78 132 43 44" mid="1" />
+      <elem eid="246" shape="tet4" nodes="78 79 132 44" mid="1" />
+      <elem eid="247" shape="tet4" nodes="13 199 23 12" mid="1" />
+      <elem eid="248" shape="tet4" nodes="130 118 152 148" mid="1" />
+      <elem eid="249" shape="tet4" nodes="142 131 132 100" mid="1" />
+      <elem eid="250" shape="tet4" nodes="178 80 170 189" mid="1" />
+      <elem eid="251" shape="tet4" nodes="52 3 19 1" mid="1" />
+      <elem eid="252" shape="tet4" nodes="46 82 81 135" mid="1" />
+      <elem eid="253" shape="tet4" nodes="69 33 102 34" mid="1" />
+      <elem eid="254" shape="tet4" nodes="187 44 78 43" mid="1" />
+      <elem eid="255" shape="tet4" nodes="146 74 107 39" mid="1" />
+      <elem eid="256" shape="tet4" nodes="184 41 88 93" mid="1" />
+      <elem eid="257" shape="tet4" nodes="142 31 100 32" mid="1" />
+      <elem eid="258" shape="tet4" nodes="166 89 184 165" mid="1" />
+      <elem eid="259" shape="tet4" nodes="55 60 54 120" mid="1" />
+      <elem eid="260" shape="tet4" nodes="140 53 119 115" mid="1" />
+      <elem eid="261" shape="tet4" nodes="121 150 120 117" mid="1" />
+      <elem eid="262" shape="tet4" nodes="59 54 60 120" mid="1" />
+      <elem eid="263" shape="tet4" nodes="31 30 66 124" mid="1" />
+      <elem eid="264" shape="tet4" nodes="50 194 86 51" mid="1" />
+      <elem eid="265" shape="tet4" nodes="77 42 76 202" mid="1" />
+      <elem eid="266" shape="tet4" nodes="128 145 138 106" mid="1" />
+      <elem eid="267" shape="tet4" nodes="194 164 203 39" mid="1" />
+      <elem eid="268" shape="tet4" nodes="200 30 29 154" mid="1" />
+      <elem eid="269" shape="tet4" nodes="195 86 181 194" mid="1" />
+      <elem eid="270" shape="tet4" nodes="45 81 134 46" mid="1" />
+      <elem eid="271" shape="tet4" nodes="87 118 113 148" mid="1" />
+      <elem eid="272" shape="tet4" nodes="129 75 40 109" mid="1" />
+      <elem eid="273" shape="tet4" nodes="75 14 2 109" mid="1" />
+      <elem eid="274" shape="tet4" nodes="84 49 180 85" mid="1" />
+      <elem eid="275" shape="tet4" nodes="202 184 165 166" mid="1" />
+      <elem eid="276" shape="tet4" nodes="129 40 108 109" mid="1" />
+      <elem eid="277" shape="tet4" nodes="117 153 120 115" mid="1" />
+      <elem eid="278" shape="tet4" nodes="117 55 121 116" mid="1" />
+      <elem eid="279" shape="tet4" nodes="115 119 140 153" mid="1" />
+      <elem eid="280" shape="tet4" nodes="101 132 133 44" mid="1" />
+      <elem eid="281" shape="tet4" nodes="32 31 67 142" mid="1" />
+      <elem eid="282" shape="tet4" nodes="64 65 98 141" mid="1" />
+      <elem eid="283" shape="tet4" nodes="115 54 53 119" mid="1" />
+      <elem eid="284" shape="tet4" nodes="163 38 193 162" mid="1" />
+      <elem eid="285" shape="tet4" nodes="119 53 140 58" mid="1" />
+      <elem eid="286" shape="tet4" nodes="98 115 153 117" mid="1" />
+      <elem eid="287" shape="tet4" nodes="153 150 141 98" mid="1" />
+      <elem eid="288" shape="tet4" nodes="142 31 67 66" mid="1" />
+      <elem eid="289" shape="tet4" nodes="140 7 29 64" mid="1" />
+      <elem eid="290" shape="tet4" nodes="77 131 43 78" mid="1" />
+      <elem eid="291" shape="tet4" nodes="162 37 192 161" mid="1" />
+      <elem eid="292" shape="tet4" nodes="33 158 188 189" mid="1" />
+      <elem eid="293" shape="tet4" nodes="103 126 134 102" mid="1" />
+      <elem eid="294" shape="tet4" nodes="163 74 164 39" mid="1" />
+      <elem eid="295" shape="tet4" nodes="137 138 106 49" mid="1" />
+      <elem eid="296" shape="tet4" nodes="66 31 67 156" mid="1" />
+      <elem eid="297" shape="tet4" nodes="141 99 30 98" mid="1" />
+      <elem eid="298" shape="tet4" nodes="39 194 164 163" mid="1" />
+      <elem eid="299" shape="tet4" nodes="129 109 108 110" mid="1" />
+      <elem eid="300" shape="tet4" nodes="160 190 35 191" mid="1" />
+      <elem eid="301" shape="tet4" nodes="24 2 14 109" mid="1" />
+      <elem eid="302" shape="tet4" nodes="102 34 126 69" mid="1" />
+      <elem eid="303" shape="tet4" nodes="73 38 74 163" mid="1" />
+      <elem eid="304" shape="tet4" nodes="45 81 80 134" mid="1" />
+      <elem eid="305" shape="tet4" nodes="46 47 190 82" mid="1" />
+      <elem eid="306" shape="tet4" nodes="189 80 81 178" mid="1" />
+      <elem eid="307" shape="tet4" nodes="3 113 28 18" mid="1" />
+      <elem eid="308" shape="tet4" nodes="159 34 190 189" mid="1" />
+      <elem eid="309" shape="tet4" nodes="162 180 172 193" mid="1" />
+      <elem eid="310" shape="tet4" nodes="190 81 189 46" mid="1" />
+      <elem eid="311" shape="tet4" nodes="159 158 34 189" mid="1" />
+      <elem eid="312" shape="tet4" nodes="39 38 194 163" mid="1" />
+      <elem eid="313" shape="tet4" nodes="175 204 203 198" mid="1" />
+      <elem eid="314" shape="tet4" nodes="175 164 183 203" mid="1" />
+      <elem eid="315" shape="tet4" nodes="113 118 112 148" mid="1" />
+      <elem eid="316" shape="tet4" nodes="195 86 87 174" mid="1" />
+      <elem eid="317" shape="tet4" nodes="176 170 79 188" mid="1" />
+      <elem eid="318" shape="tet4" nodes="52 9 174 87" mid="1" />
+      <elem eid="319" shape="tet4" nodes="198 11 175 182" mid="1" />
+      <elem eid="320" shape="tet4" nodes="7 92 5 168" mid="1" />
+      <elem eid="321" shape="tet4" nodes="119 54 53 59" mid="1" />
+      <elem eid="322" shape="tet4" nodes="196 174 197 195" mid="1" />
+      <elem eid="323" shape="tet4" nodes="70 34 35 159" mid="1" />
+      <elem eid="324" shape="tet4" nodes="143 134 126 102" mid="1" />
+      <elem eid="325" shape="tet4" nodes="69 34 126 70" mid="1" />
+      <elem eid="326" shape="tet4" nodes="143 101 133 102" mid="1" />
+      <elem eid="327" shape="tet4" nodes="90 167 96 91" mid="1" />
+      <elem eid="328" shape="tet4" nodes="127 145 105 137" mid="1" />
+      <elem eid="329" shape="tet4" nodes="33 68 32 157" mid="1" />
+      <elem eid="330" shape="tet4" nodes="32 68 101 125" mid="1" />
+      <elem eid="331" shape="tet4" nodes="72 36 105 37" mid="1" />
+      <elem eid="332" shape="tet4" nodes="67 68 32 125" mid="1" />
+      <elem eid="333" shape="tet4" nodes="141 30 99 124" mid="1" />
+      <elem eid="334" shape="tet4" nodes="12 22 198 199" mid="1" />
+      <elem eid="335" shape="tet4" nodes="12 11 198 22" mid="1" />
+      <elem eid="336" shape="tet4" nodes="114 151 41 116" mid="1" />
+      <elem eid="337" shape="tet4" nodes="74 203 164 39" mid="1" />
+      <elem eid="338" shape="tet4" nodes="128 107 138 139" mid="1" />
+      <elem eid="339" shape="tet4" nodes="199 22 23 12" mid="1" />
+      <elem eid="340" shape="tet4" nodes="202 185 184 166" mid="1" />
+      <elem eid="341" shape="tet4" nodes="188 187 157 32" mid="1" />
+      <elem eid="342" shape="tet4" nodes="32 187 157 156" mid="1" />
+      <elem eid="343" shape="tet4" nodes="4 40 23 13" mid="1" />
+      <elem eid="344" shape="tet4" nodes="156 187 157 176" mid="1" />
+      <elem eid="345" shape="tet4" nodes="11 198 21 182" mid="1" />
+      <elem eid="346" shape="tet4" nodes="149 99 141 98" mid="1" />
+      <elem eid="347" shape="tet4" nodes="70 160 35 71" mid="1" />
+      <elem eid="348" shape="tet4" nodes="29 65 98 64" mid="1" />
+      <elem eid="349" shape="tet4" nodes="51 87 205 52" mid="1" />
+      <elem eid="350" shape="tet4" nodes="176 187 157 188" mid="1" />
+      <elem eid="351" shape="tet4" nodes="1 87 113 18" mid="1" />
+      <elem eid="352" shape="tet4" nodes="200 177 186 206" mid="1" />
+      <elem eid="353" shape="tet4" nodes="199 203 175 183" mid="1" />
+      <elem eid="354" shape="tet4" nodes="31 155 187 156" mid="1" />
+      <elem eid="355" shape="tet4" nodes="157 68 32 67" mid="1" />
+      <elem eid="356" shape="tet4" nodes="160 36 35 71" mid="1" />
+      <elem eid="357" shape="tet4" nodes="162 172 192 193" mid="1" />
+      <elem eid="358" shape="tet4" nodes="109 14 24 25" mid="1" />
+      <elem eid="359" shape="tet4" nodes="195 174 197 182" mid="1" />
+      <elem eid="360" shape="tet4" nodes="118 130 112 148" mid="1" />
+      <elem eid="361" shape="tet4" nodes="122 151 150 116" mid="1" />
+      <elem eid="362" shape="tet4" nodes="71 144 35 70" mid="1" />
+      <elem eid="363" shape="tet4" nodes="101 132 125 133" mid="1" />
+      <elem eid="364" shape="tet4" nodes="70 103 34 126" mid="1" />
+      <elem eid="365" shape="tet4" nodes="85 173 86 50" mid="1" />
+      <elem eid="366" shape="tet4" nodes="17 130 148 112" mid="1" />
+      <elem eid="367" shape="tet4" nodes="86 194 50 173" mid="1" />
+      <elem eid="368" shape="tet4" nodes="74 40 146 129" mid="1" />
+      <elem eid="369" shape="tet4" nodes="35 104 71 36" mid="1" />
+      <elem eid="370" shape="tet4" nodes="109 15 14 25" mid="1" />
+      <elem eid="371" shape="tet4" nodes="187 169 186 43" mid="1" />
+      <elem eid="372" shape="tet4" nodes="196 197 10 20" mid="1" />
+      <elem eid="373" shape="tet4" nodes="162 73 37 72" mid="1" />
+      <elem eid="374" shape="tet4" nodes="162 192 172 161" mid="1" />
+      <elem eid="375" shape="tet4" nodes="117 120 153 150" mid="1" />
+      <elem eid="376" shape="tet4" nodes="38 73 106 37" mid="1" />
+      <elem eid="377" shape="tet4" nodes="187 44 188 176" mid="1" />
+      <elem eid="378" shape="tet4" nodes="143 125 133 101" mid="1" />
+      <elem eid="379" shape="tet4" nodes="103 134 126 135" mid="1" />
+      <elem eid="380" shape="tet4" nodes="102 101 133 45" mid="1" />
+      <elem eid="381" shape="tet4" nodes="183 13 12 199" mid="1" />
+      <elem eid="382" shape="tet4" nodes="177 77 186 169" mid="1" />
+      <elem eid="383" shape="tet4" nodes="139 107 138 50" mid="1" />
+      <elem eid="384" shape="tet4" nodes="65 30 141 124" mid="1" />
+      <elem eid="385" shape="tet4" nodes="202 177 185 166" mid="1" />
+      <elem eid="386" shape="tet4" nodes="48 179 47 83" mid="1" />
+      <elem eid="387" shape="tet4" nodes="38 73 37 162" mid="1" />
+      <elem eid="388" shape="tet4" nodes="139 146 128 107" mid="1" />
+      <elem eid="389" shape="tet4" nodes="205 118 51 139" mid="1" />
+      <elem eid="390" shape="tet4" nodes="103 34 126 102" mid="1" />
+      <elem eid="391" shape="tet4" nodes="139 118 51 86" mid="1" />
+      <elem eid="392" shape="tet4" nodes="88 89 184 94" mid="1" />
+      <elem eid="393" shape="tet4" nodes="104 144 127 136" mid="1" />
+      <elem eid="394" shape="tet4" nodes="202 77 186 177" mid="1" />
+      <elem eid="395" shape="tet4" nodes="171 47 190 191" mid="1" />
+      <elem eid="396" shape="tet4" nodes="88 41 165 76" mid="1" />
+      <elem eid="397" shape="tet4" nodes="88 8 41 76" mid="1" />
+      <elem eid="398" shape="tet4" nodes="74 183 164 203" mid="1" />
+      <elem eid="399" shape="tet4" nodes="64 29 154 168" mid="1" />
+      <elem eid="400" shape="tet4" nodes="84 48 49 137" mid="1" />
+      <elem eid="401" shape="tet4" nodes="103 134 135 46" mid="1" />
+      <elem eid="402" shape="tet4" nodes="70 159 35 160" mid="1" />
+      <elem eid="403" shape="tet4" nodes="180 49 172 193" mid="1" />
+      <elem eid="404" shape="tet4" nodes="129 40 146 108" mid="1" />
+      <elem eid="405" shape="tet4" nodes="98 141 149 150" mid="1" />
+      <elem eid="406" shape="tet4" nodes="106 145 105 37" mid="1" />
+      <elem eid="407" shape="tet4" nodes="85 138 49 50" mid="1" />
+      <elem eid="408" shape="tet4" nodes="37 73 106 145" mid="1" />
+      <elem eid="409" shape="tet4" nodes="72 73 37 145" mid="1" />
+      <elem eid="410" shape="tet4" nodes="166 90 167 185" mid="1" />
+      <elem eid="411" shape="tet4" nodes="98 149 114 150" mid="1" />
+      <elem eid="412" shape="tet4" nodes="1 3 113 52" mid="1" />
+      <elem eid="413" shape="tet4" nodes="115 120 119 153" mid="1" />
+      <elem eid="414" shape="tet4" nodes="149 99 114 42" mid="1" />
+      <elem eid="415" shape="tet4" nodes="72 145 105 127" mid="1" />
+      <elem eid="416" shape="tet4" nodes="136 82 47 135" mid="1" />
+      <elem eid="417" shape="tet4" nodes="50 138 139 85" mid="1" />
+      <elem eid="418" shape="tet4" nodes="145 73 106 128" mid="1" />
+      <elem eid="419" shape="tet4" nodes="128 74 107 146" mid="1" />
+      <elem eid="420" shape="tet4" nodes="134 133 80 45" mid="1" />
+      <elem eid="421" shape="tet4" nodes="46 47 82 135" mid="1" />
+      <elem eid="422" shape="tet4" nodes="189 81 190 178" mid="1" />
+      <elem eid="423" shape="tet4" nodes="46 190 81 82" mid="1" />
+      <elem eid="424" shape="tet4" nodes="131 124 149 99" mid="1" />
+      <elem eid="425" shape="tet4" nodes="192 191 48 179" mid="1" />
+      <elem eid="426" shape="tet4" nodes="186 77 202 42" mid="1" />
+      <elem eid="427" shape="tet4" nodes="192 179 172 161" mid="1" />
+      <elem eid="428" shape="tet4" nodes="89 88 184 165" mid="1" />
+      <elem eid="429" shape="tet4" nodes="93 88 184 94" mid="1" />
+      <elem eid="430" shape="tet4" nodes="129 108 147 110" mid="1" />
+      <elem eid="431" shape="tet4" nodes="4 75 2 109" mid="1" />
+      <elem eid="432" shape="tet4" nodes="20 197 10 21" mid="1" />
+      <elem eid="433" shape="tet4" nodes="130 27 16 111" mid="1" />
+      <elem eid="434" shape="tet4" nodes="104 127 105 136" mid="1" />
+      <elem eid="435" shape="tet4" nodes="50 107 138 106" mid="1" />
+      <elem eid="436" shape="tet4" nodes="195 51 86 194" mid="1" />
+      <elem eid="437" shape="tet4" nodes="52 19 9 1" mid="1" />
+      <elem eid="438" shape="tet4" nodes="52 9 87 1" mid="1" />
+      <elem eid="439" shape="tet4" nodes="175 183 12 199" mid="1" />
+      <elem eid="440" shape="tet4" nodes="115 54 120 117" mid="1" />
+      <elem eid="441" shape="tet4" nodes="6 63 57 123" mid="1" />
+      <elem eid="442" shape="tet4" nodes="104 36 105 127" mid="1" />
+      <elem eid="443" shape="tet4" nodes="48 179 172 192" mid="1" />
+      <elem eid="444" shape="tet4" nodes="29 115 64 98" mid="1" />
+      <elem eid="445" shape="tet4" nodes="128 106 107 38" mid="1" />
+      <elem eid="446" shape="tet4" nodes="50 139 86 85" mid="1" />
+      <elem eid="447" shape="tet4" nodes="198 175 12 199" mid="1" />
+      <elem eid="448" shape="tet4" nodes="106 107 138 128" mid="1" />
+      <elem eid="449" shape="tet4" nodes="155 177 154 206" mid="1" />
+      <elem eid="450" shape="tet4" nodes="200 177 154 167" mid="1" />
+      <elem eid="451" shape="tet4" nodes="122 123 56 62" mid="1" />
+      <elem eid="452" shape="tet4" nodes="124 31 100 142" mid="1" />
+      <elem eid="453" shape="tet4" nodes="89 166 95 90" mid="1" />
+      <elem eid="454" shape="tet4" nodes="169 77 43 78" mid="1" />
+      <elem eid="455" shape="tet4" nodes="91 167 96 201" mid="1" />
+      <elem eid="456" shape="tet4" nodes="167 177 185 200" mid="1" />
+      <elem eid="457" shape="tet4" nodes="193 37 192 162" mid="1" />
+      <elem eid="458" shape="tet4" nodes="62 123 56 57" mid="1" />
+      <elem eid="459" shape="tet4" nodes="102 69 126 143" mid="1" />
+      <elem eid="460" shape="tet4" nodes="102 133 134 45" mid="1" />
+      <elem eid="461" shape="tet4" nodes="71 127 36 104" mid="1" />
+      <elem eid="462" shape="tet4" nodes="136 144 135 104" mid="1" />
+      <elem eid="463" shape="tet4" nodes="156 66 31 155" mid="1" />
+      <elem eid="464" shape="tet4" nodes="121 55 56 116" mid="1" />
+      <elem eid="465" shape="tet4" nodes="42 41 151 76" mid="1" />
+      <elem eid="466" shape="tet4" nodes="70 126 144 103" mid="1" />
+      <elem eid="467" shape="tet4" nodes="113 112 18 148" mid="1" />
+      <elem eid="468" shape="tet4" nodes="178 170 158 189" mid="1" />
+      <elem eid="469" shape="tet4" nodes="198 197 21 182" mid="1" />
+      <elem eid="470" shape="tet4" nodes="198 21 22 11" mid="1" />
+      <elem eid="471" shape="tet4" nodes="72 105 145 37" mid="1" />
+      <elem eid="472" shape="tet4" nodes="121 55 61 56" mid="1" />
+      <elem eid="473" shape="tet4" nodes="151 123 116 122" mid="1" />
+      <elem eid="474" shape="tet4" nodes="148 112 18 17" mid="1" />
+      <elem eid="475" shape="tet4" nodes="17 112 18 28" mid="1" />
+      <elem eid="476" shape="tet4" nodes="70 144 35 103" mid="1" />
+      <elem eid="477" shape="tet4" nodes="28 112 18 113" mid="1" />
+      <elem eid="478" shape="tet4" nodes="85 49 138 84" mid="1" />
+      <elem eid="479" shape="tet4" nodes="71 144 127 104" mid="1" />
+      <elem eid="480" shape="tet4" nodes="128 38 74 73" mid="1" />
+      <elem eid="481" shape="tet4" nodes="80 188 189 45" mid="1" />
+      <elem eid="482" shape="tet4" nodes="156 31 67 32" mid="1" />
+      <elem eid="483" shape="tet4" nodes="121 60 61 55" mid="1" />
+      <elem eid="484" shape="tet4" nodes="104 105 48 136" mid="1" />
+      <elem eid="485" shape="tet4" nodes="206 177 154 200" mid="1" />
+      <elem eid="486" shape="tet4" nodes="200 30 154 206" mid="1" />
+      <elem eid="487" shape="tet4" nodes="31 99 30 124" mid="1" />
+      <elem eid="488" shape="tet4" nodes="57 123 56 116" mid="1" />
+      <elem eid="489" shape="tet4" nodes="45 133 80 44" mid="1" />
+      <elem eid="490" shape="tet4" nodes="33 68 101 32" mid="1" />
+      <elem eid="491" shape="tet4" nodes="133 132 79 44" mid="1" />
+      <elem eid="492" shape="tet4" nodes="33 68 69 143" mid="1" />
+      <elem eid="493" shape="tet4" nodes="163 193 173 180" mid="1" />
+      <elem eid="494" shape="tet4" nodes="195 181 174 182" mid="1" />
+      <elem eid="495" shape="tet4" nodes="182 174 197 10" mid="1" />
+      <elem eid="496" shape="tet4" nodes="113 118 87 52" mid="1" />
+      <elem eid="497" shape="tet4" nodes="195 174 87 52" mid="1" />
+      <elem eid="498" shape="tet4" nodes="108 40 146 39" mid="1" />
+      <elem eid="499" shape="tet4" nodes="147 129 146 108" mid="1" />
+      <elem eid="500" shape="tet4" nodes="163 38 194 193" mid="1" />
+      <elem eid="501" shape="tet4" nodes="128 73 106 38" mid="1" />
+      <elem eid="502" shape="tet4" nodes="48 49 172 84" mid="1" />
+      <elem eid="503" shape="tet4" nodes="57 123 116 41" mid="1" />
+      <elem eid="504" shape="tet4" nodes="41 123 116 151" mid="1" />
+      <elem eid="505" shape="tet4" nodes="143 133 134 102" mid="1" />
+      <elem eid="506" shape="tet4" nodes="115 54 119 120" mid="1" />
+      <elem eid="507" shape="tet4" nodes="76 41 165 202" mid="1" />
+      <elem eid="508" shape="tet4" nodes="97 5 92 168" mid="1" />
+      <elem eid="509" shape="tet4" nodes="201 185 167 96" mid="1" />
+      <elem eid="510" shape="tet4" nodes="166 185 184 95" mid="1" />
+      <elem eid="511" shape="tet4" nodes="18 87 113 148" mid="1" />
+      <elem eid="512" shape="tet4" nodes="163 193 194 173" mid="1" />
+      <elem eid="513" shape="tet4" nodes="6 8 41 93" mid="1" />
+      <elem eid="514" shape="tet4" nodes="84 172 48 83" mid="1" />
+      <elem eid="515" shape="tet4" nodes="43 77 186 42" mid="1" />
+      <elem eid="516" shape="tet4" nodes="1 113 87 52" mid="1" />
+      <elem eid="517" shape="tet4" nodes="77 42 151 76" mid="1" />
+      <elem eid="518" shape="tet4" nodes="130 147 152 111" mid="1" />
+      <elem eid="519" shape="tet4" nodes="195 87 51 52" mid="1" />
+      <elem eid="520" shape="tet4" nodes="111 152 118 108" mid="1" />
+      <elem eid="521" shape="tet4" nodes="13 40 23 199" mid="1" />
+      <elem eid="522" shape="tet4" nodes="105 137 106 49" mid="1" />
+      <elem eid="523" shape="tet4" nodes="152 147 146 108" mid="1" />
+      <elem eid="524" shape="tet4" nodes="175 204 181 164" mid="1" />
+      <elem eid="525" shape="tet4" nodes="30 31 155 186" mid="1" />
+      <elem eid="526" shape="tet4" nodes="31 156 187 32" mid="1" />
+      <elem eid="527" shape="tet4" nodes="32 157 188 33" mid="1" />
+      <elem eid="528" shape="tet4" nodes="33 189 34 158" mid="1" />
+      <elem eid="529" shape="tet4" nodes="34 190 35 159" mid="1" />
+      <elem eid="530" shape="tet4" nodes="35 191 36 160" mid="1" />
+      <elem eid="531" shape="tet4" nodes="36 37 161 192" mid="1" />
+      <elem eid="532" shape="tet4" nodes="36 191 192 161" mid="1" />
+      <elem eid="533" shape="tet4" nodes="37 162 193 38" mid="1" />
+      <elem eid="534" shape="tet4" nodes="42 149 43 77" mid="1" />
+      <elem eid="535" shape="tet4" nodes="43 132 100 44" mid="1" />
+      <elem eid="536" shape="tet4" nodes="44 101 45 133" mid="1" />
+      <elem eid="537" shape="tet4" nodes="44 100 101 132" mid="1" />
+      <elem eid="538" shape="tet4" nodes="45 46 134 102" mid="1" />
+      <elem eid="539" shape="tet4" nodes="46 47 135 103" mid="1" />
+      <elem eid="540" shape="tet4" nodes="47 136 104 48" mid="1" />
+      <elem eid="541" shape="tet4" nodes="48 137 105 49" mid="1" />
+      <elem eid="542" shape="tet4" nodes="49 138 106 50" mid="1" />
+      <elem eid="543" shape="tet4" nodes="50 51 139 107" mid="1" />
+      <elem eid="544" shape="tet4" nodes="51 52 205 108" mid="1" />
+      <elem eid="545" shape="tet4" nodes="86 181 174 195" mid="1" />
+      <elem eid="546" shape="tet4" nodes="118 108 139 205" mid="1" />
+      <elem eid="547" shape="tet4" nodes="205 87 118 52" mid="1" />
+      <elem eid="548" shape="tet4" nodes="86 118 51 87" mid="1" />
+      <elem eid="549" shape="tet4" nodes="87 118 51 205" mid="1" />
+      <elem eid="550" shape="tet4" nodes="205 52 118 108" mid="1" />
+      <elem eid="551" shape="tet4" nodes="200 186 30 206" mid="1" />
+    </elset>
+    <temperature nid="5" value="523" />
+    <temperature nid="6" value="523" />
+    <temperature nid="7" value="523" />
+    <temperature nid="8" value="523" />
+    <temperature nid="53" value="523" />
+    <temperature nid="54" value="523" />
+    <temperature nid="55" value="523" />
+    <temperature nid="56" value="523" />
+    <temperature nid="57" value="523" />
+    <temperature nid="58" value="523" />
+    <temperature nid="59" value="523" />
+    <temperature nid="60" value="523" />
+    <temperature nid="61" value="523" />
+    <temperature nid="62" value="523" />
+    <temperature nid="63" value="523" />
+    <temperature nid="88" value="523" />
+    <temperature nid="89" value="523" />
+    <temperature nid="90" value="523" />
+    <temperature nid="91" value="523" />
+    <temperature nid="92" value="523" />
+    <temperature nid="93" value="523" />
+    <temperature nid="94" value="523" />
+    <temperature nid="95" value="523" />
+    <temperature nid="96" value="523" />
+    <temperature nid="97" value="523" />
+    <mat mid="1" name="sst">
+      <thermal type="Isotropic" thermalconductivity="0.018" />
+    </mat>
+    <mat mid="2" name="Unnamed" />
+    <results>
+      <stats start="2011-06-20T23:18:06.86" end="2011-06-20T23:18:07.27" duration=".41" />
+      <node nid="1" temperature="522.999999999968" heatfluxx="-2.00251244158218E-14" heatfluxy="3.06954461848363E-14" heatfluxz="3.80038857526545E-14" heatfluxmag="5.67262449096306E-14" />
+      <node nid="2" temperature="522.999999999965" heatfluxx="2.94676283374429E-14" heatfluxy="1.30967237055302E-14" heatfluxz="-2.04636307898909E-15" heatfluxmag="4.1570274114202E-14" />
+      <node nid="3" temperature="522.999999999968" heatfluxx="-1.22781784739345E-14" heatfluxy="2.14868123293854E-14" heatfluxz="3.2997604648699E-14" heatfluxmag="4.28584233566159E-14" />
+      <node nid="4" temperature="522.999999999965" heatfluxx="1.77351466845721E-14" heatfluxy="3.27418092638254E-14" heatfluxz="-6.82121026329696E-16" heatfluxmag="5.02964968371948E-14" />
+      <node nid="5" temperature="523" heatfluxx="6.65068000671454E-15" heatfluxy="-5.75539615965681E-16" heatfluxz="-5.70423708268208E-14" heatfluxmag="5.99665407340375E-14" />
+      <node nid="6" temperature="523" heatfluxx="0" heatfluxy="-1.22781784739345E-15" heatfluxz="-7.28505256120115E-14" heatfluxmag="7.29029827778085E-14" />
+      <node nid="7" temperature="523" heatfluxx="0" heatfluxy="-8.5265128291212E-16" heatfluxz="-5.62749846721999E-14" heatfluxmag="5.66068672091604E-14" />
+      <node nid="8" temperature="523" heatfluxx="-2.72848410531878E-15" heatfluxy="-1.87583282240666E-15" heatfluxz="-7.29869498172775E-14" heatfluxmag="7.33360933841336E-14" />
+      <node nid="9" temperature="522.999999999969" heatfluxx="-1.2661871551245E-14" heatfluxy="5.06474862049799E-14" heatfluxz="4.22062385041499E-15" heatfluxmag="6.30598736796591E-14" />
+      <node nid="10" temperature="522.999999999969" heatfluxx="-2.60911292571109E-14" heatfluxy="9.62430135587056E-15" heatfluxz="-1.41966438604868E-14" heatfluxmag="4.05307170699204E-14" />
+      <node nid="11" temperature="522.999999999971" heatfluxx="1.80762071977369E-14" heatfluxy="2.66027200268581E-14" heatfluxz="7.0770056481706E-15" heatfluxmag="6.37979433607048E-14" />
+      <node nid="12" temperature="522.999999999969" heatfluxx="7.22621962268022E-14" heatfluxy="6.44604369881563E-14" heatfluxz="6.01119154453045E-15" heatfluxmag="1.00856790475789E-13" />
+      <node nid="13" temperature="522.999999999966" heatfluxx="2.87130319520657E-14" heatfluxy="7.53317408452858E-14" heatfluxz="3.06954461848363E-15" heatfluxmag="8.36190317425322E-14" />
+      <node nid="14" temperature="522.999999999965" heatfluxx="2.76259015663527E-14" heatfluxy="-1.22781784739345E-14" heatfluxz="-2.72848410531878E-15" heatfluxmag="4.10646316869021E-14" />
+      <node nid="15" temperature="522.999999999966" heatfluxx="4.10871336953278E-14" heatfluxy="-9.33653154788772E-15" heatfluxz="-4.47641923528863E-15" heatfluxmag="4.87304703522888E-14" />
+      <node nid="16" temperature="522.999999999967" heatfluxx="3.86570775390283E-14" heatfluxy="3.5811353882309E-15" heatfluxz="-7.03437308402499E-16" heatfluxmag="4.49708929569571E-14" />
+      <node nid="17" temperature="522.999999999968" heatfluxx="-3.41060513164848E-16" heatfluxy="-2.04636307898909E-15" heatfluxz="2.38742359215394E-15" heatfluxmag="2.10684810904294E-14" />
+      <node nid="18" temperature="522.999999999967" heatfluxx="-1.45803369377973E-14" heatfluxy="-5.62749846721999E-15" heatfluxz="1.50919277075445E-14" heatfluxmag="3.5220752604893E-14" />
+      <node nid="19" temperature="522.999999999969" heatfluxx="-5.62749846721999E-15" heatfluxy="5.42286215932108E-14" heatfluxz="1.38129507831763E-14" heatfluxmag="6.54572495728056E-14" />
+      <node nid="20" temperature="522.999999999969" heatfluxx="-1.33013600134291E-14" heatfluxy="1.79056769411545E-14" heatfluxz="-1.66267000167863E-14" heatfluxmag="3.94143417054907E-14" />
+      <node nid="21" temperature="522.999999999971" heatfluxx="-2.30215846386272E-14" heatfluxy="1.94404492503963E-14" heatfluxz="9.29389898374211E-15" heatfluxmag="5.9089724782233E-14" />
+      <node nid="22" temperature="522.999999999969" heatfluxx="7.77617970015854E-14" heatfluxy="5.52518031327054E-14" heatfluxz="6.3948846218409E-16" heatfluxmag="9.58294536347305E-14" />
+      <node nid="23" temperature="522.999999999967" heatfluxx="4.51478854301968E-14" heatfluxy="7.87849785410799E-14" heatfluxz="1.53477230924182E-15" heatfluxmag="9.44159022178955E-14" />
+      <node nid="24" temperature="522.999999999965" heatfluxx="3.61524143954739E-14" heatfluxy="-9.54969436861575E-15" heatfluxz="1.70530256582424E-16" heatfluxmag="3.81884898809628E-14" />
+      <node nid="25" temperature="522.999999999966" heatfluxx="5.06474862049799E-14" heatfluxy="1.79056769411545E-15" heatfluxz="4.22062385041499E-15" heatfluxmag="5.28738427751087E-14" />
+      <node nid="26" temperature="522.999999999967" heatfluxx="4.5339731968852E-14" heatfluxy="7.16227077646181E-15" heatfluxz="-1.02318153949454E-15" heatfluxmag="4.70688699501575E-14" />
+      <node nid="27" temperature="522.999999999968" heatfluxx="1.5688783605583E-14" heatfluxy="7.84439180279151E-15" heatfluxz="3.24007487506606E-15" heatfluxmag="2.82742575505143E-14" />
+      <node nid="28" temperature="522.999999999967" heatfluxx="-7.67386154620908E-15" heatfluxy="-1.125499693444E-14" heatfluxz="6.90647539158817E-15" heatfluxmag="2.75207076859136E-14" />
+      <node nid="29" temperature="522.999999999998" heatfluxx="-4.86721773995669E-15" heatfluxy="-1.08286712929839E-14" heatfluxz="-7.33280103304423E-14" heatfluxmag="7.82331826388274E-14" />
+      <node nid="30" temperature="522.999999999992" heatfluxx="8.02202748673153E-15" heatfluxy="-4.1474379486317E-14" heatfluxz="-1.0129497240996E-13" heatfluxmag="1.20669768051364E-13" />
+      <node nid="31" temperature="522.999999999984" heatfluxx="2.28617125230812E-15" heatfluxy="-3.60191876325189E-14" heatfluxz="-1.08917375118978E-13" heatfluxmag="1.27349947164273E-13" />
+      <node nid="32" temperature="522.99999999998" heatfluxx="-3.92326171549939E-14" heatfluxy="2.01918481934626E-14" heatfluxz="-7.80932808653809E-14" heatfluxmag="1.19790064765082E-13" />
+      <node nid="33" temperature="522.999999999979" heatfluxx="-6.59769381984785E-14" heatfluxy="6.1135096984799E-14" heatfluxz="-7.10654280957782E-14" heatfluxmag="1.50054309186842E-13" />
+      <node nid="34" temperature="522.999999999974" heatfluxx="-4.73952305973008E-14" heatfluxy="8.41384105245067E-14" heatfluxz="-6.28756332713262E-14" heatfluxmag="1.45126573276473E-13" />
+      <node nid="35" temperature="522.999999999971" heatfluxx="-3.778463256562E-14" heatfluxy="8.50702365694035E-14" heatfluxz="-3.02569398107672E-14" heatfluxmag="1.13185651839781E-13" />
+      <node nid="36" temperature="522.999999999969" heatfluxx="-3.10608681632272E-14" heatfluxy="7.68847842534472E-14" heatfluxz="3.7007539889698E-15" heatfluxmag="9.13968903647666E-14" />
+      <node nid="37" temperature="522.999999999971" heatfluxx="-3.48247145406536E-14" heatfluxy="4.95877624676463E-14" heatfluxz="-1.00850042602677E-14" heatfluxmag="8.18867297180528E-14" />
+      <node nid="38" temperature="522.999999999968" heatfluxx="-1.38494929810154E-14" heatfluxy="1.83350477657638E-14" heatfluxz="-4.12761253747768E-14" heatfluxmag="7.4187212914449E-14" />
+      <node nid="39" temperature="522.999999999964" heatfluxx="1.70530256582424E-14" heatfluxy="1.30029320644098E-14" heatfluxz="-1.71542779980882E-14" heatfluxmag="6.02893031608714E-14" />
+      <node nid="40" temperature="522.999999999965" heatfluxx="1.67019339535139E-14" heatfluxy="2.51582284416894E-14" heatfluxz="3.97235185921411E-15" heatfluxmag="5.49833455373107E-14" />
+      <node nid="41" temperature="522.999999999997" heatfluxx="-2.00373051484348E-15" heatfluxy="-2.15436557482462E-14" heatfluxz="-6.67910171614494E-14" heatfluxmag="7.35993420898663E-14" />
+      <node nid="42" temperature="522.999999999994" heatfluxx="-7.58859641791787E-15" heatfluxy="-4.60431692772545E-14" heatfluxz="-7.16227077646181E-14" heatfluxmag="8.8265534934438E-14" />
+      <node nid="43" temperature="522.999999999987" heatfluxx="-6.71462885293295E-16" heatfluxy="-1.94724236735055E-14" heatfluxz="-1.33657085399363E-13" heatfluxmag="1.3918406861731E-13" />
+      <node nid="44" temperature="522.999999999978" heatfluxx="-1.04636299624872E-14" heatfluxy="8.15347789284715E-15" heatfluxz="-1.42451372963162E-13" heatfluxmag="1.4586294038407E-13" />
+      <node nid="45" temperature="522.999999999971" heatfluxx="-1.78843606590817E-14" heatfluxy="2.79669620795175E-14" heatfluxz="-1.00292806611696E-13" heatfluxmag="1.13516706375261E-13" />
+      <node nid="46" temperature="522.999999999966" heatfluxx="-2.4183322011595E-14" heatfluxy="5.2693849283969E-14" heatfluxz="-5.3902014362367E-14" heatfluxmag="9.95703808149569E-14" />
+      <node nid="47" temperature="522.999999999964" heatfluxx="-1.81774595375828E-14" heatfluxy="8.33972890745826E-14" heatfluxz="-2.98094986195263E-14" heatfluxmag="1.01013501364719E-13" />
+      <node nid="48" temperature="522.999999999962" heatfluxx="-5.20703480333395E-14" heatfluxy="8.57554027788865E-14" heatfluxz="-1.16973930541775E-14" heatfluxmag="1.15107292354398E-13" />
+      <node nid="49" temperature="522.999999999961" heatfluxx="-6.39328590068544E-14" heatfluxy="7.51958495470717E-14" heatfluxz="-4.22911705655338E-15" heatfluxmag="1.2102965877294E-13" />
+      <node nid="50" temperature="522.999999999961" heatfluxx="-6.42526032379465E-14" heatfluxy="4.42366143715844E-14" heatfluxz="6.2799765387922E-15" heatfluxmag="1.0650474595981E-13" />
+      <node nid="51" temperature="522.999999999962" heatfluxx="-2.5965515452039E-14" heatfluxy="-6.90647539158817E-15" heatfluxz="5.82128631013542E-14" heatfluxmag="1.07111136558268E-13" />
+      <node nid="52" temperature="522.999999999967" heatfluxx="-1.09992015495663E-14" heatfluxy="3.12430081805815E-14" heatfluxz="4.10071976375548E-14" heatfluxmag="8.58777698626706E-14" />
+      <node nid="53" temperature="523" heatfluxx="-1.47082346302341E-15" heatfluxy="-1.53477230924182E-15" heatfluxz="-5.42605960163201E-14" heatfluxmag="5.59427287542807E-14" />
+      <node nid="54" temperature="523" heatfluxx="-1.72661884789704E-15" heatfluxy="-9.72022462519817E-15" heatfluxz="-4.90487650495197E-14" heatfluxmag="5.35936555438432E-14" />
+      <node nid="55" temperature="523" heatfluxx="2.1103119252075E-15" heatfluxy="7.67386154620908E-16" heatfluxz="-4.31015223512077E-14" heatfluxmag="4.51867267155633E-14" />
+      <node nid="56" temperature="523" heatfluxx="-1.02318153949454E-14" heatfluxy="3.18323145620525E-15" heatfluxz="-5.09912112534039E-14" heatfluxmag="5.99474178416122E-14" />
+      <node nid="57" temperature="523" heatfluxx="-1.41540112963412E-14" heatfluxy="9.2086338554509E-15" heatfluxz="-6.6975758272747E-14" heatfluxmag="7.73561861538568E-14" />
+      <node nid="58" temperature="523" heatfluxx="1.15107923193136E-15" heatfluxy="-1.02318153949454E-15" heatfluxz="-5.52518031327054E-14" heatfluxmag="5.57063328684374E-14" />
+      <node nid="59" temperature="523" heatfluxx="1.53477230924182E-15" heatfluxy="-6.13908923696726E-15" heatfluxz="-4.7066350816749E-14" heatfluxmag="4.8987172007942E-14" />
+      <node nid="60" temperature="523" heatfluxx="1.66267000167863E-15" heatfluxy="-1.02318153949454E-15" heatfluxz="-4.57873738923808E-14" heatfluxmag="4.70000460612849E-14" />
+      <node nid="61" temperature="523" heatfluxx="-2.17426077142591E-15" heatfluxy="9.2086338554509E-15" heatfluxz="-4.52757831226336E-14" heatfluxmag="4.75901468025234E-14" />
+      <node nid="62" temperature="523" heatfluxx="3.06954461848363E-15" heatfluxy="-6.13908923696726E-15" heatfluxz="-6.15827389083279E-14" heatfluxmag="6.31164248290014E-14" />
+      <node nid="63" temperature="523" heatfluxx="0" heatfluxy="-6.82121026329696E-16" heatfluxz="-7.18785031494917E-14" heatfluxmag="7.19280653419839E-14" />
+      <node nid="64" temperature="522.999999999998" heatfluxx="-4.46479217233983E-15" heatfluxy="-1.60918551211415E-14" heatfluxz="-6.94833281820386E-14" heatfluxmag="7.52525652450489E-14" />
+      <node nid="65" temperature="522.999999999992" heatfluxx="-6.54836185276508E-15" heatfluxy="-4.83964868180919E-14" heatfluxz="-1.02318153949454E-13" heatfluxmag="1.2065434104335E-13" />
+      <node nid="66" temperature="522.999999999984" heatfluxx="1.43245415529236E-14" heatfluxy="-4.50839365839784E-14" heatfluxz="-1.17154286272125E-13" heatfluxmag="1.36156118635708E-13" />
+      <node nid="67" temperature="522.99999999998" heatfluxx="-2.04636307898909E-14" heatfluxy="8.88888962435885E-15" heatfluxz="-7.16227077646181E-14" heatfluxmag="1.00804926504809E-13" />
+      <node nid="68" temperature="522.99999999998" heatfluxx="-8.4207840700401E-14" heatfluxy="7.62781837693183E-14" heatfluxz="-5.54901093824389E-14" heatfluxmag="1.53432096725737E-13" />
+      <node nid="69" temperature="522.999999999975" heatfluxx="-6.54836185276508E-14" heatfluxy="1.18382104119519E-13" heatfluxz="-7.71534836019328E-14" heatfluxmag="1.78687898270363E-13" />
+      <node nid="70" temperature="522.999999999971" heatfluxx="-5.89352566748857E-14" heatfluxy="1.23139898278168E-13" heatfluxz="-3.9187852962641E-14" heatfluxmag="1.56466409323912E-13" />
+      <node nid="71" temperature="522.99999999997" heatfluxx="-4.17458068113774E-14" heatfluxy="1.08099129647599E-13" heatfluxz="-8.21422929675464E-15" heatfluxmag="1.23526920991333E-13" />
+      <node nid="72" temperature="522.999999999971" heatfluxx="-5.23868948221207E-14" heatfluxy="8.34404545457801E-14" heatfluxz="8.90167939360253E-15" heatfluxmag="1.10933992088909E-13" />
+      <node nid="73" temperature="522.999999999969" heatfluxx="-3.86762621928938E-14" heatfluxy="4.09784206567565E-14" heatfluxz="-3.01838554150891E-14" heatfluxmag="8.52807262531724E-14" />
+      <node nid="74" temperature="522.999999999964" heatfluxx="1.61151092470391E-14" heatfluxy="1.35091937636389E-14" heatfluxz="-1.91846538655227E-14" heatfluxmag="6.63052780492687E-14" />
+      <node nid="75" temperature="522.999999999965" heatfluxx="6.54836185276508E-15" heatfluxy="2.08473238672013E-14" heatfluxz="-8.18545231595635E-16" heatfluxmag="4.4263355502453E-14" />
+      <node nid="76" temperature="522.999999999997" heatfluxx="-2.55795384873636E-17" heatfluxy="-2.79840151051758E-14" heatfluxz="-6.11862560617737E-14" heatfluxmag="7.38910113860599E-14" />
+      <node nid="77" temperature="522.999999999994" heatfluxx="1.91663827666032E-14" heatfluxy="-3.40573283860327E-14" heatfluxz="-9.0478481849589E-14" heatfluxmag="1.11714072924518E-13" />
+      <node nid="78" temperature="522.999999999987" heatfluxx="-2.66027200268581E-15" heatfluxy="-1.3505996321328E-14" heatfluxz="-1.38884104217141E-13" heatfluxmag="1.42222711555388E-13" />
+      <node nid="79" temperature="522.999999999978" heatfluxx="-2.45563569478691E-14" heatfluxy="1.70103930940968E-14" heatfluxz="-1.34686262143191E-13" heatfluxmag="1.39521054505638E-13" />
+      <node nid="80" temperature="522.999999999971" heatfluxx="-2.87663226572477E-14" heatfluxy="4.10551592722186E-14" heatfluxz="-1.00472916444994E-13" heatfluxmag="1.17771493410066E-13" />
+      <node nid="81" temperature="522.999999999965" heatfluxx="-5.81295012125338E-14" heatfluxy="7.54596385377226E-14" heatfluxz="-5.38469165090039E-14" heatfluxmag="1.21112231948922E-13" />
+      <node nid="82" temperature="522.999999999964" heatfluxx="-2.27657892537536E-14" heatfluxy="1.00220631793491E-13" heatfluxz="-3.27545990330691E-14" heatfluxmag="1.15024910667207E-13" />
+      <node nid="83" temperature="522.999999999961" heatfluxx="-3.96802590785228E-14" heatfluxy="9.33653154788772E-14" heatfluxz="-2.23341345417793E-14" heatfluxmag="1.17414333955877E-13" />
+      <node nid="84" temperature="522.999999999961" heatfluxx="-5.58273427486711E-14" heatfluxy="8.5051965470484E-14" heatfluxz="-7.67386154620908E-15" heatfluxmag="1.23136815225255E-13" />
+      <node nid="85" temperature="522.999999999961" heatfluxx="-6.03677108301781E-14" heatfluxy="5.51239054402686E-14" heatfluxz="3.5731417824536E-15" heatfluxmag="1.10409371502936E-13" />
+      <node nid="86" temperature="522.999999999962" heatfluxx="-5.87306203669868E-14" heatfluxy="4.2700776248239E-14" heatfluxz="5.86112491873791E-14" heatfluxmag="1.30217703090466E-13" />
+      <node nid="87" temperature="522.999999999966" heatfluxx="-3.07274206079455E-14" heatfluxy="1.55395696310734E-14" heatfluxz="5.25020027453138E-14" heatfluxmag="9.56084991150676E-14" />
+      <node nid="88" temperature="523" heatfluxx="7.41806616133544E-15" heatfluxy="-8.69704308570362E-15" heatfluxz="-9.05515662452672E-14" heatfluxmag="9.43411395230206E-14" />
+      <node nid="89" temperature="523" heatfluxx="1.37063693728123E-14" heatfluxy="1.36424205265939E-15" heatfluxz="-1.09480424725916E-13" heatfluxmag="1.14190569030695E-13" />
+      <node nid="90" temperature="523" heatfluxx="-3.24007487506606E-15" heatfluxy="1.38129507831763E-14" heatfluxz="-1.24657617561752E-13" heatfluxmag="1.26750160556494E-13" />
+      <node nid="91" temperature="523" heatfluxx="-2.40447661781218E-14" heatfluxy="-1.02318153949454E-14" heatfluxz="-9.41327016334981E-14" heatfluxmag="1.05479312333136E-13" />
+      <node nid="92" temperature="523" heatfluxx="-2.38742359215394E-15" heatfluxy="-2.72848410531878E-15" heatfluxz="-6.2755134422332E-14" heatfluxmag="6.30738182779834E-14" />
+      <node nid="93" temperature="523" heatfluxx="5.62749846721999E-15" heatfluxy="-6.65068000671454E-15" heatfluxz="-8.44124770082999E-14" heatfluxmag="8.61386474169903E-14" />
+      <node nid="94" temperature="523" heatfluxx="-1.62003743753303E-15" heatfluxy="3.41060513164848E-15" heatfluxz="-1.05046638054773E-13" heatfluxmag="1.05596411711597E-13" />
+      <node nid="95" temperature="523" heatfluxx="4.05009359383257E-16" heatfluxy="-1.4495071809506E-15" heatfluxz="-1.21076482173521E-13" heatfluxmag="1.22440240845828E-13" />
+      <node nid="96" temperature="523" heatfluxx="-1.49320555919985E-14" heatfluxy="-1.33013600134291E-14" heatfluxz="-1.11697318061488E-13" heatfluxmag="1.17834294914461E-13" />
+      <node nid="97" temperature="523" heatfluxx="-1.31308297568466E-14" heatfluxy="4.00746102968696E-15" heatfluxz="-6.73594513500575E-14" heatfluxmag="7.990643818218E-14" />
+      <node nid="98" temperature="522.999999999996" heatfluxx="7.91366971952812E-15" heatfluxy="-2.74340550276975E-14" heatfluxz="-6.02078387146321E-14" heatfluxmag="7.95117326892396E-14" />
+      <node nid="99" temperature="522.999999999995" heatfluxx="1.04876107798191E-14" heatfluxy="-1.21994722016657E-14" heatfluxz="-9.84836827473583E-14" heatfluxmag="1.42404731499512E-13" />
+      <node nid="100" temperature="522.999999999984" heatfluxx="-6.38574907238113E-15" heatfluxy="-1.93490937557986E-14" heatfluxz="-1.65328546611927E-13" heatfluxmag="1.79381464749177E-13" />
+      <node nid="101" temperature="522.999999999973" heatfluxx="-2.57485461523694E-14" heatfluxy="6.41680994054435E-14" heatfluxz="-1.21827408652258E-13" heatfluxmag="1.74080298126135E-13" />
+      <node nid="102" temperature="522.999999999967" heatfluxx="-1.81249301281891E-14" heatfluxy="1.01495954498075E-13" heatfluxz="-9.10920067055081E-14" heatfluxmag="1.6051700536624E-13" />
+      <node nid="103" temperature="522.999999999962" heatfluxx="-1.77321015014188E-14" heatfluxy="8.74272083300249E-14" heatfluxz="-3.9107945676496E-14" heatfluxmag="1.29320485317326E-13" />
+      <node nid="104" temperature="522.999999999962" heatfluxx="-1.97601934814884E-14" heatfluxy="7.34132754587335E-14" heatfluxz="-3.47147310897355E-15" heatfluxmag="9.05325040770502E-14" />
+      <node nid="105" temperature="522.999999999963" heatfluxx="-4.33938599339204E-14" heatfluxy="5.13052457660836E-14" heatfluxz="1.97090201302176E-14" heatfluxmag="9.27418606286495E-14" />
+      <node nid="106" temperature="522.999999999965" heatfluxx="-5.44113325824063E-14" heatfluxy="-5.26207648882909E-15" heatfluxz="1.92037100507239E-14" heatfluxmag="9.07593886229603E-14" />
+      <node nid="107" temperature="522.999999999967" heatfluxx="-2.451981475003E-14" heatfluxy="-2.34235488148572E-14" heatfluxz="-1.78086117281444E-15" heatfluxmag="7.87152399791406E-14" />
+      <node nid="108" temperature="522.999999999966" heatfluxx="1.1833902279154E-14" heatfluxy="-2.72725000477773E-14" heatfluxz="1.87378533741809E-14" heatfluxmag="6.20961122621887E-14" />
+      <node nid="109" temperature="522.999999999965" heatfluxx="2.40813083759609E-14" heatfluxy="-1.60968381481195E-14" heatfluxz="-4.82357011476E-15" heatfluxmag="3.88747699305508E-14" />
+      <node nid="110" temperature="522.999999999966" heatfluxx="3.85785948641238E-14" heatfluxy="-1.40454920421524E-14" heatfluxz="-4.32526741695421E-15" heatfluxmag="4.84827128921657E-14" />
+      <node nid="111" temperature="522.999999999967" heatfluxx="2.66613398025584E-14" heatfluxy="9.54969436861575E-15" heatfluxz="1.23914212224463E-14" heatfluxmag="3.94389582724874E-14" />
+      <node nid="112" temperature="522.999999999968" heatfluxx="4.09272615797818E-15" heatfluxy="-1.8231234703721E-14" heatfluxz="1.0073396662268E-14" heatfluxmag="3.00648580214783E-14" />
+      <node nid="113" temperature="522.999999999967" heatfluxx="-7.8133863015947E-15" heatfluxy="-1.07899144164879E-14" heatfluxz="2.34634130306817E-14" heatfluxmag="4.73453602854987E-14" />
+      <node nid="114" temperature="522.999999999997" heatfluxx="-9.72022462519817E-16" heatfluxy="-2.4760993255768E-14" heatfluxz="-4.23341361965868E-14" heatfluxmag="5.40277655323856E-14" />
+      <node nid="115" temperature="522.999999999998" heatfluxx="-2.22345219159391E-15" heatfluxy="-1.21207659293969E-14" heatfluxz="-5.34612354385899E-14" heatfluxmag="5.77705926902222E-14" />
+      <node nid="116" temperature="522.999999999999" heatfluxx="-1.59689404556827E-14" heatfluxy="-4.96973890611636E-15" heatfluxz="-4.16780895510068E-14" heatfluxmag="5.18442750404061E-14" />
+      <node nid="117" temperature="522.999999999999" heatfluxx="6.50146603220492E-15" heatfluxy="-1.63709046319127E-14" heatfluxz="-4.27817781201156E-14" heatfluxmag="5.11379474014656E-14" />
+      <node nid="118" temperature="522.999999999967" heatfluxx="2.04468021461492E-15" heatfluxy="-3.45424741441859E-14" heatfluxz="4.86642305400222E-14" heatfluxmag="7.19271877894007E-14" />
+      <node nid="119" temperature="522.999999999999" heatfluxx="-7.84439180279151E-15" heatfluxy="-1.65982783073559E-14" heatfluxz="-5.417177817435E-14" heatfluxmag="5.96893468940769E-14" />
+      <node nid="120" temperature="522.999999999999" heatfluxx="2.79243295153719E-15" heatfluxy="-1.125499693444E-14" heatfluxz="-4.59579041489633E-14" heatfluxmag="5.10209367976895E-14" />
+      <node nid="121" temperature="522.999999999999" heatfluxx="-4.04621790618297E-15" heatfluxy="1.67429706462744E-15" heatfluxz="-4.18574266156859E-14" heatfluxmag="4.47538311599912E-14" />
+      <node nid="122" temperature="522.999999999999" heatfluxx="-1.2661871551245E-14" heatfluxy="-1.02318153949454E-15" heatfluxz="-4.47032411088344E-14" heatfluxmag="5.01006061912971E-14" />
+      <node nid="123" temperature="522.999999999998" heatfluxx="-9.28171825112908E-15" heatfluxy="-3.87347297094363E-15" heatfluxz="-5.89990913267359E-14" heatfluxmag="6.61940753252301E-14" />
+      <node nid="124" temperature="522.999999999993" heatfluxx="1.37276856548851E-14" heatfluxy="-5.35465005668812E-14" heatfluxz="-1.28529187293225E-13" heatfluxmag="1.7981953429727E-13" />
+      <node nid="125" temperature="522.999999999974" heatfluxx="-2.84636314518138E-14" heatfluxy="5.65819391340483E-14" heatfluxz="-1.36976528557209E-13" heatfluxmag="1.83301239351029E-13" />
+      <node nid="126" temperature="522.999999999963" heatfluxx="-3.63229446520563E-14" heatfluxy="1.21119114737667E-13" heatfluxz="-6.08121553113961E-14" heatfluxmag="1.71709314318822E-13" />
+      <node nid="127" temperature="522.999999999963" heatfluxx="-4.32294200436445E-14" heatfluxy="8.83517259353539E-14" heatfluxz="1.84704251893208E-14" heatfluxmag="1.10238888344983E-13" />
+      <node nid="128" temperature="522.999999999967" heatfluxx="-3.99040800402872E-14" heatfluxy="-2.74212652584538E-14" heatfluxz="4.4172665525366E-15" heatfluxmag="9.22854890410797E-14" />
+      <node nid="129" temperature="522.999999999965" heatfluxx="1.83746351467562E-14" heatfluxy="-2.65387711806397E-14" heatfluxz="-6.09645667282166E-15" heatfluxmag="3.93932108099637E-14" />
+      <node nid="130" temperature="522.999999999967" heatfluxx="2.08996456504709E-14" heatfluxy="7.44132028723305E-15" heatfluxz="1.64217730323137E-14" heatfluxmag="3.45855259517809E-14" />
+      <node nid="131" temperature="522.99999999999" heatfluxx="-1.52070356307377E-14" heatfluxy="-2.40959252550965E-14" heatfluxz="-1.49888101930173E-13" heatfluxmag="1.56549730824385E-13" />
+      <node nid="132" temperature="522.999999999981" heatfluxx="-2.1422863483167E-15" heatfluxy="-2.34479102800833E-15" heatfluxz="-1.63570836562987E-13" heatfluxmag="1.67641661140457E-13" />
+      <node nid="133" temperature="522.999999999973" heatfluxx="5.49427170426497E-15" heatfluxy="8.48388026497559E-15" heatfluxz="-1.23238030457634E-13" heatfluxmag="1.29548796617285E-13" />
+      <node nid="134" temperature="522.999999999967" heatfluxx="1.27897692436818E-16" heatfluxy="1.98241423277068E-14" heatfluxz="-8.39300191846082E-14" heatfluxmag="9.67839109689247E-14" />
+      <node nid="135" temperature="522.999999999963" heatfluxx="2.57927013080916E-15" heatfluxy="1.71382907865336E-14" heatfluxz="-3.02752822811669E-14" heatfluxmag="5.75852534935102E-14" />
+      <node nid="136" temperature="522.999999999962" heatfluxx="-9.9653618690354E-15" heatfluxy="2.0122570276726E-14" heatfluxz="-1.11030767913078E-14" heatfluxmag="4.20522555196869E-14" />
+      <node nid="137" temperature="522.999999999962" heatfluxx="-3.46176420862321E-14" heatfluxy="-5.37170308234636E-15" heatfluxz="7.97628629811698E-15" heatfluxmag="5.2557822056295E-14" />
+      <node nid="138" temperature="522.999999999963" heatfluxx="-4.90061324853741E-14" heatfluxy="-4.33146851719357E-14" heatfluxz="1.91680005201533E-14" heatfluxmag="7.19539346027419E-14" />
+      <node nid="139" temperature="522.999999999964" heatfluxx="-2.84102153567373E-14" heatfluxy="-3.51192016644157E-14" heatfluxz="3.2867826107844E-14" heatfluxmag="7.81648147819304E-14" />
+      <node nid="140" temperature="522.999999999999" heatfluxx="-3.72066014361652E-16" heatfluxy="-1.95334657539868E-15" heatfluxz="-5.51355325032174E-14" heatfluxmag="5.65230711760219E-14" />
+      <node nid="141" temperature="522.999999999995" heatfluxx="2.16402895603096E-14" heatfluxy="-6.34372554486617E-15" heatfluxz="-5.73493252886692E-14" heatfluxmag="1.11712850144834E-13" />
+      <node nid="142" temperature="522.999999999985" heatfluxx="-8.7865714704094E-15" heatfluxy="-3.13349346470204E-14" heatfluxz="-1.45112721838814E-13" heatfluxmag="1.60269655340788E-13" />
+      <node nid="143" temperature="522.999999999967" heatfluxx="-4.67657912395225E-14" heatfluxy="1.18279785965569E-13" heatfluxz="-1.0223829907674E-13" heatfluxmag="1.86720580048825E-13" />
+      <node nid="144" temperature="522.999999999962" heatfluxx="-3.83565179618017E-14" heatfluxy="9.76115188677795E-14" heatfluxz="-8.28477286773932E-15" heatfluxmag="1.28971695625373E-13" />
+      <node nid="145" temperature="522.999999999965" heatfluxx="-5.86538817515247E-14" heatfluxy="3.41742634191178E-14" heatfluxz="1.90738425054349E-14" heatfluxmag="1.07805532926161E-13" />
+      <node nid="146" temperature="522.999999999966" heatfluxx="7.43938244340825E-15" heatfluxy="-2.18278728425503E-14" heatfluxz="-8.68638494466723E-16" heatfluxmag="5.15657188255215E-14" />
+      <node nid="147" temperature="522.999999999966" heatfluxx="2.87194268366875E-14" heatfluxy="-7.36690708436072E-15" heatfluxz="3.78577169612981E-15" heatfluxmag="4.38808722257443E-14" />
+      <node nid="148" temperature="522.999999999967" heatfluxx="7.44132028723305E-15" heatfluxy="-3.03233801704747E-14" heatfluxz="2.79485525631819E-14" heatfluxmag="5.29691537312128E-14" />
+      <node nid="149" temperature="522.999999999996" heatfluxx="9.31826044896816E-16" heatfluxy="9.42788704248544E-15" heatfluxz="-7.40344928219981E-14" heatfluxmag="1.02725553539473E-13" />
+      <node nid="150" temperature="522.999999999998" heatfluxx="6.49326746217692E-16" heatfluxy="-1.9991393156278E-14" heatfluxz="-4.19307665512091E-14" heatfluxmag="5.27271670292478E-14" />
+      <node nid="151" temperature="522.999999999997" heatfluxx="-9.60298507379775E-15" heatfluxy="-2.31921148952097E-14" heatfluxz="-4.16093826061115E-14" heatfluxmag="5.14060250313168E-14" />
+      <node nid="152" temperature="522.999999999966" heatfluxx="1.08784092844871E-14" heatfluxy="4.54747350886465E-16" heatfluxz="2.91606738755945E-14" heatfluxmag="4.71585098402743E-14" />
+      <node nid="153" temperature="522.999999999997" heatfluxx="5.34612354385899E-15" heatfluxy="-2.10775397135876E-14" heatfluxz="-5.19776222063228E-14" heatfluxmag="6.03536640617144E-14" />
+      <node nid="154" temperature="522.999999999994" heatfluxx="-1.92348993875515E-14" heatfluxy="-9.64714022951999E-15" heatfluxz="-8.96928245960485E-14" heatfluxmag="1.00974414810833E-13" />
+      <node nid="155" temperature="522.999999999989" heatfluxx="2.35697176062136E-15" heatfluxy="4.44901258690931E-15" heatfluxz="-1.03574862972014E-13" heatfluxmag="1.06598787782959E-13" />
+      <node nid="156" temperature="522.999999999984" heatfluxx="-1.8289370018465E-15" heatfluxy="-6.65068000671454E-16" heatfluxz="-8.89528450898069E-14" heatfluxmag="9.50156825738908E-14" />
+      <node nid="157" temperature="522.999999999978" heatfluxx="-3.30542260229549E-14" heatfluxy="-2.47695197685971E-14" heatfluxz="-7.04022335221155E-14" heatfluxmag="9.85310777195569E-14" />
+      <node nid="158" temperature="522.999999999975" heatfluxx="-5.16600096034381E-14" heatfluxy="-2.48547848968883E-14" heatfluxz="-6.52360327216273E-14" heatfluxmag="9.64669492726415E-14" />
+      <node nid="159" temperature="522.999999999972" heatfluxx="-3.42552652909944E-14" heatfluxy="6.69331257086014E-15" heatfluxz="-3.78396480815724E-14" heatfluxmag="6.30907060260137E-14" />
+      <node nid="160" temperature="522.999999999971" heatfluxx="-1.79056769411545E-14" heatfluxy="2.06341610464733E-14" heatfluxz="-2.03317362945654E-14" heatfluxmag="3.87735393243366E-14" />
+      <node nid="161" temperature="522.99999999997" heatfluxx="-1.1681322575896E-14" heatfluxy="1.74793512996985E-15" heatfluxz="2.33912889058274E-15" heatfluxmag="3.20662153933943E-14" />
+      <node nid="162" temperature="522.99999999997" heatfluxx="-1.15401022071637E-14" heatfluxy="-6.3948846218409E-16" heatfluxz="-2.51986764787659E-14" heatfluxmag="3.69962967543962E-14" />
+      <node nid="163" temperature="522.999999999968" heatfluxx="-5.71276359551121E-15" heatfluxy="-6.70397071189654E-15" heatfluxz="-4.19930756834219E-14" heatfluxmag="7.22249192817422E-14" />
+      <node nid="164" temperature="522.999999999967" heatfluxx="3.93498567063944E-14" heatfluxy="2.68158828475862E-14" heatfluxz="3.48734374711057E-14" heatfluxmag="1.03333192114382E-13" />
+      <node nid="165" temperature="522.999999999996" heatfluxx="1.65243818628369E-14" heatfluxy="-2.59376520261867E-14" heatfluxz="-8.37985680846032E-14" heatfluxmag="9.6179820543723E-14" />
+      <node nid="166" temperature="522.999999999996" heatfluxx="8.96446553352606E-15" heatfluxy="-8.27846881954677E-15" heatfluxz="-1.01853071431502E-13" heatfluxmag="1.10598261999488E-13" />
+      <node nid="167" temperature="522.999999999996" heatfluxx="-2.08046913030557E-14" heatfluxy="-1.42392764246324E-14" heatfluxz="-9.27684595808387E-14" heatfluxmag="1.09611854775514E-13" />
+      <node nid="168" temperature="522.999999999998" heatfluxx="-1.57740487338742E-14" heatfluxy="-1.21502807814977E-14" heatfluxz="-7.14521775080357E-14" heatfluxmag="8.2339253346091E-14" />
+      <node nid="169" temperature="522.999999999988" heatfluxx="1.57186264004849E-14" heatfluxy="-1.65755409398116E-14" heatfluxz="-1.01606723035275E-13" heatfluxmag="1.11396645204605E-13" />
+      <node nid="170" temperature="522.999999999975" heatfluxx="-3.57843754628107E-14" heatfluxy="9.2086338554509E-15" heatfluxz="-8.48733271163749E-14" heatfluxmag="1.09436766855488E-13" />
+      <node nid="171" temperature="522.999999999971" heatfluxx="-3.44300588039914E-14" heatfluxy="9.20991283237527E-14" heatfluxz="-2.06474837227688E-14" heatfluxmag="1.0463361964384E-13" />
+      <node nid="172" temperature="522.99999999997" heatfluxx="-4.89714935270058E-14" heatfluxy="1.16099130309522E-13" heatfluxz="-1.21782584017183E-14" heatfluxmag="1.37419121147311E-13" />
+      <node nid="173" temperature="522.999999999967" heatfluxx="-2.97745827992912E-14" heatfluxy="6.35395736026112E-14" heatfluxz="-3.51718654201249E-15" heatfluxmag="1.42529094331751E-13" />
+      <node nid="174" temperature="522.99999999997" heatfluxx="-3.17612602884765E-14" heatfluxy="5.62110358259815E-14" heatfluxz="1.76711978383537E-14" heatfluxmag="9.7616343983881E-14" />
+      <node nid="175" temperature="522.99999999997" heatfluxx="5.24380538990954E-14" heatfluxy="3.32534000335727E-14" heatfluxz="2.49621989745208E-14" heatfluxmag="9.70013364114189E-14" />
+      <node nid="176" temperature="522.999999999982" heatfluxx="-9.98001681296046E-15" heatfluxy="-5.11590769747271E-16" heatfluxz="-1.19153187316812E-13" heatfluxmag="1.26029390046424E-13" />
+      <node nid="177" temperature="522.999999999992" heatfluxx="8.08739741842146E-15" heatfluxy="-1.77692527358886E-14" heatfluxz="-8.03623834144673E-14" heatfluxmag="1.01939931770842E-13" />
+      <node nid="178" temperature="522.999999999971" heatfluxx="-4.35971259094003E-14" heatfluxy="4.75779415864963E-14" heatfluxz="-3.98715435667718E-14" heatfluxmag="9.19256861847495E-14" />
+      <node nid="179" temperature="522.99999999997" heatfluxx="-3.9605652091268E-14" heatfluxy="1.00527586255339E-13" heatfluxz="-1.15694120950138E-14" heatfluxmag="1.24615922587582E-13" />
+      <node nid="180" temperature="522.999999999969" heatfluxx="-6.13749051581181E-14" heatfluxy="1.03059960565588E-13" heatfluxz="-2.36802577546769E-14" heatfluxmag="1.35636731008459E-13" />
+      <node nid="181" temperature="522.99999999997" heatfluxx="3.88808985007927E-15" heatfluxy="7.65339791541919E-14" heatfluxz="5.23229459759023E-14" heatfluxmag="1.52335813819927E-13" />
+      <node nid="182" temperature="522.99999999997" heatfluxx="-6.33585491763929E-15" heatfluxy="3.1492347191558E-14" heatfluxz="6.25714864537048E-15" heatfluxmag="5.244585110753E-14" />
+      <node nid="183" temperature="522.999999999967" heatfluxx="4.23597157350741E-14" heatfluxy="6.62254251437844E-14" heatfluxz="1.80058967735874E-14" heatfluxmag="8.97966243827968E-14" />
+      <node nid="184" temperature="522.999999999997" heatfluxx="1.22248877687525E-14" heatfluxy="-1.42392764246324E-14" heatfluxz="-9.8140162663185E-14" heatfluxmag="1.04449911495322E-13" />
+      <node nid="185" temperature="522.999999999996" heatfluxx="-2.840394586201E-15" heatfluxy="-1.13828946268768E-14" heatfluxz="-9.73727765085641E-14" heatfluxmag="1.07600190003589E-13" />
+      <node nid="186" temperature="522.99999999999" heatfluxx="2.00714111997513E-14" heatfluxy="-2.1529444893531E-14" heatfluxz="-9.65281188314293E-14" heatfluxmag="1.14472189909944E-13" />
+      <node nid="187" temperature="522.999999999983" heatfluxx="6.15507644852187E-16" heatfluxy="2.65387711806398E-15" heatfluxz="-1.06932962484763E-13" heatfluxmag="1.12478669775502E-13" />
+      <node nid="188" temperature="522.999999999976" heatfluxx="-3.20009019283418E-14" heatfluxy="2.68585154117318E-15" heatfluxz="-9.29099297497515E-14" heatfluxmag="1.11464019376444E-13" />
+      <node nid="189" temperature="522.999999999972" heatfluxx="-4.64188687487876E-14" heatfluxy="2.76578759894619E-14" heatfluxz="-5.86145038755648E-14" heatfluxmag="9.79382495178822E-14" />
+      <node nid="190" temperature="522.999999999971" heatfluxx="-3.61151109018465E-14" heatfluxy="6.07913719363751E-14" heatfluxz="-2.48822134771287E-14" heatfluxmag="9.23180666459835E-14" />
+      <node nid="191" temperature="522.99999999997" heatfluxx="-2.94164692604681E-14" heatfluxy="4.63522553673101E-14" heatfluxz="-1.16843201780625E-14" heatfluxmag="7.12337723758727E-14" />
+      <node nid="192" temperature="522.99999999997" heatfluxx="-3.05249159282539E-14" heatfluxy="4.9720227934813E-14" heatfluxz="-3.52035067763268E-15" heatfluxmag="8.19174918156953E-14" />
+      <node nid="193" temperature="522.999999999969" heatfluxx="-4.06600467580834E-14" heatfluxy="3.74374816861486E-14" heatfluxz="-2.89027373463162E-14" heatfluxmag="9.92068308623997E-14" />
+      <node nid="194" temperature="522.999999999967" heatfluxx="-2.1103119252075E-15" heatfluxy="6.45163922285974E-14" heatfluxz="2.44284592554322E-14" heatfluxmag="1.26781464143401E-13" />
+      <node nid="195" temperature="522.999999999969" heatfluxx="-2.92337582712727E-14" heatfluxy="8.7180548494611E-14" heatfluxz="4.74409083445997E-14" heatfluxmag="1.28604738902895E-13" />
+      <node nid="196" temperature="522.99999999997" heatfluxx="-3.41060513164849E-16" heatfluxy="4.32009983342141E-14" heatfluxz="-6.79278855386656E-15" heatfluxmag="5.41372453244028E-14" />
+      <node nid="197" temperature="522.99999999997" heatfluxx="-1.2943246474606E-14" heatfluxy="2.14996020986291E-14" heatfluxz="1.22781784739345E-15" heatfluxmag="4.12081421211979E-14" />
+      <node nid="198" temperature="522.99999999997" heatfluxx="4.25899315814604E-14" heatfluxy="4.00746102968696E-14" heatfluxz="1.38368483337814E-14" heatfluxmag="7.11453974403459E-14" />
+      <node nid="199" temperature="522.999999999967" heatfluxx="6.25535986645528E-14" heatfluxy="7.86919620374895E-14" heatfluxz="1.25813904748962E-14" heatfluxmag="1.05665277371449E-13" />
+      <node nid="200" temperature="522.999999999994" heatfluxx="-1.72395431263794E-14" heatfluxy="-2.39595010498306E-14" heatfluxz="-8.12896416846343E-14" heatfluxmag="1.00404921289185E-13" />
+      <node nid="201" temperature="522.999999999997" heatfluxx="-3.48986294408281E-14" heatfluxy="-3.06024296812459E-14" heatfluxz="-8.60635199470297E-14" heatfluxmag="1.04195984364124E-13" />
+      <node nid="202" temperature="522.999999999994" heatfluxx="1.42971349045443E-14" heatfluxy="-4.140231015169E-14" heatfluxz="-7.28011936449288E-14" heatfluxmag="9.60489051399507E-14" />
+      <node nid="203" temperature="522.999999999967" heatfluxx="4.71942485091858E-14" heatfluxy="6.38848973721906E-14" heatfluxz="3.33608141112052E-14" heatfluxmag="9.37194206612602E-14" />
+      <node nid="204" temperature="522.99999999997" heatfluxx="2.95327398899562E-14" heatfluxy="3.63578258409027E-14" heatfluxz="3.47881723428145E-14" heatfluxmag="9.30939495070549E-14" />
+      <node nid="205" temperature="522.999999999965" heatfluxx="9.39648359121747E-15" heatfluxy="-7.0399686080691E-14" heatfluxz="7.16227077646181E-14" heatfluxmag="1.02708039650767E-13" />
+      <node nid="206" temperature="522.99999999999" heatfluxx="-8.68105587414902E-15" heatfluxy="-1.54276591501912E-14" heatfluxz="-9.32374177864403E-14" heatfluxmag="1.03425727250073E-13" />
+    </results>
+  </solution>
+</liml>

@@ -1,0 +1,16 @@
+Module Dependencies:
+
+Software			Version		Status
+-------------------------------------------
+Python 				2.66		Needed
+OCC 				6.3			Needed
+PythonOCC 			0.5			Needed
+wxPython			2.8			Needed for gui, required by PythonOCC
+networkx			1.4			Needed for edge tracing
+Cheetah			 	 ?			TryToRemove. i think i did already actually
+numpy				 ?			Required for pixel mapping. maybe could get rid of it
+PIL								TryToRemove used to fill triangles, but dont think needed any more
+cython							Optional for making stuff faster
+mingw				 			Optional For making stuff faster: optional
+psyco							Optional for faster execution
+setuptools						Optional for installing the above packages

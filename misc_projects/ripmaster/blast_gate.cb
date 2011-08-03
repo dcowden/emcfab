@@ -5,13 +5,14 @@
       <ModificationCount>0</ModificationCount>
       <objects>
         <circle id="1" d="4.49">
-          <ModificationCount>1</ModificationCount>
+          <ModificationCount>2</ModificationCount>
           <mat m="Identity" />
         </circle>
       </objects>
     </layer>
   </layers>
   <MachiningOptions>
+    <OutFile>{$cbfile.name}.nc</OutFile>
     <Stock>
       <PMin>0,0</PMin>
       <PMax>0,0</PMax>
@@ -84,7 +85,7 @@
       </Stock>
       <ToolProfile>Unspecified</ToolProfile>
       <Nesting>
-        <BasePoint />
+        <BasePoint>0,0</BasePoint>
       </Nesting>
     </part>
   </parts>

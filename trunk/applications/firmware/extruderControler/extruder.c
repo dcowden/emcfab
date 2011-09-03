@@ -362,7 +362,14 @@ void readTemp(){
       pid_heater.enable = 0;
    }
    else{
-      if ( heaterGlobalEnable == 1 ){
+   
+      //heater control is one-sided, ie, negative values have no affect.
+      //thus, we turn off the pid controller if the setpoint is below
+      //feedback value.
+      //in truth, the cooling fan could be used to influence the negative side, but
+      //this is easier.
+      //if ( heaterGlobalEnable == 1 && ( pid_heater.feedback < pid_heater.command ) ){
+      if ( heaterGlobalEnable == 1  ){
          pid_heater.enable.F0 = 1;
       }
       else{
@@ -626,12 +633,13 @@ void interrupt_low(void){
 
 
         //apply motor speed if specified and enabled
+        //this simulates step pulses coming into the board
+        //from the host controller.
           if ( debugMotorSpeed != 0u && pid_motor.enable.F0 == 1 && motorGlobalEnable == 1 ) {
-              pid_motor.command += debugMotorSpeed;
+              //pid_motor.command += debugMotorSpeed;
+              motorPulses += debugMotorSpeed;
           }
-         //if ( velocityControlMode == 1u ){
-         //    pid_motor.command = debugMotorSpeed;
-         //}
+
          //check enable flag on motor stage
          if ( motorGlobalEnable == 1 ){
              if ( pid_heater.feedback > MOTOR_SAFE_TEMP ){
@@ -949,13 +957,13 @@ void main() {
   txtPos = 0;
 
   
-  Usart_Init(57600);
+  Usart_Init(38400);
   initDuty(120);
   initRegisters();
   resetPosition();
   
   //delay_100_ms();
-  Delay_ms(100);
+  //Delay_ms(100);
   printMessage(splash);
 
   //read memory...
@@ -964,7 +972,7 @@ void main() {
   }
   printMessage(cmdPrompt);
   //delay_100_ms();
-  Delay_ms(200);
+  //Delay_ms(500);
   
   //enable interrupts
   RCON.IPEN = 1;
@@ -972,12 +980,12 @@ void main() {
   INTCON.PEIE = 1;
   MOTOR_BRAKE_PIN = 0;
   while(1) {
-  //CPU_BANDWIDTH_PIN = ~CPU_BANDWIDTH_PIN;
-  //Delay_ms(1000);
-  
+  CPU_BANDWIDTH_PIN = ~CPU_BANDWIDTH_PIN;
+  //Delay_ms(2000);
+
     while ( Usart_Data_Ready() ) {
        x = Usart_Read();
-       
+
        //push character onto the command
        //buffer. if command is complete
        //(newline)

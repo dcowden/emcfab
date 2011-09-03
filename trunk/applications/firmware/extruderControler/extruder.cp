@@ -1,6 +1,6 @@
-#line 1 "C:/data/emcfdm/src/pic/extruderControler/extruder.c"
-#line 1 "c:/data/emcfdm/src/pic/extrudercontroler/pid.h"
-#line 26 "c:/data/emcfdm/src/pic/extrudercontroler/pid.h"
+#line 1 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
+#line 1 "c:/data/emcfab/applications/firmware/extrudercontroler/pid.h"
+#line 26 "c:/data/emcfab/applications/firmware/extrudercontroler/pid.h"
 extern struct PIDStruct {
  signed long command;
  signed long feedback;
@@ -28,7 +28,7 @@ extern struct PIDStruct {
 };
 
 void calc_pid(struct PIDStruct *ps);
-#line 1 "c:/data/emcfdm/src/pic/extrudercontroler/duty.h"
+#line 1 "c:/data/emcfab/applications/firmware/extrudercontroler/duty.h"
 
 
 
@@ -37,14 +37,14 @@ void initDuty( unsigned short dtyperiod );
 void dutyInterruptProc(void);
 void setDuty( unsigned short setpnt );
 #line 1 "c:/apps/mikroc/include/built_in.h"
-#line 1 "c:/data/emcfdm/src/pic/extrudercontroler/eeprom.h"
+#line 1 "c:/data/emcfab/applications/firmware/extrudercontroler/eeprom.h"
 typedef unsigned char byte;
 typedef unsigned int word;
 
 
 void Eeprom_Write_Obj(word addr,void *obj,byte size);
 void Eeprom_Read_Obj(word addr,void *obj,byte size);
-#line 1 "c:/data/emcfdm/src/pic/extrudercontroler/mflow.h"
+#line 1 "c:/data/emcfab/applications/firmware/extrudercontroler/mflow.h"
 
 
 
@@ -69,7 +69,7 @@ extern struct MeltFlowStruct {
 };
 
 void calc_vel(struct MeltFlowStruct *ps);
-#line 128 "C:/data/emcfdm/src/pic/extruderControler/extruder.c"
+#line 128 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
 unsigned short buffer = 0xFF;
 char txtBuffer[40];
 char cmdBuffer[40];
@@ -269,7 +269,7 @@ void clearMemory(){
  unsigned short blank = 0xFF;
  EEprom_Write_Obj(0,&blank,1);
 }
-#line 332 "C:/data/emcfdm/src/pic/extruderControler/extruder.c"
+#line 332 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
 void readTemp(){
 
 
@@ -303,6 +303,13 @@ void readTemp(){
  pid_heater.enable = 0;
  }
  else{
+
+
+
+
+
+
+
  if ( heaterGlobalEnable == 1 ){
  pid_heater.enable.F0 = 1;
  }
@@ -344,7 +351,7 @@ void setMotorDuty ( int newDuty){
  PDC0L =  ((char *)&tmp2)[0] ;
 
 }
-#line 413 "C:/data/emcfdm/src/pic/extruderControler/extruder.c"
+#line 420 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
 void calcMotorPosition(){
  long axis_adjust = 0;
  long turn_adjust = 0;
@@ -375,7 +382,7 @@ void calcMotorPosition(){
  (long)(POSCNTH << 8 ) + (long)POSCNTL;
 
 }
-#line 474 "C:/data/emcfdm/src/pic/extruderControler/extruder.c"
+#line 481 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
 void calcMotorVelocity(){
  long vOutput = motorPulses;
  float aIn = 0.0;
@@ -386,7 +393,7 @@ void calcMotorVelocity(){
 
 
  if ( meltFlowComp == 1){
-#line 496 "C:/data/emcfdm/src/pic/extruderControler/extruder.c"
+#line 503 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
  }
 
 
@@ -408,7 +415,7 @@ void resetPosition(){
  pid_motor.feedback = 0;
  pid_motor.command = 0;
 }
-#line 529 "C:/data/emcfdm/src/pic/extruderControler/extruder.c"
+#line 536 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
 void interrupt ( void ){
 
 
@@ -531,13 +538,13 @@ void interrupt_low(void){
  }
  calc_pid(&pid_motor);
  setMotorDuty(pid_motor.output );
-#line 662 "C:/data/emcfdm/src/pic/extruderControler/extruder.c"
+#line 669 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
  if ( velocityControlMode == 1 ){
  motorTurns = 0;
  pid_motor.feedback = 0;
  pid_motor.command = 0;
  }
-#line 678 "C:/data/emcfdm/src/pic/extruderControler/extruder.c"
+#line 685 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
  TMR1H = 0xE0;
  TMR1L = 0x9F;
  PIR1.TMR1IF = 0;
@@ -663,7 +670,7 @@ void initRegisters(){
 
 
  QEICON = 0b10011000;
-#line 834 "C:/data/emcfdm/src/pic/extruderControler/extruder.c"
+#line 841 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
  T5CON = 0b00011001;
 
 
@@ -683,7 +690,7 @@ void initRegisters(){
 
 
  PIE3.IC2QEIE = 1;
-#line 872 "C:/data/emcfdm/src/pic/extruderControler/extruder.c"
+#line 879 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
  PTCON0 = 0b00000000;
 
 
@@ -764,13 +771,13 @@ void main() {
  txtPos = 0;
 
 
- Usart_Init(57600);
+ Usart_Init(38400);
  initDuty(120);
  initRegisters();
  resetPosition();
 
 
- Delay_ms(100);
+
  printMessage(splash);
 
 
@@ -779,7 +786,7 @@ void main() {
  }
  printMessage(cmdPrompt);
 
- Delay_ms(200);
+
 
 
  RCON.IPEN = 1;
@@ -787,7 +794,7 @@ void main() {
  INTCON.PEIE = 1;
   PORTB.F0  = 0;
  while(1) {
-
+  PORTD.F6  = ~ PORTD.F6 ;
 
 
  while ( Usart_Data_Ready() ) {

@@ -11,10 +11,14 @@
   RS-232 interface for setting gains and temperature setpoints
 
 
-  Interesting-- to implement velocity control, all that is required
-  is to reset position counter and position feedback each servo loop.
-  Then, though gains will be different, the
-  control is matching desired velocity instead of desired position
+  TODO:
+      this module uses text commands for input and output--easy to code
+      but inefficient and large RAM/ROM usage.
+      
+      A proper binary protocol for transmission of numeric data,
+      ana  format that allows direct serialization/unserialziation would save
+      a LOT of RAM and ROM-- not only due to the strings in memory, but also
+      the routines atoi and atof-- these take a lot of space
   
 */
 
@@ -24,6 +28,11 @@
 #include "built_in.h"
 #include "eeprom.h"
 #include "mflow.h"
+
+
+//debug selections
+#define DEBUG 1
+
 
 //define pins
 #define SPI_PIN PORTD.F0
@@ -50,6 +59,11 @@
 #define AXIS_MIN    -2000000000L
 #define AXIS_ADJUST  400000000L
 #define  TURN_ADJUST 200000
+#define MAX_ERROR 10000L
+#define SIMULATE_DURATION 3000
+#define SIMULATE_ACCEL 40
+#define SIMULATE_START_RAMP 2960
+#define SIMULATE_END_RAMP 40
 
 //for input step/dir contrl
 #define STEP_PIN PORTC.F3
@@ -63,12 +77,42 @@
 
 //for melt flow compensation calcs
 //these values change with extruder geometry and material
-#define Tmf 5.0
-#define Tex 0.08
-#define pMF = 0.1 //percent melt flow
-#define Af = 0.012 //filament cross section area
-#define ppMf = 1.1 // 1 + pMf, used frequently
-#define dT = 0.01 // time for the servo loop
+#define TMF 2.1
+#define PMF  1.1 // 1 + pMf, used frequently
+#define MF  0.1
+#define DT  0.001 // time for the servo loop
+#define CA  0.0000433   // mf / pmf * dt / Tmf, to save computation time   0.0000433
+#define CB  0.9995238  //1 - ( dt / Tmf ) -- precomputed       0.9995238
+
+
+//string contstants
+#define COMMAND_HT "ht"
+#define COMMAND_STATUS "s"
+#define COMMAND_SAVE_EEPROM "v"
+#define COMMAND_READ_EEPROM "rd"
+#define COMMAND_DEFAULTS "d"
+#define COMMAND_HEATER_ENABLE "hge"
+#define COMMAND_MOTOR_ENABLE "mge"
+#define COMMAND_FLOWCOMP "cc"
+#define COMMAND_HEATER_KP "hp"
+#define COMMAND_HEATER_KI "hi"
+#define COMMAND_HEATER_KD "hd"
+#define COMMAND_HEATER_DUTY "hy"
+#define COMMAND_HEATER_FFO "hfg0"
+#define COMMAND_HEATER_FEEDBACK "hf"
+#define COMMAND_MOTOR_KP "mp"
+#define COMMAND_MOTOR_KI "mi"
+#define COMMAND_MOTOR_KD "md"
+#define COMMAND_MOTOR_DUTY "my"
+#define COMMAND_MOTOR_FF0 "mfg"
+#define COMMAND_MOTOR_POS "mcmd"
+#define COMMAND_MOTOR_SPEED "msp"
+#define COMMAND_MOTOR_FEEDBACK "mf"
+#define COMMAND_MOTOR_TEST "t"
+
+#define COMMA ","
+#define EQUALS "="
+#define SPLASH  "Extruder v0.2\0"
 
 //conditional compilation options to control
 //program size
@@ -121,7 +165,7 @@
           F3   SPI clock out (  OUT ) -- master mode
           F4   LMD18200 thermal flag ( IN )
           F5   Heater enable pin ( OUT )
-          F6   N/C
+          F6   Bandwidth Output Measure
           F7   N/C
 */
 
@@ -136,12 +180,12 @@ unsigned short txtPos = 0;
 unsigned short tempCount = 0u;
 unsigned short stepMultiplier = 40u;
 unsigned short heaterGlobalEnable = 0;
-unsigned short motorGlobalEnable = 0;
-unsigned short velocityControlMode = 0u;
-unsigned short meltFlowComp = 0u;
+unsigned short motorGlobalEnable = 1;
+unsigned short meltFlowComp = 1u;
 unsigned short motorDirSwitches = 0u;
-float qMf = 0.0;      //melt flow rate
-
+unsigned short debugCount = 0u;
+unsigned short simulateCurrentVel = 0u;
+int simulateDuration = 0;
 
 //allow manual override of duty cycles at any time
 int debugHeaterDuty = 0;
@@ -150,8 +194,20 @@ int debugMotorSpeed = 0;
 long motorPulses = 0;
 long motorTurns = 0;
 
+//meltflow comp variables
+//based on dt = servo loop. make sure to re-compute
+//derived values if any changes are made!
+
+double  xMelt = 0;     //current melt flow per servo loop, in steps
+double  dxMelt = 0;    //change in melt flow per servo loop, in steps
+double stepError = 0.0;  //step error left over between servo loops
+
+#ifdef DEBUG
+double tmpValue = 0.0; //for debugging
+#endif
+
 struct PIDStruct pid_heater = {
-      50,          //command
+      250,          //command
       0,          //feedback
       0,          //error
       0,         //deadband
@@ -165,10 +221,10 @@ struct PIDStruct pid_heater = {
       0,         //prev_cmd
       0,         //cmd_d
       0,         //bias
-      3.5,         //pgain
-      0.8,       //igain
+      25.0,         //pgain
+      0.001,       //igain
       0,         //dgain
-      0.4,         //ff0gain
+      0.6,         //ff0gain
       0,         //ff1gain
       254,       //maxoutput  int--max is 32000!
       0,         //output
@@ -203,7 +259,7 @@ struct PIDStruct pid_motor = {
 };
 
 
-const char *splash = "Extruder v0.1\0";
+//const char *splash = "Extruder v0.2\0";
 const char *cmdPrompt = "\nCmd:>";
 const char *noEeprom = "\nNo EEPROM Data.";
 const char *unknownCommand = "\n?:";
@@ -223,12 +279,13 @@ const char *cmd_readEEprom = "rd";
 const char *cmd_defaults = "de";
 const char *cmd_globalHeaterEnable = "hge";
 const char *cmd_globalMotorEnable = "mge";
+const char *cmd_meltFlowComp = "cc";
 const char *cmd_heater_Kp = "hp";
 const char *cmd_heater_Ki = "hi";
 const char *cmd_heater_Kd = "hd";
 const char *cmd_heater_kff0 = "hfg0";
 const char *cmd_heater_duty = "hy";
-const char *cmd_heater_SetTemp = "ht";
+//const char *cmd_heater_SetTemp = "ht";
 const char *cmd_heater_SetFeedback = "hf";
 const char *cmd_motor_Kp = "mp";
 const char *cmd_motor_Ki = "mi";
@@ -238,6 +295,7 @@ const char *cmd_motor_Kff1 = "mfg";
 const char *cmd_motor_SetPos = "mcmd";
 const char *cmd_motor_Speed = "msp";
 const char *cmd_motor_SetFeedback = "mf";
+const char *cmd_test = "t";
 
 //////////////////////////////////////////////////////////////////
 //    Utility Functions
@@ -415,12 +473,21 @@ void setMotorDuty ( int newDuty){
   Used to run the motor in position control mode.
   In this mode, the pid loop of the motor matches commanded position,
   according to the encoder.
+
+  in position control, motor pulses are directly applied
+  to commanded position,
+  and encoder counts are directly applied to feedback.
   
+  If melt flow compensation is on, the commanded position
+  is adjusted based on the flow history, which is essentially
+  inverse exponetional.
 */
 void calcMotorPosition(){
   long axis_adjust = 0;
   long turn_adjust = 0;
-
+  double dx = 0.0; //for temporary computations
+  double stepAdjust = 0.0;
+  double stepsToAdd = 0.0;
   if  ( pid_motor.command > AXIS_MAX || pid_motor.feedback > AXIS_MAX ){
       //adjust axis position down
       axis_adjust = -AXIS_ADJUST;
@@ -437,82 +504,39 @@ void calcMotorPosition(){
        pid_motor.feedback += axis_adjust;
        motorTurns += turn_adjust;
   }
-  //in position control, motor pulses are directly applied
-  //to commanded position,
-  //and encoder counts are directly applied to feedback.
-  pid_motor.command += motorPulses;
-  motorPulses = 0;
   
-  pid_motor.feedback = (long)(motorTurns * CNT_PER_TURN ) +
-     (long)(POSCNTH << 8 ) + (long)POSCNTL;
 
-}
-
-
-/*
-   This routine computes the variables rquired for meltFlow compensation,
-   etc.
-
-   The general strategy is to run the motor pid loop in velocity control
-   mode, meaning pid_motor.feedback and pid_motor.command are velocities
-   (in units of counts per servo loop ).
-
-   melt flow compensation is used to adjust the commanded velocity,
-   according to exponential behavior of the extruder.
-
-   INPUTS/preconditions:
-           the motor encoder reflects the most recent position
-           the pid_motor structure has the previously computed values:
-              previous velocity, pid_motor.prev_cmd
-           current value of the melt flow variables
-              qmf, current melt flow ( which starts at zero )
-           dt is a constant, equal to servo loop time.
-   COMPUTED values:
-           from inputs, we can compute the values of:
-             new velocity= motor encoder counts since last
-             acceleration= new velocity - previous velocity
-             target speed= new velocity + (a constant ) * acceleration
-             Qmf, new value of melt flow=complex equation from spreadsheet
-             adjusted velocity = more complex stuff from spreadsheet
-
-   OUTPUTS/actions:
-
-*/
-void calcMotorVelocity(){
-  long vOutput = motorPulses;
-  float aIn = 0.0;
-  float qTarget = 0.0;
-  float qAdjusted = 0.0;
-  
-  //if melt flow comp is on, adjust commanded
-  //velocity to account for melt flow in the extruder.
-  //if not, just pass open loop velocity commands.
   if ( meltFlowComp == 1){
-    //aIn = (float)(pid_motor.command - vIn) / dT;
+    //we adjust the commanded number of steps to account for
+    //the melt flow history of the extruder
+    dx = PMF * (double)(( (double)motorPulses - (double)xMelt ));
+    stepAdjust = dx - (double)motorPulses + stepError;
+    stepError = modf((double)stepAdjust,&stepsToAdd);
+    xMelt = (CA * dx) + (CB * xMelt );
 
-    //target meltflowrate is a function of velocity and acceleration
-    //qtarget = Af * ( vIn + (Tex * aIn) );
-    
-    //compute change in melt flow rate
-    
-    //compute adjusted flow rate
-    
-    //compute adjusted command
-    //vOutput = (long)( qAdjusted / Af );
+    //debugging values
+    #ifdef DEBUG
+    if ( stepsToAdd  > 0.0 ){
+       tmpValue = stepsToAdd;
+    }
+    #endif
+    //other algorithms might simplify things.
+    //though he math is complex, in the end,
+    //all that is done here is to find out how many steps
+    //to add to the commanded position per servo loop.
+    motorPulses += (long)stepsToAdd;
 
   }
 
-  //in velocity control, motor command is equal to number of pulses,
-  //and encoder counts are directly applied to feedback.
-  pid_motor.command = motorPulses;
-  
+  pid_motor.command += motorPulses;
+  motorPulses = 0;
+
   pid_motor.feedback = (long)(motorTurns * CNT_PER_TURN ) +
      (long)(POSCNTH << 8 ) + (long)POSCNTL;
-     
-  motorPulses = 0;
-  motorTurns = 0;
-  
+
+
 }
+
 
 void resetPosition(){
      motorTurns = 0;
@@ -602,12 +626,12 @@ void interrupt_low(void){
            }
         }
         
-        
+       #ifdef DEBUG
        //regardless, use override if specified
        if ( debugHeaterDuty != 0u ){
           setDuty((unsigned short)debugHeaterDuty);
        }
-       
+       #endif
        
         //reset timer to value that results in 60hz cycle
         //tricky because it has to be timed to include cost of pid loop
@@ -624,22 +648,39 @@ void interrupt_low(void){
          
          //this is also where we compute desired
          //melt flow adjustments.
-         if ( velocityControlMode == 1u){
-            calcMotorVelocity();
+
+
+         //if active, adjust steps according to test profile
+         #ifdef DEBUG
+         if ( simulateDuration  > 0 ){
+               simulateDuration--;
+               motorPulses += simulateCurrentVel;
+               
+               //ramp up  at a constant rate of 1 step per ms
+               if ( simulateDuration > SIMULATE_START_RAMP){
+                    simulateCurrentVel += 1;
+               }
+               if ( simulateDuration < SIMULATE_END_RAMP){
+                    simulateCurrentVel -= 1;
+               }
+
          }
          else{
-            calcMotorPosition();
+               simulateCurrentVel = 0;
          }
-
+         #endif
+         
+         calcMotorPosition();
 
         //apply motor speed if specified and enabled
         //this simulates step pulses coming into the board
+        #ifdef DEBUG
         //from the host controller.
           if ( debugMotorSpeed != 0u && pid_motor.enable.F0 == 1 && motorGlobalEnable == 1 ) {
               //pid_motor.command += debugMotorSpeed;
               motorPulses += debugMotorSpeed;
           }
-
+        #endif
          //check enable flag on motor stage
          if ( motorGlobalEnable == 1 ){
              if ( pid_heater.feedback > MOTOR_SAFE_TEMP ){
@@ -655,23 +696,18 @@ void interrupt_low(void){
              FAULT_OUT = 1;
          }
          calc_pid(&pid_motor);
-         setMotorDuty(pid_motor.output );
-         //setMotorDuty(0);
-         //if ( debugMotorDuty != 0u ){
-         //     setMotorDuty(debugMotorDuty);
-         //}
 
-         //in velocity control mode, we're interested in the
-         //change in position vs time. though gains might need to
-         //be reset compared to position mode ( because we're not dividing by
-         //delta time) ,
-         //simply avoiding accumulation of position and position feedback
-         //essential converts the drive to velocity control mode
-         if ( velocityControlMode == 1 ){
-             motorTurns = 0;
-             pid_motor.feedback = 0;
-             pid_motor.command = 0;
+        //check for motor position fault
+         if ( pid_motor.error > MAX_ERROR ){
+             motorGlobalEnable = 0;
+             heaterGlobalEnable = 0;
+             pid_motor.enable.F0 = 0;
+             FAULT_OUT = 1;
+          }
+         else{
+             setMotorDuty(pid_motor.output );
          }
+         
 
          //TMR1H = 0xFF;
          //TMR1L = 0x00;   //?, dmm reports   1.8khz, 93% bandwidth used
@@ -695,39 +731,61 @@ void interrupt_low(void){
 //TODO: pig, takes 3500 words
  void printFloat( char* name, float f ){
        char floatTxt[13];
-       USART_Send_String(name);
+
        FloatToStr(f,floatTxt);
+       USART_Send_String(COMMA);
+       USART_Send_String(name);
+       USART_Send_String(EQUALS);
        USART_Send_String(floatTxt);
+       
 }
 
 
+/*
+    This routine is a memory hogg-- each line takes about 100 bytes ROM
+    and 5 bytes RAM.  Moving to a proper serial tranfer protocol
+    for commands and status would save LOTS of ROM and RAM!!!!
+    
+    //NEXT STEP: try this program and see if it works. If it does,
+    //then convert all of these statements to use defines like COMMAND_HP,
+    //and chnage commandMatches to strstr.
+    //this will save about 250 bytes ROM and 100 bytes RAM
+ */
 void printStatus(){
-       printFloat("ht=",pid_heater.command);
-       printFloat(",hv=",pid_heater.feedback);
-       printFloat(",hp=",pid_heater.pgain);
-       printFloat(",hi=",pid_heater.igain);
-       printFloat(",hd=",pid_heater.dgain);
-       printFloat(",hfg0=",pid_heater.ff0gain);
-       printFloat(",hout=",pid_heater.output);
-       printFloat(",herr=",pid_heater.error);
-       printFloat(",herri=",pid_heater.error_i);
-       printFloat(",herrd=",pid_heater.error_d);
-       printFloat(",he=",pid_heater.enable);
-       printFloat(",mcmd=",pid_motor.command);
-       printFloat(",mv=",pid_motor.feedback);
-       printFloat(",mp=",pid_motor.pgain);
-       printFloat(",mi=",pid_motor.igain);
-       printFloat(",md=",pid_motor.dgain);
-       printFloat(",mfg=",pid_motor.ff1gain);
-       printFloat(",mout=",pid_motor.output);
-       printFloat(",merr=",pid_motor.error);
-       printFloat(",merri=",pid_motor.error_i);
-       printFloat(",merrd=",pid_motor.error_d);
-       printFloat(",me=",pid_motor.enable);
-       printFloat(",mTurns=",motorTurns);
-       printFloat(",mge=",motorGlobalEnable);
-       printFloat(",hge=",heaterGlobalEnable);
-       printFloat(",dirswitchs=",motorDirSwitches);
+       //printFloat("ht",pid_heater.command);
+       printFloat(COMMAND_HT,pid_heater.command);
+       printFloat("hv",pid_heater.feedback);
+       printFloat("hp",pid_heater.pgain);
+       //printFloat(",hi=",pid_heater.igain);
+       //printFloat(",hd=",pid_heater.dgain);
+       //printFloat(",hfg0=",pid_heater.ff0gain);
+       printFloat("hout",pid_heater.output);
+       printFloat("herr",pid_heater.error);
+       //printFloat(",herri=",pid_heater.error_i);
+       //printFloat(",herrd=",pid_heater.error_d);
+       printFloat("he",pid_heater.enable);
+       printFloat("mcmd",pid_motor.command);
+       printFloat("m",pid_motor.feedback);
+       //printFloat(",mp=",pid_motor.pgain);
+       //printFloat(",mi=",pid_motor.igain);
+       //printFloat(",md=",pid_motor.dgain);
+       //printFloat(",mfg=",pid_motor.ff1gain);
+       printFloat("mout",pid_motor.output);
+       printFloat("merr",pid_motor.error);
+       //printFloat(",merri=",pid_motor.error_i);
+       //printFloat(",merrd=",pid_motor.error_d);
+       printFloat("me",pid_motor.enable);
+       //printFloat(",mTurns=",motorTurns);
+       printFloat("mge",motorGlobalEnable);
+       printFloat("hge",heaterGlobalEnable);
+       //printFloat(",dirswitchs=",motorDirSwitches);
+       printFloat("cc",meltFlowComp );
+       printFloat("se",stepError);
+       
+       #ifdef DEBUG
+       printFloat("debug",tmpValue);
+       #endif
+       
 }
 
 void initRegisters(){
@@ -915,6 +973,9 @@ void initRegisters(){
 //the template.
 //the template is usually smaller than source
 //characters are compared until there is no data in either buffer
+
+
+//change this to strcmp or strstr
 unsigned short commandMatches(const char *source ){
     char *cmdptr = cmdBuffer;
     while(*source && *cmdptr ){
@@ -964,7 +1025,7 @@ void main() {
   
   //delay_100_ms();
   //Delay_ms(100);
-  printMessage(splash);
+  printMessage(SPLASH);
 
   //read memory...
   if ( ! readMemory() ){
@@ -1025,6 +1086,7 @@ void main() {
               pid_heater.feedback = findIntValue(cmdBuffer);
            }
            else if ( commandMatches(cmd_heater_Kp )){
+           //else if ( commandMatches(COMMAND_HP)){
               pid_heater.pgain = findFloatValue(cmdBuffer);
            }
            else if ( commandMatches(cmd_heater_Ki )){
@@ -1037,7 +1099,8 @@ void main() {
               debugHeaterDuty = findIntValue(cmdBuffer);
            }
 
-           else if ( commandMatches(cmd_heater_SetTemp )){
+           //else if ( commandMatches(cmd_heater_SetTemp )){
+           else if ( commandMatches(COMMAND_HT )){
               pid_heater.command = findIntValue(cmdBuffer);
            }
            else if ( commandMatches(cmd_motor_Kp )){
@@ -1065,6 +1128,14 @@ void main() {
            else if ( commandMatches(cmd_motor_SetFeedback)){
               pid_motor.feedback = findLongValue(cmdBuffer);
 
+           }
+           else if ( commandMatches(cmd_meltFlowComp)){
+              meltFlowComp = findIntValue(cmdBuffer);
+           }
+           else if ( commandMatches(cmd_test)){
+              //start profile for a step response test.
+              
+              simulateDuration = SIMULATE_DURATION;
            }
            else{
               //unrecognized command!

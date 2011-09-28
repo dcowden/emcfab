@@ -98,7 +98,10 @@
 //by the running motor.
 #define HEATER_FF0_ADJUST_WITH_MOTOR_ON "1.5"
 
-//string contstants
+// --- Command Summary ---
+// These are serial commands that can be sent ( one per line )
+// To the pic
+// commands can be any lenght, but shorter saves ROM
 #define COMMAND_HT "ht"
 #define COMMAND_STATUS "s"
 #define COMMAND_SAVE_EEPROM "v"
@@ -296,35 +299,8 @@ const char *unknownCommand = "\n?:";
 //compatible with prior verions
 unsigned short EEPROM_VERSION_ID = 172u;
 
-// --- Command Summary ---
-// These are serial commands that can be sent ( one per line )
-// To the pic
-// commands can be any lenght, but shorter saves ROM
-/*
-const char *cmd_status = "s";
-const char *cmd_saveEEprom = "v";
-const char *cmd_readEEprom = "rd";
-const char *cmd_defaults = "de";
-const char *cmd_globalHeaterEnable = "hge";
-const char *cmd_globalMotorEnable = "mge";
-const char *cmd_meltFlowComp = "cc";
-const char *cmd_heater_Kp = "hp";
-const char *cmd_heater_Ki = "hi";
-const char *cmd_heater_Kd = "hd";
-const char *cmd_heater_kff0 = "hfg0";
-const char *cmd_heater_duty = "hy";
-const char *cmd_heater_SetTemp = "ht";
-const char *cmd_heater_SetFeedback = "hf";
-const char *cmd_motor_Kp = "mp";
-const char *cmd_motor_Ki = "mi";
-const char *cmd_motor_Kd = "md";
-const char *cmd_motor_duty = "my";
-const char *cmd_motor_Kff1 = "mfg";
-const char *cmd_motor_SetPos = "mcmd";
-const char *cmd_motor_Speed = "msp";
-const char *cmd_motor_SetFeedback = "mf";
-const char *cmd_test = "t";
-*/
+
+
 //////////////////////////////////////////////////////////////////
 //    Utility Functions
 //

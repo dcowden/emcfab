@@ -20,6 +20,10 @@
       a LOT of RAM and ROM-- not only due to the strings in memory, but also
       the routines atoi and atof-- these take a lot of space
   
+  TODO:
+      extruder temp is falling as the extruder is running. what would be good
+      is to increase fead forward gain when motor is running, since we know
+      that more heat input is required then
 */
 
 
@@ -81,7 +85,7 @@
 #define PMF  1.1 // 1 + pMf, used frequently
 #define MF  0.1
 #define DT  0.001 // time for the servo loop
-#define CA  0.0000433   // mf / pmf * dt / Tmf, to save computation time   0.0000433
+#define CA  0.0000633   // mf / pmf * dt / Tmf, to save computation time   0.0000433
 #define CB  0.9995238  //1 - ( dt / Tmf ) -- precomputed       0.9995238
 
 
@@ -109,6 +113,20 @@
 #define COMMAND_MOTOR_SPEED "msp"
 #define COMMAND_MOTOR_FEEDBACK "mf"
 #define COMMAND_MOTOR_TEST "t"
+
+#define TXT_HEATER_ERROR "herr"
+#define TXT_HEATER_OUTPUT "hout"
+#define TXT_HEATER_IERROR "herri"
+#define TXT_HEATER_DERROR "herrd"
+#define TXT_HEATER_FEEDBACK "hv"
+#define TXT_HEATER_ENABLE "he"
+
+#define TXT_MOTOR_ERROR "merr"
+#define TXT_MOTOR_OUTPUT "mout"
+#define TXT_MOTOR_IERROR "merri"
+#define TXT_MOTOR_DERROR "merrd"
+#define TXT_MOTOR_FEEDBACK "mv"
+#define TXT_MOTOR_ENABLE "me"
 
 #define COMMA ","
 #define EQUALS "="
@@ -273,6 +291,7 @@ unsigned short EEPROM_VERSION_ID = 172u;
 // These are serial commands that can be sent ( one per line )
 // To the pic
 // commands can be any lenght, but shorter saves ROM
+/*
 const char *cmd_status = "s";
 const char *cmd_saveEEprom = "v";
 const char *cmd_readEEprom = "rd";
@@ -285,7 +304,7 @@ const char *cmd_heater_Ki = "hi";
 const char *cmd_heater_Kd = "hd";
 const char *cmd_heater_kff0 = "hfg0";
 const char *cmd_heater_duty = "hy";
-//const char *cmd_heater_SetTemp = "ht";
+const char *cmd_heater_SetTemp = "ht";
 const char *cmd_heater_SetFeedback = "hf";
 const char *cmd_motor_Kp = "mp";
 const char *cmd_motor_Ki = "mi";
@@ -296,7 +315,7 @@ const char *cmd_motor_SetPos = "mcmd";
 const char *cmd_motor_Speed = "msp";
 const char *cmd_motor_SetFeedback = "mf";
 const char *cmd_test = "t";
-
+*/
 //////////////////////////////////////////////////////////////////
 //    Utility Functions
 //
@@ -654,7 +673,7 @@ void interrupt_low(void){
          #ifdef DEBUG
          if ( simulateDuration  > 0 ){
                simulateDuration--;
-               motorPulses += simulateCurrentVel;
+               motorPulses -= simulateCurrentVel;
                
                //ramp up  at a constant rate of 1 step per ms
                if ( simulateDuration > SIMULATE_START_RAMP){
@@ -667,6 +686,9 @@ void interrupt_low(void){
          }
          else{
                simulateCurrentVel = 0;
+               pid_heater.ff0gain = 0.6;
+               //hack-- right now just hack inoto the test profile
+               //TODO: integrate into motion control loops
          }
          #endif
          
@@ -752,35 +774,34 @@ void interrupt_low(void){
     //this will save about 250 bytes ROM and 100 bytes RAM
  */
 void printStatus(){
-       //printFloat("ht",pid_heater.command);
        printFloat(COMMAND_HT,pid_heater.command);
-       printFloat("hv",pid_heater.feedback);
-       printFloat("hp",pid_heater.pgain);
-       //printFloat(",hi=",pid_heater.igain);
-       //printFloat(",hd=",pid_heater.dgain);
-       //printFloat(",hfg0=",pid_heater.ff0gain);
-       printFloat("hout",pid_heater.output);
-       printFloat("herr",pid_heater.error);
-       //printFloat(",herri=",pid_heater.error_i);
-       //printFloat(",herrd=",pid_heater.error_d);
-       printFloat("he",pid_heater.enable);
-       printFloat("mcmd",pid_motor.command);
-       printFloat("m",pid_motor.feedback);
-       //printFloat(",mp=",pid_motor.pgain);
-       //printFloat(",mi=",pid_motor.igain);
-       //printFloat(",md=",pid_motor.dgain);
-       //printFloat(",mfg=",pid_motor.ff1gain);
-       printFloat("mout",pid_motor.output);
-       printFloat("merr",pid_motor.error);
-       //printFloat(",merri=",pid_motor.error_i);
-       //printFloat(",merrd=",pid_motor.error_d);
-       printFloat("me",pid_motor.enable);
+       printFloat(TXT_HEATER_FEEDBACK,pid_heater.feedback);
+       printFloat(COMMAND_HEATER_KP,pid_heater.pgain);
+       printFloat(COMMAND_HEATER_KI,pid_heater.igain);
+       printFloat(COMMAND_HEATER_KD,pid_heater.dgain);
+       printFloat(COMMAND_HEATER_FFO,pid_heater.ff0gain);
+       printFloat(TXT_HEATER_OUTPUT,pid_heater.output);
+       printFloat(TXT_HEATER_ERROR,pid_heater.error);
+      // printFloat(TXT_HEATER_IERROR,pid_heater.error_i);
+      // printFloat(TXT_HEATER_DERROR,pid_heater.error_d);
+      // printFloat(TXT_HEATER_ENABLE,pid_heater.enable);
+       printFloat(COMMAND_MOTOR_POS,pid_motor.command);
+       printFloat(TXT_MOTOR_FEEDBACK,pid_motor.feedback);
+       printFloat(COMMAND_MOTOR_KP,pid_motor.pgain);
+      //printFloat(COMMAND_MOTOR_KI,pid_motor.igain);
+      // printFloat(COMMAND_MOTOR_KD,pid_motor.dgain);
+      // printFloat(COMMAND_MOTOR_FF0,pid_motor.ff1gain);
+       printFloat(TXT_MOTOR_OUTPUT,pid_motor.output);
+      // printFloat(TXT_MOTOR_ERROR,pid_motor.error);
+      // printFloat(TXT_MOTOR_IERROR,pid_motor.error_i);
+      // printFloat(TXT_MOTOR_DERROR,pid_motor.error_d);
+       printFloat(TXT_MOTOR_ENABLE,pid_motor.enable);
        //printFloat(",mTurns=",motorTurns);
-       printFloat("mge",motorGlobalEnable);
-       printFloat("hge",heaterGlobalEnable);
+       printFloat(COMMAND_MOTOR_ENABLE,motorGlobalEnable);
+       printFloat(COMMAND_HEATER_ENABLE,heaterGlobalEnable);
        //printFloat(",dirswitchs=",motorDirSwitches);
-       printFloat("cc",meltFlowComp );
-       printFloat("se",stepError);
+       printFloat(COMMAND_FLOWCOMP,meltFlowComp );
+
        
        #ifdef DEBUG
        printFloat("debug",tmpValue);
@@ -1054,16 +1075,16 @@ void main() {
        if ( pushChar(x) ){
 
            //command is in txtBuffer
-           if ( commandMatches(cmd_status ) ){
+           if ( commandMatches(COMMAND_STATUS ) ){
               printStatus();
            }
-           else if ( commandMatches(cmd_saveEEprom )){
+           else if ( commandMatches(COMMAND_SAVE_EEPROM )){
               writeMemory();
            }
-           else if ( commandMatches(cmd_readEEprom )){
+           else if ( commandMatches(COMMAND_READ_EEPROM )){
               readMemory();
            }
-           else if ( commandMatches(cmd_globalMotorEnable)){
+           else if ( commandMatches(COMMAND_MOTOR_ENABLE)){
               motorGlobalEnable = findIntValue(cmdBuffer);
               //if ( motorGlobalEnable == 0 ){
               //   MOTOR_BRAKE_PIN = 0;
@@ -1072,30 +1093,30 @@ void main() {
               //   MOTOR_BRAKE_PIN = 1;
               //}
            }
-           else if ( commandMatches(cmd_globalHeaterEnable)){
+           else if ( commandMatches(COMMAND_HEATER_ENABLE)){
                 heaterGlobalEnable = findIntValue(cmdBuffer);
            }
-           else if ( commandMatches(cmd_defaults)){
+           else if ( commandMatches(COMMAND_DEFAULTS)){
                 //restore to factory defaults
                 clearMemory();
            }
-           else if ( commandMatches(cmd_heater_kff0)){
+           else if ( commandMatches(COMMAND_HEATER_FFO)){
               pid_heater.ff0gain = findFloatValue(cmdBuffer);
            }
-           else if ( commandMatches(cmd_heater_SetFeedback)){
+           else if ( commandMatches(COMMAND_HEATER_FEEDBACK)){
               pid_heater.feedback = findIntValue(cmdBuffer);
            }
-           else if ( commandMatches(cmd_heater_Kp )){
+           else if ( commandMatches(COMMAND_HEATER_KP )){
            //else if ( commandMatches(COMMAND_HP)){
               pid_heater.pgain = findFloatValue(cmdBuffer);
            }
-           else if ( commandMatches(cmd_heater_Ki )){
+           else if ( commandMatches(COMMAND_HEATER_KI )){
               pid_heater.igain = findFloatValue(cmdBuffer);
            }
-           else if ( commandMatches(cmd_heater_Kd )){
+           else if ( commandMatches(COMMAND_HEATER_KD )){
               pid_heater.dgain = findFloatValue(cmdBuffer);
            }
-           else if ( commandMatches(cmd_heater_duty )){
+           else if ( commandMatches(COMMAND_HEATER_DUTY )){
               debugHeaterDuty = findIntValue(cmdBuffer);
            }
 
@@ -1103,38 +1124,39 @@ void main() {
            else if ( commandMatches(COMMAND_HT )){
               pid_heater.command = findIntValue(cmdBuffer);
            }
-           else if ( commandMatches(cmd_motor_Kp )){
+           else if ( commandMatches(COMMAND_MOTOR_KP )){
               pid_motor.pgain = findFloatValue(cmdBuffer);
            }
-           else if ( commandMatches(cmd_motor_Ki )){
+           else if ( commandMatches(COMMAND_MOTOR_KI )){
               pid_motor.igain = findFloatValue(cmdBuffer);
            }
-           else if ( commandMatches(cmd_motor_Kd )){
+           else if ( commandMatches(COMMAND_MOTOR_KD )){
               pid_motor.dgain = findFloatValue(cmdBuffer);
            }
-           else if ( commandMatches(cmd_motor_Kff1 )){
+           else if ( commandMatches(COMMAND_MOTOR_FF0 )){
               pid_motor.ff1gain = findFloatValue(cmdBuffer);
            }
-           else if ( commandMatches(cmd_motor_duty )){
+           else if ( commandMatches(COMMAND_MOTOR_DUTY )){
               debugMotorDuty = findIntValue(cmdBuffer);
               //setMotorDuty(debugMotorDuty);
            }
-           else if ( commandMatches(cmd_motor_SetPos )){
+           else if ( commandMatches(COMMAND_MOTOR_POS )){
               pid_motor.command = findLongValue(cmdBuffer);
            }
-           else if ( commandMatches(cmd_motor_Speed )){
+           else if ( commandMatches(COMMAND_MOTOR_SPEED )){
               debugMotorSpeed = findIntValue(cmdBuffer);
            }
-           else if ( commandMatches(cmd_motor_SetFeedback)){
+           else if ( commandMatches(COMMAND_MOTOR_FEEDBACK)){
               pid_motor.feedback = findLongValue(cmdBuffer);
 
            }
-           else if ( commandMatches(cmd_meltFlowComp)){
+           else if ( commandMatches(COMMAND_FLOWCOMP)){
               meltFlowComp = findIntValue(cmdBuffer);
            }
-           else if ( commandMatches(cmd_test)){
+           else if ( commandMatches(COMMAND_MOTOR_TEST)){
               //start profile for a step response test.
-              
+              pid_heater.ff0gain = 0.9;
+              //hack-- integrate into motor control
               simulateDuration = SIMULATE_DURATION;
            }
            else{

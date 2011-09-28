@@ -10,7 +10,10 @@
   
   RS-232 interface for setting gains and temperature setpoints
 
-
+  Fault conditions require a hardware reset to clear.  These include:
+      POSITION out of tolerance on servo
+      
+      
   TODO:
       this module uses text commands for input and output--easy to code
       but inefficient and large RAM/ROM usage.
@@ -54,8 +57,8 @@
 
 
 //program constants
-//#define MOTOR_SAFE_TEMP 200
-#define MOTOR_SAFE_TEMP 1
+#define MOTOR_SAFE_TEMP 200
+
 //code to rescale axis if we run past the end
 //the motor would have to run at full speed for about 4 hours
 //to get to these limits!
@@ -64,6 +67,8 @@
 #define AXIS_ADJUST  400000000L
 #define  TURN_ADJUST 200000
 #define MAX_ERROR 10000L
+
+//constants for simulating a step input. not used if DEBUG is not enabled
 #define SIMULATE_DURATION 3000
 #define SIMULATE_ACCEL 40
 #define SIMULATE_START_RAMP 2960
@@ -88,6 +93,10 @@
 #define CA  0.0000633   // mf / pmf * dt / Tmf, to save computation time   0.0000433
 #define CB  0.9995238  //1 - ( dt / Tmf ) -- precomputed       0.9995238
 
+//factor to apply to heater ffgain when the motor is running.
+//this allows accounting for the extra heat load generated
+//by the running motor.
+#define HEATER_FF0_ADJUST_WITH_MOTOR_ON "1.5"
 
 //string contstants
 #define COMMAND_HT "ht"
@@ -240,7 +249,7 @@ struct PIDStruct pid_heater = {
       0,         //cmd_d
       0,         //bias
       25.0,         //pgain
-      0.001,       //igain
+      0.005,       //igain      account for difference between staeady state and running
       0,         //dgain
       0.6,         //ff0gain
       0,         //ff1gain
@@ -470,6 +479,8 @@ void setMotorDuty ( int newDuty){
         }
         MOTOR_DIR = 0;
         tmp2 = -newDuty;
+        
+        
      }
      else{
         if ( MOTOR_DIR == 0 ){
@@ -500,6 +511,11 @@ void setMotorDuty ( int newDuty){
   If melt flow compensation is on, the commanded position
   is adjusted based on the flow history, which is essentially
   inverse exponetional.
+  
+  Another control optimization if the motor is running, then adjust
+  the heater feed forward gain upwards to compensate for increased
+  heat dissipation
+  
 */
 void calcMotorPosition(){
   long axis_adjust = 0;
@@ -546,6 +562,7 @@ void calcMotorPosition(){
     motorPulses += (long)stepsToAdd;
 
   }
+
 
   pid_motor.command += motorPulses;
   motorPulses = 0;
@@ -637,12 +654,15 @@ void interrupt_low(void){
            calc_pid(&pid_heater);
            //heater is one-sided, we cannot cool
            //so we'll just turn it off
+           //this block of code already happens since the enable
+           //bit is set in readTemp
+           /*
            if ( pid_heater.output > 0 && heaterGlobalEnable == 1){
               setDuty(pid_heater.output);
            }
            else{
               setDuty(0);
-           }
+           } */
         }
         
        #ifdef DEBUG
@@ -682,54 +702,46 @@ void interrupt_low(void){
                if ( simulateDuration < SIMULATE_END_RAMP){
                     simulateCurrentVel -= 1;
                }
-
          }
          else{
                simulateCurrentVel = 0;
-               pid_heater.ff0gain = 0.6;
-               //hack-- right now just hack inoto the test profile
-               //TODO: integrate into motion control loops
+
          }
-         #endif
-         
-         calcMotorPosition();
 
         //apply motor speed if specified and enabled
         //this simulates step pulses coming into the board
-        #ifdef DEBUG
         //from the host controller.
-          if ( debugMotorSpeed != 0u && pid_motor.enable.F0 == 1 && motorGlobalEnable == 1 ) {
+        if ( debugMotorSpeed != 0u && pid_motor.enable.F0 == 1 && motorGlobalEnable == 1 ) {
               //pid_motor.command += debugMotorSpeed;
               motorPulses += debugMotorSpeed;
-          }
+        }
         #endif
-         //check enable flag on motor stage
-         if ( motorGlobalEnable == 1 ){
+
+        calcMotorPosition();
+        //check for faults and disable motor if necessary
+        
+        pid_motor.enable.F0 = 0; //start with disabled status
+        
+        if ( motorGlobalEnable == 1 ){
              if ( pid_heater.feedback > MOTOR_SAFE_TEMP ){
                  pid_motor.enable.F0 = 1;
                  FAULT_OUT = 0;
              }
              else{
-                  FAULT_OUT = 1;
+                 FAULT_OUT = 1;
              }
-         }
-         else{
-             pid_motor.enable.F0 = 0;
-             FAULT_OUT = 1;
-         }
-         calc_pid(&pid_motor);
+        }
+
 
         //check for motor position fault
-         if ( pid_motor.error > MAX_ERROR ){
+        if ( pid_motor.error > MAX_ERROR ){
              motorGlobalEnable = 0;
-             heaterGlobalEnable = 0;
              pid_motor.enable.F0 = 0;
              FAULT_OUT = 1;
-          }
-         else{
-             setMotorDuty(pid_motor.output );
-         }
-         
+        }
+
+        calc_pid(&pid_motor);
+        setMotorDuty(pid_motor.output );
 
          //TMR1H = 0xFF;
          //TMR1L = 0x00;   //?, dmm reports   1.8khz, 93% bandwidth used
@@ -741,9 +753,9 @@ void interrupt_low(void){
          //TMR1L = 0x60;  //2khz    50% bandwidth (dmm reports 1khz though  )
          //this implies that computations are taking about 1ms?
 
-         TMR1H = 0xE0;
-         TMR1L = 0x9F; //1khz       dmm reports 750 hz, 33% bandwidth
-         PIR1.TMR1IF = 0;
+        TMR1H = 0xE0;
+        TMR1L = 0x9F; //1khz       dmm reports 750 hz, 33% bandwidth
+        PIR1.TMR1IF = 0;
 
      }
      //CPU_BANDWIDTH_PIN = 0;
@@ -1086,12 +1098,6 @@ void main() {
            }
            else if ( commandMatches(COMMAND_MOTOR_ENABLE)){
               motorGlobalEnable = findIntValue(cmdBuffer);
-              //if ( motorGlobalEnable == 0 ){
-              //   MOTOR_BRAKE_PIN = 0;
-              //}
-              //else{
-              //   MOTOR_BRAKE_PIN = 1;
-              //}
            }
            else if ( commandMatches(COMMAND_HEATER_ENABLE)){
                 heaterGlobalEnable = findIntValue(cmdBuffer);
@@ -1107,7 +1113,6 @@ void main() {
               pid_heater.feedback = findIntValue(cmdBuffer);
            }
            else if ( commandMatches(COMMAND_HEATER_KP )){
-           //else if ( commandMatches(COMMAND_HP)){
               pid_heater.pgain = findFloatValue(cmdBuffer);
            }
            else if ( commandMatches(COMMAND_HEATER_KI )){
@@ -1119,8 +1124,6 @@ void main() {
            else if ( commandMatches(COMMAND_HEATER_DUTY )){
               debugHeaterDuty = findIntValue(cmdBuffer);
            }
-
-           //else if ( commandMatches(cmd_heater_SetTemp )){
            else if ( commandMatches(COMMAND_HT )){
               pid_heater.command = findIntValue(cmdBuffer);
            }
@@ -1155,8 +1158,6 @@ void main() {
            }
            else if ( commandMatches(COMMAND_MOTOR_TEST)){
               //start profile for a step response test.
-              pid_heater.ff0gain = 0.9;
-              //hack-- integrate into motor control
               simulateDuration = SIMULATE_DURATION;
            }
            else{

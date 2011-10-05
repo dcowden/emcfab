@@ -4,10 +4,51 @@ interrupt_low
 	calcMotorPosition
 		Mul_32x32_S
 			Mul_32x32_U
-	calcMotorVelocity
-		Mul_32x32_S
-			Mul_32x32_U
-	setDuty
+		Double2Longint
+			SETIOV3224
+		Add_32x32_FP
+			SETFOV32
+			NRM4032
+				RES032
+				SETFOV32
+				FIXSIGN32
+				SETFUN32
+		Mul_32x32_FP
+			SETFUN32
+			SETFOV32
+			RES032
+		Sub_32x32_FP
+			Add_32x32_FP
+				SETFOV32
+				NRM4032
+					RES032
+					SETFOV32
+					FIXSIGN32
+					SETFUN32
+		Longint2Double
+			NRM4032
+				RES032
+				SETFOV32
+				FIXSIGN32
+				SETFUN32
+		modf
+			Sub_32x32_FP
+				Add_32x32_FP
+					SETFOV32
+					NRM4032
+						RES032
+						SETFOV32
+						FIXSIGN32
+						SETFUN32
+			Longint2Double
+				NRM4032
+					RES032
+					SETFOV32
+					FIXSIGN32
+					SETFUN32
+			Double2Longint
+				SETIOV3224
+			Compare_Double
 	calc_pid
 		Double2Int
 			SETIOV3224
@@ -97,6 +138,8 @@ main
 				FIXSIGN32
 				SETFUN32
 		printFloat
+			USART_Send_String
+				Usart_Write
 			FloatToStr
 				Div_8x8_U
 				Mul_32x32_FP
@@ -105,8 +148,6 @@ main
 					RES032
 				Compare_Double
 				strcpy
-			USART_Send_String
-				Usart_Write
 	commandMatches
 	pushChar
 	Usart_Read

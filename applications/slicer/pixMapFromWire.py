@@ -327,8 +327,8 @@ def pixmapFromFaceTriangulation(face,fillpattern):
 			myAISContext->Display(aShape);		
 	"""
 	
-	PIXEL = 0.1;
-	DEFLECTION = PIXEL / 10.0;
+	PIXEL = 0.012;
+	DEFLECTION = PIXEL / 50.0;
 	triangulateAtDeflection(face,DEFLECTION);
 	
 	#get bounding box
@@ -375,13 +375,14 @@ def pixmapFromFaceTriangulation(face,fillpattern):
 		#TestDisplay.display.showShape(Wrappers.make_vertex(p3));
 		
 	#tile hex pattern onto the filling
-	#pixmap.tileOnto(fillpattern);
+	pixmap.tileOnto(fillpattern);
 	
 	#mark boundaries
 	#approximate each wire with a set of segments
 	bb = TopExp.TopExp_Explorer();
 	bb.Init(face,TopAbs.TopAbs_WIRE);
 	edgeNum = 1;
+	#while False:
 	while bb.More():
 		#print "plotting wire"
 		w = Wrappers.Wire(Wrappers.cast(bb.Current()));
@@ -394,7 +395,7 @@ def pixmapFromFaceTriangulation(face,fillpattern):
 			ew = Wrappers.Edge(e);
 			lastPnt = None;
 			for pnt in ew.discretePoints(DEFLECTION):				
-				#pixmap.set(tP(pnt),7);
+				pixmap.set(tP(pnt),7);
 				edgeNum += 1;
 				#plot the line
 				#if lastPnt != None: pixmap.drawLine(tP(lastPnt),tP(pnt),edgeNum );				
@@ -495,8 +496,8 @@ if __name__=='__main__':
 						 [5,5,5,5,5,5,5,5,5,5], \
 						 [0,0,0,0,0,5,0,0,0,0], \
 						 [0,0,0,0,0,0,5,0,0,0]] );						 
-	pm2 = pixmapFromFace2(f,hextile3);
-	#pm2 = pixmapFromFaceTriangulation(f,hextile);
+	#pm2 = pixmapFromFace2(f,hextile3);
+	pm2 = pixmapFromFaceTriangulation(f,hextile3);
 	#pm2 = pixmapFromFace2(f); #make pixmap without inner fill
 	#(xMin,yMin,zMin,xMax,yMax,zMax) = boundingBox([f]);
 	#print "Making Edges..."

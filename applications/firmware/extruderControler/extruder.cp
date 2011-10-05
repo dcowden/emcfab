@@ -69,7 +69,7 @@ extern struct MeltFlowStruct {
 };
 
 void calc_vel(struct MeltFlowStruct *ps);
-#line 128 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
+#line 202 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
 unsigned short buffer = 0xFF;
 char txtBuffer[40];
 char cmdBuffer[40];
@@ -81,12 +81,12 @@ unsigned short txtPos = 0;
 unsigned short tempCount = 0u;
 unsigned short stepMultiplier = 40u;
 unsigned short heaterGlobalEnable = 0;
-unsigned short motorGlobalEnable = 0;
-unsigned short velocityControlMode = 0u;
-unsigned short meltFlowComp = 0u;
+unsigned short motorGlobalEnable = 1;
+unsigned short meltFlowComp = 1u;
 unsigned short motorDirSwitches = 0u;
-float qMf = 0.0;
-
+unsigned short debugCount = 0u;
+unsigned short simulateCurrentVel = 0u;
+int simulateDuration = 0;
 
 
 int debugHeaterDuty = 0;
@@ -95,8 +95,16 @@ int debugMotorSpeed = 0;
 long motorPulses = 0;
 long motorTurns = 0;
 
+
+
+
+
+double xMelt = 0;
+double dxMelt = 0;
+double stepError = 0.0;
+#line 239 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
 struct PIDStruct pid_heater = {
- 50,
+ 250,
  0,
  0,
  0,
@@ -110,10 +118,10 @@ struct PIDStruct pid_heater = {
  0,
  0,
  0,
- 3.5,
- 0.8,
+ 25.0,
+ 0.005,
  0,
- 0.4,
+ 0.6,
  0,
  254,
  0,
@@ -148,7 +156,7 @@ struct PIDStruct pid_motor = {
 };
 
 
-const char *splash = "Extruder v0.1\0";
+
 const char *cmdPrompt = "\nCmd:>";
 const char *noEeprom = "\nNo EEPROM Data.";
 const char *unknownCommand = "\n?:";
@@ -159,30 +167,6 @@ const char *unknownCommand = "\n?:";
 unsigned short EEPROM_VERSION_ID = 172u;
 
 
-
-
-
-const char *cmd_status = "s";
-const char *cmd_saveEEprom = "v";
-const char *cmd_readEEprom = "rd";
-const char *cmd_defaults = "de";
-const char *cmd_globalHeaterEnable = "hge";
-const char *cmd_globalMotorEnable = "mge";
-const char *cmd_heater_Kp = "hp";
-const char *cmd_heater_Ki = "hi";
-const char *cmd_heater_Kd = "hd";
-const char *cmd_heater_kff0 = "hfg0";
-const char *cmd_heater_duty = "hy";
-const char *cmd_heater_SetTemp = "ht";
-const char *cmd_heater_SetFeedback = "hf";
-const char *cmd_motor_Kp = "mp";
-const char *cmd_motor_Ki = "mi";
-const char *cmd_motor_Kd = "md";
-const char *cmd_motor_duty = "my";
-const char *cmd_motor_Kff1 = "mfg";
-const char *cmd_motor_SetPos = "mcmd";
-const char *cmd_motor_Speed = "msp";
-const char *cmd_motor_SetFeedback = "mf";
 
 
 
@@ -269,7 +253,7 @@ void clearMemory(){
  unsigned short blank = 0xFF;
  EEprom_Write_Obj(0,&blank,1);
 }
-#line 332 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
+#line 394 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
 void readTemp(){
 
 
@@ -334,6 +318,8 @@ void setMotorDuty ( int newDuty){
  }
   PORTB.F2  = 0;
  tmp2 = -newDuty;
+
+
  }
  else{
  if (  PORTB.F2  == 0 ){
@@ -351,11 +337,13 @@ void setMotorDuty ( int newDuty){
  PDC0L =  ((char *)&tmp2)[0] ;
 
 }
-#line 420 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
+#line 496 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
 void calcMotorPosition(){
  long axis_adjust = 0;
  long turn_adjust = 0;
-
+ double dx = 0.0;
+ double stepAdjust = 0.0;
+ double stepsToAdd = 0.0;
  if ( pid_motor.command >  2000000000L  || pid_motor.feedback >  2000000000L  ){
 
  axis_adjust = - 400000000L ;
@@ -374,6 +362,18 @@ void calcMotorPosition(){
  }
 
 
+ if ( meltFlowComp == 1){
+
+
+ dx =  1.1  * (double)(( (double)motorPulses - (double)xMelt ));
+ stepAdjust = dx - (double)motorPulses + stepError;
+ stepError = modf((double)stepAdjust,&stepsToAdd);
+ xMelt = ( 0.0000633  * dx) + ( 0.9995238  * xMelt );
+#line 538 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
+ motorPulses += (long)stepsToAdd;
+
+ }
+
 
  pid_motor.command += motorPulses;
  motorPulses = 0;
@@ -381,32 +381,9 @@ void calcMotorPosition(){
  pid_motor.feedback = (long)(motorTurns *  2000  ) +
  (long)(POSCNTH << 8 ) + (long)POSCNTL;
 
-}
-#line 481 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
-void calcMotorVelocity(){
- long vOutput = motorPulses;
- float aIn = 0.0;
- float qTarget = 0.0;
- float qAdjusted = 0.0;
-
-
-
-
- if ( meltFlowComp == 1){
-#line 503 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
- }
-
-
-
- pid_motor.command = motorPulses;
-
- pid_motor.feedback = (long)(motorTurns *  2000  ) +
- (long)(POSCNTH << 8 ) + (long)POSCNTL;
-
- motorPulses = 0;
- motorTurns = 0;
 
 }
+
 
 void resetPosition(){
  motorTurns = 0;
@@ -415,7 +392,7 @@ void resetPosition(){
  pid_motor.feedback = 0;
  pid_motor.command = 0;
 }
-#line 536 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
+#line 572 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
 void interrupt ( void ){
 
 
@@ -475,56 +452,23 @@ void interrupt_low(void){
  tempCount = 0;
 
  calc_pid(&pid_heater);
-
-
- if ( pid_heater.output > 0 && heaterGlobalEnable == 1){
- setDuty(pid_heater.output);
+#line 642 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
  }
- else{
- setDuty(0);
- }
- }
-
-
-
- if ( debugHeaterDuty != 0u ){
- setDuty((unsigned short)debugHeaterDuty);
- }
-
-
-
-
+#line 653 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
  TMR0H = 0x5D;
  TMR0L = 0x3D;
 
  INTCON.TMR0IF = 0;
  }
  if (PIR1.TMR1IF ){
-
-
-
-
-
-
-
- if ( velocityControlMode == 1u){
- calcMotorVelocity();
- }
- else{
+#line 696 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
  calcMotorPosition();
- }
 
 
-
- if ( debugMotorSpeed != 0u && pid_motor.enable.F0 == 1 && motorGlobalEnable == 1 ) {
- pid_motor.command += debugMotorSpeed;
- }
-
-
-
+ pid_motor.enable.F0 = 0;
 
  if ( motorGlobalEnable == 1 ){
- if ( pid_heater.feedback >  1  ){
+ if ( pid_heater.feedback >  200  ){
  pid_motor.enable.F0 = 1;
   PORTC.F5  = 0;
  }
@@ -532,19 +476,18 @@ void interrupt_low(void){
   PORTC.F5  = 1;
  }
  }
- else{
+
+
+
+ if ( pid_motor.error >  10000L  ){
+ motorGlobalEnable = 0;
  pid_motor.enable.F0 = 0;
   PORTC.F5  = 1;
  }
+
  calc_pid(&pid_motor);
  setMotorDuty(pid_motor.output );
-#line 669 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
- if ( velocityControlMode == 1 ){
- motorTurns = 0;
- pid_motor.feedback = 0;
- pid_motor.command = 0;
- }
-#line 685 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
+#line 732 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
  TMR1H = 0xE0;
  TMR1L = 0x9F;
  PIR1.TMR1IF = 0;
@@ -557,39 +500,44 @@ void interrupt_low(void){
 
  void printFloat( char* name, float f ){
  char floatTxt[13];
- USART_Send_String(name);
+
  FloatToStr(f,floatTxt);
+ USART_Send_String( "," );
+ USART_Send_String(name);
+ USART_Send_String( "=" );
  USART_Send_String(floatTxt);
+
 }
-
-
+#line 764 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
 void printStatus(){
- printFloat("ht=",pid_heater.command);
- printFloat(",hv=",pid_heater.feedback);
- printFloat(",hp=",pid_heater.pgain);
- printFloat(",hi=",pid_heater.igain);
- printFloat(",hd=",pid_heater.dgain);
- printFloat(",hfg0=",pid_heater.ff0gain);
- printFloat(",hout=",pid_heater.output);
- printFloat(",herr=",pid_heater.error);
- printFloat(",herri=",pid_heater.error_i);
- printFloat(",herrd=",pid_heater.error_d);
- printFloat(",he=",pid_heater.enable);
- printFloat(",mcmd=",pid_motor.command);
- printFloat(",mv=",pid_motor.feedback);
- printFloat(",mp=",pid_motor.pgain);
- printFloat(",mi=",pid_motor.igain);
- printFloat(",md=",pid_motor.dgain);
- printFloat(",mfg=",pid_motor.ff1gain);
- printFloat(",mout=",pid_motor.output);
- printFloat(",merr=",pid_motor.error);
- printFloat(",merri=",pid_motor.error_i);
- printFloat(",merrd=",pid_motor.error_d);
- printFloat(",me=",pid_motor.enable);
- printFloat(",mTurns=",motorTurns);
- printFloat(",mge=",motorGlobalEnable);
- printFloat(",hge=",heaterGlobalEnable);
- printFloat(",dirswitchs=",motorDirSwitches);
+ printFloat( "ht" ,pid_heater.command);
+ printFloat( "hv" ,pid_heater.feedback);
+ printFloat( "hp" ,pid_heater.pgain);
+ printFloat( "hi" ,pid_heater.igain);
+ printFloat( "hd" ,pid_heater.dgain);
+ printFloat( "hfg0" ,pid_heater.ff0gain);
+ printFloat( "hout" ,pid_heater.output);
+ printFloat( "herr" ,pid_heater.error);
+
+
+
+ printFloat( "mcmd" ,pid_motor.command);
+ printFloat( "mv" ,pid_motor.feedback);
+ printFloat( "mp" ,pid_motor.pgain);
+
+
+
+ printFloat( "mout" ,pid_motor.output);
+
+
+
+ printFloat( "me" ,pid_motor.enable);
+
+ printFloat( "mge" ,motorGlobalEnable);
+ printFloat( "hge" ,heaterGlobalEnable);
+
+ printFloat( "cc" ,meltFlowComp );
+#line 798 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
 }
 
 void initRegisters(){
@@ -670,7 +618,7 @@ void initRegisters(){
 
 
  QEICON = 0b10011000;
-#line 841 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
+#line 909 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
  T5CON = 0b00011001;
 
 
@@ -690,7 +638,7 @@ void initRegisters(){
 
 
  PIE3.IC2QEIE = 1;
-#line 879 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
+#line 947 "C:/data/emcfab/applications/firmware/extruderControler/extruder.c"
  PTCON0 = 0b00000000;
 
 
@@ -724,6 +672,9 @@ void initRegisters(){
  PTCON1.F7=1;
 
 }
+
+
+
 
 
 
@@ -778,7 +729,7 @@ void main() {
 
 
 
- printMessage(splash);
+ printMessage( "Extruder v0.2\0" );
 
 
  if ( ! readMemory() ){
@@ -807,78 +758,78 @@ void main() {
  if ( pushChar(x) ){
 
 
- if ( commandMatches(cmd_status ) ){
+ if ( commandMatches( "s"  ) ){
  printStatus();
  }
- else if ( commandMatches(cmd_saveEEprom )){
+ else if ( commandMatches( "v"  )){
  writeMemory();
  }
- else if ( commandMatches(cmd_readEEprom )){
+ else if ( commandMatches( "rd"  )){
  readMemory();
  }
- else if ( commandMatches(cmd_globalMotorEnable)){
+ else if ( commandMatches( "mge" )){
  motorGlobalEnable = findIntValue(cmdBuffer);
-
-
-
-
-
-
  }
- else if ( commandMatches(cmd_globalHeaterEnable)){
+ else if ( commandMatches( "hge" )){
  heaterGlobalEnable = findIntValue(cmdBuffer);
  }
- else if ( commandMatches(cmd_defaults)){
+ else if ( commandMatches( "d" )){
 
  clearMemory();
  }
- else if ( commandMatches(cmd_heater_kff0)){
+ else if ( commandMatches( "hfg0" )){
  pid_heater.ff0gain = findFloatValue(cmdBuffer);
  }
- else if ( commandMatches(cmd_heater_SetFeedback)){
+ else if ( commandMatches( "hf" )){
  pid_heater.feedback = findIntValue(cmdBuffer);
  }
- else if ( commandMatches(cmd_heater_Kp )){
+ else if ( commandMatches( "hp"  )){
  pid_heater.pgain = findFloatValue(cmdBuffer);
  }
- else if ( commandMatches(cmd_heater_Ki )){
+ else if ( commandMatches( "hi"  )){
  pid_heater.igain = findFloatValue(cmdBuffer);
  }
- else if ( commandMatches(cmd_heater_Kd )){
+ else if ( commandMatches( "hd"  )){
  pid_heater.dgain = findFloatValue(cmdBuffer);
  }
- else if ( commandMatches(cmd_heater_duty )){
+ else if ( commandMatches( "hy"  )){
  debugHeaterDuty = findIntValue(cmdBuffer);
  }
-
- else if ( commandMatches(cmd_heater_SetTemp )){
+ else if ( commandMatches( "ht"  )){
  pid_heater.command = findIntValue(cmdBuffer);
  }
- else if ( commandMatches(cmd_motor_Kp )){
+ else if ( commandMatches( "mp"  )){
  pid_motor.pgain = findFloatValue(cmdBuffer);
  }
- else if ( commandMatches(cmd_motor_Ki )){
+ else if ( commandMatches( "mi"  )){
  pid_motor.igain = findFloatValue(cmdBuffer);
  }
- else if ( commandMatches(cmd_motor_Kd )){
+ else if ( commandMatches( "md"  )){
  pid_motor.dgain = findFloatValue(cmdBuffer);
  }
- else if ( commandMatches(cmd_motor_Kff1 )){
+ else if ( commandMatches( "mfg"  )){
  pid_motor.ff1gain = findFloatValue(cmdBuffer);
  }
- else if ( commandMatches(cmd_motor_duty )){
+ else if ( commandMatches( "my"  )){
  debugMotorDuty = findIntValue(cmdBuffer);
 
  }
- else if ( commandMatches(cmd_motor_SetPos )){
+ else if ( commandMatches( "mcmd"  )){
  pid_motor.command = findLongValue(cmdBuffer);
  }
- else if ( commandMatches(cmd_motor_Speed )){
+ else if ( commandMatches( "msp"  )){
  debugMotorSpeed = findIntValue(cmdBuffer);
  }
- else if ( commandMatches(cmd_motor_SetFeedback)){
+ else if ( commandMatches( "mf" )){
  pid_motor.feedback = findLongValue(cmdBuffer);
 
+ }
+ else if ( commandMatches( "cc" )){
+ meltFlowComp = findIntValue(cmdBuffer);
+ }
+ else if ( commandMatches( "t" )){
+
+ simulateDuration =  3000 ;
  }
  else{
 

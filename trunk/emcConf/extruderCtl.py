@@ -89,7 +89,7 @@ def runHal():
 class Extruder:
     PROMPT = "Cmd:>";
     
-    def __init__(self,baudrate=57600,comport='/dev/ttyS0'):
+    def __init__(self,baudrate=38400,comport='/dev/ttyS0'):
         self._baudrate = baudrate;
         self._comport = comport;
         self.status = {};

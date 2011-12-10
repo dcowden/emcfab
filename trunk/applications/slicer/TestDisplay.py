@@ -23,6 +23,11 @@ class AppFrame(wx.Frame):
       self.app = app;
   def showShape(self,shape):
 		self.canva._display.DisplayShape(shape)
+  def addShape(self,shape):
+		self.canva._display.DisplayShape(shape,update=False);
+  def fitAll(self):
+		self.canva._display.FitAll();
+		
   def showShapes(self,listOfShape):
 		for s in listOfShape:
 			self.canva._display.DisplayShape(s);

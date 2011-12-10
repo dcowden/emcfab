@@ -22,6 +22,7 @@ import networkx as nx
 import cProfile
 import pstats
 import hexagonlib
+import traverse
 
 def tP(point):
 	"return a tuple for a point"
@@ -35,6 +36,7 @@ class PointOnAnEdge:
 		self.hash = self.edge.__hash__();
 		self.param = param;
 		self.point = point;
+
 
 """
 	Graph of edges.
@@ -65,14 +67,16 @@ class EdgeGraph:
 		"""
 		# key=edgeHash: value=dict(key=nodehash,value=node)
 		self.edges = {}; #store nodes organized by hashed edge and parameter. dict of dicts
-
+		self.fillEdges = []; #ordered list of edges-- used when we walk the graph later.
+		
 		#graph for the edges and nodes. nodes are 2d tuples ( x,y)
 		#edges are nx edges with EdgeSegment objects in the attributes
 		self.g = nx.MultiGraph();
-	
-	def firstNode(self):
-		return self.edges.values()[0].values()[0];
+		self.startNode = False
 
+	def getEdge(self,n1,n2):
+		return self.g.get_edge_data(n1,n2)[2];
+		
 	def divideEdge(self,edge,param):
 		"""
 			split the edge at the provided parameter,
@@ -129,8 +133,16 @@ class EdgeGraph:
 		#adds the nodes and the edges all in one shot to the graph
 		#print "Adding Edge :%d " % edgeSegment.edge.__hash__();
 		#TestDisplay.display.showShape(edgeSegment.edge);
-		self.g.add_edge(tP(edgeSegment.firstPoint),tP(edgeSegment.lastPoint),edgeSegment.key(),{'node': edgeSegment, 'type': edgeSegment.type} );
 		
+		#hack-- easy way to store the first node is to wathc for the first fill type node added.
+		if self.startNode == False and edgeSegment.type == 'FILL':
+			self.startNode = tP(edgeSegment.firstPoint);
+		p1 = tP(edgeSegment.firstPoint);
+		p2 = tP(edgeSegment.lastPoint);
+		self.g.add_edge(p1,p2,edgeSegment.key(),{'node': edgeSegment, 'type': edgeSegment.type} );
+		
+		#keep track of fill edges in the order they were added
+		self.fillEdges.append( (p1,p2) );
 		#store the edge in a dict by edge hash.
 		#the key of the second dict is hash+p1+p2-- ie, each distint edge, and paramter pair are stored
 		eh = edgeSegment.hash;
@@ -190,7 +202,7 @@ class EdgeGraph:
 		
 		#todo, i dont think we care about this key do we, as long as it is unique?
 		self.g.add_edge(p1,p2,(p1,p2),{'edgeList': edgeList,"type":type} );
-
+		self.fillEdges.append( ( p1,p2 ));
 		
 	def addWire(self,wire,type):
 		"add all the edges of a wire. They will be connected together."
@@ -226,6 +238,14 @@ class EdgeGraph:
 			#print e[2].keys();#
 			yield e[2];
 
+	def walkEdges(self):
+		"return a path that will walk all infill edges in the graph"
+		edgeList = traverse.walkAllInFill(self.g,self.fillEdges,isFillEdge );
+		return edgeList;
+
+def isFillEdge(graph,n1,n2):
+	print "dict",graph[n1][n2]
+	return graph[n1][n2][2]['type'] == 'FILL';
 	
 def splitWire(wire,ipoints):
 	"""

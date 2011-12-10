@@ -35,6 +35,8 @@ import hexagonlib
 import edgegraph3 as eg
 import cProfile
 import pstats
+from OCC.Display.SimpleGui import *
+
 
 #20% speed boost from psyco
 #import psyco
@@ -44,6 +46,8 @@ log = logging.getLogger('hatchLib');
 
 ts = TopoDS.TopoDS();
 btool = BRep.BRep_Tool();
+
+display, start_display, add_menu, add_function_to_menu = init_display()
 
 """
 	convienient way to iterate in pairs with loop around to the start
@@ -113,7 +117,6 @@ class Hatcher:
 		self.boundaryWires = wireList;
 		
 		self.graph = eg.EdgeGraph();
-		
 		#maps the wires into the node graph.
 		for w in wireList:
 			self.graph.addWire(w,'BOUND');
@@ -122,12 +125,6 @@ class Hatcher:
 		self.zLevel = zLevel;
 		self.HATCH_PADDING = 1; #TODO, should be based on unit of measure
 	
-	def  displayAllEdges(self):
-		TestDisplay.display.eraseAll();
-		#for en in h.graph.allEdgesRandomOrder():
-		#	e = en.newEdge();
-		#	TestDisplay.display.showShape(e );
-		#time.sleep(2);
 	def  hatch(self):
 		"""take the a slice and compute hatches
 		
@@ -145,30 +142,49 @@ class Hatcher:
 				* use active wire table to detect when to stop computing intersections with wires.
 				 each boundary must be activated before computation stops, and a boundary is finished
 				 after intersections have been found, and then stop occurring.
+				 
+			More optimization can be used by Bnd_BoundSortBox-- which would compare all of the bounding
+			boxes at once in c++, but with more glue code.
 			
 		"""
 		log.info("Hatching...");
 		q = time.clock();
 		hatchWires = self._makeHatchLines22();
+		numCompares = 0;
+		
 		print "Time to Make hatch Lines: %0.3f" % ( time.clock() - q )
 		activeBoundaries = {};
-		
+		#bndBoxes = {}
 		for b in self.boundaryWires:
+			#bl = BRepBndLib.BRepBndLib();
+			#bbox = Bnd.Bnd_Box();
+			#bl.Add(b,bbox);
+			#bndBoxes[b] = bbox;
 			activeBoundaries[b] = 0;
-		
+		print "There are %d boundary wires, %d hatch wires" % ( len(self.boundaryWires),len(hatchWires)  )
 		#intersect each line with each boundary				
 		for hatchLine in hatchWires:
-		
+			
+			#b = BRepBndLib.BRepBndLib();
+			#wireBounds = Bnd.Bnd_Box();
+			#b.Add(hatchLine,wireBounds);
+
 			if len(activeBoundaries) == 0:
 				break; #finished hatching, no more active boundaries.
 
 			interSections = [];	#list of intersections for just this single hatch line	
-			#TestDisplay.display.showShape(hatchLine);
+			#display.DisplayShape(hatchLine);
 			for boundary in activeBoundaries.keys():
+				
+				#do not compute if bounding boxes are outside
+				#if wireBounds.IsOut(bndBoxes[boundary]):
+				#	#print "skipping this comparison"
+				#	continue;
+					
 				brp = BRepExtrema.BRepExtrema_DistShapeShape();
 				brp.LoadS1(boundary);
 				brp.LoadS2(hatchLine );
-
+				numCompares+= 1;
 				if brp.Perform() and brp.Value() < 0.001:
 					#print "intersection found!"
 					#TODO need to handle the somewhat unusual cases that the intersection is
@@ -230,7 +246,7 @@ class Hatcher:
 			#first and last in the set will do?
 			
 			#for e in edgesInside:
-			#	#fTestDisplay.display.showShape(e);
+			#	#fdisplay.DisplayShape(e);
 			#	self.graph.addEdge(e,'FILL');
 			if len(edgesInside) > 1:
 				self.graph.addEdgeListAsSingleEdge(edgesInside,'FILL');
@@ -250,75 +266,13 @@ class Hatcher:
 
 
 		log.info("Finished Hatching.");
-
-	def  hatch2(self):
-		"""take the a slice and compute hatches
-			a copy to try to find a better way to perform.
-			with very small hexes, BrepExtremaDistShapeShape was very expensive.
-			it was also in 3d.
-			total time for a 4" solid with .125" hexagons was 8 seconds: too slow!
-			
-		"""
-		log.info("Hatching...");
-		q = time.clock();
-		hatchWires = self._makeHatchLines22();
-		print "Time to Make hatch Lines: %0.3f" % ( time.clock() - q )
-		activeBoundaries = {};
-		
-		#compute 2d curves on the face for the wires in the edges
-		#make a plane
-		plane = gp.gp_Pln( gp.gp_Pnt(0,0,0), gp.gp_Dir(1,0,0) );
-		gapi = GeomAPI.GeomAPI();
-		intcc = Geom2dAPI.Geom2dAPI_InterCurveCurve();
-		print "Computing 2d curves from wires..."
-		q = time.clock();
-		curves = []
-		for b in self.boundaryWires:
-			for e in Wrappers.Wire(b).edges2():
-				#get curve and project onto plane
-				(hc,p1,p2) =  btool.Curve(e);
-				#get 2d curve
-				h2d = gapi.To2d(hc,plane);
-				curves.append(h2d);
-			activeBoundaries[b] = 0;
-		print "Complete %0.3f sec, %d curves" % ( (time.clock() - q),len(curves ));
-	
-		#make a list of 2d curves that correspond to the hexagons. 
-		#this might be slow now, but we wont care, we can do this much faster later on
-		q = time.clock();
-		hatchCurves = [];
-		for w in hatchWires:
-			clist = [];
-			for e in Wrappers.Wire(w).edges2():
-				(c,p1,p2) = btool.Curve(e);				
-				clist.append ( gapi.To2d(c,plane));
-			hatchCurves.append(clist);
-		print "Completed projecting curves for hatching %0.3f sec, %d curves" % ( (time.clock() - q),len(hatchCurves ));
-
-		#for each wire, intersect with each curve. for now, just find out how long it takes
-		q = time.clock();
-		pnts = [];
-		count = 0;
-		for hc in hatchCurves: #for each wire
-			for cc in hc: #for each edge
-				for c in curves: #for each curve
-					count+=1;
-					ic = Geom2dAPI.Geom2dAPI_InterCurveCurve(c,cc);
-					if ic.NbPoints() > 0:
-						pnts.append( ic.Point(1) );
-		
-		#intersect each line with each boundary  using 2d computations.
-		print "Computed %d intersections %0.3f sec, %d points found" % ( count, (time.clock() - q ) , len(pnts ) );
-
-
-
-		log.info("Finished Hatching.");
+		print "%d Total Intersections computed." % ( numCompares )
 		
 		
 	
 	def _makeHatchLines22(self):
 		"make hatch lines using hexlib"
-		hex = hexagonlib.Hexagon(0.350,0.01);
+		hex = hexagonlib.Hexagon(0.250,0.01);
 		
 		xMin = self.bounds[0] - ( self.HATCH_PADDING);
 		yMin = self.bounds[1] - ( self.HATCH_PADDING);		 
@@ -335,9 +289,9 @@ class Hatcher:
 		xMax = self.bounds[2] + (self.HATCH_PADDING);
 		yMax = self.bounds[3] + (self.HATCH_PADDING) ;
 		wires = [];
-		for y in Wrappers.frange6(yMin,yMax,0.01):
+		for y in Wrappers.frange6(yMin,yMax,0.05):
 			e = Wrappers.edgeFromTwoPoints(gp.gp_Pnt(xMin,y,self.zLevel),gp.gp_Pnt(xMax,y,self.zLevel));
-			#TestDisplay.display.showShape(e);
+			#display.DisplayShape(e);
 			wires.append(Wrappers.wireFromEdges([e]));
 		return wires;
 
@@ -366,7 +320,33 @@ def runProfiled(cmd,level=1.0):
 	p = pstats.Stats('slicer.prof')
 	p.sort_stats('cum')
 	p.print_stats(level);	
+
+			
 	
+def displayEdgeFromGraph(ed):
+	if ed.has_key('node'):
+		#these are partial segments of edges"
+		e = ed['node'].newEdge();
+		#display.DisplayShape( TestDisplay.makeEdgeIndicator(e) );
+		display.DisplayShape(e,update=False );	
+	if ed.has_key('edgeList'):
+		#print "Found EdgeList"
+		#these are full edges
+		el = ed['edgeList'];
+		for e in el:
+			display.DisplayShape(e,update=False );
+				
+def displayAllEdgesAndVertices(h):
+	i=0;
+	for en in h.graph.allEdgesRandomOrder():
+		i+=1;
+		displayEdgeFromGraph(en)	
+	print "%d edges total" % i
+
+	for n in h.graph.allNodesRandomOrder():
+		p = gp.gp_Pnt(n[0],n[1],0);
+		display.DisplayShape(Wrappers.make_vertex(p),update=False);
+
 if __name__=='__main__':
 
 	###Logging Configuration
@@ -385,37 +365,30 @@ if __name__=='__main__':
 	w2=makeCircleWire();
 	h = Hatcher([w,w2],0.0,( -6,0,10.0,10.0) );
 	
-	#TestDisplay.display.showShape(w);
-	#TestDisplay.display.showShape(w2);
+	#display.DisplayShape(w);
+	#display.DisplayShape(w2);
 		
 	#runProfiled('h.hatch()',0.9);
 	t = Wrappers.Timer();
 	h.hatch();
 	#h.hatch2();
 	print "Hatching Finished",t.finishedString();
-	#display all edges in the graph
-	i=0;
-	for en in h.graph.allEdgesRandomOrder():
-		i+=1;
-		if en.has_key('node'):
-			#these are partial segments of edges"
-			e = en['node'].newEdge();
-			#TestDisplay.display.showShape( TestDisplay.makeEdgeIndicator(e) );
-			TestDisplay.display.showShape(e );	
-		if en.has_key('edgeList'):
-			#print "Found EdgeList"
-			#these are full edges
-			el = en['edgeList'];
-			for e in el:
-				TestDisplay.display.showShape(e);
+	print "There are %d fill edges" % len(h.graph.fillEdges)
 	
-	print "%d edges total" % i
-
-	for n in h.graph.allNodesRandomOrder():
-		p = gp.gp_Pnt(n[0],n[1],0);
-		TestDisplay.display.showShape(Wrappers.make_vertex(p));
+	#display all edges in the graph
+	displayAllEdgesAndVertices(h)
+	
+	#display edges in walk-to-fill order
+	#each entry is a list of nodes that form a path
+	print h.graph.walkEdges();
+	#for en in he.graph.walkEdges():
+	#	for p in Wrappers.pairwise(en):
+	#		#each pair is a set of nodes that form an edge
+	#		displayEdgeFromGraph( h.graph.getEdge(p[0],p[1]) );
+			
 
 	print "Done.";
-	TestDisplay.display.run();
+	display.FitAll();
+	start_display()
 
 	

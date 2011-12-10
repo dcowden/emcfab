@@ -2,7 +2,7 @@ import sys
 import time
 import numpy as np
 import time
-import breshamtest as bres
+import bresenham as bres
 import networkx as nx
 
 from PIL import Image,ImageDraw
@@ -37,7 +37,8 @@ class pixmap:
 		self.nX = int((max[0] - min[0] ) / step + 2) ;
 		self.nY = int((max[1]- min[1] ) / step  + 2) ; #+2 just corrects for rounding
 
-		self.p = np.zeros( (self.nX,self.nY),dtype=np.uint8 );
+		#self.p = np.zeros( (self.nX,self.nY),dtype=np.uint8 );
+		self.p = np.zeros ( ( self.nX, self.nY),dtype=np.int );
 		#self.p.shape = self.nY,self.nX;
 		
 	def index(self,p ):
@@ -69,7 +70,7 @@ class pixmap:
 		return  v
 	
 	
-	def drawLine2(self,p1,p2,value=1):
+	def drawLine2(self,p1,p2):
 		"""
 			draws a line, but while doing so, marks any pixels that have already been drawn as vertices
 			TODO: lots of code copied here from drawLine, but i'm just prototyping for now
@@ -79,13 +80,12 @@ class pixmap:
 		#TODO: should be refactored.
 		i1 = self.index(p1);
 		i2 = self.index(p2);
-		VERTEX_VALUE = 9;
 		#draw a line on the canvas, while promoting any pixels that have already been drawn 
 		#to vertices.  if the underlying pixel-based tile has vertice built-in, then this 
 		#will retain those, while also promoting crossed edges to vertices
 		#newVertices = [i1];
 		#newVertices.extend(bres.drawLineReturnVertices(self.p,i1,i2,value,VERTEX_VALUE));
-		bres.drawLineReturnVertices(self.p,i1,i2,value,VERTEX_VALUE);
+		return bres.piecewise_bresenham_line(self.p,i1,i2,20);
 		#newVertices.append(i2);
 		#return newVertices;
 		
@@ -257,14 +257,14 @@ class pixmap:
 		#draw a polygon on the image
 		#dont use fill values on this object, it results in buggy patterns.
 		ImageDraw.Draw(i).polygon(adjusted, outline=outlineFillValue,fill=innerFillValue);
-			
+		#ImageDraw.Draw(i).polygon(adjusted, outline=outlineFillValue);	
 		#copy values into windowed box
 		#must or the values to avoid overwriting previously set pixels
 		#m = np.array(i);
 		#print "image array shape is",m.shape
-		#m /= 255;
-		m = np.array(i).T;
 		
+		m = np.array(i).T;
+		#m /= 255;
 		#print m.shape;
 		#m /= 255;
 		#v[:] = np.maximum(v,m);
@@ -344,7 +344,7 @@ class pixmap:
 if __name__=='__main__':
 	"test cases"
 	q = time.clock();
-	t = pixmap((0,0),(3.5,2.5),0.01 );
+	t = pixmap((0,0),(3.5,2.5),0.001 );
 	t.set((1.301,0.18),1);
 	#print "Shape is",t.p.shape
 	print "made map in %0.3f" % (time.clock() - q );
@@ -360,6 +360,8 @@ if __name__=='__main__':
 	
 	#t.fillTriangle((2.1,2.1),(4.2,4.2),( 4.5,4.5) );
 	t.saveImage('c:\\temp\\pixtest.jpg');
+	
+	
 	
 	t2 = pixmap((0,0),(5.0,5.0),0.01);
 	t2.drawPolygon([(1.0,1.0),(2.0,2.0),(1.0,2.0)],1,0 );

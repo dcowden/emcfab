@@ -26,8 +26,9 @@ from OCC import BRepTools
 from OCC import TColgp
 from OCC import Poly
 from OCC import TopLoc
-from OCC import BRepMesh
+from OCC import BRepMesh,BRepClass
 from OCC.Utils.Topology import Topo
+from OCC import BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI,BRepAdaptor,IntCurvesFace,Approx,BRepLib,TopTools
 import pixmaptest
 import Wrappers
 import TestWires
@@ -59,7 +60,50 @@ def makeHeartWire():
 	e4 = Wrappers.edgeFromTwoPoints(gp.gp_Pnt(-4,4,0), gp.gp_Pnt(0,0,0));
 	return Wrappers.wireFromEdges([e1,e2,e3,e4]);
 
+def makePieWire():
+	e1 = Wrappers.edgeFromTwoPoints(gp.gp_Pnt(0,0,0), gp.gp_Pnt(4.0,0,0));
+	e2 = Wrappers.edgeFromTwoPoints(gp.gp_Pnt(4.0,0,0), gp.gp_Pnt(2.0,0.1,0));
+	e3 = Wrappers.edgeFromTwoPoints(gp.gp_Pnt(2.0,0.1,0), gp.gp_Pnt(3.0,1.0,0));
+	e4 = Wrappers.edgeFromTwoPoints(gp.gp_Pnt(3.0,1.0,0), gp.gp_Pnt(00,0,0));
+	return Wrappers.wireFromEdges([e1,e2,e3,e4]);	
 
+	
+def testOffsetReferences():
+	ow = makeHeartWire();
+	
+	bo = BRepOffsetAPI.BRepOffsetAPI_MakeOffset();
+	bo.AddWire(ow);
+	TestDisplay.display.showShape(ow )
+	bo.Perform(-0.01,0.0);
+	
+	newWire = bo.Shape();
+	TestDisplay.display.showShape(newWire);
+	
+	#now see if we can figure out which edge in the new wire goes with which
+	for oldEdge in Topo(ow).edges():
+		listOfShape = bo.Generated(oldEdge); #listOfShape is TopTools.TopTools_ListOfShape
+		newEdge = listOfShape.First();
+		
+		print "Old EdgeID is %d, New EdgeId is %d" % ( oldEdge.__hash__(), newEdge.__hash__()   );
+		
+#offset a face, returning the offset shape
+def offsetFace(face,offset ):
+	ow = brt.OuterWire(face);
+	bo = BRepOffsetAPI.BRepOffsetAPI_MakeOffset();
+	bo.AddWire(ow);
+	
+	
+	for w in Topo(face).wires():
+		if not w.IsSame(ow):
+			#TestDisplay.display.showShape(w);
+			bo.AddWire(w);
+	
+	#print "about to offset by %0.2f" % offset;
+	bo.Perform(offset,0.0);  #this line crashes hard, but only sometimes.
+	#print "done offsetting..";
+	bo.Check()
+	return bo.Shape()
+	
 def makeCircleWire():
 	circle = gp.gp_Circ(gp.gp_Ax2(gp.gp_Pnt(0,2,0),gp.gp().DZ()),.75);
 	e2 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(circle, gp.gp_Pnt(0,1.25,0),gp.gp_Pnt(0,1.25,0)).Edge();
@@ -97,9 +141,11 @@ def boundarypixmapFromFace(face):
 		creates a pixel map containing only the boundaries of the object.
 		the shape is approximated with straight lines, and vertices are marked
 		with different values to help re-construct the lines later on.	
+		
+		Some c++ optimizaion woudl really speed this up.
 	"""
 	PIXEL = 0.02;
-	DEFLECTION = PIXEL / 2.0;
+	DEFLECTION = PIXEL / 4.0;
 
 	#get bounding box
 	(xMin,yMin,zMin,xMax,yMax,zMax) = boundingBox([face]);
@@ -214,8 +260,6 @@ def testWirePixmap(face):
 	#make pixmap
 	pixmap = pixmaptest.pixmap((xMin-BUFFER,yMin-BUFFER),(xMax+BUFFER,yMax+BUFFER),PIXEL);
 
-	#we will draw the outer wire as a filled polygon, then
-	#draw the inner wire as another filled polygon
 	
 	ow = brt.OuterWire(face);
 	boundary = tuplesFromWire(ow,DEFLECTION);
@@ -238,6 +282,83 @@ def testWirePixmap(face):
 			g.add_edge(l[0],l[1]);
 	
 	return g;
+
+def testWirePixmap2(face):
+	"""
+		tests drawing a wire while adjusting sharp borders
+	"""
+	PIXEL = 0.01 ;
+	DEFLECTION = PIXEL / 4.0;
+
+	#get bounding box
+	(xMin,yMin,zMin,xMax,yMax,zMax) = boundingBox([face]);
+	g = nx.Graph();
+	#adjust boundaries a bit
+	BUFFER=PIXEL*5;
+	#make pixmap
+	pixmap = pixmaptest.pixmap((xMin-BUFFER,yMin-BUFFER),(xMax+BUFFER,yMax+BUFFER),PIXEL);
+
+	
+	ow = brt.OuterWire(face);
+	boundary = tuplesFromWire(ow,DEFLECTION);
+	
+	for et in Wrappers.pairwise(boundary):
+		p1 = et[0];
+		p2 = et[1];
+		g.add_edge(p1,p2);
+
+		i1 = pixmap.index(p1);
+		i2 = pixmap.index(p2);
+		#print i1,i2,p1,p2
+		pixmap.drawLine(p1,p2,1,2);
+	
+	pixmap.saveImage("c:\\temp\\thickboundary.jpg");
+
+
+def testHugePixmap(face):
+	"""
+		tests drawing a wire while adjusting sharp borders
+	"""
+	PIXEL = 0.005 ;
+	DEFLECTION = PIXEL / 2.0;
+
+	#get bounding box
+	(xMin,yMin,zMin,xMax,yMax,zMax) = boundingBox([face]);
+	g = nx.Graph();
+	#adjust boundaries a bit
+	BUFFER=PIXEL*5;
+	#make pixmap
+	pixmap = pixmaptest.pixmap((xMin-BUFFER,yMin-BUFFER),(xMax+BUFFER,yMax+BUFFER),PIXEL);
+
+	
+	ow = brt.OuterWire(face);
+	boundary = tuplesFromWire(ow,DEFLECTION);
+	
+	for et in Wrappers.pairwise(boundary):
+		p1 = et[0];
+		p2 = et[1];
+		g.add_edge(p1,p2);
+
+		i1 = pixmap.index(p1);
+		i2 = pixmap.index(p2);
+		#print i1,i2,p1,p2
+		pixmap.drawLine(p1,p2,1,2);
+	
+	#now, lets see how long it takes to find the intersection of a line by painting on the pixmap
+	q = time.clock();
+	p1 = ( -4.0,2.0 )
+	p2 = ( 4.0, 2.0 )
+	results = pixmap.drawLine2(p1,p2 )
+	print results
+	print "Found Intersections in %0.3f seconds" % ( time.clock() - q );
+	
+	#how fast is it to determine if a point is on the face?
+	q = time.clock()
+	p1 = ( -0.5,2.0)
+	for i in range(1,1000):
+		pixmap.get(p1)
+	print "Tested 1000 points in %0.3f seconds" % ( time.clock() - q );
+	pixmap.saveImage( "c:\\temp\scanline.jpg" );
 	
 def pixmapFromFace2(face,fillpattern=None):
 	"""
@@ -257,8 +378,8 @@ def pixmapFromFace2(face,fillpattern=None):
 			tile a fill pattern onto the background
 	"""
 	
-	PIXEL = 0.1 ;
-	DEFLECTION = PIXEL / 4.0;
+	PIXEL = 0.010 ;
+	DEFLECTION = PIXEL / 2.0;
 
 	#get bounding box
 	(xMin,yMin,zMin,xMax,yMax,zMax) = boundingBox([face]);
@@ -275,7 +396,7 @@ def pixmapFromFace2(face,fillpattern=None):
 	outerPoints = tuplesFromWire(ow,DEFLECTION);
 	#outerPoints.pop(2);
 	#print outerPoints
-	pixmap.drawPolygon(outerPoints,0,1);
+	pixmap.drawPolygon(outerPoints,1,1);
 	#drawWire(outerPoints,pixmap);
 	#pixmap.saveImage("c:\\temp\\heartborder-1.bmp");
 	
@@ -285,27 +406,39 @@ def pixmapFromFace2(face,fillpattern=None):
 	for w in Topo(face).wires():
 		if not w.IsSame(ow):
 			wp = tuplesFromWire(w,DEFLECTION);
-			pixmap.drawPolygon(wp,1,0);
+			pixmap.drawPolygon(wp,0,0);
 			wires.append(wp);
 			
 
 	#pixmap.saveImage("c:\\temp\\heartborder-2.bmp");
-	if fillpattern is not None:
-		pixmap.tileOnto(fillpattern);
-	pixmap.saveImage("c:\\temp\\heartborder-3.bmp");
+	#if fillpattern is not None:
+	#	pixmap.tileOnto(fillpattern);
+	#pixmap.saveImage("c:\\temp\\heartborder-3.bmp");
 	
 	#now draw the borders, while marking vertices.
 	#after this runs, all vertices in the graph should have value 9
 	#vertexList = [];
-	for w in wires:
-		for et in Wrappers.pairwise(w):
-			#vertexList.extend(pixmap.drawLine2(et[0],et[1],1));
-			pixmap.drawLine(et[0],et[1],2);
+	#for w in wires:
+	#	for et in Wrappers.pairwise(w):
+	#		#vertexList.extend(pixmap.drawLine2(et[0],et[1],1));
+	#		pixmap.drawLine(et[0],et[1],2);
 
-	pixmap.saveImage("c:\\temp\\heartborder-4.bmp");
+	#pixmap.saveImage("c:\\temp\\heartborder-4.bmp");
 	return pixmap;
+
+def testPointInFacePerformance(face):
+	"""
+		tests how quickly we can dtermine if a point is on a face
+	"""
+	pnt = gp.gp_Pnt2d(0.5,2.0);
+	TOLERANCE = 0.001;
+	q = time.clock()
+	for i in range(1000):
+		bf = BRepClass.BRepClass_FaceExplorer(face)
+		result = bf.Reject(pnt)
+	print ("Computed point in face 100 times in %0.3f" % ( time.clock() - q ) )
 	
-def pixmapFromFaceTriangulation(face,fillpattern):
+def pixmapFromFaceTriangulation(face):
 	"""
 		create a filled pixmap from a defined face.
 		
@@ -327,8 +460,8 @@ def pixmapFromFaceTriangulation(face,fillpattern):
 			myAISContext->Display(aShape);		
 	"""
 	
-	PIXEL = 0.012;
-	DEFLECTION = PIXEL / 50.0;
+	PIXEL = 0.005;
+	DEFLECTION = PIXEL / 20.0;
 	triangulateAtDeflection(face,DEFLECTION);
 	
 	#get bounding box
@@ -375,10 +508,11 @@ def pixmapFromFaceTriangulation(face,fillpattern):
 		#TestDisplay.display.showShape(Wrappers.make_vertex(p3));
 		
 	#tile hex pattern onto the filling
-	pixmap.tileOnto(fillpattern);
+	#pixmap.tileOnto(fillpattern);
 	
 	#mark boundaries
 	#approximate each wire with a set of segments
+	"""
 	bb = TopExp.TopExp_Explorer();
 	bb.Init(face,TopAbs.TopAbs_WIRE);
 	edgeNum = 1;
@@ -400,7 +534,8 @@ def pixmapFromFaceTriangulation(face,fillpattern):
 				#plot the line
 				#if lastPnt != None: pixmap.drawLine(tP(lastPnt),tP(pnt),edgeNum );				
 				lastPnt = pnt;
-		bb.Next();	
+		bb.Next();
+	"""
 	return pixmap;
 	
 #syntax example to tile
@@ -438,11 +573,40 @@ if __name__=='__main__':
 
 	w = makeHeartWire();
 	w2 = makeCircleWire();
-
-	#pm = pixmapFromWires([w2,w] );
-	f = faceFromWires(w,[w2]);
+	f = faceFromWires(makeHeartWire(),[w2] );
 	q = time.clock();
-	#pm = pixmapFromFace(f);
+	testHugePixmap(f);
+	print "HugePixMap: Elapsed %0.3f" % ( (time.clock() - q ));
+	
+	#testOffsetReferences();
+	testPointInFacePerformance(f);
+	
+	#pm = pixmapFromWires([w2,w] );
+	#f = faceFromWires(w,[w2]);
+	#f = faceFromWires(w,[]);
+	f = faceFromWires(makeHeartWire(),[w2] );
+	testWirePixmap2(f);
+	TestDisplay.display.showShape(f)
+	q = time.clock();
+	pm = boundarypixmapFromFace(f);
+	pm.saveImage("c:\\temp\\boundary3.jpg");
+	#for i in range(1,20):
+	#	tmp = offsetFace(f, -0.01*i)
+	#	TestDisplay.display.showShape(tmp)
+	#	if not tmp:
+			
+	#		break;
+	print "BoundaryMapFromFace: Elapsed %0.3f" % ( (time.clock() - q ));
+	
+	q = time.clock();
+	pm = pixmapFromFace2(f);
+	print "pixmapFromFace2: Elapsed %0.3f" % ( (time.clock() - q ));	
+	pm.saveImage("c:\\temp\\pixmapFromFace2.jpg");
+	q = time.clock();
+	pm = pixmapFromFaceTriangulation(f);
+	print "pixmapFromFaceTriangulation: Elapsed %0.3f" % ( (time.clock() - q ));	
+	pm.saveImage("c:\\temp\\pixmapFromFaceTriangulation.jpg");
+	
 	#print pm.p.shape;
 	#print pm.p
 	#pm.saveImage("c:\\temp\\pleasework2.jpg");
@@ -496,23 +660,23 @@ if __name__=='__main__':
 						 [5,5,5,5,5,5,5,5,5,5], \
 						 [0,0,0,0,0,5,0,0,0,0], \
 						 [0,0,0,0,0,0,5,0,0,0]] );						 
-	#pm2 = pixmapFromFace2(f,hextile3);
-	pm2 = pixmapFromFaceTriangulation(f,hextile3);
+	pm2 = pixmapFromFace2(faceFromWires(makeHeartWire(),[] ));
+	#pm2 = pixmapFromFaceTriangulation(f,hextile3);
 	#pm2 = pixmapFromFace2(f); #make pixmap without inner fill
 	#(xMin,yMin,zMin,xMax,yMax,zMax) = boundingBox([f]);
 	#print "Making Edges..."
 	#he = makeHexEdges(xMin,yMin,xMax,yMax,zMax);
 	#print "Trimming Edges..."
 	
-	#q = time.clock();
-	#g = testWirePixmap(f);
-	#print "Trim Edges: Elapsed %0.3f" % ( time.clock() - q );
-	#print "Displaying..."
+	q = time.clock();
+	g = testWirePixmap(f);
+	print "Trim Edges: Elapsed %0.3f" % ( time.clock() - q );
+	print "Displaying..."
 	#print g.edges();
 	#displayGraph(g);
 	
 	pm2.saveImage("c:\\temp\\heartborder.jpg");
-	np.savetxt("c:\\temp\\heartborder.txt",pm2.p,fmt="%d");
+	#np.savetxt("c:\\temp\\heartborder.txt",pm2.p,fmt="%d");
 
 	print "Elapsed %0.3f" % ( time.clock() - q );
 	

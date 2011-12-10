@@ -265,9 +265,10 @@ if __name__=='__main__':
 	
 	#display.DisplayShape(w1);
 	#display.DisplayShape(w2);
-	t = Wrappers.Timer();
-	w3 = h2.makeHexForBoundingBox((0,0,0),(100,100,0));
+	q = time.clock()
+	for i in range(1,100):
+		w3 = h2.makeHexForBoundingBox((0,0,0),(100,100,0));
 	#runProfiled('w3 = h2.makeHexForBoundingBox((0,0,0),(100,100,0));',0.5);
-	print "Total Time: %0.8f " % (t.elapsed()*1000);
+	print "Total Time: %0.8f " % (time.clock() - q);
 	display.DisplayShape(w3 );
 	start_display();

@@ -1,0 +1,59 @@
+The goal is to work in 2d space instead of 3d space to optimize execution.
+
+Here is one approach:
+
+	Handle(HLRBRep_Algo)myAlgo = new HLRBRep_Algo();
+	myAlgo->Add(R);
+	Prs3d_Projector myProj(false,0, 0,0,zloc,0,0,1, 0,0,1);//zloc is z coordinate of projection point
+	myAlgo->Projector(myProj.Projector());
+	myAlgo->Update();
+	HLRBRep_HLRToShape aHLRToShape(myAlgo);
+	TopoDS_Shape Proj = aHLRToShape.VCompound();
+	Handle (AIS_Shape) DispP = new AIS_Shape(Proj);
+	myAISContext->Display(DispP,Standard_False);
+
+Another approach is to convert curves to 2d curves, using this:
+	Sorry, it is GeomAPI::To2d() and GeomAPI::To3d() 
+
+ProjLib has some promising stuff:
+	file:///C:/apps/OpenCascade/Documentation/ModelingData/html/classProjLib.html
+	this will project a curve onto a plane. however, getting the end points would require also projecting the end points,
+	and this does not save the parameters of the curves, it deals with the primatives only. IE, i dont want a gp_Circ,
+	i want a Geom2d_Curve
+	
+	this package makes trimmed curves
+	file:///C:/apps/OpenCascade/Documentation/ModelingData/html/packages/GCE2d.html
+
+Ok so here's how to get intersections:
+	* from wires, edges
+	* from edges, get curves ( Geom_Curve )
+	* use GeomAPI.To2d() to get Geom_2dCurves in the plane 
+		(file:///C:/apps/OpenCascade/Documentation/ModelingAlgorithms/html/classGeomAPI.html)
+		file:///C:/apps/OpenCascade/Documentation/ModelingAlgorithms/html/packages/GeomAPI.html
+	* Use GeomAPI_ExtremaCurveCurve or Geom2dAPI__InterCurveCurve to find intersections:
+		file:///C:/apps/OpenCascade/Documentation/ModelingAlgorithms/html/classGeom2dAPI__InterCurveCurve.html
+		file:///C:/apps/OpenCascade/Documentation/ModelingAlgorithms/html/classGeom2dAPI__ExtremaCurveCurve.html
+	* use Geom2d__OffsetCurve to compute offsets if needed of a single curve:
+		file:///C:/apps/OpenCascade/Documentation/ModelingData/html/classGeom2d__OffsetCurve.html
+	* for display, we need shapes, not curves. to do this, use BRepBuilderAPI_MakeEdge2d to make edges
+		file:///C:/apps/OpenCascade/Documentation/ModelingAlgorithms/html/classBRepBuilderAPI__MakeEdge2d.html
+		
+	* check out Geom2dHatch_Intersector, intersects lines and curves!
+		file:///C:/apps/OpenCascade/Documentation/ModelingAlgorithms/html/classGeom2dHatch__Intersector.html
+		file:///C:/apps/OpenCascade/Documentation/ModelingAlgorithms/html/classIntRes2d__Intersection.html
+		
+what a fantastic book of c algorithms for geometry
+	http://tog.acm.org/resources/GraphicsGems/gems.html#gemsii
+
+to execute transformations:
+	file:///C:/apps/OpenCascade/Documentation/ModelingData/html/classGeomLib.html
+bounding box in 2d:
+file:///C:/apps/OpenCascade/Documentation/ModelingData/html/classBndLib__Add2dCurve.html
+fillets in 2d:
+file:///C:/apps/OpenCascade/Documentation/ModelingAlgorithms/html/classChFi2d.html
+file:///C:/apps/OpenCascade/Documentation/FoundationClasses/html/classBnd__Box2d.html
+very useful-- a sorted array of bounding boxes in 2d for intersection!
+	file:///C:/apps/OpenCascade/Documentation/FoundationClasses/html/classBnd__BoundSortBox2d.html
+
+	use CPnts_AbscissaPoint to comput distance along a curve from another pointa;
+		file:///C:/apps/OpenCascade/Documentation/ModelingData/html/classCPnts__AbscissaPoint.html

@@ -1,0 +1,18 @@
+var OX_41115f55 = '';
+OX_41115f55 += "<"+"script type=\"text/javascript\"><"+"!--\n";
+OX_41115f55 += "google_ad_client = \"pub-4985676952072833\";\n";
+OX_41115f55 += "google_ad_width = 468;\n";
+OX_41115f55 += "google_ad_height = 60;\n";
+OX_41115f55 += "google_ad_format = \"468x60_as\";\n";
+OX_41115f55 += "google_ad_type = \"text_image\";\n";
+OX_41115f55 += "google_ad_channel = \"\";\n";
+OX_41115f55 += "google_color_border = \"FFFFFF\";\n";
+OX_41115f55 += "google_color_bg = \"FFFFFF\";\n";
+OX_41115f55 += "google_color_link = \"22229C\";\n";
+OX_41115f55 += "google_color_text = \"000000\";\n";
+OX_41115f55 += "google_color_url = \"000000\";\n";
+OX_41115f55 += "//--><"+"/script>\n";
+OX_41115f55 += "<"+"script type=\"text/javascript\"\n";
+OX_41115f55 += "src=\"http://pagead2.googlesyndication.com/pagead/show_ads.js\">\n";
+OX_41115f55 += "<"+"/script><"+"div id=\'beacon_641ea7af55\' style=\'position: absolute; left: 0px; top: 0px; visibility: hidden;\'><"+"img src=\'http://www.devmaster.net/adsrvr/www/delivery/lg.php?bannerid=1&amp;campaignid=2&amp;zoneid=1&amp;loc=1&amp;referer=http%3A%2F%2Fwww.devmaster.net%2Fcodespotlight%2Fshow.php%3Fid%3D17&amp;cb=641ea7af55\' width=\'0\' height=\'0\' alt=\'\' style=\'width: 0px; height: 0px;\' /><"+"/div>\n";
+document.write(OX_41115f55);

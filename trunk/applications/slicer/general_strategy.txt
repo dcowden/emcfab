@@ -1,0 +1,56 @@
+overview of the algorithm:
+
+STRATEGY 1: Pixel map based intersection. faster?
+This method uses pixel maps to trim fill wires, find intersections, and perform collision detection.
+
+* for each layer:
+	* create a pixel map that contains the area to fill
+	* create offsets for outer layers
+	* create a set of wires to represent the boundaries of the filling
+	* create an indexed map of wires, so that when pixels are drawn, it is easy to find the wire that corresponds to the pixel
+	* create a signiture of the layer based on the boundary wires. this allows re-use of identical layers
+	* create vectors for filling
+		* if a full infill layer, compute offsets from outer wire until all area is filled
+		* if a partial infill layer, computer hexagon fill at desired interval
+		* arranged in some known order, typically ascending x or ascending y or something
+		
+	* paint the boundaries onto the pixel map
+		* more than one pixel thickness is required, because otherwise diagonals will allow 'leaks'
+		
+	* trim all wires to a list of new wires that lie in the desired space
+		* these wires will usually have endpoints on one of the original boundary wires
+		   * inset offsets will not have such vertices
+		* each wire may need to be trimmed into multiple segments
+		* the list does not include endpoints internal to a wire
+		* wires may contain curves
+		* use pixel maps to track painting to prevent over-drawing
+			* convert curved wires to piecewise linear segments
+			* a single pixel wide path is easiest, but using 3 pixels wide for each path is more accurate
+	
+	* project each endpoint of fill wires onto the boundary wires to find the parameter on each edge of the boundaries
+
+	* create a network graph that links the edges and nodes
+		* nodes are vertices
+		* edges are either wires or edges ( or parts of an edge )
+		* all edges must be visited in order to complete the fill
+		* mark edges in the graph as either infill or boundary
+		
+	* traverse the edges in the order that results in the shortest total path
+		* some edges will be islands not connected to the boundaries
+		* only infill edges must be visited. 
+		* use boundary edges only to connect infill edges when needed
+		* perhaps chain through using nearest neighbor searches to join the curves?
+		    * http://code.activestate.com/recipes/577497-kd-tree-for-nearest-neighbor-search-in-a-k-dimensi/
+			
+STRATEGY 2: pixel maps for collision detection only. intersections and trimming is done in vector space
+	* compute intersections for fill wires using naive computation.  [this is complete-- see hatchLib ]
+	* remove or trim edges that draw on already drawn pixels.
+	   * this would require removing nodes in many cases
+	   
+	   
+	   
+collision detection interfaces:
+	
+	* a node is ( x, y) coordinates.
+	* a line is ( x0,y0), ( x1, y1)
+	* 

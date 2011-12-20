@@ -240,18 +240,28 @@ class Hatcher:
 			#print "Splitting wire by %d intersection points" % len(interSections )
 			edgesInside = [];
 			edgesInside = eg.splitWire(hatchLine,interSections);
+
+			#returned value is a list of lists. each entry is a chain of edges
 			
-			#print "Split returned %d edges" % len(edgesInside);
 			# TODO: a speedup here is possible. why add all edges to the graph when only the
 			#first and last in the set will do?
+			#the goal is to get each sequence of edges that intersect the borders
 			
-			#for e in edgesInside:
-			#	#fdisplay.DisplayShape(e);
-			#	self.graph.addEdge(e,'FILL');
-			if len(edgesInside) > 1:
-				self.graph.addEdgeListAsSingleEdge(edgesInside,'FILL');
-			if len(edgesInside) == 1:
-				self.graph.addEdge(edgesInside[0],'FILL');
+			for e in edgesInside:
+				if len(e) == 1:
+					#display.DisplayShape(e[0]);
+					self.graph.addEdge(e[0],'FILL');
+				else:
+					#for f in e:
+						#display.DisplayShape(f);
+						#self.graph.addEdge(f,'FILL');
+					self.graph.addEdgeListAsSingleEdge(e,'FILL');#somehow has a bug!
+				#time.sleep(1)
+				
+			#if len(edgesInside) > 1:
+			#	self.graph.addEdgeListAsSingleEdge(edgesInside,'FILL');
+			#if len(edgesInside) == 1:
+			#	self.graph.addEdge(edgesInside[0],'FILL');
 			
 			#test to see if we can break out of the loop.
 			#we can stop if we've hit each boundary at least once
@@ -272,7 +282,7 @@ class Hatcher:
 	
 	def _makeHatchLines22(self):
 		"make hatch lines using hexlib"
-		hex = hexagonlib.Hexagon(0.250,0.01);
+		hex = hexagonlib.Hexagon(2.22,.07);
 		
 		xMin = self.bounds[0] - ( self.HATCH_PADDING);
 		yMin = self.bounds[1] - ( self.HATCH_PADDING);		 
@@ -323,29 +333,38 @@ def runProfiled(cmd,level=1.0):
 
 			
 	
-def displayEdgeFromGraph(ed):
+def displayEdgeFromGraph(ed,refreshNow=False):
+	#if ed == None:
+	#	return;
 	if ed.has_key('node'):
 		#these are partial segments of edges"
 		e = ed['node'].newEdge();
 		#display.DisplayShape( TestDisplay.makeEdgeIndicator(e) );
-		display.DisplayShape(e,update=False );	
+		display.DisplayShape(e,update=refreshNow );	
 	if ed.has_key('edgeList'):
 		#print "Found EdgeList"
 		#these are full edges
-		el = ed['edgeList'];
-		for e in el:
-			display.DisplayShape(e,update=False );
-				
+		for e in ed['edgeList']:
+			display.DisplayShape(e,update=refreshNow );
+
+	
+def debugGraph(h):
+	print "There are %d nodes total" % ( len(h.graph.g.nodes()) )
+	for n in h.graph.allNodesRandomOrder():
+		print "%s, %d neighbors" % ( str(n), len ( h.graph.g.neighbors(n) ) )
+		
 def displayAllEdgesAndVertices(h):
 	i=0;
 	for en in h.graph.allEdgesRandomOrder():
 		i+=1;
 		displayEdgeFromGraph(en)	
 	print "%d edges total" % i
-
+	i=0
 	for n in h.graph.allNodesRandomOrder():
+		i+=1;
 		p = gp.gp_Pnt(n[0],n[1],0);
 		display.DisplayShape(Wrappers.make_vertex(p),update=False);
+	print "%d nodes total" % i
 
 if __name__=='__main__':
 
@@ -364,28 +383,41 @@ if __name__=='__main__':
 	w = makeHeartWire();
 	w2=makeCircleWire();
 	h = Hatcher([w,w2],0.0,( -6,0,10.0,10.0) );
-	
+
 	#display.DisplayShape(w);
 	#display.DisplayShape(w2);
 		
 	#runProfiled('h.hatch()',0.9);
 	t = Wrappers.Timer();
 	h.hatch();
+	debugGraph(h)
 	#h.hatch2();
 	print "Hatching Finished",t.finishedString();
 	print "There are %d fill edges" % len(h.graph.fillEdges)
 	
+	if True:
+		for e in h.graph.fillEdges:
+			edge = h.graph.getEdge(e[0],e[1] );
+			if edge:
+				#print "Display Edge:",e[0],e[1]
+				displayEdgeFromGraph(h.graph.getEdge(e[0],e[1]),True);
+				#time.sleep(.5)
 	#display all edges in the graph
-	displayAllEdgesAndVertices(h)
+	#displayAllEdgesAndVertices(h)
 	
 	#display edges in walk-to-fill order
 	#each entry is a list of nodes that form a path
-	print h.graph.walkEdges();
-	#for en in he.graph.walkEdges():
-	#	for p in Wrappers.pairwise(en):
-	#		#each pair is a set of nodes that form an edge
-	#		displayEdgeFromGraph( h.graph.getEdge(p[0],p[1]) );
-			
+
+	if False:
+		en = h.graph.walkEdges();
+		print "Walked Edges-- %d total paths" % len(en);
+		for path in en:
+				print "path:"
+				for edge in Wrappers.pairwise(path):
+					#each pair is a set of nodes that form an edge
+					#print "Display Edge:",edge[0],edge[1]
+					displayEdgeFromGraph( h.graph.getEdge(edge[0],edge[1]),False);
+					#time.sleep(0.2)
 
 	print "Done.";
 	display.FitAll();

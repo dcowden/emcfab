@@ -1,0 +1,38 @@
+arc fitting algo from a series of points
+	* see https://github.com/alexrj/Slic3r/blob/master/lib/Slic3r/ExtrusionPath.pm
+	
+	* at least 3 segments ( 4 points ) required
+	* for each point
+		* create segments for the next 3 lines
+		* compute length of all three. continue if the segments are different lengths, within resolution
+		* compute agles of each, and subtract each one from the next one-- ie, compute angle of each relative to the next one
+			(ignore parallel lines or sharp vertices )
+		* once the above are found, go into greedy mode finding points until none are left
+		* once arc is complete, use perpindicular lines to find center.
+		
+	* but this algorithm is based on getting just one value, essentialy at vertices, not intermediate values in the pixel map.
+	   -->id to use this technique, we would need to have points marked as 'vertices'
+	   
+	* this appraoch works on all of the data:
+	http://www.loria.fr/~tombre/icpr2000.pdf
+	
+	Lowe, Rosin and West have line and arc fitting methods
+		http://www.bmva.org/bmvc/1988/avc-88-040.pdf
+		* fitting arc to data requires binary split gradient descent method
+		
+	Phillips-Rosenfeld algorithm
+	
+	this paper describes a method arc-chord distance
+		http://www.citr.auckland.ac.nz/researchreports/CITR-TR-150.pdf
+	
+	see 
+		Optimal Line and Arc Detection on Run-Length Representations by Daniel Keysers and Thomas M. Breuel
+		(RAST method )
+	
+	see this paper, which is more like the slic3r code 
+		"Fast Line, Arc/Circle and Leg Detection from Laser Scan Data in a Player Driver"
+		Inscribed Angle Variance (IAV).
+		http://miarn.sourceforge.net/pdf/a1738b.pdf
+		this site actually has the code!
+			http://sourceforge.net/projects/miarn/files/miarn-pv3d/0.5.0/miarn-0.5.0.tar.bz2/download
+			

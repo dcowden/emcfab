@@ -1,0 +1,2810 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CADFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="0.9.8.0" Name="xaxis_base_plate" units="Inches">
+  <layers>
+    <layer name="0" color="255,255,255">
+      <ModificationCount>0</ModificationCount>
+      <objects>
+        <line id="1">
+          <ModificationCount>1</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.077220129,1.7149728142</p>
+            <p>14.467830028,1.7149728142</p>
+          </pts>
+        </line>
+        <line id="2">
+          <ModificationCount>1</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>13.5957510002,0.9649728142</p>
+            <p>-0.4678405548,0.9649728142</p>
+          </pts>
+        </line>
+        <line id="3">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.25,0.8966059397</p>
+            <p>12.25,-0.2614080474</p>
+          </pts>
+        </line>
+        <line id="4">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.75,0.75</p>
+            <p>0.75,-0.2614080474</p>
+          </pts>
+        </line>
+        <line id="5">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-0.1430740414,3.06</p>
+            <p>1.7388063054,3.06</p>
+          </pts>
+        </line>
+        <line id="6">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>-0.1430740414,1.84</p>
+            <p>1.8232920003,1.84</p>
+          </pts>
+        </line>
+        <line id="7">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.4102362205,3.2034620258</p>
+            <p>1.4102362205,1.3785710162</p>
+          </pts>
+        </line>
+        <line id="8">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.19,3.1471382292</p>
+            <p>0.19,1.3785710162</p>
+          </pts>
+        </line>
+        <line id="9">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.3363812448,3.06</p>
+            <p>13.3302436441,3.06</p>
+          </pts>
+        </line>
+        <line id="10">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.3363812448,1.84</p>
+            <p>13.3302436441,1.84</p>
+          </pts>
+        </line>
+        <line id="11">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.81,3.2034620258</p>
+            <p>12.81,1.3785710162</p>
+          </pts>
+        </line>
+        <line id="12">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.59,3.2034620258</p>
+            <p>11.59,1.3278795992</p>
+          </pts>
+        </line>
+        <circle id="23" c="12.2,2.45,0" d="0.87">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="25" c="2.07,2.385,0" d="0.8661417322">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="26" c="0.55,1.5,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="27" c="12.45,1.5,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="28" c="11.45,2.25,0" d="0.25">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="29" c="0.75,0.75,0" d="0.3125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="30" c="12.25,0.75,0" d="0.3125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="31" c="3.75,0.75,0" d="0.3125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="32" c="9.25,0.75,0" d="0.3125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="37" c="12.81,3.06,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="38" c="11.59,3.06,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="39" c="11.59,1.84,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="40" c="12.81,1.84,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="46" c="12.2,2.45,0" d="0.87">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <line id="47">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.8,2.015</p>
+            <p>1.0000093037,2.015</p>
+          </pts>
+        </line>
+        <line id="48">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.0000093037,2.8811417323</p>
+            <p>0.7421916383,2.8811417323</p>
+          </pts>
+        </line>
+        <arc id="49" p="0.8,2.45,0" r="0.43500000000000005" s="97.6367874865" w="172.3632125135">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </arc>
+        <circle id="50" c="2.07,2.385,0" d="0.8661417322">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="51" c="12.45,1.5,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="52" c="11.45,2.25,0" d="0.25">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="53" c="0.75,0.75,0" d="0.55">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="54" c="12.81,1.84,0" d="0.3">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="55" c="11.59,1.84,0" d="0.3">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <arc id="70" p="1.0000093037,2.4480708662,0" r="0.4330708661" s="270" w="180">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </arc>
+        <circle id="72" c="9.25,0.75,0" d="0.55">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="78" c="0.55,1.5,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="79" c="1.881,0.5,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="80" c="2.865,0.5,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="81" c="4.833,0.5,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="82" c="5.817,0.5,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="83" c="6.801,0.5,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="84" c="7.785,0.5,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="85" c="8.769,0.5,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="86" c="9.753,0.5,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="87" c="10.737,0.5,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="88" c="11.721,0.5,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="89" c="12.705,0.5,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="90" c="12.25,0.75,0" d="0.55">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="91" c="12.81,3.06,0" d="0.3">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="92" c="3.75,0.75,0" d="0.55">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="93" c="11.59,3.06,0" d="0.3">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="94" c="12.25,0.75,0" d="0.3125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="95" c="0.75,0.75,0" d="0.3125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="96" c="3.75,0.75,0" d="0.3125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="97" c="9.25,0.75,0" d="0.3125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="98" c="12.81,3.06,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="99" c="12.81,1.84,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="100" c="11.59,1.84,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <circle id="117" c="11.59,3.06,0" d="0.125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+        </circle>
+        <line id="118">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.19,3.06</p>
+            <p>0.19,3.16</p>
+          </pts>
+        </line>
+        <line id="119">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.19,3.06</p>
+            <p>0.09,3.06</p>
+          </pts>
+        </line>
+        <line id="120">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.19,3.06</p>
+            <p>0.19,2.96</p>
+          </pts>
+        </line>
+        <line id="121">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.19,3.06</p>
+            <p>0.29,3.06</p>
+          </pts>
+        </line>
+        <line id="122">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.39,3.06</p>
+            <p>0.39,3.16</p>
+          </pts>
+        </line>
+        <line id="123">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.39,3.06</p>
+            <p>0.29,3.06</p>
+          </pts>
+        </line>
+        <line id="124">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.39,3.06</p>
+            <p>0.39,2.96</p>
+          </pts>
+        </line>
+        <line id="125">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.39,3.06</p>
+            <p>0.49,3.06</p>
+          </pts>
+        </line>
+        <line id="126">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.19,1.84</p>
+            <p>0.19,1.94</p>
+          </pts>
+        </line>
+        <line id="127">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.19,1.84</p>
+            <p>0.09,1.84</p>
+          </pts>
+        </line>
+        <line id="128">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.19,1.84</p>
+            <p>0.19,1.74</p>
+          </pts>
+        </line>
+        <line id="129">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.19,1.84</p>
+            <p>0.29,1.84</p>
+          </pts>
+        </line>
+        <line id="130">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.39,1.84</p>
+            <p>0.39,1.94</p>
+          </pts>
+        </line>
+        <line id="131">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.39,1.84</p>
+            <p>0.29,1.84</p>
+          </pts>
+        </line>
+        <line id="132">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.39,1.84</p>
+            <p>0.39,1.74</p>
+          </pts>
+        </line>
+        <line id="133">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.39,1.84</p>
+            <p>0.49,1.84</p>
+          </pts>
+        </line>
+        <line id="134">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.4102362205,1.84</p>
+            <p>1.4102362205,1.94</p>
+          </pts>
+        </line>
+        <line id="135">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.4102362205,1.84</p>
+            <p>1.3102362205,1.84</p>
+          </pts>
+        </line>
+        <line id="136">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.4102362205,1.84</p>
+            <p>1.4102362205,1.74</p>
+          </pts>
+        </line>
+        <line id="137">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.4102362205,1.84</p>
+            <p>1.5102362205,1.84</p>
+          </pts>
+        </line>
+        <line id="138">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.6102362205,1.84</p>
+            <p>1.6102362205,1.94</p>
+          </pts>
+        </line>
+        <line id="139">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.6102362205,1.84</p>
+            <p>1.5102362205,1.84</p>
+          </pts>
+        </line>
+        <line id="140">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.6102362205,1.84</p>
+            <p>1.6102362205,1.74</p>
+          </pts>
+        </line>
+        <line id="141">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.6102362205,1.84</p>
+            <p>1.7102362205,1.84</p>
+          </pts>
+        </line>
+        <line id="142">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.59,1.84</p>
+            <p>11.59,1.94</p>
+          </pts>
+        </line>
+        <line id="143">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.59,1.84</p>
+            <p>11.49,1.84</p>
+          </pts>
+        </line>
+        <line id="144">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.59,1.84</p>
+            <p>11.59,1.74</p>
+          </pts>
+        </line>
+        <line id="145">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.59,1.84</p>
+            <p>11.69,1.84</p>
+          </pts>
+        </line>
+        <line id="146">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.59,2.04</p>
+            <p>11.59,2.09</p>
+          </pts>
+        </line>
+        <line id="147">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.39,1.84</p>
+            <p>11.34,1.84</p>
+          </pts>
+        </line>
+        <line id="148">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.59,1.64</p>
+            <p>11.59,1.59</p>
+          </pts>
+        </line>
+        <line id="149">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.79,1.84</p>
+            <p>11.84,1.84</p>
+          </pts>
+        </line>
+        <line id="150">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.81,1.84</p>
+            <p>12.81,1.94</p>
+          </pts>
+        </line>
+        <line id="151">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.81,1.84</p>
+            <p>12.71,1.84</p>
+          </pts>
+        </line>
+        <line id="152">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.81,1.84</p>
+            <p>12.81,1.74</p>
+          </pts>
+        </line>
+        <line id="153">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.81,1.84</p>
+            <p>12.91,1.84</p>
+          </pts>
+        </line>
+        <line id="154">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.81,2.04</p>
+            <p>12.81,2.09</p>
+          </pts>
+        </line>
+        <line id="155">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.61,1.84</p>
+            <p>12.56,1.84</p>
+          </pts>
+        </line>
+        <line id="156">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.81,1.64</p>
+            <p>12.81,1.59</p>
+          </pts>
+        </line>
+        <line id="157">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>13.01,1.84</p>
+            <p>13.06,1.84</p>
+          </pts>
+        </line>
+        <line id="158">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.81,3.06</p>
+            <p>12.81,3.16</p>
+          </pts>
+        </line>
+        <line id="159">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.81,3.06</p>
+            <p>12.71,3.06</p>
+          </pts>
+        </line>
+        <line id="160">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.81,3.06</p>
+            <p>12.81,2.96</p>
+          </pts>
+        </line>
+        <line id="161">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.81,3.06</p>
+            <p>12.91,3.06</p>
+          </pts>
+        </line>
+        <line id="162">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.81,3.26</p>
+            <p>12.81,3.31</p>
+          </pts>
+        </line>
+        <line id="163">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.61,3.06</p>
+            <p>12.56,3.06</p>
+          </pts>
+        </line>
+        <line id="164">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.81,2.86</p>
+            <p>12.81,2.81</p>
+          </pts>
+        </line>
+        <line id="165">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>13.01,3.06</p>
+            <p>13.06,3.06</p>
+          </pts>
+        </line>
+        <line id="166">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.59,3.06</p>
+            <p>11.59,3.16</p>
+          </pts>
+        </line>
+        <line id="167">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.59,3.06</p>
+            <p>11.49,3.06</p>
+          </pts>
+        </line>
+        <line id="168">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.59,3.06</p>
+            <p>11.59,2.96</p>
+          </pts>
+        </line>
+        <line id="169">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.59,3.06</p>
+            <p>11.69,3.06</p>
+          </pts>
+        </line>
+        <line id="170">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.59,3.26</p>
+            <p>11.59,3.31</p>
+          </pts>
+        </line>
+        <line id="171">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.39,3.06</p>
+            <p>11.34,3.06</p>
+          </pts>
+        </line>
+        <line id="172">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.59,2.86</p>
+            <p>11.59,2.81</p>
+          </pts>
+        </line>
+        <line id="173">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.79,3.06</p>
+            <p>11.84,3.06</p>
+          </pts>
+        </line>
+        <line id="174">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.4102362205,3.06</p>
+            <p>1.4102362205,3.16</p>
+          </pts>
+        </line>
+        <line id="175">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.4102362205,3.06</p>
+            <p>1.3102362205,3.06</p>
+          </pts>
+        </line>
+        <line id="176">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.4102362205,3.06</p>
+            <p>1.4102362205,2.96</p>
+          </pts>
+        </line>
+        <line id="177">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.4102362205,3.06</p>
+            <p>1.5102362205,3.06</p>
+          </pts>
+        </line>
+        <line id="178">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.6102362205,3.06</p>
+            <p>1.6102362205,3.16</p>
+          </pts>
+        </line>
+        <line id="179">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.6102362205,3.06</p>
+            <p>1.5102362205,3.06</p>
+          </pts>
+        </line>
+        <line id="180">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.6102362205,3.06</p>
+            <p>1.6102362205,2.96</p>
+          </pts>
+        </line>
+        <line id="181">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.6102362205,3.06</p>
+            <p>1.7102362205,3.06</p>
+          </pts>
+        </line>
+        <line id="182">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.25,0.75</p>
+            <p>12.25,0.85</p>
+          </pts>
+        </line>
+        <line id="183">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.25,0.75</p>
+            <p>12.15,0.75</p>
+          </pts>
+        </line>
+        <line id="184">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.25,0.75</p>
+            <p>12.25,0.65</p>
+          </pts>
+        </line>
+        <line id="185">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.25,0.75</p>
+            <p>12.35,0.75</p>
+          </pts>
+        </line>
+        <line id="186">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.25,0.95</p>
+            <p>12.25,1.125</p>
+          </pts>
+        </line>
+        <line id="187">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.05,0.75</p>
+            <p>11.875,0.75</p>
+          </pts>
+        </line>
+        <line id="188">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.25,0.55</p>
+            <p>12.25,0.375</p>
+          </pts>
+        </line>
+        <line id="189">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.45,0.75</p>
+            <p>12.625,0.75</p>
+          </pts>
+        </line>
+        <line id="190">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>3.75,0.75</p>
+            <p>3.75,0.85</p>
+          </pts>
+        </line>
+        <line id="191">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>3.75,0.75</p>
+            <p>3.65,0.75</p>
+          </pts>
+        </line>
+        <line id="192">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>3.75,0.75</p>
+            <p>3.75,0.65</p>
+          </pts>
+        </line>
+        <line id="193">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>3.75,0.75</p>
+            <p>3.85,0.75</p>
+          </pts>
+        </line>
+        <line id="194">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>3.75,0.95</p>
+            <p>3.75,1.125</p>
+          </pts>
+        </line>
+        <line id="195">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>3.55,0.75</p>
+            <p>3.375,0.75</p>
+          </pts>
+        </line>
+        <line id="196">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>3.75,0.55</p>
+            <p>3.75,0.375</p>
+          </pts>
+        </line>
+        <line id="197">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>3.95,0.75</p>
+            <p>4.125,0.75</p>
+          </pts>
+        </line>
+        <line id="198">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>9.25,0.75</p>
+            <p>9.25,0.85</p>
+          </pts>
+        </line>
+        <line id="199">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>9.25,0.75</p>
+            <p>9.15,0.75</p>
+          </pts>
+        </line>
+        <line id="200">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>9.25,0.75</p>
+            <p>9.25,0.65</p>
+          </pts>
+        </line>
+        <line id="201">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>9.25,0.75</p>
+            <p>9.35,0.75</p>
+          </pts>
+        </line>
+        <line id="202">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>9.25,0.95</p>
+            <p>9.25,1.125</p>
+          </pts>
+        </line>
+        <line id="203">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>9.05,0.75</p>
+            <p>8.875,0.75</p>
+          </pts>
+        </line>
+        <line id="204">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>9.25,0.55</p>
+            <p>9.25,0.375</p>
+          </pts>
+        </line>
+        <line id="205">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>9.45,0.75</p>
+            <p>9.625,0.75</p>
+          </pts>
+        </line>
+        <line id="206">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.75,0.75</p>
+            <p>0.75,0.85</p>
+          </pts>
+        </line>
+        <line id="207">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.75,0.75</p>
+            <p>0.65,0.75</p>
+          </pts>
+        </line>
+        <line id="208">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.75,0.75</p>
+            <p>0.75,0.65</p>
+          </pts>
+        </line>
+        <line id="209">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.75,0.75</p>
+            <p>0.85,0.75</p>
+          </pts>
+        </line>
+        <line id="210">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.75,0.95</p>
+            <p>0.75,1.125</p>
+          </pts>
+        </line>
+        <line id="211">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.55,0.75</p>
+            <p>0.375,0.75</p>
+          </pts>
+        </line>
+        <line id="212">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.75,0.55</p>
+            <p>0.75,0.375</p>
+          </pts>
+        </line>
+        <line id="213">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.95,0.75</p>
+            <p>1.125,0.75</p>
+          </pts>
+        </line>
+        <line id="214">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.2,2.45</p>
+            <p>12.2,2.55</p>
+          </pts>
+        </line>
+        <line id="215">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.2,2.45</p>
+            <p>12.1,2.45</p>
+          </pts>
+        </line>
+        <line id="216">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.2,2.45</p>
+            <p>12.2,2.35</p>
+          </pts>
+        </line>
+        <line id="217">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.2,2.45</p>
+            <p>12.3,2.45</p>
+          </pts>
+        </line>
+        <line id="218">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.2,2.65</p>
+            <p>12.2,2.985</p>
+          </pts>
+        </line>
+        <line id="219">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12,2.45</p>
+            <p>11.665,2.45</p>
+          </pts>
+        </line>
+        <line id="220">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.2,2.25</p>
+            <p>12.2,1.915</p>
+          </pts>
+        </line>
+        <line id="221">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.4,2.45</p>
+            <p>12.735,2.45</p>
+          </pts>
+        </line>
+        <line id="222">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.8,2.45</p>
+            <p>0.8,2.55</p>
+          </pts>
+        </line>
+        <line id="223">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.8,2.45</p>
+            <p>0.7,2.45</p>
+          </pts>
+        </line>
+        <line id="224">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.8,2.45</p>
+            <p>0.8,2.35</p>
+          </pts>
+        </line>
+        <line id="225">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.8,2.45</p>
+            <p>0.9,2.45</p>
+          </pts>
+        </line>
+        <line id="226">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.0000093037,2.4480708662</p>
+            <p>1.0000093037,2.5480708662</p>
+          </pts>
+        </line>
+        <line id="227">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.0000093037,2.4480708662</p>
+            <p>0.9000093037,2.4480708662</p>
+          </pts>
+        </line>
+        <line id="228">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.0000093037,2.4480708662</p>
+            <p>1.0000093037,2.3480708662</p>
+          </pts>
+        </line>
+        <line id="229">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.0000093037,2.4480708662</p>
+            <p>1.1000093037,2.4480708662</p>
+          </pts>
+        </line>
+        <line id="230">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>2.07,2.385</p>
+            <p>2.07,2.485</p>
+          </pts>
+        </line>
+        <line id="231">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>2.07,2.385</p>
+            <p>1.97,2.385</p>
+          </pts>
+        </line>
+        <line id="232">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>2.07,2.385</p>
+            <p>2.07,2.285</p>
+          </pts>
+        </line>
+        <line id="233">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>2.07,2.385</p>
+            <p>2.17,2.385</p>
+          </pts>
+        </line>
+        <line id="234">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>2.07,2.585</p>
+            <p>2.07,2.9180708662</p>
+          </pts>
+        </line>
+        <line id="235">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.87,2.385</p>
+            <p>1.5369291339,2.385</p>
+          </pts>
+        </line>
+        <line id="236">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>2.07,2.185</p>
+            <p>2.07,1.8519291339</p>
+          </pts>
+        </line>
+        <line id="237">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>2.27,2.385</p>
+            <p>2.6030708662,2.385</p>
+          </pts>
+        </line>
+        <line id="238">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.55,1.5</p>
+            <p>0.55,1.6</p>
+          </pts>
+        </line>
+        <line id="239">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.55,1.5</p>
+            <p>0.45,1.5</p>
+          </pts>
+        </line>
+        <line id="240">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.55,1.5</p>
+            <p>0.55,1.4</p>
+          </pts>
+        </line>
+        <line id="241">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.55,1.5</p>
+            <p>0.65,1.5</p>
+          </pts>
+        </line>
+        <line id="242">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.55,1.6</p>
+            <p>0.55,1.6625</p>
+          </pts>
+        </line>
+        <line id="243">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.45,1.5</p>
+            <p>0.3875,1.5</p>
+          </pts>
+        </line>
+        <line id="244">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.55,1.4</p>
+            <p>0.55,1.3375</p>
+          </pts>
+        </line>
+        <line id="245">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.65,1.5</p>
+            <p>0.7125,1.5</p>
+          </pts>
+        </line>
+        <line id="246">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.45,1.5</p>
+            <p>12.45,1.6</p>
+          </pts>
+        </line>
+        <line id="247">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.45,1.5</p>
+            <p>12.35,1.5</p>
+          </pts>
+        </line>
+        <line id="248">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.45,1.5</p>
+            <p>12.45,1.4</p>
+          </pts>
+        </line>
+        <line id="249">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.45,1.5</p>
+            <p>12.55,1.5</p>
+          </pts>
+        </line>
+        <line id="250">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.45,1.6</p>
+            <p>12.45,1.6625</p>
+          </pts>
+        </line>
+        <line id="251">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.35,1.5</p>
+            <p>12.2875,1.5</p>
+          </pts>
+        </line>
+        <line id="252">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.45,1.4</p>
+            <p>12.45,1.3375</p>
+          </pts>
+        </line>
+        <line id="253">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.55,1.5</p>
+            <p>12.6125,1.5</p>
+          </pts>
+        </line>
+        <line id="254">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.45,2.25</p>
+            <p>11.45,2.35</p>
+          </pts>
+        </line>
+        <line id="255">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.45,2.25</p>
+            <p>11.35,2.25</p>
+          </pts>
+        </line>
+        <line id="256">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.45,2.25</p>
+            <p>11.45,2.15</p>
+          </pts>
+        </line>
+        <line id="257">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.45,2.25</p>
+            <p>11.55,2.25</p>
+          </pts>
+        </line>
+        <line id="258">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.45,2.45</p>
+            <p>11.45,2.475</p>
+          </pts>
+        </line>
+        <line id="259">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.25,2.25</p>
+            <p>11.225,2.25</p>
+          </pts>
+        </line>
+        <line id="260">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.45,2.05</p>
+            <p>11.45,2.025</p>
+          </pts>
+        </line>
+        <line id="261">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.65,2.25</p>
+            <p>11.675,2.25</p>
+          </pts>
+        </line>
+        <line id="262">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.705,0.5</p>
+            <p>12.705,0.6</p>
+          </pts>
+        </line>
+        <line id="263">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.705,0.5</p>
+            <p>12.605,0.5</p>
+          </pts>
+        </line>
+        <line id="264">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.705,0.5</p>
+            <p>12.705,0.4</p>
+          </pts>
+        </line>
+        <line id="265">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.705,0.5</p>
+            <p>12.805,0.5</p>
+          </pts>
+        </line>
+        <line id="266">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.705,0.6</p>
+            <p>12.705,0.6625</p>
+          </pts>
+        </line>
+        <line id="267">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.605,0.5</p>
+            <p>12.5425,0.5</p>
+          </pts>
+        </line>
+        <line id="268">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.705,0.4</p>
+            <p>12.705,0.3375</p>
+          </pts>
+        </line>
+        <line id="269">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>12.805,0.5</p>
+            <p>12.8675,0.5</p>
+          </pts>
+        </line>
+        <line id="270">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.721,0.5</p>
+            <p>11.721,0.6</p>
+          </pts>
+        </line>
+        <line id="271">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.721,0.5</p>
+            <p>11.621,0.5</p>
+          </pts>
+        </line>
+        <line id="272">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.721,0.5</p>
+            <p>11.721,0.4</p>
+          </pts>
+        </line>
+        <line id="273">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.721,0.5</p>
+            <p>11.821,0.5</p>
+          </pts>
+        </line>
+        <line id="274">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.721,0.6</p>
+            <p>11.721,0.6625</p>
+          </pts>
+        </line>
+        <line id="275">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.621,0.5</p>
+            <p>11.5585,0.5</p>
+          </pts>
+        </line>
+        <line id="276">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.721,0.4</p>
+            <p>11.721,0.3375</p>
+          </pts>
+        </line>
+        <line id="277">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>11.821,0.5</p>
+            <p>11.8835,0.5</p>
+          </pts>
+        </line>
+        <line id="278">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>10.737,0.5</p>
+            <p>10.737,0.6</p>
+          </pts>
+        </line>
+        <line id="279">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>10.737,0.5</p>
+            <p>10.637,0.5</p>
+          </pts>
+        </line>
+        <line id="280">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>10.737,0.5</p>
+            <p>10.737,0.4</p>
+          </pts>
+        </line>
+        <line id="281">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>10.737,0.5</p>
+            <p>10.837,0.5</p>
+          </pts>
+        </line>
+        <line id="282">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>10.737,0.6</p>
+            <p>10.737,0.6625</p>
+          </pts>
+        </line>
+        <line id="283">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>10.637,0.5</p>
+            <p>10.5745,0.5</p>
+          </pts>
+        </line>
+        <line id="284">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>10.737,0.4</p>
+            <p>10.737,0.3375</p>
+          </pts>
+        </line>
+        <line id="285">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>10.837,0.5</p>
+            <p>10.8995,0.5</p>
+          </pts>
+        </line>
+        <line id="286">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>9.753,0.5</p>
+            <p>9.753,0.6</p>
+          </pts>
+        </line>
+        <line id="287">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>9.753,0.5</p>
+            <p>9.653,0.5</p>
+          </pts>
+        </line>
+        <line id="288">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>9.753,0.5</p>
+            <p>9.753,0.4</p>
+          </pts>
+        </line>
+        <line id="289">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>9.753,0.5</p>
+            <p>9.853,0.5</p>
+          </pts>
+        </line>
+        <line id="290">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>9.753,0.6</p>
+            <p>9.753,0.6625</p>
+          </pts>
+        </line>
+        <line id="291">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>9.653,0.5</p>
+            <p>9.5905,0.5</p>
+          </pts>
+        </line>
+        <line id="292">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>9.753,0.4</p>
+            <p>9.753,0.3375</p>
+          </pts>
+        </line>
+        <line id="293">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>9.853,0.5</p>
+            <p>9.9155,0.5</p>
+          </pts>
+        </line>
+        <line id="294">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>8.769,0.5</p>
+            <p>8.769,0.6</p>
+          </pts>
+        </line>
+        <line id="295">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>8.769,0.5</p>
+            <p>8.669,0.5</p>
+          </pts>
+        </line>
+        <line id="296">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>8.769,0.5</p>
+            <p>8.769,0.4</p>
+          </pts>
+        </line>
+        <line id="297">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>8.769,0.5</p>
+            <p>8.869,0.5</p>
+          </pts>
+        </line>
+        <line id="298">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>8.769,0.6</p>
+            <p>8.769,0.6625</p>
+          </pts>
+        </line>
+        <line id="299">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>8.669,0.5</p>
+            <p>8.6065,0.5</p>
+          </pts>
+        </line>
+        <line id="300">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>8.769,0.4</p>
+            <p>8.769,0.3375</p>
+          </pts>
+        </line>
+        <line id="301">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>8.869,0.5</p>
+            <p>8.9315,0.5</p>
+          </pts>
+        </line>
+        <line id="302">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>7.785,0.5</p>
+            <p>7.785,0.6</p>
+          </pts>
+        </line>
+        <line id="303">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>7.785,0.5</p>
+            <p>7.685,0.5</p>
+          </pts>
+        </line>
+        <line id="304">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>7.785,0.5</p>
+            <p>7.785,0.4</p>
+          </pts>
+        </line>
+        <line id="305">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>7.785,0.5</p>
+            <p>7.885,0.5</p>
+          </pts>
+        </line>
+        <line id="306">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>7.785,0.6</p>
+            <p>7.785,0.6625</p>
+          </pts>
+        </line>
+        <line id="307">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>7.685,0.5</p>
+            <p>7.6225,0.5</p>
+          </pts>
+        </line>
+        <line id="308">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>7.785,0.4</p>
+            <p>7.785,0.3375</p>
+          </pts>
+        </line>
+        <line id="309">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>7.885,0.5</p>
+            <p>7.9475,0.5</p>
+          </pts>
+        </line>
+        <line id="310">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>6.801,0.5</p>
+            <p>6.801,0.6</p>
+          </pts>
+        </line>
+        <line id="311">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>6.801,0.5</p>
+            <p>6.701,0.5</p>
+          </pts>
+        </line>
+        <line id="312">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>6.801,0.5</p>
+            <p>6.801,0.4</p>
+          </pts>
+        </line>
+        <line id="313">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>6.801,0.5</p>
+            <p>6.901,0.5</p>
+          </pts>
+        </line>
+        <line id="314">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>6.801,0.6</p>
+            <p>6.801,0.6625</p>
+          </pts>
+        </line>
+        <line id="315">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>6.701,0.5</p>
+            <p>6.6385,0.5</p>
+          </pts>
+        </line>
+        <line id="316">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>6.801,0.4</p>
+            <p>6.801,0.3375</p>
+          </pts>
+        </line>
+        <line id="317">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>6.901,0.5</p>
+            <p>6.9635,0.5</p>
+          </pts>
+        </line>
+        <line id="318">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>5.817,0.5</p>
+            <p>5.817,0.6</p>
+          </pts>
+        </line>
+        <line id="319">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>5.817,0.5</p>
+            <p>5.717,0.5</p>
+          </pts>
+        </line>
+        <line id="320">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>5.817,0.5</p>
+            <p>5.817,0.4</p>
+          </pts>
+        </line>
+        <line id="321">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>5.817,0.5</p>
+            <p>5.917,0.5</p>
+          </pts>
+        </line>
+        <line id="322">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>5.817,0.6</p>
+            <p>5.817,0.6625</p>
+          </pts>
+        </line>
+        <line id="323">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>5.717,0.5</p>
+            <p>5.6545,0.5</p>
+          </pts>
+        </line>
+        <line id="324">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>5.817,0.4</p>
+            <p>5.817,0.3375</p>
+          </pts>
+        </line>
+        <line id="325">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>5.917,0.5</p>
+            <p>5.9795,0.5</p>
+          </pts>
+        </line>
+        <line id="326">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>4.833,0.5</p>
+            <p>4.833,0.6</p>
+          </pts>
+        </line>
+        <line id="327">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>4.833,0.5</p>
+            <p>4.733,0.5</p>
+          </pts>
+        </line>
+        <line id="328">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>4.833,0.5</p>
+            <p>4.833,0.4</p>
+          </pts>
+        </line>
+        <line id="329">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>4.833,0.5</p>
+            <p>4.933,0.5</p>
+          </pts>
+        </line>
+        <line id="330">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>4.833,0.6</p>
+            <p>4.833,0.6625</p>
+          </pts>
+        </line>
+        <line id="331">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>4.733,0.5</p>
+            <p>4.6705,0.5</p>
+          </pts>
+        </line>
+        <line id="332">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>4.833,0.4</p>
+            <p>4.833,0.3375</p>
+          </pts>
+        </line>
+        <line id="333">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>4.933,0.5</p>
+            <p>4.9955,0.5</p>
+          </pts>
+        </line>
+        <line id="334">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>2.865,0.5</p>
+            <p>2.865,0.6</p>
+          </pts>
+        </line>
+        <line id="335">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>2.865,0.5</p>
+            <p>2.765,0.5</p>
+          </pts>
+        </line>
+        <line id="336">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>2.865,0.5</p>
+            <p>2.865,0.4</p>
+          </pts>
+        </line>
+        <line id="337">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>2.865,0.5</p>
+            <p>2.965,0.5</p>
+          </pts>
+        </line>
+        <line id="338">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>2.865,0.6</p>
+            <p>2.865,0.6625</p>
+          </pts>
+        </line>
+        <line id="339">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>2.765,0.5</p>
+            <p>2.7025,0.5</p>
+          </pts>
+        </line>
+        <line id="340">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>2.865,0.4</p>
+            <p>2.865,0.3375</p>
+          </pts>
+        </line>
+        <line id="341">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>2.965,0.5</p>
+            <p>3.0275,0.5</p>
+          </pts>
+        </line>
+        <line id="342">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.881,0.5</p>
+            <p>1.881,0.6</p>
+          </pts>
+        </line>
+        <line id="343">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.881,0.5</p>
+            <p>1.781,0.5</p>
+          </pts>
+        </line>
+        <line id="344">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.881,0.5</p>
+            <p>1.881,0.4</p>
+          </pts>
+        </line>
+        <line id="345">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.881,0.5</p>
+            <p>1.981,0.5</p>
+          </pts>
+        </line>
+        <line id="346">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.881,0.6</p>
+            <p>1.881,0.6625</p>
+          </pts>
+        </line>
+        <line id="347">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.781,0.5</p>
+            <p>1.7185,0.5</p>
+          </pts>
+        </line>
+        <line id="348">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.881,0.4</p>
+            <p>1.881,0.3375</p>
+          </pts>
+        </line>
+        <line id="349">
+          <ModificationCount>10</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.981,0.5</p>
+            <p>2.0435,0.5</p>
+          </pts>
+        </line>
+        <pline id="350" Closed="true">
+          <ModificationCount>11</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>13,3.25,0</p>
+            <p>0,3.25,0</p>
+            <p>0,0,0</p>
+            <p>13,0,0</p>
+          </pts>
+        </pline>
+        <pline id="351" Closed="true">
+          <ModificationCount>11</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.39,3.2225,0</p>
+            <p b="0.99999999999999967">0.19,3.2225,0</p>
+            <p>0.19,2.8975,0</p>
+            <p b="0.99999999999999989">0.39,2.8975,0</p>
+          </pts>
+        </pline>
+        <pline id="352" Closed="true">
+          <ModificationCount>11</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.4102362205,2.8975,0</p>
+            <p b="0.99999999999999989">1.6102362205,2.8975,0</p>
+            <p>1.6102362205,3.2225,0</p>
+            <p b="0.99999999999999989">1.4102362205,3.2225,0</p>
+          </pts>
+        </pline>
+        <pline id="353" Closed="true">
+          <ModificationCount>11</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>1.4102362205,1.6775,0</p>
+            <p b="0.99999999999999989">1.6102362205,1.6775,0</p>
+            <p>1.6102362205,2.0025,0</p>
+            <p b="0.99999999999999989">1.4102362205,2.0025,0</p>
+          </pts>
+        </pline>
+        <pline id="354" Closed="true">
+          <ModificationCount>11</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p>0.39,2.0025,0</p>
+            <p b="0.99999999999999967">0.19,2.0025,0</p>
+            <p>0.19,1.6775,0</p>
+            <p b="0.99999999999999989">0.39,1.6775,0</p>
+          </pts>
+        </pline>
+        <pline id="355" Closed="true">
+          <ModificationCount>11</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.93548241661719167">0.742191638289723,2.88114173228345,0</p>
+            <p>0.8,2.015,0</p>
+            <p b="0.99999999999999967">1.0000093037,2.0150000001,0</p>
+            <p>1.0000093037,2.8811417323,0</p>
+          </pts>
+        </pline>
+        <pline id="356" Closed="true">
+          <ModificationCount>11</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.99999999999999989">0.19,3.1225,0</p>
+            <p>0.19,2.9975,0</p>
+            <p b="0.99999999999999989">0.39,2.9975,0</p>
+            <p>0.39,3.1225,0</p>
+          </pts>
+        </pline>
+        <pline id="357" Closed="true">
+          <ModificationCount>11</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.99999999999999989">1.4102362205,3.1225,0</p>
+            <p>1.4102362205,2.9975,0</p>
+            <p b="0.99999999999999989">1.6102362205,2.9975,0</p>
+            <p>1.6102362205,3.1225,0</p>
+          </pts>
+        </pline>
+        <pline id="358" Closed="true">
+          <ModificationCount>11</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.99999999999999989">1.4102362205,1.9025,0</p>
+            <p>1.4102362205,1.7775,0</p>
+            <p b="0.99999999999999989">1.6102362205,1.7775,0</p>
+            <p>1.6102362205,1.9025,0</p>
+          </pts>
+        </pline>
+        <pline id="359" Closed="true">
+          <ModificationCount>11</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.99999999999999989">0.19,1.9025,0</p>
+            <p>0.19,1.7775,0</p>
+            <p b="0.99999999999999989">0.39,1.7775,0</p>
+            <p>0.39,1.9025,0</p>
+          </pts>
+        </pline>
+        <pline id="360" Closed="true">
+          <ModificationCount>11</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.99999999999999989">0.19,3.1225,0</p>
+            <p>0.19,2.9975,0</p>
+            <p b="0.99999999999999989">0.39,2.9975,0</p>
+            <p>0.39,3.1225,0</p>
+          </pts>
+        </pline>
+        <pline id="361" Closed="true">
+          <ModificationCount>11</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.99999999999999989">1.6102362205,2.9975,0</p>
+            <p>1.6102362205,3.1225,0</p>
+            <p b="0.99999999999999989">1.4102362205,3.1225,0</p>
+            <p>1.4102362205,2.9975,0</p>
+          </pts>
+        </pline>
+        <pline id="362" Closed="true">
+          <ModificationCount>11</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.99999999999999989">1.6102362205,1.7775,0</p>
+            <p>1.6102362205,1.9025,0</p>
+            <p b="0.99999999999999989">1.4102362205,1.9025,0</p>
+            <p>1.4102362205,1.7775,0</p>
+          </pts>
+        </pline>
+        <pline id="363" Closed="true">
+          <ModificationCount>11</ModificationCount>
+          <mat m="Identity" />
+          <pts>
+            <p b="0.99999999999999989">0.39,1.7775,0</p>
+            <p>0.39,1.9025,0</p>
+            <p b="0.99999999999999989">0.19,1.9025,0</p>
+            <p>0.19,1.7775,0</p>
+          </pts>
+        </pline>
+      </objects>
+    </layer>
+    <layer name="DEFPOINTS" color="255,255,255">
+      <ModificationCount>0</ModificationCount>
+      <objects />
+    </layer>
+  </layers>
+  <MachiningOptions>
+    <OutFile>{$cbfile.name}.nc</OutFile>
+    <PostProcessor>EMC2</PostProcessor>
+    <Stock>
+      <PMin>0,0</PMin>
+      <PMax>0,0</PMax>
+      <Color>255,165,0</Color>
+    </Stock>
+    <ToolDiameter>0.125</ToolDiameter>
+    <ToolProfile>Unspecified</ToolProfile>
+  </MachiningOptions>
+  <parts>
+    <part Name="Part1">
+      <machineops>
+        <pocket>
+          <WorkPlane state="Default">XY</WorkPlane>
+          <OptimisationMode state="Default">Experimental</OptimisationMode>
+          <RoughingFinishing state="Default">Roughing</RoughingFinishing>
+          <ToolDiameter state="Default">0.125</ToolDiameter>
+          <ToolNumber state="Default">0</ToolNumber>
+          <ToolProfile state="Value">EndMill</ToolProfile>
+          <PlungeFeedrate state="Default">10</PlungeFeedrate>
+          <CutFeedrate state="Value">40</CutFeedrate>
+          <MaxCrossoverDistance state="Default">0.7</MaxCrossoverDistance>
+          <CustomMOPHeader state="Default" />
+          <CustomMOPFooter state="Default" />
+          <Name>MotorCSKs</Name>
+          <StockSurface state="Default">0</StockSurface>
+          <RoughingClearance state="Default">0</RoughingClearance>
+          <ClearancePlane state="Default">0.125</ClearancePlane>
+          <SpindleDirection state="Default">CW</SpindleDirection>
+          <SpindleSpeed state="Default">1000</SpindleSpeed>
+          <SpindleRange state="Default">0</SpindleRange>
+          <VelocityMode state="Default">Undefined</VelocityMode>
+          <primitive>
+            <prim>351</prim>
+            <prim>352</prim>
+            <prim>353</prim>
+            <prim>354</prim>
+            <prim>93</prim>
+            <prim>91</prim>
+            <prim>54</prim>
+            <prim>55</prim>
+          </primitive>
+          <TargetDepth state="Value">-0.25</TargetDepth>
+          <DepthIncrement state="Value">0.015</DepthIncrement>
+          <FinalDepthIncrement state="Value">0.005</FinalDepthIncrement>
+          <CutOrdering state="Value">DepthFirst</CutOrdering>
+          <StepOver state="Default">0.4</StepOver>
+          <StepoverFeedrate state="Default">PlungeFeedrate</StepoverFeedrate>
+          <MillingDirection state="Value">Climb</MillingDirection>
+          <CollisionDetection state="Default">True</CollisionDetection>
+          <LeadInMove state="Value">
+            <LeadInType>Spiral</LeadInType>
+            <SpiralAngle>10</SpiralAngle>
+            <TangentRadius>0</TangentRadius>
+            <LeadInFeedrate>0</LeadInFeedrate>
+          </LeadInMove>
+          <LeadOutMove state="Default" />
+          <RegionFillStyle state="Default">InsideOutsideOffsets</RegionFillStyle>
+          <FinishStepover state="Value">0.005</FinishStepover>
+          <FinishStepoverAtTargetDepth state="Value">True</FinishStepoverAtTargetDepth>
+        </pocket>
+        <pocket>
+          <WorkPlane state="Default">XY</WorkPlane>
+          <OptimisationMode state="Default">Experimental</OptimisationMode>
+          <RoughingFinishing state="Default">Roughing</RoughingFinishing>
+          <ToolDiameter state="Default">0.125</ToolDiameter>
+          <ToolNumber state="Default">0</ToolNumber>
+          <ToolProfile state="Value">EndMill</ToolProfile>
+          <PlungeFeedrate state="Default">10</PlungeFeedrate>
+          <CutFeedrate state="Value">40</CutFeedrate>
+          <MaxCrossoverDistance state="Default">0.7</MaxCrossoverDistance>
+          <CustomMOPHeader state="Default" />
+          <CustomMOPFooter state="Default" />
+          <Name>MotorSlotsThur</Name>
+          <StockSurface state="Value">0</StockSurface>
+          <RoughingClearance state="Default">0</RoughingClearance>
+          <ClearancePlane state="Default">0.125</ClearancePlane>
+          <SpindleDirection state="Default">CW</SpindleDirection>
+          <SpindleSpeed state="Default">1000</SpindleSpeed>
+          <SpindleRange state="Default">0</SpindleRange>
+          <VelocityMode state="Default">Undefined</VelocityMode>
+          <primitive>
+            <prim>363</prim>
+            <prim>356</prim>
+            <prim>358</prim>
+            <prim>357</prim>
+          </primitive>
+          <TargetDepth state="Value">-0.375</TargetDepth>
+          <DepthIncrement state="Value">0.0625</DepthIncrement>
+          <FinalDepthIncrement state="Default">0</FinalDepthIncrement>
+          <CutOrdering state="Default">DepthFirst</CutOrdering>
+          <StepOver state="Default">0.4</StepOver>
+          <StepoverFeedrate state="Default">PlungeFeedrate</StepoverFeedrate>
+          <MillingDirection state="Value">Climb</MillingDirection>
+          <CollisionDetection state="Default">True</CollisionDetection>
+          <LeadInMove state="Value">
+            <LeadInType>Spiral</LeadInType>
+            <SpiralAngle>10</SpiralAngle>
+            <TangentRadius>0</TangentRadius>
+            <LeadInFeedrate>0</LeadInFeedrate>
+          </LeadInMove>
+          <LeadOutMove state="Default" />
+          <RegionFillStyle state="Default">InsideOutsideOffsets</RegionFillStyle>
+          <FinishStepover state="Value">0.005</FinishStepover>
+          <FinishStepoverAtTargetDepth state="Default">False</FinishStepoverAtTargetDepth>
+        </pocket>
+        <pocket>
+          <WorkPlane state="Default">XY</WorkPlane>
+          <OptimisationMode state="Default">Experimental</OptimisationMode>
+          <RoughingFinishing state="Default">Roughing</RoughingFinishing>
+          <ToolDiameter state="Default">0.125</ToolDiameter>
+          <ToolNumber state="Default">0</ToolNumber>
+          <ToolProfile state="Value">EndMill</ToolProfile>
+          <PlungeFeedrate state="Default">10</PlungeFeedrate>
+          <CutFeedrate state="Value">40</CutFeedrate>
+          <MaxCrossoverDistance state="Default">0.7</MaxCrossoverDistance>
+          <CustomMOPHeader state="Default" />
+          <CustomMOPFooter state="Default" />
+          <Name>ScrewCSKs</Name>
+          <StockSurface state="Default">0</StockSurface>
+          <RoughingClearance state="Default">0</RoughingClearance>
+          <ClearancePlane state="Default">0.125</ClearancePlane>
+          <SpindleDirection state="Default">CW</SpindleDirection>
+          <SpindleSpeed state="Default">1000</SpindleSpeed>
+          <SpindleRange state="Default">0</SpindleRange>
+          <VelocityMode state="Default">Undefined</VelocityMode>
+          <primitive>
+            <prim>53</prim>
+            <prim>92</prim>
+            <prim>72</prim>
+            <prim>90</prim>
+          </primitive>
+          <TargetDepth state="Value">-0.18</TargetDepth>
+          <DepthIncrement state="Value">0.08</DepthIncrement>
+          <FinalDepthIncrement state="Value">0.005</FinalDepthIncrement>
+          <CutOrdering state="Value">DepthFirst</CutOrdering>
+          <StepOver state="Default">0.4</StepOver>
+          <StepoverFeedrate state="Default">PlungeFeedrate</StepoverFeedrate>
+          <MillingDirection state="Value">Climb</MillingDirection>
+          <CollisionDetection state="Default">True</CollisionDetection>
+          <LeadInMove state="Value">
+            <LeadInType>Spiral</LeadInType>
+            <SpiralAngle>10</SpiralAngle>
+            <TangentRadius>0</TangentRadius>
+            <LeadInFeedrate>0</LeadInFeedrate>
+          </LeadInMove>
+          <LeadOutMove state="Default" />
+          <RegionFillStyle state="Default">InsideOutsideOffsets</RegionFillStyle>
+          <FinishStepover state="Value">0.005</FinishStepover>
+          <FinishStepoverAtTargetDepth state="Value">True</FinishStepoverAtTargetDepth>
+        </pocket>
+        <pocket>
+          <WorkPlane state="Default">XY</WorkPlane>
+          <OptimisationMode state="Default">Experimental</OptimisationMode>
+          <RoughingFinishing state="Default">Roughing</RoughingFinishing>
+          <ToolDiameter state="Default">0.125</ToolDiameter>
+          <ToolNumber state="Default">0</ToolNumber>
+          <ToolProfile state="Value">EndMill</ToolProfile>
+          <PlungeFeedrate state="Default">10</PlungeFeedrate>
+          <CutFeedrate state="Value">40</CutFeedrate>
+          <MaxCrossoverDistance state="Default">0.7</MaxCrossoverDistance>
+          <CustomMOPHeader state="Default" />
+          <CustomMOPFooter state="Default" />
+          <Name>ScrewHoles</Name>
+          <StockSurface state="Value">0</StockSurface>
+          <RoughingClearance state="Default">0</RoughingClearance>
+          <ClearancePlane state="Default">0.125</ClearancePlane>
+          <SpindleDirection state="Default">CW</SpindleDirection>
+          <SpindleSpeed state="Default">1000</SpindleSpeed>
+          <SpindleRange state="Default">0</SpindleRange>
+          <VelocityMode state="Default">Undefined</VelocityMode>
+          <primitive>
+            <prim>29</prim>
+            <prim>31</prim>
+            <prim>32</prim>
+            <prim>30</prim>
+            <prim>28</prim>
+          </primitive>
+          <TargetDepth state="Value">-0.375</TargetDepth>
+          <DepthIncrement state="Value">0.075</DepthIncrement>
+          <FinalDepthIncrement state="Default">0</FinalDepthIncrement>
+          <CutOrdering state="Value">DepthFirst</CutOrdering>
+          <StepOver state="Default">0.4</StepOver>
+          <StepoverFeedrate state="Default">PlungeFeedrate</StepoverFeedrate>
+          <MillingDirection state="Value">Climb</MillingDirection>
+          <CollisionDetection state="Default">True</CollisionDetection>
+          <LeadInMove state="Value">
+            <LeadInType>Spiral</LeadInType>
+            <SpiralAngle>10</SpiralAngle>
+            <TangentRadius>0</TangentRadius>
+            <LeadInFeedrate>0</LeadInFeedrate>
+          </LeadInMove>
+          <LeadOutMove state="Default" />
+          <RegionFillStyle state="Default">InsideOutsideOffsets</RegionFillStyle>
+          <FinishStepover state="Value">0.005</FinishStepover>
+          <FinishStepoverAtTargetDepth state="Value">True</FinishStepoverAtTargetDepth>
+        </pocket>
+        <profile>
+          <WorkPlane state="Default">XY</WorkPlane>
+          <OptimisationMode state="Default">Experimental</OptimisationMode>
+          <RoughingFinishing state="Default">Roughing</RoughingFinishing>
+          <ToolDiameter state="Default">0.125</ToolDiameter>
+          <ToolNumber state="Default">0</ToolNumber>
+          <ToolProfile state="Value">EndMill</ToolProfile>
+          <PlungeFeedrate state="Default">10</PlungeFeedrate>
+          <CutFeedrate state="Value">40</CutFeedrate>
+          <MaxCrossoverDistance state="Default">0.7</MaxCrossoverDistance>
+          <CustomMOPHeader state="Default" />
+          <CustomMOPFooter state="Default" />
+          <Name>MotorPockets</Name>
+          <StockSurface state="Default">0</StockSurface>
+          <RoughingClearance state="Default">0</RoughingClearance>
+          <ClearancePlane state="Default">0.125</ClearancePlane>
+          <SpindleDirection state="Default">CW</SpindleDirection>
+          <SpindleSpeed state="Default">1000</SpindleSpeed>
+          <SpindleRange state="Default">0</SpindleRange>
+          <VelocityMode state="Default">Undefined</VelocityMode>
+          <primitive>
+            <prim>355</prim>
+            <prim>25</prim>
+            <prim>23</prim>
+          </primitive>
+          <TargetDepth state="Value">-0.375</TargetDepth>
+          <DepthIncrement state="Value">0.08</DepthIncrement>
+          <FinalDepthIncrement state="Value">0.015</FinalDepthIncrement>
+          <CutOrdering state="Value">DepthFirst</CutOrdering>
+          <CutWidth state="Default">0</CutWidth>
+          <StepOver state="Default">0.4</StepOver>
+          <StepoverFeedrate state="Default">PlungeFeedrate</StepoverFeedrate>
+          <InsideOutside state="Value">Inside</InsideOutside>
+          <MillingDirection state="Value">Climb</MillingDirection>
+          <CollisionDetection state="Default">True</CollisionDetection>
+          <CornerOvercut state="Default">False</CornerOvercut>
+          <LeadInMove state="Value">
+            <LeadInType>Spiral</LeadInType>
+            <SpiralAngle>10</SpiralAngle>
+            <TangentRadius>0</TangentRadius>
+            <LeadInFeedrate>0</LeadInFeedrate>
+          </LeadInMove>
+          <LeadOutMove state="Default" />
+          <HoldingTabs state="Value">
+            <TabMethod>None</TabMethod>
+            <Width>0.06</Width>
+            <Height>0.06</Height>
+            <MinimumTabs>3</MinimumTabs>
+            <MaximumTabs>6</MaximumTabs>
+            <TabDistance>1.25</TabDistance>
+            <SizeThreshold>0.5</SizeThreshold>
+            <UseLeadIns>False</UseLeadIns>
+            <TabStyle>Triangle</TabStyle>
+          </HoldingTabs>
+          <Tabs>
+            <HoldingTab>
+              <ParentEntityID>355</ParentEntityID>
+              <ParametricPoint>0.16666666666666671</ParametricPoint>
+              <Normal>
+                <X>-0.97147197402640384</X>
+                <Y>0.23715438785998019</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <ParentEntityID>355</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>0.12634701092748432</X>
+                <Y>-0.99198610515958852</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <ParentEntityID>355</ParentEntityID>
+              <ParametricPoint>0.83333333333333359</ParametricPoint>
+              <Normal>
+                <X>0.57129765783730679</X>
+                <Y>0.82074294766973632</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <ParentEntityID>25</ParentEntityID>
+              <ParametricPoint>0.16666666666666671</ParametricPoint>
+              <Normal>
+                <X>0.49999999999999967</X>
+                <Y>0.86602540378443882</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <ParentEntityID>25</ParentEntityID>
+              <ParametricPoint>0.5</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <ParentEntityID>25</ParentEntityID>
+              <ParametricPoint>0.83333333333333326</ParametricPoint>
+              <Normal>
+                <X>0.49999999999999967</X>
+                <Y>-0.86602540378443882</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <ParentEntityID>23</ParentEntityID>
+              <ParametricPoint>0.16666666666666705</ParametricPoint>
+              <Normal>
+                <X>0.49999999999999822</X>
+                <Y>0.86602540378443971</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <ParentEntityID>23</ParentEntityID>
+              <ParametricPoint>0.49999999999999983</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>1.0208947352875034E-15</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <ParentEntityID>23</ParentEntityID>
+              <ParametricPoint>0.83333333333333359</ParametricPoint>
+              <Normal>
+                <X>0.50000000000000211</X>
+                <Y>-0.86602540378443738</Y>
+              </Normal>
+            </HoldingTab>
+          </Tabs>
+          <SideProfile state="Default" />
+        </profile>
+        <drill>
+          <WorkPlane state="Default">XY</WorkPlane>
+          <OptimisationMode state="Default">Experimental</OptimisationMode>
+          <RoughingFinishing state="Default">Roughing</RoughingFinishing>
+          <ToolDiameter state="Default">0.125</ToolDiameter>
+          <ToolNumber state="Default">0</ToolNumber>
+          <ToolProfile state="Value">EndMill</ToolProfile>
+          <PlungeFeedrate state="Default">10</PlungeFeedrate>
+          <CutFeedrate state="Default">30</CutFeedrate>
+          <MaxCrossoverDistance state="Default">0.7</MaxCrossoverDistance>
+          <CustomMOPHeader state="Default" />
+          <CustomMOPFooter state="Default" />
+          <Name>MountHoles</Name>
+          <StockSurface state="Default">0</StockSurface>
+          <RoughingClearance state="Default">0</RoughingClearance>
+          <ClearancePlane state="Default">0.125</ClearancePlane>
+          <SpindleDirection state="Default">CW</SpindleDirection>
+          <SpindleSpeed state="Default">1000</SpindleSpeed>
+          <SpindleRange state="Default">0</SpindleRange>
+          <VelocityMode state="Default">Undefined</VelocityMode>
+          <primitive>
+            <prim>26</prim>
+            <prim>79</prim>
+            <prim>80</prim>
+            <prim>81</prim>
+            <prim>82</prim>
+            <prim>83</prim>
+            <prim>84</prim>
+            <prim>85</prim>
+            <prim>86</prim>
+            <prim>27</prim>
+            <prim>89</prim>
+            <prim>88</prim>
+            <prim>87</prim>
+            <prim>39</prim>
+            <prim>40</prim>
+            <prim>37</prim>
+            <prim>38</prim>
+          </primitive>
+          <TargetDepth state="Value">-0.38</TargetDepth>
+          <DepthIncrement state="Default">0.015</DepthIncrement>
+          <HoleDiameter state="Value">0.125</HoleDiameter>
+          <DrillLeadOut state="Default">False</DrillLeadOut>
+          <LeadOutLength state="Default">0</LeadOutLength>
+          <DrillingMethod state="Value">CannedCycle</DrillingMethod>
+          <PeckDistance state="Value">0.0625</PeckDistance>
+          <RetractHeight state="Default">0.125</RetractHeight>
+          <Dwell state="Default">0</Dwell>
+          <CustomScript state="Default" />
+        </drill>
+        <profile>
+          <WorkPlane state="Default">XY</WorkPlane>
+          <OptimisationMode state="Default">Experimental</OptimisationMode>
+          <RoughingFinishing state="Default">Roughing</RoughingFinishing>
+          <ToolDiameter state="Default">0.125</ToolDiameter>
+          <ToolNumber state="Default">0</ToolNumber>
+          <ToolProfile state="Value">EndMill</ToolProfile>
+          <PlungeFeedrate state="Default">10</PlungeFeedrate>
+          <CutFeedrate state="Value">444444440</CutFeedrate>
+          <MaxCrossoverDistance state="Default">0.7</MaxCrossoverDistance>
+          <CustomMOPHeader state="Default" />
+          <CustomMOPFooter state="Default" />
+          <Name>OuterProfile</Name>
+          <StockSurface state="Default">0</StockSurface>
+          <RoughingClearance state="Default">0</RoughingClearance>
+          <ClearancePlane state="Default">0.125</ClearancePlane>
+          <SpindleDirection state="Default">CW</SpindleDirection>
+          <SpindleSpeed state="Default">1000</SpindleSpeed>
+          <SpindleRange state="Default">0</SpindleRange>
+          <VelocityMode state="Default">Undefined</VelocityMode>
+          <primitive>
+            <prim>350</prim>
+          </primitive>
+          <TargetDepth state="Value">-0.375</TargetDepth>
+          <DepthIncrement state="Value">0.08</DepthIncrement>
+          <FinalDepthIncrement state="Value">0.01</FinalDepthIncrement>
+          <CutOrdering state="Value">DepthFirst</CutOrdering>
+          <CutWidth state="Default">0</CutWidth>
+          <StepOver state="Default">0.4</StepOver>
+          <StepoverFeedrate state="Default">PlungeFeedrate</StepoverFeedrate>
+          <InsideOutside state="Default">Outside</InsideOutside>
+          <MillingDirection state="Value">Climb</MillingDirection>
+          <CollisionDetection state="Default">True</CollisionDetection>
+          <CornerOvercut state="Default">False</CornerOvercut>
+          <LeadInMove state="Value">
+            <LeadInType>Spiral</LeadInType>
+            <SpiralAngle>10</SpiralAngle>
+            <TangentRadius>0</TangentRadius>
+            <LeadInFeedrate>0</LeadInFeedrate>
+          </LeadInMove>
+          <LeadOutMove state="Default" />
+          <HoldingTabs state="Value">
+            <TabMethod>None</TabMethod>
+            <Width>0.06</Width>
+            <Height>0.06</Height>
+            <MinimumTabs>3</MinimumTabs>
+            <MaximumTabs>6</MaximumTabs>
+            <TabDistance>1.25</TabDistance>
+            <SizeThreshold>0.5</SizeThreshold>
+            <UseLeadIns>False</UseLeadIns>
+            <TabStyle>Triangle</TabStyle>
+          </HoldingTabs>
+          <Tabs>
+            <HoldingTab>
+              <ParentEntityID>350</ParentEntityID>
+              <ParametricPoint>0.083333333333333356</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <ParentEntityID>350</ParentEntityID>
+              <ParametricPoint>0.25</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <ParentEntityID>350</ParentEntityID>
+              <ParametricPoint>0.41666666666666669</ParametricPoint>
+              <Normal>
+                <X>-1</X>
+                <Y>-0</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <ParentEntityID>350</ParentEntityID>
+              <ParametricPoint>0.58333333333333337</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <ParentEntityID>350</ParentEntityID>
+              <ParametricPoint>0.75</ParametricPoint>
+              <Normal>
+                <X>0</X>
+                <Y>-1</Y>
+              </Normal>
+            </HoldingTab>
+            <HoldingTab>
+              <ParentEntityID>350</ParentEntityID>
+              <ParametricPoint>0.91666666666666674</ParametricPoint>
+              <Normal>
+                <X>1</X>
+                <Y>-0</Y>
+              </Normal>
+            </HoldingTab>
+          </Tabs>
+          <SideProfile state="Default" />
+        </profile>
+      </machineops>
+      <Stock>
+        <PMin>0,0</PMin>
+        <PMax>0,0</PMax>
+        <Color>255,165,0</Color>
+      </Stock>
+      <Style>cutout+tabs</Style>
+      <StyleLibrary>Standard-in</StyleLibrary>
+      <ToolDiameter>0.125</ToolDiameter>
+      <ToolProfile>Unspecified</ToolProfile>
+      <Nesting>
+        <BasePoint>0,0</BasePoint>
+      </Nesting>
+    </part>
+  </parts>
+  <ActiveLayer>0</ActiveLayer>
+  <ActivePart>Part1</ActivePart>
+</CADFile>

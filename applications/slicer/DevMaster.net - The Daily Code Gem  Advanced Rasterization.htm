@@ -1,0 +1,801 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0053)http://www.devmaster.net/codespotlight/show.php?id=17 -->
+<html dir="ltr" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<link rel="stylesheet" type="text/css" href="./DevMaster.net - The Daily Code Gem  Advanced Rasterization_files/devmaster_f36ce932.css">
+	<style type="text/css" id="vbulletin_css">
+<!--
+/* vBulletin 3 CSS For Style 'Default Style' (styleid: 2) */
+body
+{
+	background: #E1E1E2;
+	color: #000000;
+	font: 10pt verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+	margin: 5px 10px 10px 10px;
+	padding: 0px;
+}
+a:link
+{
+	color: #22229C;
+}
+a:visited
+{
+	color: #22229C;
+}
+a:hover, a:active
+{
+	color: #FF4400;
+}
+.page
+{
+	background: #FFFFFF;
+	color: #000000;
+}
+td, th, p, li
+{
+	font-family: verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+.tborder
+{
+	background: #D1D1E1;
+	color: #000000;
+	border: 1px solid #0B198C;
+}
+.tcat
+{
+	background: #869BBF url(/forums/images/gradients/gradient_tcat.gif) repeat-x top left;
+	color: #FFFFFF;
+	font: bold 10pt verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+.tcat a:link
+{
+	color: #ffffff;
+	text-decoration: none;
+}
+.tcat a:visited
+{
+	color: #ffffff;
+	text-decoration: none;
+}
+.tcat a:hover, .tcat a:active
+{
+	color: #FFFF66;
+	text-decoration: underline;
+}
+.thead
+{
+	background: #5C7099 url(/forums/images/gradients/gradient_thead.gif) repeat-x top left;
+	color: #FFFFFF;
+	font: bold 11px tahoma, verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+.thead a:link
+{
+	color: #FFFFFF;
+}
+.thead a:visited
+{
+	color: #FFFFFF;
+}
+.thead a:hover, .thead a:active
+{
+	color: #FFFF00;
+}
+.tfoot
+{
+	background: #3E5C92;
+	color: #E0E0F6;
+}
+.tfoot a:link
+{
+	color: #E0E0F6;
+}
+.tfoot a:visited
+{
+	color: #E0E0F6;
+}
+.tfoot a:hover, .tfoot a:active
+{
+	color: #FFFF66;
+}
+.alt1, .alt1Active
+{
+	background: #F5F5FF;
+	color: #000000;
+}
+.alt2, .alt2Active
+{
+	background: #E1E4F2;
+	color: #000000;
+}
+td.inlinemod
+{
+	background: #FFFFCC;
+	color: #000000;
+}
+.wysiwyg
+{
+	background: #F5F5FF;
+	color: #000000;
+	font: 10pt verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+textarea, .bginput
+{
+	font: 10pt verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+.button
+{
+	font: 11px verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+select
+{
+	font: 11px verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+option, optgroup
+{
+	font-size: 11px;
+	font-family: verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+.smallfont
+{
+	font: 11px verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+.time
+{
+	color: #666686;
+}
+.navbar
+{
+	font: 11px verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+.highlight
+{
+	color: #FF0000;
+	font-weight: bold;
+}
+.fjsel
+{
+	background: #3E5C92;
+	color: #E0E0F6;
+}
+.fjdpth0
+{
+	background: #F7F7F7;
+	color: #000000;
+}
+.panel
+{
+	background: #E4E7F5 url(images/gradients/gradient_panel.gif) repeat-x top left;
+	color: #000000;
+	padding: 10px;
+	border: 2px outset;
+}
+.panelsurround
+{
+	background: #D5D8E5 url(images/gradients/gradient_panelsurround.gif) repeat-x top left;
+	color: #000000;
+}
+legend
+{
+	color: #22229C;
+	font: 11px tahoma, verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+}
+.vbmenu_control
+{
+	background: #738FBF;
+	color: #FFFFFF;
+	font: bold 11px tahoma, verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+	padding: 3px 6px 3px 6px;
+	white-space: nowrap;
+}
+.vbmenu_control a:link
+{
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.vbmenu_control a:visited
+{
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.vbmenu_control a:hover, .vbmenu_control a:active
+{
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+.vbmenu_popup
+{
+	background: #FFFFFF;
+	color: #000000;
+	border: 1px solid #0B198C;
+}
+.vbmenu_option
+{
+	background: #BBC7CE;
+	color: #000000;
+	font: 11px verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+	white-space: nowrap;
+	cursor: pointer;
+}
+.vbmenu_option a:link
+{
+	color: #22229C;
+	text-decoration: none;
+}
+.vbmenu_option a:visited
+{
+	color: #22229C;
+	text-decoration: none;
+}
+.vbmenu_option a:hover, .vbmenu_option a:active
+{
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.vbmenu_hilite
+{
+	background: #8A949E;
+	color: #FFFFFF;
+	font: 11px verdana, geneva, lucida, 'lucida grande', arial, helvetica, sans-serif;
+	white-space: nowrap;
+	cursor: pointer;
+}
+.vbmenu_hilite a:link
+{
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.vbmenu_hilite a:visited
+{
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.vbmenu_hilite a:hover, .vbmenu_hilite a:active
+{
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.headerStyle { background: #FFFFFF; }
+
+/* ***** styling for 'big' usernames on postbit etc. ***** */
+.bigusername { font-size: 14pt; }
+
+/* ***** small padding on 'thead' elements ***** */
+td.thead, div.thead { padding: 4px; }
+
+/* ***** basic styles for multi-page nav elements */
+.pagenav a { text-decoration: none; }
+.pagenav td { padding: 2px 4px 2px 4px; }
+
+/* ***** define margin and font-size for elements inside panels ***** */
+.fieldset { margin-bottom: 6px; }
+.fieldset, .fieldset td, .fieldset p, .fieldset li { font-size: 11px; }
+
+/* ***** don't change the following ***** */
+form { display: inline; }
+label { cursor: default; }
+.normal { font-weight: normal; }
+.inlineimg { vertical-align: middle; }
+
+H1 {
+	FONT-WEIGHT: bold; FONT-SIZE: 12pt; COLOR: #00006f;
+}
+H2 {
+	FONT-WEIGHT: bold; FONT-SIZE: 11pt; MARGIN-BOTTOM: 0.2em; FONT-FAMILY: Tahoma, Sans-serif
+}
+H3 {
+	FONT-WEIGHT: bold; FONT-SIZE: 10pt; MARGIN-BOTTOM: 0.2em; FONT-FAMILY: Tahoma, Sans-serif
+}
+H5 {
+	FONT-WEIGHT: bold; MARGIN-BOTTOM: 0.2em; BORDER-BOTTOM: black 0.1em solid; FONT-FAMILY: Tahoma, Sans-serif
+}
+-->
+</style>	<link rel="alternate" type="application/rss+xml" title="RSS" href="http://www.devmaster.net/rss/">
+	<link rel="shortcut icon" href="http://www.devmaster.net/favicon.ico" type="image/x-icon">
+	<meta name="Keywords" content="game development, game programming, graphics programming, OpenGL, DirectX, Direct3D, Engine, 3D, Graphics, AI, artificial intelligence, game design, game, gamedev, development, programming, c++, games, create, design, shading, tutorial, art, devmaster, articles, forum">
+	<meta name="Description" content="DevMaster.net is a game development website that provides articles, a 3D engines database, daily news updates, and an active forum!">
+	
+<title>DevMaster.net - The Daily Code Gem: Advanced Rasterization</title>
+<script type="text/javascript" async="" src="./DevMaster.net - The Daily Code Gem  Advanced Rasterization_files/ga.js"></script><script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-20324558-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+
+<body>
+
+
+<a name="top"></a>
+<table class="headerStyle" border="0" width="100%" cellpadding="0" cellspacing="0" align="center">
+<tbody><tr>
+	<td align="left"><a href="http://www.devmaster.net/"><img border="0" src="./DevMaster.net - The Daily Code Gem  Advanced Rasterization_files/logo.gif" alt="DevMaster.net - Your source for game development" title="DevMaster.net - Your source for game development"></a></td>
+	<td align="right"><script type="text/javascript"><!--//<![CDATA[
+   var m3_u = (location.protocol=='https:'?'https://www.devmaster.net/adsrvr/www/delivery/ajs.php':'http://www.devmaster.net/adsrvr/www/delivery/ajs.php');
+   var m3_r = Math.floor(Math.random()*99999999999);
+   if (!document.MAX_used) document.MAX_used = ',';
+   document.write ("<scr"+"ipt type='text/javascript' src='"+m3_u);
+   document.write ("?zoneid=1");
+   document.write ('&amp;cb=' + m3_r);
+   if (document.MAX_used != ',') document.write ("&amp;exclude=" + document.MAX_used);
+   document.write ("&amp;loc=" + escape(window.location));
+   if (document.referrer) document.write ("&amp;referer=" + escape(document.referrer));
+   if (document.context) document.write ("&context=" + escape(document.context));
+   if (document.mmm_fo) document.write ("&amp;mmm_fo=1");
+   document.write ("'><\/scr"+"ipt>");
+//]]>--></script><script type="text/javascript" src="./DevMaster.net - The Daily Code Gem  Advanced Rasterization_files/ajs.php"></script><script type="text/javascript"><!--
+google_ad_client = "pub-4985676952072833";
+google_ad_width = 468;
+google_ad_height = 60;
+google_ad_format = "468x60_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FFFFFF";
+google_color_bg = "FFFFFF";
+google_color_link = "22229C";
+google_color_text = "000000";
+google_color_url = "000000";
+//--></script>
+<script type="text/javascript" src="./DevMaster.net - The Daily Code Gem  Advanced Rasterization_files/show_ads.js">
+</script><script src="./DevMaster.net - The Daily Code Gem  Advanced Rasterization_files/expansion_embed.js"></script><script src="./DevMaster.net - The Daily Code Gem  Advanced Rasterization_files/test_domain.js"></script><script>google_protectAndRun("ads_core.google_render_ad", google_handleError, google_render_ad);</script><ins style="display:inline-table;border:none;height:60px;margin:0;padding:0;position:relative;visibility:visible;width:468px"><ins id="google_ads_frame1_anchor" style="display:block;border:none;height:60px;margin:0;padding:0;position:relative;visibility:visible;width:468px"><iframe allowtransparency="true" frameborder="0" height="60" hspace="0" id="google_ads_frame1" marginheight="0" marginwidth="0" name="google_ads_frame" scrolling="no" src="./DevMaster.net - The Daily Code Gem  Advanced Rasterization_files/ads.htm" style="left:0;position:absolute;top:0" vspace="0" width="468"></iframe></ins></ins><div id="beacon_641ea7af55" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./DevMaster.net - The Daily Code Gem  Advanced Rasterization_files/lg.php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+<noscript>&lt;a href='http://www.devmaster.net/adsrvr/www/delivery/ck.php?n=afba2a08&amp;amp;cb=INSERT_RANDOM_NUMBER_HERE' target='_blank'&gt;&lt;img src='http://www.devmaster.net/adsrvr/www/delivery/avw.php?zoneid=1&amp;amp;cb=INSERT_RANDOM_NUMBER_HERE&amp;amp;n=afba2a08' border='0' alt='' /&gt;&lt;/a&gt;</noscript></td>
+</tr>
+</tbody></table>
+
+<table class="tborder" cellpadding="6" cellspacing="1" width="100%">
+<tbody><tr>
+	<td class="tcat" style="color: rgb(255, 193, 37);" colspan="2" align="center" nowrap="nowrap" width="60%">
+		[[ <b><a href="http://www.devmaster.net/">Home</a> |
+		<a href="http://www.devmaster.net/forums/">Forums</a> | 
+		<a href="http://www.devmaster.net/engines/">3D Engines Database</a> | 
+		<a href="http://www.devmaster.net/wiki/Main_Page">Wiki</a> |
+		<a href="http://www.devmaster.net/articles.php">Articles/Tutorials</a> | 
+		<a href="http://www.devmaster.net/jobs.php">Game Dev Jobs</a> | 
+		<a href="http://www.devmaster.net/chat/">IRC Chat Network</a> |
+		<a href="http://www.devmaster.net/forums/sendmessage.php">Contact Us</a></b> ]]
+	</td>
+</tr>
+</tbody></table>
+<div class="smallfont">Welcome Guest!</div>
+<div align="center">
+	<div class="page" style="width:100%; text-align:left">
+		<div style="padding:0px 15px 0px 15px">
+
+<table border="0" cellpadding="5" cellspacing="3" width="100%">
+<tbody><tr>
+	<td width="85%" valign="top">
+		<br>
+		<style type="text/css">
+.codemain
+{
+	background: #FFFFFF; border: 1px solid #888888; font-family: Courier, Courier New; color: #000000;
+	font-size: 10pt; height: auto; padding: 3px
+}
+</style>
+
+<br>
+<table align="center" width="90%">
+<tbody><tr>
+	<td width="20%" nowrap=""><h1>The Daily Code Gem</h1></td>
+	<td nowrap=""><a href="http://www.devmaster.net/codespotlight/submit.php">Submit Code</a> | <a href="http://www.devmaster.net/codespotlight/index.php">Code Spotlight Archive</a></td>
+</tr>
+</tbody></table>
+<br>
+<table class="tborder" cellpadding="6" cellspacing="1" border="0" width="80%" align="center">
+<tbody><tr class="thead">
+	<td width="100%" colspan="4" align="center">Advanced Rasterization</td>
+</tr>
+<tr class="tcat">
+		<td class="smallfont" width="27%">Submitted by: <a href="http://www.devmaster.net/forums/member.php?u=964">Nicolas Capens</a></td>
+	<td class="smallfont" width="33%">Category: <a href="http://www.devmaster.net/codespotlight/index.php?catid=2">Graphics Theory &amp; Implementation</a></td>
+	<td class="smallfont" width="20%">Submitted: Sat, 11 Sep 2004</td>
+	<td class="smallfont" width="20%">Dublished: Sun, 12 Sep 2004</td>
+</tr>
+<tr class="alt1">
+	<td colspan="4">It's quite surprising that the most elementary rendering operations, like rasterization, are so little documented. Graphics cards take care of most of this, so people have forgotten how it actually works. But there are many reasons left why understanding the inner workings of the graphics pipeline is still useful. Not only for software rendering, but for any situation where this type of operations is required. Knowledge of these algorithm simply make you a better graphics programmer.
+<br>
+<br>Today I present you the theory and implementation of an advanced rasterizer. It is advanced in the sense that it has many nice properties the <a href="http://www.d6.com/users/checker/misctech.htm" target="_blank">classical scanline conversion algorithm</a> does not have. The main problem with the old algorithm is that it's hard to process pixels in parallel. It identifies filled scanlines, but this is only suited for processing one pixel at a time. A much more efficient approach is to process 2x2 pixels together. These are called quads. By sharing some setup cost per quad, and using advanced parallel instructions, this results in a significant speedup. Some of the current graphics hardware also uses quad pixel pipelines.
+<br>
+<br>Our starting point is the half-space function approach. Before I go into details, all you have to know is that a half-space function is positive on one side of a line, and negative on the other. So it splits the screen in half, hence the name. Here's a small illustration of it, where the edges of a triangle each split the screen in a positive and negative part: <a href="http://sw-shader.sourceforge.net/half-space.png" target="_blank">half-space.png</a>. Locations where all three half-space functions are positive define the inside of the triangle. When a half-edge function is zero, we're on an edge. When any of them is negative, we are outside the triangle. So this can be used for rasterization. If we can find formulas for the half-space functions, and evaluate them for each pixel location, we know which pixels need to be filled.
+<br>
+<br>So what formula is positive on one side of a line and negative on the other? Surprisingly, the equation of a line is exactly what we're looking for. For a segment with starting coordinates (x1, y1) and end coordinates (x2, y2), the equation is:
+<br>
+<br>(x2 - x1) * (y - y1) - (y2 - y1) * (x - x1) = 0
+<br>
+<br>You can easily verify that this equation is true for any point (x, y) on this line (for example the start and end points themselves). But the left hand side also behaves perfectly as a half-space fuction. It is positive for (x, y) coordinates on one side, and negative on the other. It's zero on the line itself, which effectively defines the line in the above equation. Verifying this behaviour is left as an excercise for the reader. Let's write some code!
+<!--c1--><pre class="codemain"><font color="BLUE">void</font> Rasterizer::triangle(<font color="BLUE">const</font> Vertex &amp;v1, <font color="BLUE">const</font> Vertex &amp;v2, <font color="BLUE">const</font> Vertex &amp;v3)
+{
+    <font color="BLUE">float</font> y1 = v1.y;
+	<font color="BLUE">float</font> y2 = v2.y;
+    <font color="BLUE">float</font> y3 = v3.y;
+
+    <font color="BLUE">float</font> x1 = v1.x;
+    <font color="BLUE">float</font> x2 = v2.x;
+    <font color="BLUE">float</font> x3 = v3.x;
+
+    <font color="GREEN">// Bounding rectangle
+</font>    <font color="BLUE">int</font> minx = (<font color="BLUE">int</font>)min(x1, x2, x3);
+    <font color="BLUE">int</font> maxx = (<font color="BLUE">int</font>)max(x1, x2, x3);
+    <font color="BLUE">int</font> miny = (<font color="BLUE">int</font>)min(y1, y2, y3);
+    <font color="BLUE">int</font> maxy = (<font color="BLUE">int</font>)max(y1, y2, y3);
+
+    (<font color="BLUE">char</font>*&amp;)colorBuffer += miny * stride;
+
+    <font color="GREEN">// Scan through bounding rectangle
+</font>    <font color="BLUE">for</font>(<font color="BLUE">int</font> y = miny; y &lt; maxy; y++)
+    {
+        <font color="BLUE">for</font>(<font color="BLUE">int</font> x = minx; x &lt; maxx; x++)
+        {
+            <font color="GREEN">// When all half-space functions positive, pixel is in triangle
+</font>            <font color="BLUE">if</font>((x1 - x2) * (y - y1) - (y1 - y2) * (x - x1) &gt; 0 &amp;&amp;
+            &lt;&lt; (x2 - x3) * (y - y2) - (y2 - y3) * (x - x2) &gt; 0 &amp;&amp;
+            &lt;&lt; (x3 - x1) * (y - y3) - (y3 - y1) * (x - x3) &gt; 0)
+            {
+                colorBuffer[x] = 0x00FFFFFF;&lt;&lt; <font color="GREEN">// White
+</font>            }
+        }
+
+        (<font color="BLUE">char</font>*&amp;)colorBuffer += stride;
+    }
+}
+</pre><!--ec2-->
+<br>This is the simplest working implementation of the half-space functions algorithm. Before I continue to explain how it can be improved, there are a few things to note. It would be possible to scan the whole screen, to see which pixels are inside the triangle, but this is of course a waste of time. Therefore only the smallest rectangle surrounding the triangle is scanned. You might also have noticed that I swapped some components in the formula. This is because in screen coordinates, the y-axis points downward. It is also very important that the triangle's vertices are in counter-clockwise order. This makes sure that all the positive sides of the half-spaces point inside the triangle.
+<br>
+<br>Unfortunately, this implementation isn't fast at all. For every pixel, six multiplications and no less than fifteen subtractions are required. But don't worry, this can be optimized greatly. Per horizontal line that we scan, only the x component in the formula changes. For the first edge, this means only (y1 - y2) gets added to the half-edge function value of the previous pixel. That's just an addition and subtraction per pixel! Furthermore, the vertex coordinates are 'constant' per triangle, so (y1 - y2) and all other pairs like this only have to be computed once per pixel. Also for stepping in the y direction it's just an addition of a constant. Let's implement this:
+<!--c1--><pre class="codemain"><font color="BLUE">void</font> Rasterizer::triangle(<font color="BLUE">const</font> Vertex &amp;v1, <font color="BLUE">const</font> Vertex &amp;v2, <font color="BLUE">const</font> Vertex &amp;v3)
+{
+    <font color="BLUE">float</font> y1 = v1.y;
+    <font color="BLUE">float</font> y2 = v2.y;
+    <font color="BLUE">float</font> y3 = v3.y;
+
+    <font color="BLUE">float</font> x1 = v1.x;
+    <font color="BLUE">float</font> x2 = v2.x;
+    <font color="BLUE">float</font> x3 = v3.x;
+
+    <font color="GREEN">// Deltas
+</font>    <font color="BLUE">float</font> Dx12 = x1 - x2;
+    <font color="BLUE">float</font> Dx23 = x2 - x3;
+    <font color="BLUE">float</font> Dx31 = x3 - x1;
+
+    <font color="BLUE">float</font> Dy12 = y1 - y2;
+    <font color="BLUE">float</font> Dy23 = y2 - y3;
+    <font color="BLUE">float</font> Dy31 = y3 - y1;
+
+    <font color="GREEN">// Bounding rectangle
+</font>    <font color="BLUE">int</font> minx = (<font color="BLUE">int</font>)min(x1, x2, x3);
+    <font color="BLUE">int</font> maxx = (<font color="BLUE">int</font>)max(x1, x2, x3);
+    <font color="BLUE">int</font> miny = (<font color="BLUE">int</font>)min(y1, y2, y3);
+    <font color="BLUE">int</font> maxy = (<font color="BLUE">int</font>)max(y1, y2, y3);
+
+    (<font color="BLUE">char</font>*&amp;)colorBuffer += miny * stride;
+
+    <font color="GREEN">// Constant part of half-edge functions
+</font>    <font color="BLUE">float</font> C1 = Dy12 * x1 - Dx12 * y1;
+    <font color="BLUE">float</font> C2 = Dy23 * x2 - Dx23 * y2;
+    <font color="BLUE">float</font> C3 = Dy31 * x3 - Dx31 * y3;
+
+    <font color="BLUE">float</font> Cy1 = C1 + Dx12 * miny - Dy12 * minx;
+    <font color="BLUE">float</font> Cy2 = C2 + Dx23 * miny - Dy23 * minx;
+    <font color="BLUE">float</font> Cy3 = C3 + Dx31 * miny - Dy31 * minx;
+
+    <font color="GREEN">// Scan through bounding rectangle
+</font>    <font color="BLUE">for</font>(<font color="BLUE">int</font> y = miny; y &lt; maxy; y++)
+    {
+        <font color="GREEN">// Start value for horizontal scan
+</font>        <font color="BLUE">float</font> Cx1 = Cy1;
+        <font color="BLUE">float</font> Cx2 = Cy2;
+        <font color="BLUE">float</font> Cx3 = Cy3;
+
+        <font color="BLUE">for</font>(<font color="BLUE">int</font> x = minx; x &lt; maxx; x++)
+        {
+            <font color="BLUE">if</font>(Cx1 &gt; 0 &amp;&amp; Cx2 &gt; 0 &amp;&amp; Cx3 &gt; 0)
+            {
+                colorBuffer[x] = 0x00FFFFFF;&lt;&lt; <font color="GREEN">// White
+</font>            }
+
+            Cx1 -= Dy12;
+            Cx2 -= Dy23;
+            Cx3 -= Dy31;
+        }
+
+        Cy1 += Dx12;
+        Cy2 += Dx23;
+        Cy3 += Dx31;
+
+        (<font color="BLUE">char</font>*&amp;)colorBuffer += stride;
+    }
+}
+</pre><!--ec2-->
+<br>The C1-C3 variables are the constant part of the half-edge equation and are not recomputed per pixel. The Cy1-Cy3 variables determine the 'starting value' of the half-space functions at the top of the bounding rectangle. And finally the Dx1-Dx3 variables are the start values per horizontal scan. Only these are incremented (actually decremented) with the delta values every pixel. So testing whether a pixel is inside the triangle has become really cheap: aside from some setup per horizontal line and per triangle that is negligible, just three subtractions and three compares for zero.
+<br>
+<br>Ok, so this algorithm is starting to show its usefulness. But there still are some serious issues to solve. Here's an actual image created using this code: <a href="http://sw-shader.sourceforge.net/first_try.png" target="_blank">first_try.png</a>. If it isn't clear that this is actually a car, here's the shaded reference image: <a href="http://sw-shader.sourceforge.net/reference.png" target="_blank">reference.png</a>. As you can see, there are many gaps between the polygons. The cause is twofold: precision, and the fill convention.
+<br>
+<br>There are precision issues because floating-point numbers are quite limited. They have 24-bit of precision. If you look at the half-space function, you see that we do several subtractions and multiplications. That's the perfect recipe for precision problems. What most people would do in such situation is use double-precision floating-point numbers. While this will make the issue unnoticable, it isn't exactly perfect and also slower. The real solution might sound crazy: use integers! Integers have 32-bit of precision, and do not suffer from precision loss when subtracting. Instead of using a 'floating-point', we'll use fixed-point arithmetic to assure we get sub-pixel accuracy.
+<br>
+<br>The second cause of the gaps is the fill convention. The half-space functions can be positive or negative, but also zero. In this case, the pixel is exactly on the edge. Until now, we've ignored this case and treated it as a pixel outside. We could treat it as inside, using &gt;= comparators, but this isn't correct either. What will happen is that pixels on the edge between two triangles will be drawn twice. While this may sound more acceptable than gaps, it causes some serious artifacts for things like transparency and stenciling.
+<br>
+<br>What we'll use here is a top-left fill convention, just like DirectX and OpenGL. This means that all edges which are on the left side of the triangle, or on a horizontal top, are treated as inside the triangle. This convention assures that no gaps will occur, nor drawing the same pixel twice. Let's first see how we can detect whether an edge is 'top-left'. For humans, it's really easy to recognise them. Here are a few examples: <a href="http://sw-shader.sourceforge.net/top-left.png" target="_blank">top-left.png</a>. I'm sure nobody really had a problem to identify the top-left edges himself, it's really simple. But give yourself a minute to think about how you would detect this using code... Don't look before you tried it, but here's the answer: <a href="http://sw-shader.sourceforge.net/detect.png" target="_blank">detect.png</a>. The arrows indicate the counter-clockwise order of the vertices. Note how for left edges they all point downward! To detect this in code we merely have to check the Dy1-Dy3 values! The only exception is the top edge. There, Dy# is zero, but Dx# is positive.
+<br>
+<br>Now that we know how to detect top-left edges, we still have to deal with them correctly so pixels on these edges are treated as inside. What we actually want to do is change the Cx# &gt; 0 statements into Cx# &gt;= 0 statements. Testing for top-left edges per pixel is way to slow, and handling all these cases in separate loops is way too complex. But look at what Cx# &gt; 0 fundamentally is. It is 'true' when Cx# is 1, 2, 3, etc, and 'false' when Cx# is 0, -1, -2, etc. All we want to do is make it true also when Cx# is zero. The solution is too simple for words: all we have to do is add 1 to Cx# beforehand. This can even be done sooner, with the C1-C3 variables! Ok, let's sum this all up:
+<!--c1--><pre class="codemain"><font color="BLUE">void</font> Rasterizer::triangle(<font color="BLUE">const</font> Vertex &amp;v1, <font color="BLUE">const</font> Vertex &amp;v2, <font color="BLUE">const</font> Vertex &amp;v3)
+{
+    <font color="GREEN">// 28.4 fixed-point coordinates
+</font>    <font color="BLUE">const</font> <font color="BLUE">int</font> Y1 = iround(16.0f * v1.y);
+    <font color="BLUE">const</font> <font color="BLUE">int</font> Y2 = iround(16.0f * v2.y);
+    <font color="BLUE">const</font> <font color="BLUE">int</font> Y3 = iround(16.0f * v3.y);
+
+    <font color="BLUE">const</font> <font color="BLUE">int</font> X1 = iround(16.0f * v1.x);
+    <font color="BLUE">const</font> <font color="BLUE">int</font> X2 = iround(16.0f * v2.x);
+    <font color="BLUE">const</font> <font color="BLUE">int</font> X3 = iround(16.0f * v3.x);
+
+    <font color="GREEN">// Deltas
+</font>    <font color="BLUE">const</font> <font color="BLUE">int</font> DX12 = X1 - X2;
+    <font color="BLUE">const</font> <font color="BLUE">int</font> DX23 = X2 - X3;
+    <font color="BLUE">const</font> <font color="BLUE">int</font> DX31 = X3 - X1;
+
+    <font color="BLUE">const</font> <font color="BLUE">int</font> DY12 = Y1 - Y2;
+    <font color="BLUE">const</font> <font color="BLUE">int</font> DY23 = Y2 - Y3;
+    <font color="BLUE">const</font> <font color="BLUE">int</font> DY31 = Y3 - Y1;
+
+    <font color="GREEN">// Fixed-point deltas
+</font>    <font color="BLUE">const</font> <font color="BLUE">int</font> FDX12 = DX12 &lt;&lt; 4;
+    <font color="BLUE">const</font> <font color="BLUE">int</font> FDX23 = DX23 &lt;&lt; 4;
+    <font color="BLUE">const</font> <font color="BLUE">int</font> FDX31 = DX31 &lt;&lt; 4;
+
+    <font color="BLUE">const</font> <font color="BLUE">int</font> FDY12 = DY12 &lt;&lt; 4;
+    <font color="BLUE">const</font> <font color="BLUE">int</font> FDY23 = DY23 &lt;&lt; 4;
+    <font color="BLUE">const</font> <font color="BLUE">int</font> FDY31 = DY31 &lt;&lt; 4;
+
+    <font color="GREEN">// Bounding rectangle
+</font>    <font color="BLUE">int</font> minx = (min(X1, X2, X3) + 0xF) &gt;&gt; 4;
+    <font color="BLUE">int</font> maxx = (max(X1, X2, X3) + 0xF) &gt;&gt; 4;
+    <font color="BLUE">int</font> miny = (min(Y1, Y2, Y3) + 0xF) &gt;&gt; 4;
+    <font color="BLUE">int</font> maxy = (max(Y1, Y2, Y3) + 0xF) &gt;&gt; 4;
+
+    (<font color="BLUE">char</font>*&amp;)colorBuffer += miny * stride;
+
+    <font color="GREEN">// Half-edge constants
+</font>    <font color="BLUE">int</font> C1 = DY12 * X1 - DX12 * Y1;
+    <font color="BLUE">int</font> C2 = DY23 * X2 - DX23 * Y2;
+    <font color="BLUE">int</font> C3 = DY31 * X3 - DX31 * Y3;
+
+    <font color="GREEN">// Correct for fill convention
+</font>    <font color="BLUE">if</font>(DY12 &lt; 0 || (DY12 == 0 &amp;&amp; DX12 &gt; 0)) C1++;
+    <font color="BLUE">if</font>(DY23 &lt; 0 || (DY23 == 0 &amp;&amp; DX23 &gt; 0)) C2++;
+    <font color="BLUE">if</font>(DY31 &lt; 0 || (DY31 == 0 &amp;&amp; DX31 &gt; 0)) C3++;
+
+    <font color="BLUE">int</font> CY1 = C1 + DX12 * (miny &lt;&lt; 4) - DY12 * (minx &lt;&lt; 4);
+    <font color="BLUE">int</font> CY2 = C2 + DX23 * (miny &lt;&lt; 4) - DY23 * (minx &lt;&lt; 4);
+    <font color="BLUE">int</font> CY3 = C3 + DX31 * (miny &lt;&lt; 4) - DY31 * (minx &lt;&lt; 4);
+
+    <font color="BLUE">for</font>(<font color="BLUE">int</font> y = miny; y &lt; maxy; y++)
+    {
+        <font color="BLUE">int</font> CX1 = CY1;
+        <font color="BLUE">int</font> CX2 = CY2;
+        <font color="BLUE">int</font> CX3 = CY3;
+
+        <font color="BLUE">for</font>(<font color="BLUE">int</font> x = minx; x &lt; maxx; x++)
+        {
+            <font color="BLUE">if</font>(CX1 &gt; 0 &amp;&amp; CX2 &gt; 0 &amp;&amp; CX3 &gt; 0)
+            {
+                colorBuffer[x] = 0x00FFFFFF;
+            }
+
+            CX1 -= FDY12;
+            CX2 -= FDY23;
+            CX3 -= FDY31;
+        }
+
+        CY1 += FDX12;
+        CY2 += FDX23;
+        CY3 += FDX31;
+
+        (<font color="BLUE">char</font>*&amp;)colorBuffer += stride;
+    }
+}
+</pre><!--ec2-->
+<br>Here's the end result: <a href="http://sw-shader.sourceforge.net/correct.png" target="_blank">correct.png</a>. Not only is it now entirely flawless, it's also faster than the floating-point version! The range of the fixed-point integers is big enough for a 2048x2048 color buffer, with 4 bits of sub-pixel precision. Now we got this fixed, let's focus on performance again...
+<br>
+<br>This implementation is perfect for small triangles. The setup cost per triangle is really low compared to the scanline conversion algorithm. Unfortunately, it's not optimal for big triangles. About half of all pixels will be outside the triangle, but we still pay the price of evaluating the half-space functions. Furthermore, until now I've only talked about drawing one pixel at a time, while the real benefits of this approach is the possibility for parallelism. I'll show you how to take advantage of this, and what other benefits we get from it.
+<br>
+<br>What we really want to do is quickly skip pixels outside the triangle. We don't want to waste any time evaluating half-space functions there. We also don't want to spend too much time inside the triangle. The really interesting part is around the edges. So what we'll do is quickly detect whether 8x8 blocks are not covered, partially covered, or fully covered. Not covered or fully covered blocks can quicly be respectively rejected or accepted. Partially covered blocks will be completely scanned. There's another reason to do this block-based approach: it is very useful for visibility determination algorithms. And an extra benefit is that memory accesses are more localized.
+<br>
+<br>So how do we detect coverage as fast as possible? With the half-space functions, it's really easy. All we have to do is evaluate the half-space functions in the corners of the blocks. A non-covered block has negative half-space values for the corners for at least one edge. A completely covered block has positive half-space values for all edges. Everything else is a partially covered block. So the final implementation is:
+<!--c1--><pre class="codemain"><font color="BLUE">void</font> Rasterizer::triangle(<font color="BLUE">const</font> Vertex &amp;v1, <font color="BLUE">const</font> Vertex &amp;v2, <font color="BLUE">const</font> Vertex &amp;v3)
+{
+    <font color="GREEN">// 28.4 fixed-point coordinates
+</font>    <font color="BLUE">const</font> <font color="BLUE">int</font> Y1 = iround(16.0f * v1.y);
+    <font color="BLUE">const</font> <font color="BLUE">int</font> Y2 = iround(16.0f * v2.y);
+    <font color="BLUE">const</font> <font color="BLUE">int</font> Y3 = iround(16.0f * v3.y);
+
+    <font color="BLUE">const</font> <font color="BLUE">int</font> X1 = iround(16.0f * v1.x);
+    <font color="BLUE">const</font> <font color="BLUE">int</font> X2 = iround(16.0f * v2.x);
+    <font color="BLUE">const</font> <font color="BLUE">int</font> X3 = iround(16.0f * v3.x);
+
+    <font color="GREEN">// Deltas
+</font>    <font color="BLUE">const</font> <font color="BLUE">int</font> DX12 = X1 - X2;
+    <font color="BLUE">const</font> <font color="BLUE">int</font> DX23 = X2 - X3;
+    <font color="BLUE">const</font> <font color="BLUE">int</font> DX31 = X3 - X1;
+
+    <font color="BLUE">const</font> <font color="BLUE">int</font> DY12 = Y1 - Y2;
+    <font color="BLUE">const</font> <font color="BLUE">int</font> DY23 = Y2 - Y3;
+    <font color="BLUE">const</font> <font color="BLUE">int</font> DY31 = Y3 - Y1;
+
+    <font color="GREEN">// Fixed-point deltas
+</font>    <font color="BLUE">const</font> <font color="BLUE">int</font> FDX12 = DX12 &lt;&lt; 4;
+    <font color="BLUE">const</font> <font color="BLUE">int</font> FDX23 = DX23 &lt;&lt; 4;
+    <font color="BLUE">const</font> <font color="BLUE">int</font> FDX31 = DX31 &lt;&lt; 4;
+
+    <font color="BLUE">const</font> <font color="BLUE">int</font> FDY12 = DY12 &lt;&lt; 4;
+    <font color="BLUE">const</font> <font color="BLUE">int</font> FDY23 = DY23 &lt;&lt; 4;
+    <font color="BLUE">const</font> <font color="BLUE">int</font> FDY31 = DY31 &lt;&lt; 4;
+
+    <font color="GREEN">// Bounding rectangle
+</font>    <font color="BLUE">int</font> minx = (min(X1, X2, X3) + 0xF) &gt;&gt; 4;
+    <font color="BLUE">int</font> maxx = (max(X1, X2, X3) + 0xF) &gt;&gt; 4;
+    <font color="BLUE">int</font> miny = (min(Y1, Y2, Y3) + 0xF) &gt;&gt; 4;
+    <font color="BLUE">int</font> maxy = (max(Y1, Y2, Y3) + 0xF) &gt;&gt; 4;
+
+    <font color="GREEN">// Block size, standard 8x8 (must be power of two)
+</font>    <font color="BLUE">const</font> <font color="BLUE">int</font> q = 8;
+
+    <font color="GREEN">// Start in corner of 8x8 block
+</font>    minx &amp;= ~(q - 1);
+    miny &amp;= ~(q - 1);
+
+    (<font color="BLUE">char</font>*&amp;)colorBuffer += miny * stride;
+
+    <font color="GREEN">// Half-edge constants
+</font>    <font color="BLUE">int</font> C1 = DY12 * X1 - DX12 * Y1;
+    <font color="BLUE">int</font> C2 = DY23 * X2 - DX23 * Y2;
+    <font color="BLUE">int</font> C3 = DY31 * X3 - DX31 * Y3;
+
+    <font color="GREEN">// Correct for fill convention
+</font>    <font color="BLUE">if</font>(DY12 &lt; 0 || (DY12 == 0 &amp;&amp; DX12 &gt; 0)) C1++;
+    <font color="BLUE">if</font>(DY23 &lt; 0 || (DY23 == 0 &amp;&amp; DX23 &gt; 0)) C2++;
+    <font color="BLUE">if</font>(DY31 &lt; 0 || (DY31 == 0 &amp;&amp; DX31 &gt; 0)) C3++;
+
+    <font color="GREEN">// Loop through blocks
+</font>    <font color="BLUE">for</font>(<font color="BLUE">int</font> y = miny; y &lt; maxy; y += q)
+    {
+        <font color="BLUE">for</font>(<font color="BLUE">int</font> x = minx; x &lt; maxx; x += q)
+        {
+            <font color="GREEN">// Corners of block
+</font>            <font color="BLUE">int</font> x0 = x &lt;&lt; 4;
+            <font color="BLUE">int</font> x1 = (x + q - 1) &lt;&lt; 4;
+            <font color="BLUE">int</font> y0 = y &lt;&lt; 4;
+            <font color="BLUE">int</font> y1 = (y + q - 1) &lt;&lt; 4;
+
+            <font color="GREEN">// Evaluate half-space functions
+</font>            <font color="BLUE">bool</font> a00 = C1 + DX12 * y0 - DY12 * x0 &gt; 0;
+            <font color="BLUE">bool</font> a10 = C1 + DX12 * y0 - DY12 * x1 &gt; 0;
+            <font color="BLUE">bool</font> a01 = C1 + DX12 * y1 - DY12 * x0 &gt; 0;
+            <font color="BLUE">bool</font> a11 = C1 + DX12 * y1 - DY12 * x1 &gt; 0;
+            <font color="BLUE">int</font> a = (a00 &lt;&lt; 0) | (a10 &lt;&lt; 1) | (a01 &lt;&lt; 2) | (a11 &lt;&lt; 3);
+    
+            <font color="BLUE">bool</font> b00 = C2 + DX23 * y0 - DY23 * x0 &gt; 0;
+            <font color="BLUE">bool</font> b10 = C2 + DX23 * y0 - DY23 * x1 &gt; 0;
+            <font color="BLUE">bool</font> b01 = C2 + DX23 * y1 - DY23 * x0 &gt; 0;
+            <font color="BLUE">bool</font> b11 = C2 + DX23 * y1 - DY23 * x1 &gt; 0;
+            <font color="BLUE">int</font> b = (b00 &lt;&lt; 0) | (b10 &lt;&lt; 1) | (b01 &lt;&lt; 2) | (b11 &lt;&lt; 3);
+    
+            <font color="BLUE">bool</font> c00 = C3 + DX31 * y0 - DY31 * x0 &gt; 0;
+            <font color="BLUE">bool</font> c10 = C3 + DX31 * y0 - DY31 * x1 &gt; 0;
+            <font color="BLUE">bool</font> c01 = C3 + DX31 * y1 - DY31 * x0 &gt; 0;
+            <font color="BLUE">bool</font> c11 = C3 + DX31 * y1 - DY31 * x1 &gt; 0;
+            <font color="BLUE">int</font> c = (c00 &lt;&lt; 0) | (c10 &lt;&lt; 1) | (c01 &lt;&lt; 2) | (c11 &lt;&lt; 3);
+
+            <font color="GREEN">// Skip block when outside an edge
+</font>            <font color="BLUE">if</font>(a == 0x0 || b == 0x0 || c == 0x0) <font color="BLUE">continue</font>;
+
+            <font color="BLUE">unsigned</font> <font color="BLUE">int</font> *buffer = colorBuffer;
+
+            <font color="GREEN">// Accept whole block when totally covered
+</font>            <font color="BLUE">if</font>(a == 0xF &amp;&amp; b == 0xF &amp;&amp; c == 0xF)
+            {
+                <font color="BLUE">for</font>(<font color="BLUE">int</font> iy = 0; iy &lt; q; iy++)
+                {
+                    <font color="BLUE">for</font>(<font color="BLUE">int</font> ix = x; ix &lt; x + q; ix++)
+                    {
+                        buffer[ix] = 0x00007F00;&lt;&lt; <font color="GREEN">// Green
+</font>                    }
+
+                    (<font color="BLUE">char</font>*&amp;)buffer += stride;
+                }
+            }
+            <font color="BLUE">else</font>&lt;&lt; <font color="GREEN">// Partially covered block
+</font>            {
+                <font color="BLUE">int</font> CY1 = C1 + DX12 * y0 - DY12 * x0;
+                <font color="BLUE">int</font> CY2 = C2 + DX23 * y0 - DY23 * x0;
+                <font color="BLUE">int</font> CY3 = C3 + DX31 * y0 - DY31 * x0;
+
+                <font color="BLUE">for</font>(<font color="BLUE">int</font> iy = y; iy &lt; y + q; iy++)
+                {
+                    <font color="BLUE">int</font> CX1 = CY1;
+                    <font color="BLUE">int</font> CX2 = CY2;
+                    <font color="BLUE">int</font> CX3 = CY3;
+
+                    <font color="BLUE">for</font>(<font color="BLUE">int</font> ix = x; ix &lt; x + q; ix++)
+                    {
+                        <font color="BLUE">if</font>(CX1 &gt; 0 &amp;&amp; CX2 &gt; 0 &amp;&amp; CX3 &gt; 0)
+                        {
+                            buffer[ix] = 0x0000007F;&lt;&lt; <font color="GREEN">// Blue
+</font>                        }
+
+                        CX1 -= FDY12;
+                        CX2 -= FDY23;
+                        CX3 -= FDY31;
+                    }
+
+                    CY1 += FDX12;
+                    CY2 += FDX23;
+                    CY3 += FDX31;
+
+                    (<font color="BLUE">char</font>*&amp;)buffer += stride;
+                }
+            }
+        }
+
+        (<font color="BLUE">char</font>*&amp;)colorBuffer += q * stride;
+    }
+}
+</pre><!--ec2-->
+<br>
+<br>Note that I scan partially covered blocks completely, all 8x8 pixels. This is for consistency with the other blocks so they can be processed by the same visibility algorithm. Also, this is extremely fast when done in an unrolled loop, using assembly instructions. All further optimizations to this algorithm are best done in assembly anyway. So now the rasterizer can output coverage masks for 8x8 pixels. This can then easily be processed by the pixel pipeline(s). It's easy to process them as 4x4 quads, and many calculations can even be done per block. Everything taken together, there is no reason left to use the old scanline conversion algorithm.
+<br>
+<br>Enjoy!
+<br>
+<br>Nicolas "Nick" Capens<br>
+	<br>
+	</td>
+</tr>
+</tbody></table>
+<table align="center" border="0" cellpadding="5" cellspacing="1" width="80%">
+<tbody><tr>
+<td><a href="http://www.devmaster.net/forums/showthread.php?t=1884">181 comment(s)</a></td>
+</tr>
+</tbody></table>
+<br>
+<h2>How to Submit your own Code Gem</h2>
+<p>Do you have some code, tip or even a mini-article you would like to share related to game and grahics development? Would you like to have the satisfaction of sharing your
+learning experience with everyone! Please <a href="http://www.devmaster.net/codespotlight/submit.php">submit it</a> and if relevant, we will post it as a featured item on
+the main page. All items submitted will be added to a queue which is processed daily (every 24-hours). After approval by a
+moderator, your entry will be displayed depending on the amount of submissions we receive (submissions are processed on a
+first-come-first-serve basis). Your submission will also link to a forum thread to provide user feedback.</p><br>
+			</td>
+	</tr>
+</tbody></table>
+
+		</div>	
+	</div>
+</div>
+
+<div align="center">
+	<table cellpadding="6" cellspacing="0" border="0" width="100%" class="page" align="center">
+<tbody><tr>
+	<td class="tfoot" align="right" width="100%">
+		<div class="smallfont">
+			<strong>
+				<a href="http://www.devmaster.net/forums/sendmessage.php" rel="nofollow">Contact Us</a> -
+				<a href="http://www.devmaster.net/legal.html">Privacy Statement</a> -
+				<a href="http://www.devmaster.net/codespotlight/show.php?id=17#top" onclick="self.scrollTo(0, 0); return false;">Top</a>
+			</strong>
+		</div>
+	</td>
+</tr>
+</tbody></table>
+
+<br>
+
+<div align="center" class="smallfont">
+	Copyright ©2003-2011, DevMaster.net. All rights reserved.
+</div></div>
+
+
+</body></html>

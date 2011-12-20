@@ -1,0 +1,33 @@
+Ok, random performance tests results:
+
+Using the heart wire ( 5x5 inches )
+	* create a pixmap with 0.005 pix resolution, and draw boundaries on the pixel map:  130 ms
+		see pixMapFromWire.py
+	* find intersections of boundary with a single line ( results in 3 segements:  4 ms ( this already uses bresenham code in cython for one iteration.
+		see pixMapFromWire.py
+	* find intersections of boundary with a single line using 2d geometry and Geomapi_intercurvecurve: 1ms 
+		( used no cython , required interescting the line with each boundary -- used no optimization such as bounding box check or active edge tables) 
+		see test2dStuff.py  --> this appraoch was much faster
+	* using 3d , time to compute 0.25" hexagons, and also trim edges and connect inside of an edgegraph was 2.188 sec.
+		included active edge detection
+		profield time was 2.8 sec
+		1.3 sec was in BRepExtrema_DistShapeShape
+		.5 sec in Brep Bnd.
+		.5 sec splitting the hex wires at intersection points
+		the rest is TopoDS.edge constructors and python garbage collector
+	* 3d time to compute .125 hexagons ( and trim edges and such ) was 12 seconds.
+	
+	* offsetting is insanesly fast in both 3d and 2d. 
+	
+	* using a pixmap, it was possible to test 1000 points for inside of face in about 0.033 sec
+		--> pretty fast, but consider this:  suppose 0.125" hexes, with each hex having 8 vertices.
+		    --> for a 5x5 object, that's 40x40x8 = 12,800 vertices.  , or an estimated 12.8*0.033 = 422ms ( i guess that's pretty ok )
+	* using BRepClass_FaceExplorer, it took 0.018sec to test 100 points ( much slower than pixel map )
+	
+	YAY! weird pixmap problems and fill problems are fixed with PIL 1.1.7!!!!
+	
+	* computing pixel map for a 5x5 object @ 0.010 "/pix = 0.046 sec
+	*  at 0.005 in/pixel = .133 sec ( this is with some code still in python, not moved to c )
+	
+	
+	

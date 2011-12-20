@@ -41,7 +41,7 @@ class PointOnAnEdge:
 		self.param = param;
 		self.point = point;
 
-
+class 
 """
 	Graph of edges.
 	Also provides finding a single edge in the chain,
@@ -343,48 +343,14 @@ def splitWire(wire,ipoints):
 	
 "an edge in a connected set of edges."
 class EdgeSegment:
-	"a sub-portion of a parameterized edge"
-	def __init__(self,edge,p1,p2,type):
-		"edge is a ref to an edge, with the beginning and ending parameters"
-		"for the underlying curve"
+	"one or more sub-portions of an edge"
+	def __init__(self,edge, edgetype):
 		self.edge = edge;
-		self.p1 = p1;
-		self.p2 = p2;
-		self.type =type;
-		
-		self.hash = self.edge.__hash__();
-		#precompute to save time
-		self.myKey = ( self.hash,self.p1, self.p2);
-		
-		#todo, this can be optimized, the underlying curve is computed twice here.
-		[self.firstPoint, self.lastPoint] = Wrappers.pointAtParameterList(edge, [self.p1,self.p2] );
-
-		
-	def newEdge(self):
-		"make a new edge between specified parameters"
-		return Wrappers.trimmedEdge(self.edge,self.p1, self.p2);
-		#return self.ew.trimmedEdge(self.p1, self.p2 );
-		
-	"define these methods so nodes just magically work in dicts"
-	def __eq__(self,p1):
-		return self.key().__eq__(p1);
-		
-	def __hash__(self):
-		return self.key().__hash__();
-		
-	def key(self):
-		"""
-			since multiple EdgeSegments can be associated with a single edge,
-			the key is a tuple consisting of the edge hash the the start parameter on the edge
-		"""
-		return self.myKey;
-		#return ( hashE(self.edge),self.p1,self.p2);
-
-	def __repr__(self):
-		return  "EdgeSegment: %d ( %0.3f - %0.3f )" % ( self.edge.__hash__(),self.p1, self.p2);
-
-			
-
+		self.points = []; #list of point on edge objects
+		self.edgetype =edgetype;
+	
+	def addPoint(self,param,point):
+		"adds a point for this edge"
 
 def testSplitWire1():
 	"""

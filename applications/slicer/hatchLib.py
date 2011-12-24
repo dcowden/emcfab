@@ -151,12 +151,8 @@ class Hatcher:
 		
 		print "Time to Make hatch Lines: %0.3f" % ( time.clock() - q )
 		activeBoundaries = {};
-		#bndBoxes = {}
+		
 		for b in self.boundaryWires:
-			#bl = BRepBndLib.BRepBndLib();
-			#bbox = Bnd.Bnd_Box();
-			#bl.Add(bs,bbox);
-			#bndBoxes[b] = bbox;
 			activeBoundaries[b] = 0;
 			self.graphBuilder.addBoundaryWire(b);
 			
@@ -167,68 +163,102 @@ class Hatcher:
 			if len(activeBoundaries) == 0:
 				break; #finished hatching, no more active boundaries.
 
-			interSections = [];	#list of intersections for just this single hatch line	
-			#display.DisplayShape(hatchLine);
+			interSections = [];	#list of intersections for just this single hatch line
+			closePoints = []; #extrema that are not intersectionsf or this single hatch line
+			
 			for boundary in activeBoundaries.keys():
-				
-				#do not compute if bounding boxes are outside
-				#if wireBounds.IsOut(bndBoxes[boundary]):
-				#	#print "skipping this comparison"
-				#	continue;
 				brp = BRepExtrema.BRepExtrema_DistShapeShape();
 				brp.LoadS1(boundary);
 				brp.LoadS2(hatchLine );
 				numCompares+= 1;
 				result = brp.Perform();
-				if result and brp.Value() < 0.001:
+				
+				"""
+					tricky thing: for a given hatch line ( whether a line or a string of hexes ),
+					we want to check for both intersections and close points that would result in overdrawing.
+					if the line has zero intersections, then it is not in play, and should not be considered.
+					if the line has at least one intersection, then it is in play, and extrema that are not intersections should
+					also be included for later processing.
+				"""
+				if result and brp.Value() < 0.050: #if < tolerance we have an intersection. if < filament width we have a close sitation
 					#print "intersection found!"
 					#TODO need to handle the somewhat unusual cases that the intersection is
 					#on a vertex
 					for k in range(1,brp.NbSolution()+1):
 						activeBoundaries[boundary] = 1;
-						#try:
-						#make the node
-						#quite complex depending on where exactly the intersection is.
-						if brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsOnEdge:
-							#well this sux-- have to check to ensure that the edge is not a local
-							#minimum or maximum also.
-							if Wrappers.isEdgeLocalMinimum(Wrappers.cast(brp.SupportOnShape1(k)),brp.ParOnEdgeS1(k),brp.PointOnShape1(k)):
-								#print "Warning: edge appears to be a local min/max.  Is it a tangent?"
-								continue;
-							else:
-								#self.boundaryIntersectionsByEdge = {} #boundary intersections, hashed by edges
-								self.graphBuilder.addPointOnBoundaryEdge(Wrappers.cast(brp.SupportOnShape1(k)),brp.ParOnEdgeS1(k),brp.PointOnShape1(k));
-
-						if brp.SupportTypeShape2(k) == BRepExtrema.BRepExtrema_IsOnEdge:
-							if brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsVertex:
-								#the intersection is on a vertex of the boundary.
-								vertex = Wrappers.cast(brp.SupportOnShape1(k));
-								if Wrappers.isLocalMinimum(boundary, vertex):
-									print "vertex encountered that is a local minimum, skipping it"	
+						if brp.Value() < 0.001:	#there is at least one intersection on this wire. there may also be extrema 					
+							#try:
+							#make the node
+							#quite complex depending on where exactly the intersection is.
+							if brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsOnEdge:
+								#well this sux-- have to check to ensure that the edge is not a local
+								#minimum or maximum also.
+								if Wrappers.isEdgeLocalMinimum(Wrappers.cast(brp.SupportOnShape1(k)),brp.ParOnEdgeS1(k),brp.PointOnShape1(k)):
+									#print "Warning: edge appears to be a local min/max.  Is it a tangent?"
 									continue;
-							
-							#otherwise, vertex was not a local minimum, or was on an edge
-							poe = eg.PointOnAnEdge(Wrappers.cast(brp.SupportOnShape2(k)),brp.ParOnEdgeS2(k),brp.PointOnShape2(k));
-							interSections.append(poe);
-							
-						elif brp.SupportTypeShape2(k) == BRepExtrema.BRepExtrema_IsVertex:
-							#how on earth to handle this one?
-							#this actually means that a vertex can also have an infill node attached to it!
-							#for right now let's just ignore it.
-							print "WARNING: intersection on vertex of hatch line!"
-							pass;
-						else:
-							raise ValueError("I dont know how to handle this kind of intersection");
+								else:
+									#self.boundaryIntersectionsByEdge = {} #boundary intersections, hashed by edges
+									self.graphBuilder.addPointOnBoundaryEdge(Wrappers.cast(brp.SupportOnShape1(k)),brp.ParOnEdgeS1(k),brp.PointOnShape1(k));
+	
+							if brp.SupportTypeShape2(k) == BRepExtrema.BRepExtrema_IsOnEdge:
+								if brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsVertex:
+									#the intersection is on a vertex of the boundary.
+									vertex = Wrappers.cast(brp.SupportOnShape1(k));
+									if Wrappers.isLocalMinimum(boundary, vertex):
+										print "vertex encountered that is a local minimum, skipping it"	
+										continue;
+								
+								#otherwise, vertex was not a local minimum, or was on an edge
+								poe = eg.PointOnAnEdge(Wrappers.cast(brp.SupportOnShape2(k)),brp.ParOnEdgeS2(k),brp.PointOnShape2(k));
+								interSections.append(poe);
+								
+							elif brp.SupportTypeShape2(k) == BRepExtrema.BRepExtrema_IsVertex:
+								#how on earth to handle this one?
+								#this actually means that a vertex can also have an infill node attached to it!
+								#for right now let's just ignore it.
+								print "WARNING: intersection on vertex of hatch line!"
+								pass;
+							else:
+								raise ValueError("I dont know how to handle this kind of intersection");
+						else: #brp.Value is between 0.001 and 0.05
+
+							#we know this is a place where the boundary is close to a fill contour.
+							#our goal is to eventually remove it from the list. Support1 is the boundary.
+							#print "found extremum close but not intersecting, distance = %0.3f" %  ( brp.Value() )
+							if brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsOnEdge:
+								poeBound = eg.PointOnAnEdge(brp.SupportOnShape1(k), brp.ParOnEdgeS1(k),brp.PointOnShape1(k));
+								closePoints.append((poeBound,'EDGE',brp.SupportOnShape2(k)));								
+							elif brp.SupportTypeShape2(k) == BRepExtrema.BRepExtrema_IsVertex:
+								#here a vertex is closest to a fill line.
+								poeBound = eg.PointOnAnEdge(brp.SupportOnShape1(k), 0,brp.PointOnShape1(k));
+								closePoints.append((poeBound,'VERTEX',brp.SupportOnShape2(k)));		
+
 				else:
-					if brp.Value() < 0.05:
-						print "found extremum close but not intersecting, distance = %0.3f, edge1=%s, edge2=%s" %  ( brp.Value(),brp.SupportOnShape2(k),brp.SupportOnShape1(k) )
 					if activeBoundaries[boundary] == 1:
 						#finished with this wire. 
 						#print "Finished with wire %d" % boundary.__hash__();
 						del activeBoundaries[boundary];
 					
-
+			if len(interSections) % 2 == 1:
+				log.warn( "Detected Odd Number of intersection points. This is ignored for now.");
+				continue;
+			
+			if len(interSections) == 0:
+				#log.warn("Hatch has no intersections-- discarding");
+				continue;
+						
 			#at this point we have all the intersections for this hatch line.
+			#we also know we have at least one intersection.
+			
+			if len(closePoints) > 0:
+				#there were extrema ( points where this hatch is close to a boundary but doesnt intersect.
+				#we do this here instead of inline because we have to avoid hatch lines that are close, but do not actually
+				#intersect a wire. ( ie, they are 'just outside' of the boundary )
+				for cp in closePoints:
+					self.graphBuilder.addPointsTooClose(cp[0], cp[1]);
+					#display.DisplayShape(cp[0].edge );
+					#display.DisplayShape(cp[2] );
+					
 			#add the edges 'inside' the shape to the graph
 			#print "Splitting wire by %d intersection points" % len(interSections )
 			edgesInside = [];
@@ -243,9 +273,7 @@ class Hatcher:
 			#if len(interSections) == 0 and (len(boundariesFound) ==  len(self.boundaryWires)):
 			#	continueHatching = False;
 			
-			if len(interSections) % 2 == 1:
-				log.warn( "Detected Odd Number of intersection points. This is ignored for now.");
-				continue;
+
 			
 			log.debug("found %d intersection Nodes." % len(interSections));
 
@@ -369,7 +397,7 @@ if __name__=='__main__':
 	t = Wrappers.Timer();
 	h.hatch();
 	g = h.graphBuilder.graph;
-	debugGraph(g)
+	#debugGraph(g)
 	#h.hatch2();
 	print "Hatching Finished",t.finishedString();
 	#print "There are %d fill edges" % len(h.graph.fillEdges)
@@ -384,7 +412,7 @@ if __name__=='__main__':
 			displayEdgeFromGraph(edge,True);
 			#time.sleep(.5)
 	#display all edges in the graph
-	displayAllEdgesAndVertices(g)
+	#displayAllEdgesAndVertices(g)
 	
 	#display edges in walk-to-fill order
 	#each entry is a list of nodes that form a path

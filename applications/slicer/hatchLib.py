@@ -32,7 +32,7 @@ from OCC import BRepTools
 import Wrappers
 import TestDisplay
 import hexagonlib
-import edgegraph3 as eg
+import edgegraph4 as eg
 import cProfile
 import pstats
 from OCC.Display.SimpleGui import *
@@ -115,16 +115,13 @@ class Hatcher:
 	
 		#self.boundaryWires = Wrappers.makeWiresFromOffsetShape(shape);
 		self.boundaryWires = wireList;
-		
-		self.graph = eg.EdgeGraph();
-		#maps the wires into the node graph.
-		for w in wireList:
-			self.graph.addWire(w,'BOUND');
 			
 		self.bounds = bounds;
 		self.zLevel = zLevel;
 		self.HATCH_PADDING = 1; #TODO, should be based on unit of measure
 	
+		self.graphBuilder = eg.EdgeGraphBuilder();
+		
 	def  hatch(self):
 		"""take the a slice and compute hatches
 		
@@ -158,16 +155,14 @@ class Hatcher:
 		for b in self.boundaryWires:
 			#bl = BRepBndLib.BRepBndLib();
 			#bbox = Bnd.Bnd_Box();
-			#bl.Add(b,bbox);
+			#bl.Add(bs,bbox);
 			#bndBoxes[b] = bbox;
 			activeBoundaries[b] = 0;
+			self.graphBuilder.addBoundaryWire(b);
+			
 		print "There are %d boundary wires, %d hatch wires" % ( len(self.boundaryWires),len(hatchWires)  )
 		#intersect each line with each boundary				
 		for hatchLine in hatchWires:
-			
-			#b = BRepBndLib.BRepBndLib();
-			#wireBounds = Bnd.Bnd_Box();
-			#b.Add(hatchLine,wireBounds);
 
 			if len(activeBoundaries) == 0:
 				break; #finished hatching, no more active boundaries.
@@ -180,12 +175,12 @@ class Hatcher:
 				#if wireBounds.IsOut(bndBoxes[boundary]):
 				#	#print "skipping this comparison"
 				#	continue;
-					
 				brp = BRepExtrema.BRepExtrema_DistShapeShape();
 				brp.LoadS1(boundary);
 				brp.LoadS2(hatchLine );
 				numCompares+= 1;
-				if brp.Perform() and brp.Value() < 0.001:
+				result = brp.Perform();
+				if result and brp.Value() < 0.001:
 					#print "intersection found!"
 					#TODO need to handle the somewhat unusual cases that the intersection is
 					#on a vertex
@@ -201,12 +196,10 @@ class Hatcher:
 								#print "Warning: edge appears to be a local min/max.  Is it a tangent?"
 								continue;
 							else:
-								self.graph.divideEdge(Wrappers.cast(brp.SupportOnShape1(k)),brp.ParOnEdgeS1(k));
-						
-						if brp.SupportTypeShape2(k) == BRepExtrema.BRepExtrema_IsOnEdge:
-							
+								#self.boundaryIntersectionsByEdge = {} #boundary intersections, hashed by edges
+								self.graphBuilder.addPointOnBoundaryEdge(Wrappers.cast(brp.SupportOnShape1(k)),brp.ParOnEdgeS1(k),brp.PointOnShape1(k));
 
-							
+						if brp.SupportTypeShape2(k) == BRepExtrema.BRepExtrema_IsOnEdge:
 							if brp.SupportTypeShape1(k) == BRepExtrema.BRepExtrema_IsVertex:
 								#the intersection is on a vertex of the boundary.
 								vertex = Wrappers.cast(brp.SupportOnShape1(k));
@@ -226,9 +219,9 @@ class Hatcher:
 							pass;
 						else:
 							raise ValueError("I dont know how to handle this kind of intersection");
-
-					
 				else:
+					if brp.Value() < 0.05:
+						print "found extremum close but not intersecting, distance = %0.3f, edge1=%s, edge2=%s" %  ( brp.Value(),brp.SupportOnShape2(k),brp.SupportOnShape1(k) )
 					if activeBoundaries[boundary] == 1:
 						#finished with this wire. 
 						#print "Finished with wire %d" % boundary.__hash__();
@@ -242,27 +235,9 @@ class Hatcher:
 			edgesInside = eg.splitWire(hatchLine,interSections);
 
 			#returned value is a list of lists. each entry is a chain of edges
-			
-			# TODO: a speedup here is possible. why add all edges to the graph when only the
-			#first and last in the set will do?
-			#the goal is to get each sequence of edges that intersect the borders
-			
 			for e in edgesInside:
-				if len(e) == 1:
-					#display.DisplayShape(e[0]);
-					self.graph.addEdge(e[0],'FILL');
-				else:
-					#for f in e:
-						#display.DisplayShape(f);
-						#self.graph.addEdge(f,'FILL');
-					self.graph.addEdgeListAsSingleEdge(e,'FILL');#somehow has a bug!
-				#time.sleep(1)
-				
-			#if len(edgesInside) > 1:
-			#	self.graph.addEdgeListAsSingleEdge(edgesInside,'FILL');
-			#if len(edgesInside) == 1:
-			#	self.graph.addEdge(edgesInside[0],'FILL');
-			
+				self.graphBuilder.addFillEdges(e);
+							
 			#test to see if we can break out of the loop.
 			#we can stop if we've hit each boundary at least once
 			#if len(interSections) == 0 and (len(boundariesFound) ==  len(self.boundaryWires)):
@@ -277,12 +252,12 @@ class Hatcher:
 
 		log.info("Finished Hatching.");
 		print "%d Total Intersections computed." % ( numCompares )
-		
+		self.graphBuilder.buildGraph();
 		
 	
 	def _makeHatchLines22(self):
 		"make hatch lines using hexlib"
-		hex = hexagonlib.Hexagon(2.22,.07);
+		hex = hexagonlib.Hexagon(0.5,.02);
 		
 		xMin = self.bounds[0] - ( self.HATCH_PADDING);
 		yMin = self.bounds[1] - ( self.HATCH_PADDING);		 
@@ -340,27 +315,30 @@ def displayEdgeFromGraph(ed,refreshNow=False):
 		#these are partial segments of edges"
 		e = ed['node'].newEdge();
 		#display.DisplayShape( TestDisplay.makeEdgeIndicator(e) );
-		display.DisplayShape(e,update=refreshNow );	
+		display.DisplayShape(e,update=refreshNow );
+	if ed.has_key('edge'):
+		display.DisplayShape(ed['edge'],update=refreshNow);
+		
 	if ed.has_key('edgeList'):
 		#print "Found EdgeList"
 		#these are full edges
 		for e in ed['edgeList']:
 			display.DisplayShape(e,update=refreshNow );
-
 	
-def debugGraph(h):
-	print "There are %d nodes total" % ( len(h.graph.g.nodes()) )
-	for n in h.graph.allNodesRandomOrder():
-		print "%s, %d neighbors" % ( str(n), len ( h.graph.g.neighbors(n) ) )
+	
+def debugGraph(g):
+	print "There are %d nodes total" % ( len(g.nodes()) )
+	for n in g.nodes_iter():
+		print "%s, %d neighbors" % ( str(n), len ( g.neighbors(n) ) )
 		
-def displayAllEdgesAndVertices(h):
+def displayAllEdgesAndVertices(g):
 	i=0;
-	for en in h.graph.allEdgesRandomOrder():
+	for en in g.edges_iter(data=True):
 		i+=1;
-		displayEdgeFromGraph(en)	
+		displayEdgeFromGraph(en[2])	
 	print "%d edges total" % i
 	i=0
-	for n in h.graph.allNodesRandomOrder():
+	for n in g.nodes_iter():
 		i+=1;
 		p = gp.gp_Pnt(n[0],n[1],0);
 		display.DisplayShape(Wrappers.make_vertex(p),update=False);
@@ -390,34 +368,37 @@ if __name__=='__main__':
 	#runProfiled('h.hatch()',0.9);
 	t = Wrappers.Timer();
 	h.hatch();
-	debugGraph(h)
+	g = h.graphBuilder.graph;
+	debugGraph(g)
 	#h.hatch2();
 	print "Hatching Finished",t.finishedString();
-	print "There are %d fill edges" % len(h.graph.fillEdges)
+	#print "There are %d fill edges" % len(h.graph.fillEdges)
 	
-	if True:
-		for e in h.graph.fillEdges:
-			edge = h.graph.getEdge(e[0],e[1] );
-			if edge:
-				#print "Display Edge:",e[0],e[1]
-				displayEdgeFromGraph(h.graph.getEdge(e[0],e[1]),True);
-				#time.sleep(.5)
+	if False:
+		for e in g.edges_iter(data=True):
+			displayEdgeFromGraph(e[2]);
+
+	if False:
+		for e in h.graphBuilder.fillEdges:
+			edge = g.get_edge_data(e[0],e[1]);
+			displayEdgeFromGraph(edge,True);
+			#time.sleep(.5)
 	#display all edges in the graph
-	#displayAllEdgesAndVertices(h)
+	displayAllEdgesAndVertices(g)
 	
 	#display edges in walk-to-fill order
 	#each entry is a list of nodes that form a path
 
 	if False:
-		en = h.graph.walkEdges();
-		print "Walked Edges-- %d total paths" % len(en);
+		q = time.clock();
+		en = h.graphBuilder.walkEdges();
+		print "Walked Edges-- %d total paths, %0.3f sec" % (len(en), ( time.clock() - q ) );
 		for path in en:
-				print "path:"
 				for edge in Wrappers.pairwise(path):
 					#each pair is a set of nodes that form an edge
 					#print "Display Edge:",edge[0],edge[1]
-					displayEdgeFromGraph( h.graph.getEdge(edge[0],edge[1]),False);
-					#time.sleep(0.2)
+					displayEdgeFromGraph( g.get_edge_data(edge[0],edge[1]),False);
+					#time.sleep(.75)
 
 	print "Done.";
 	display.FitAll();

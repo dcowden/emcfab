@@ -32,16 +32,15 @@ def tP(point,places=3):
 	"""
 	return (round(point.X(),places), round(point.Y(),places) );
 	
-	
+
 class PointOnAnEdge:
 	"stores an intersection point"
-	def __init__(self,edge,param,point):
+	def __init__(self,edge,param,gppnt):
 		self.edge = edge;
-		self.hash = self.edge.__hash__();
 		self.param = param;
-		self.point = point;
-
-class 
+		self.hash = self.edge.__hash__();
+		self.point = gppnt;
+		self.node = tP(gppnt);
 """
 	Graph of edges.
 	Also provides finding a single edge in the chain,
@@ -52,11 +51,9 @@ class
 	functions to find edges using their native OCC edge object and parameter.
 	
 """
-class EdgeGraph:
+class EdgeGraphBuilder:
 
-	def __init__ (self):
-		"make an empty edgegraph"
-	
+	def __init__ (self):	
 		"""
 			dictionary contains each underlying edge, and all of 
 			the nodes lying on that edge. multiple edge nodes
@@ -69,203 +66,113 @@ class EdgeGraph:
 			the only difference is the parameters on the edge in that case.
 			
 		"""
-		# key=edgeHash: value=dict(key=nodehash,value=node)
-		self.edges = {}; #store nodes organized by hashed edge and parameter. dict of dicts
-		self.fillEdges = []; #ordered list of edges-- used when we walk the graph later.
+		self.boundaryEdges = {}; #store nodes organized by hashed edge
+		self.fillEdges = []; #ordered list of edges-- used when we walk the graph later. each 3-tuple (x, y, edgeObject )
+		self.graph = nx.Graph();
+	"""
+		adds an intersection point on the boundary 
+		for later addition to the grid.
 		
-		#graph for the edges and nodes. nodes are 2d tuples ( x,y)
-		#edges are nx edges with EdgeSegment objects in the attributes
-		self.g = nx.Graph();
-		self.startNode = False
+		After the entire 
+	"""
+	def addPointOnBoundaryEdge(self,edge,param,pnt):
+		"add the provided point as an intersection"
+		ec = self.boundaryEdges.setdefault(edge,[]); #ec will be empty list, or list of intersections for this edge
+		ec.append(PointOnAnEdge(edge,param,pnt)); 
 
-	def getEdge(self,n1,n2):
-		return self.g.get_edge_data(n1,n2);
-		
-	def divideEdge(self,edge,param):
-		"""
-			split the edge at the provided parameter,
-			creating two new edge nodes.
-			update internal structures accordingly.
-		"""
-		original = self.findEdge(edge,param);
-		
-		if original == None:
-			raise ValueError,"Could not find edge having parameter %0.3f" % (param);
-			
-		#param must be between the bounds on the original edge
-		assert param >= original.p1 and param <= original.p2;
-		
-		#compute nodes on either end.
-		n1 = tP(original.firstPoint);
-		n2 = tP(original.lastPoint);
-		
-		#add new node and edges
-		#n3 = tP( Wrappers.pointAtParameter(edge,param));
-		newNode1 = EdgeSegment(edge,original.p1,param,original.type);
-		newNode2 = EdgeSegment(edge,param,original.p2, original.type );
-
-		
-		self.addEdgeSegment(newNode1);
-		self.addEdgeSegment(newNode2);
-		
-		#delete the original
-		self.removeEdge(original);
-				
-		return [newNode1,newNode2];
-		
-	def findEdge(self,edge,param):
-		"""
-			Find the edge having the parameter of
-			the contained value. returns none if not found.
-			typically used to find an intersection value, 
-		"""
-		
-		#TODO: it would be good to find a faster way to 
-		#do this,ie, to hash by parameter or sort instead
-		#of looping through all
-		
-		for n in self.edges[edge.__hash__()].values():
-			if param >= n.p1 and param <= n.p2:
-				return n;
-			#else:
-			#	print "checking, param=%0.3f,p1=%0.3f,p2=%03.f" % ( param, n.p1, n.p2 );
-		return None;
-
-
-	def addEdgeSegment(self,edgeSegment):
-		"adds an EdgeSegment to the structure"
-		#adds the nodes and the edges all in one shot to the graph
-		#print "Adding Edge :%d " % edgeSegment.edge.__hash__();
-		#TestDisplay.display.showShape(edgeSegment.edge);
-		
-		#hack-- easy way to store the first node is to wathc for the first fill type node added.
-		if self.startNode == False and edgeSegment.type == 'FILL':
-			self.startNode = tP(edgeSegment.firstPoint);
-		p1 = tP(edgeSegment.firstPoint);
-		p2 = tP(edgeSegment.lastPoint);
-		self.g.add_edge(p1,p2,{'node': edgeSegment, 'type': edgeSegment.type} );
-		
-		#keep track of fill edges in the order they were added
-		if edgeSegment.type == 'FILL':
-			self.fillEdges.append( (p1,p2) );
-			
-		#store the edge in a dict by edge hash.
-		#the key of the second dict is hash+p1+p2-- ie, each distint edge, and paramter pair are stored
-		eh = edgeSegment.hash;
-		l = self.edges.setdefault(eh,{});
-		#if not self.edges.has_key(eh):
-		#	self.edges[eh] = {};		
-		#l = self.edges[eh];
-
-		l[edgeSegment] = edgeSegment;
-		
-	def addEdge(self,edge,etype):
-		"adds an edgeto the structure, using the endpoints of the edge as the nodes"
-		"this is equivalent to adding an edgesegment that spans the full edge"
+	"""
+		adds an edge and both its endpoints
+	"""
+	def addSingleBoundaryEdge(self,edge):
 		(f,l) = brepTool.Range(edge);
-		newEdge = EdgeSegment(edge,f,l,etype);
-		self.addEdgeSegment(newEdge);
-		#print "Adding %s Edge (%0.3f, %0.3f ) <--> (%0.3f %0.3f ) " % ( type, newEdge.firstPoint.X(), newEdge.firstPoint.Y(), newEdge.lastPoint.X(), newEdge.lastPoint.Y()  ) ;
-
-
-	def removeEdge(self,edgeSegment):
-		"remove an EdgeSegment from the structure"
-		#print "Removing Edge %s " % str(edgeSegment.key());
-		#remove from hash to find by original edge
-		e = edgeSegment.edge;
-		d =  self.edges[e.__hash__()];
-		#print edgeSegment.type 
-		d.pop(edgeSegment);
-		
-		assert edgeSegment.type == 'BOUND'
-			
-		#remove edge from nested graph
-		n1 = tP(edgeSegment.firstPoint);
-		n2 = tP(edgeSegment.lastPoint);
-		try:
-			self.g.remove_edge(n1,n2);
-		except:
-			pass;
-		#print "Removing %s Edge (%0.3f, %0.3f ) <--> (%0.3f %0.3f ) " % ( edgeSegment.type, edgeSegment.firstPoint.X(), edgeSegment.firstPoint.Y(), edgeSegment.lastPoint.X(), edgeSegment.lastPoint.Y()  ) ;
+		(firstPoint, lastPoint) = Wrappers.pointAtParameterList(edge, [f,l] );
+		self.addPointOnBoundaryEdge(edge,f,firstPoint);
+		self.addPointOnBoundaryEdge(edge,l,lastPoint);
 	
-	def addEdgeListAsSingleEdge(self,edgeList,etype):
-		"""
-			adds a list of edges in the graph as a single edge.
-			The list of edges becomes a 'pseudo-edge' with a single start and endpoint.
-			The edge cannot be divided, and its vertices are not stored in the edge graph
-		"""
-		
-		#TODO: adding this method has broken the EdgeSegment intervace.
-		#what is needed is an object that exposes first and last point, and a container for the underlying object
-		# an edgesegment ( a portion of an edge between two parameters ), a full edge ( requring no trimming ), 
-		# and a gropu of edges combined are all special subcases.
-		
-		firstEdge = edgeList[0];
-		lastEdge = edgeList[-1];
-		(f,l) = brepTool.Range(firstEdge);
-		(n,m) = brepTool.Range(lastEdge);
-		
-		#todo, this can be optimized, the underlying curve is computed twice here.
-		#something very odd is happening here. whey does using the last parameter and first paraterm
-		#work ? initially i had them backewards, which should have worked, but opposites worked.
-		#wierd. do i need to account for the sense?
-		#maybe i should just use wrappers.edge here
-		if firstEdge.Orientation() == TopAbs.TopAbs_FORWARD:
-			p1 = tP( Wrappers.pointAtParameter( firstEdge,f));
-		else:
-			p1 = tP( Wrappers.pointAtParameter ( firstEdge,l));
-		
-		if lastEdge.Orientation() == TopAbs.TopAbs_FORWARD:	
-			p2 = tP(Wrappers.pointAtParameter(lastEdge,m ));
-		else:
-			p2 = tP(Wrappers.pointAtParameter(lastEdge,n )); 
-		
-		#todo, i dont think we care about this key do we, as long as it is unique?
-		self.g.add_edge(p1,p2,{'edgeList': edgeList,"type":etype} );
-		if etype == 'FILL':
-			self.fillEdges.append( ( p1,p2 ));
-		
-	def addWire(self,wire,type):
-		"add all the edges of a wire. They will be connected together."
-		"each edge is added at its full length"
-		
+	"""
+		adds the edges of the wire
+	"""
+	def addBoundaryWire(self,wire):
 		#for finding an edge node
 		wr = Wrappers.Wire(wire);
 		eS = wr.edgesAsSequence();
 
 		for i in range(1,eS.Length()+1):
 			e = Wrappers.cast(eS.Value(i));
-			self.addEdge(e,type);
+			self.addSingleBoundaryEdge(e);	
 
-		#link last and first edge if the wire is closed
-		#if wire.Closed():
-		#	firstEdge = eS.Value(1);
-		#	lastEdge = eS.Value(eS.Length());
-		#	
-		#	self.linkPrev( firstNode,lastNode);
-		#	self.linkNext( lastNode,firstNode);			
+	"""
+		Add a list of edges.
+		If the list has only a single edge, it is simply added.
+		if the list contains multiple edges, the end points are used
+		to create the nodes of the list
+		
+		***
+		TODO: i think we could maybe speed this up because for fillwires
+		we already have the point and parameter from the intersection calcs--
+		why not preserve them rather than re-compute?
+		***
+	"""
+	def addFillEdges(self,edgeList):
 
-	def allNodesRandomOrder(self):
-		for n in self.g.nodes_iter():
-			yield n;
+		if len(edgeList) == 1:
+			(f,l) = brepTool.Range(edgeList[0]);
+			p1 = tP( Wrappers.pointAtParameter( edgeList[0],f));
+			p2 = tP( Wrappers.pointAtParameter( edgeList[0],l));
+		else:
+			firstEdge = edgeList[0];
+			lastEdge = edgeList[-1];
+			(f,l) = brepTool.Range(firstEdge);
+			(n,m) = brepTool.Range(lastEdge);
 			
-	def allEdgesRandomOrder(self):
-		"return all the edges"
+			if firstEdge.Orientation() == TopAbs.TopAbs_FORWARD:
+				p1 = tP( Wrappers.pointAtParameter( firstEdge,f));
+			else:
+				p1 = tP( Wrappers.pointAtParameter ( firstEdge,l));
+			
+			if lastEdge.Orientation() == TopAbs.TopAbs_FORWARD:	
+				p2 = tP(Wrappers.pointAtParameter(lastEdge,m ));
+			else:
+				p2 = tP(Wrappers.pointAtParameter(lastEdge,n ));
+		
+		self.fillEdges.append( (p1,p2,edgeList )); #would be nice if edge lists and edges looked the same
 
-		for e in self.g.edges_iter(data=True):
-			#wow, python perl-like hell
-			#each edge is a tuple of nodes.
-			#then we have to extract the edge dict and get the node value
-			#print e[2].keys();#
-			yield e[2];
+	"""
+		build a graph of the nodes.
+		
+		the reason we dont add them as we go along is because it is much faster
+		to add the nodes and build the edges needed, rather than actually
+		adding them and then dividing them as we go along.
+		
+		in the case where two nodes are connected by both fill and boundaries, we do not 
+		want to add boundary connections in that case.
+	"""
+	def buildGraph(self):
+		g = self.graph;
+		
+		#add fill edge nodes first
+		for e in self.fillEdges:
+			g.add_edge(e[0], e[1], {"type":'FILL', "edgeList":e[2]});
+					
+		#add boundary nodes. 
+		for (edge, pointList ) in self.boundaryEdges.iteritems():
+			#sort the points by parameter
+			sortedPoints = sorted(pointList,key = lambda p: p.param );
+			
+			for (poe1,poe2) in Wrappers.pairwise(sortedPoints):
+				#dont add if there is already an edge
+				if not g.has_edge(poe1.node,poe2.node):
+					#here we need to trim each edge to limit it to the desired parameters
+					g.add_edge(poe1.node,poe2.node,{"type":"BOUND", "edge": Wrappers.trimmedEdge(edge,poe1.param,poe2.param)});
 
+	"""
+		walk the edges in a sensible order
+	"""
 	def walkEdges(self):
-		"return a path that will walk all infill edges in the graph"
-		edgeList = traverse.travelAll(self.g,self.fillEdges,isFillEdge );
-		return edgeList;
-
+		return traverse.travelAll(self.graph,self.fillEdges,isFillEdge );
+				
 def isFillEdge(graph,n1,n2):
-	return graph[n1][n2]['type'] == 'FILL';
+	return graph[n1][n2]["type"] == 'FILL';
 	
 def splitWire(wire,ipoints):
 	"""
@@ -340,17 +247,8 @@ def splitWire(wire,ipoints):
 			edgeList.append(edges);
 	return edgeList;
 
-	
-"an edge in a connected set of edges."
-class EdgeSegment:
-	"one or more sub-portions of an edge"
-	def __init__(self,edge, edgetype):
-		self.edge = edge;
-		self.points = []; #list of point on edge objects
-		self.edgetype =edgetype;
-	
-	def addPoint(self,param,point):
-		"adds a point for this edge"
+
+
 
 def testSplitWire1():
 	"""
@@ -409,31 +307,6 @@ def testSplitWire2():
 	#print "length=%0.3f" % length;
 	assert length == 4.5;
 
-	
-def testDivideWire():
-	w = TestDisplay.makeCircleWire();
-	#w = TestDisplay.makeSquareWire();
-	#w = TestDisplay.makeReversedWire();
-	
-	wr = Wrappers.Wire(w);
-	
-	eg = EdgeGraph();
-	eg.addWire(w,'BOUND');
-	print eg.edges
-	
-	#the big test-- split one of the edges
-	e = eg.firstNode().edge;
-
-	[newEdge1,newEdge2] = eg.divideEdge(e,2.5);
-	print eg.edges
-	e2 = newEdge2.edge;
-	[newEdge3,newEdge4] = eg.divideEdge(e2,0.2333 );
-
-	for en in eg.allEdgesRandomOrder():
-		time.sleep(.1);
-		e = en.newEdge();
-		TestDisplay.display.showShape( TestDisplay.makeEdgeIndicator(e) );
-		TestDisplay.display.showShape(e );	
 
 		
 def splitPerfTest():
@@ -445,8 +318,6 @@ def splitPerfTest():
 	
 	WIDTH=0.1
 	edges = [];
-
-		
 	
 	#trick here. after building a wire, the edges change identity.
 	#evidently, BRepBuilder_MakeWire makes copies of the underliying edges.

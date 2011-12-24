@@ -66,8 +66,9 @@ class EdgeGraphBuilder:
 			the only difference is the parameters on the edge in that case.
 			
 		"""
-		self.boundaryEdges = {}; #store nodes organized by hashed edge
+		self.boundaryEdges = {}; #store boundary edges organized by hashed edge
 		self.fillEdges = []; #ordered list of edges-- used when we walk the graph later. each 3-tuple (x, y, edgeObject )
+		self.closeEdges = []; #list of boundary points that are too close to a fill contour
 		self.graph = nx.Graph();
 	"""
 		adds an intersection point on the boundary 
@@ -100,6 +101,15 @@ class EdgeGraphBuilder:
 		for i in range(1,eS.Length()+1):
 			e = Wrappers.cast(eS.Value(i));
 			self.addSingleBoundaryEdge(e);	
+
+	"""
+		Track pairs of edges that did not intersect, but were close to each other
+		ctype is either EDGE or VERTEX-- the type of point that was too close to the edge
+		boundaryPoint is a PointOnAnEdge object, the location on the boundary that was too close
+	"""
+	def addPointsTooClose(self,boundaryPoint,ctype):
+		#
+		self.closeEdges.append((boundaryPoint,ctype));
 
 	"""
 		Add a list of edges.

@@ -1,0 +1,13 @@
+{
+  "nozzleDiameter": 0.35,
+  "minLayerHeight": 0.2,
+  "fillDensity": 0.2,
+  "tableCenterX": 63,
+  "tableCenterY": 63,
+  "translateToPositiveCenter":true,
+  "layerHeight" : 1.0,
+  "trackWidth": 0.4,
+  "machineMaxFeedRate": 2000,
+  "filamentDiameter" : 1.75,
+  "fillingWallThickness": 1.8
+}      

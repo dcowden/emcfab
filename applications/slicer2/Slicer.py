@@ -14,6 +14,7 @@ import Wrappers
 import OCCUtil
 from Extruder import *
 from Constants import *;
+import time
 
 from OCC.Display.SimpleGui import *
 display, start_display, add_menu, add_function_to_menu = init_display()
@@ -171,17 +172,17 @@ class Slicer:
                 print "computing shell..."
                 #compute offset inwards by one track width               
                 offset =  (-1) * i *  self.extruder.trackWidth();
+                
                 innerEdge = OCCUtil.offsetWireList(faceWires,offset);
                 
+                #display.DisplayShape(innerEdge);
+                #time.sleep(1.0);
                 #now offset back outwards 1/2 track width. this creates a nice smooth path
                 pathCenter = OCCUtil.offsetWireList(innerEdge,self.extruder.trackWidth()/2);
-                
-                if not pathCenter:
-                    #couldnt create offset, so we are done.
-                    break;
+                #display.DisplayShape(pathCenter)
+                #display.EraseAll();
                                
                 for w in pathCenter:
-                    display.DisplayShape(w);
                     cSlice.fillWires.Append(w);
 
                 lastPath = pathCenter;
@@ -189,6 +190,7 @@ class Slicer:
             #ok at this point, the last path represents the last successfully computed shell, which 
             #should be the basis for filling
             #TODO LATER: EXECUTE FILLING
+            
         return cSlice;
     
     def display(self):
@@ -199,10 +201,10 @@ class Slicer:
         
         for slice in self.slices:
             
-            #for f in OCCUtil.hSeqIterator(slice.faces):
+            for f in OCCUtil.hSeqIterator(slice.faces):
             #    display.DisplayColoredShape(f,'WHITE');
-            for w in OCCUtil.hSeqIterator(slice.fillWires):
-                display.DisplayColoredShape(w, 'BLUE');
+               for w in OCCUtil.hSeqIterator(slice.fillWires):
+                 display.DisplayColoredShape(w, 'BLUE');
         
         start_display();
         

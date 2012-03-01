@@ -402,12 +402,16 @@ def cast(shape):
 #returns a list of wires.
 def offsetWireList(wireList,offsetAmount):
 
+    if len(wireList) == 0:
+        print "Warning: zero wires in the shape-- skipping"
+        return [];
+    
     bo = BRepOffsetAPI.BRepOffsetAPI_MakeOffset();
+
     for w in wireList:
         bo.AddWire(w);
-    
+
     bo.Perform(offsetAmount,TOLERANCE);  #this line crashes hard, but only sometimes.
-    #print "done offsetting..";
     if  not bo.IsDone():
         print "Warning: offset not computed!"
         return None;

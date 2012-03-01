@@ -63,6 +63,11 @@ def makeCircleWire():
     mw.Add(e1);
     return mw.Wire();   
 
+def makeCircleWire2():
+    circle = gp.gp_Circ(gp.gp_Ax2(gp.gp_Pnt(0,2,0),gp.gp().DZ()),.75);
+    e2 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(circle, gp.gp_Pnt(0,1.25,0),gp.gp_Pnt(0,1.25,0)).Edge();
+    return OCCUtil.wireFromEdges([e2]);
+
 def makeHeartWire():
     "make a heart wire"
     e1 = OCCUtil.edgeFromTwoPoints(gp.gp_Pnt(0,0,0), gp.gp_Pnt(4.0,4.0,0));

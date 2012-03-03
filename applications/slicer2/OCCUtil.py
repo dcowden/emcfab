@@ -13,7 +13,7 @@ from Constants import *;
 brt = BRepTools.BRepTools();
 brepTool = BRep.BRep_Tool();
 topoDS = TopoDS.TopoDS();
-
+import Wrappers
 import itertools
 
 
@@ -311,6 +311,65 @@ def pointAtParameter(edge,param):
     hc = brepTool.Curve(edge);
     c = GeomAdaptor.GeomAdaptor_Curve(hc[0]);
     return c.Value(param);
+      
+
+def paramAtDistanceFromPoint(curve,param,distance):
+    
+    #gcpnts = GCPnts.GCPnts_AbscissaPoint(curve,param,distance);
+    #return gcpnts.Parameter(); 
+    return param + distance;
+
+def divideEdgeAtParam(edge, param, distance,separation):
+    """
+        Divides an edge.
+        Edge is the edge to divide
+        param is the parameter on the edge that is the basis for the division
+        dist is the distance from the supplied parameter to move along the curve from the supplied parameter
+        separateWidth is the gap along the curve that should be left between the divided edges
+        
+        distance will be at least twice the separation distance
+        returns a list of edges.  there will be two edges if the sparation point occurs in the middle of
+        the edge, but only one if the separation point was too close to a vertex ( in which case, only one is returned )
+        if only one edge is returned, the vertex closer to the desired point should be used
+        
+        NOTE: curves are normally paramterized by distance, so it is a good assumption, though not always true, that
+        shortest distance is shorted difference between parameters. there is a good chance that simply subtracting parameters would
+        actually work!!!!
+    
+        
+        
+    """
+    (handleCurve, p1, p2  ) = brepTool.Curve(edge);
+    curve = GeomAdaptor.GeomAdaptor_Curve(handleCurve);
+        
+    if p1>p2: (p1,p2) = (p2,p1) #now p1 < p2 
+    
+    assert param > p1 and param < p2; #we expect param between p1 and p2.
+    
+    if distance < (2.0)*separation:
+        distance = (2.0)*separation;
+    
+    newP = paramAtDistanceFromPoint(curve,param,distance);
+    
+    if newP < p1 or newP > p2:
+        #requested distance moved us off the curve. try moving the other way on the curve
+        newP = paramAtDistanceFromPoint(curve,param,(-1.0)*distance);
+
+        if newP < p1: #still off the curve
+            newP = p1;
+            newP2 = paramAtDistanceFromPoint(curve,p1,separation);
+            return [edgeFromTwoPointsOnCurve(handleCurve,newP2,p2)];
+        if newP > p2:
+            newP = p2;
+            newP2 = paramAtDistanceFromPoint(curve,newP,(-1.0)*separation);
+            return [edgeFromTwoPointsOnCurve(handleCurve,p1,newP2)];
+    else:
+        #requested location was found between the parameters. find other point
+        newP2 = paramAtDistanceFromPoint(curve,newP,separation);
+        return [edgeFromTwoPointsOnCurve(handleCurve,p1,newP),  edgeFromTwoPointsOnCurve(handleCurve,newP2,p2) ];
+        
+    return (  edgeFromTwoPointsOnCurve(handleCurve),  edgeFromTwoPointsOnCurve(handleCurve) );
+        
 
 def shortenEdge(edge, point, dist):
     "given an edge, shorten it by the specified distance on the end closest to point"
@@ -496,12 +555,8 @@ def isFaceAtZLevel(zLevel,face):
     sDir = gp.gp_Dir(vec);
     return (abs(z - zLevel) < 0.0001 ) and ( zDir.IsParallel(sDir,0.0001))
 
-
-if __name__=='__main__':
     
-    from OCC.Display.SimpleGui import *
-    display, start_display, add_menu, add_function_to_menu = init_display()
-    
+def TestShortenEdge():
     #test trimming and such
     e1 = edgeFromTwoPoints ( gp.gp_Pnt(0,0,0), gp.gp_Pnt(1,1,0));
     display.DisplayColoredShape(e1,'BLUE');
@@ -511,7 +566,39 @@ if __name__=='__main__':
     p = (p1 + p2) / 2 
     display.DisplayColoredShape( splitEdge(e1,p,0.1), 'RED');
     #display.DisplayColoredShape( shortenEdge(e1,p1,0.1), 'WHITE');
-    display.DisplayColoredShape( shortenEdge(e1,p2,0.1), 'WHITE');
+    display.DisplayColoredShape( shortenEdge(e1,p2,0.1), 'WHITE');    
+
+def TestDivideEdge():
+    #lines are parameterized between 0 and line length
+    edge = edgeFromTwoPoints ( gp.gp_Pnt(0,0,0), gp.gp_Pnt(2,2,0));
+    (handleCurve, p1, p2  ) = brepTool.Curve(edge); #p1=0, #p2=2.828
+    print p1,p2
+    totalLen = (p2 - p1);
+    display.DisplayColoredShape(edge, 'BLUE');
+    #divide the edge into two edges, split at 0.25 units from param=1.414, with a gap of 0.1 between them
+    edges = divideEdgeAtParam(edge, 1.414, 0.25,0.1); #divide the edge into two edges
+    assert(len(edges)== 2);
+    (e1,e2) = ( edges[0],edges[1]);
+    (hc,q1,q2) = brepTool.Curve(e1);
+    print q1,q2;
+
+    (hc,q1,q2) = brepTool.Curve(e2);
+    print q1,q2;
+    print Wrappers.Edge(e1).distanceBetweenEnds();
+    assert (abs(Wrappers.Edge(e1).distanceBetweenEnds()- (1.414 + 0.25)) < 0.000001);
+    assert (abs(Wrappers.Edge(e2).distanceBetweenEnds() - (totalLen - 1.414 - 0.25 - 0.1)) < 0.0000001 ); 
+    display.DisplayColoredShape(edges,'RED');
+    
+    edges = divideEdgeAtParam(edge, 1.414, 2.5,0.1); #should return one edge of length 0.1 less than total
+    assert ( len(edges) ==1);
+    assert ( abs(Wrappers.Edge(edges[0]).distanceBetweenEnds() - (totalLen - 0.1)) < 0.0000001 );
+    display.DisplayColoredShape(edges,'GREEN');
+if __name__=='__main__':
+    
+    from OCC.Display.SimpleGui import *
+    display, start_display, add_menu, add_function_to_menu = init_display()
+    
+    TestDivideEdge();
     
     start_display();
     

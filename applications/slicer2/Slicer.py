@@ -15,6 +15,7 @@ import OCCUtil
 from Extruder import *
 from Constants import *;
 import time
+import hatchlib
 
 from OCC.Display.SimpleGui import *
 display, start_display, add_menu, add_function_to_menu = init_display()
@@ -189,7 +190,14 @@ class Slicer:
                     
             #ok at this point, the last path represents the last successfully computed shell, which 
             #should be the basis for filling
-            #TODO LATER: EXECUTE FILLING
+            #opportunity for improvement: this bounds can and should be different for each layer.
+            #for lines it is cheaper to compute once for the whole slice object. but for
+            #hexagons it is cheaper to compute them only for the area needed.
+            
+            #ireList,zLevel,bounds,spacing,fillAngle
+            s = self.solid;
+            h = Hatcher(lastPath,cSlice.zLevel,(s.xMin,s.yMin,s.xMax,s.yMax), self.extruder.trackWidth(), cSlice.fillAngle );
+            h.hatch();
             
         return cSlice;
     

@@ -5,7 +5,7 @@ import itertools
 # OCC imports
 from OCC import BRep,gp,GeomAbs,GeomAPI,GCPnts,TopoDS,BRepTools,GeomAdaptor,TopAbs,TopTools,TopExp,Approx,BRepLib,Bnd,BRepBndLib
 from OCC import BRepGProp,BRepLProp, BRepBuilderAPI,BRepPrimAPI,GeomAdaptor,GeomAbs,BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI,BRepAdaptor
-from OCC import BRepExtrema
+from OCC import BRepExtrema,TColgp
 from OCC import ShapeAnalysis
 from OCC.Utils import Topo
 from OCC import ShapeFix,ShapeExtend
@@ -91,22 +91,23 @@ def makeExtrusionWire( shellWire, startPoint, trackWidth):
     wb = WireBuilder();
 
     #make an edge from start point to located point.
-    wb.add ( OCCUtil.edgeFromTwoPoints(startPoint, p1 ) );
+    #wb.add ( OCCUtil.edgeFromTwoPoints(startPoint, p1 ) );
+    dist = p1.Distance(p2)
+    
     
     if brp.SupportTypeShape2(1) == BRepExtrema.BRepExtrema_IsOnEdge:
-        
+  
         #closest point is a point along an edge
         interSectingEdge = OCCUtil.cast(brp.SupportOnShape2(1));
         p = brp.ParOnEdgeS2(1);
-        
+    
         #compute parameter along one curve
         #break the edge into two new edges. account for a split distance between them.
         (e1,e2)= OCCUtil.splitEdge(interSectingEdge,p);
-        #display.DisplayColoredShape(e1,'BLUE');
-
-        #add first edge as is
-        wb.add ( e1 );
-     
+        
+         
+        wb.add(e1);
+                
         #add second one shortened, on the end near the vertex
         wb.add ( OCCUtil.shortenEdge(e2,p1,trackWidth)); #hack, must find parameter closest to this end
 

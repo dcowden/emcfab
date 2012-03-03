@@ -55,7 +55,16 @@ class Hatcher:
 		self.HATCH_PADDING = 0.1; #TODO, should be based on unit of measure
 	
 		self.graphBuilder = eg.EdgeGraphBuilder();
+	
+	def wires(self):
+		"""
+			return a list of wires that resulted from the hatching operation.
+			TODO, right now there is a mess, need to return this 
 		
+		"""
+		return [];
+	
+	
 	def  hatch(self):
 		"""take the a slice and compute hatches
 		

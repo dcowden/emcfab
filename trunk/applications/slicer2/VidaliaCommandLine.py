@@ -42,7 +42,7 @@ if __name__=='__main__':
     #TODO: need to be able to pass in progress monitor here for occasional chances to cancel and to report progress
     #
     slicer.execute(); #run the slice operation. this runs a potentially long time.
-    #slicer.display(); #show the result
+    slicer.display(); #show the result
     
     #compute output files based on input file location
     (path,file) = os.path.split(inputFile);

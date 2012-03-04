@@ -5,7 +5,9 @@ import time,os,sys,string;
 
 from OCC import BRep,gp,GeomAbs,GeomAPI,GCPnts,TopoDS,BRepTools,GeomAdaptor,TopAbs,TopTools,TopExp,Approx,BRepLib
 from OCC import BRepGProp,BRepLProp, BRepBuilderAPI,BRepPrimAPI,GeomAdaptor,GeomAbs,BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI,BRepAdaptor
-
+from OCC import BRepExtrema,TColgp
+from OCC import ShapeAnalysis
+from OCC import ShapeFix,ShapeExtend
 from OCC.Utils.Topology import Topo
 
 from Constants import *;
@@ -486,7 +488,7 @@ def offsetWireList(wireList,offsetAmount):
             bb.Init(shape,TopAbs.TopAbs_WIRE);
             while bb.More():
                 w = topoDS.wire(bb.Current());
-                returnWires.append(w);
+                returnWires.append(cast(w));
                 bb.Next();        
             bb.ReInit();        
     return returnWires;            
@@ -555,6 +557,32 @@ def isFaceAtZLevel(zLevel,face):
     sDir = gp.gp_Dir(vec);
     return (abs(z - zLevel) < 0.0001 ) and ( zDir.IsParallel(sDir,0.0001))
 
+"""
+
+    Smart Wire Builder..
+    accepts edges, and then uses WireOrder to connect them together into the best possible order.
+    edges
+
+"""
+class WireBuilder:
+    def __init__(self):
+        self.edges = [];
+        self.fixer = ShapeFix.ShapeFix_Wire();
+        self.wireData = ShapeExtend.ShapeExtend_WireData();
+
+    def add(self,edge):
+        self.edges.append(edge)
+        self.wireData.Add(edge);
+
+    "returns a list of wires, representing the fewest possible wires to connect the edges"    
+    def wire(self):
+        #this method will only work when exactly one wire is expected.
+        #print "Ordering Wires. We have %d Edges" % len(self.edges)
+        self.fixer.Load(self.wireData.GetHandle());
+        self.fixer.SetClosedWireMode(True)
+        self.fixer.FixReorder();
+        self.fixer.FixConnected();
+        return self.fixer.Wire();
     
 def TestShortenEdge():
     #test trimming and such

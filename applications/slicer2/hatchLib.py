@@ -52,7 +52,7 @@ class Hatcher:
 		self.spacing = spacing;	
 		self.bounds = bounds;
 		self.zLevel = zLevel;
-		self.HATCH_PADDING = 0.1; #TODO, should be based on unit of measure
+		self.HATCH_PADDING = 5.0; #TODO, should be based on unit of measure
 	
 		self.graphBuilder = eg.EdgeGraphBuilder();
 	
@@ -123,11 +123,12 @@ class Hatcher:
 				also be included for later processing.
 			"""
 			if result and brp.Value() < 0.050: #if < tolerance we have an intersection. if < filament width we have a close sitation
-				#print "intersection found!"
+				print "intersection found!"
 				#TODO need to handle the somewhat unusual cases that the intersection is
 				#on a vertex
 				for k in range(1,brp.NbSolution()+1):
-					if brp.Value() < 0.001:	#there is at least one intersection on this wire. there may also be extrema 					
+					if brp.Value() < 0.001:	#there is at least one intersection on this wire. there may also be extrema
+						print "spot on match" 					
 						#try:
 						#make the node
 						#quite complex depending on where exactly the intersection is.
@@ -135,7 +136,7 @@ class Hatcher:
 							#well this sux-- have to check to ensure that the edge is not a local
 							#minimum or maximum also.
 							if OCCUtil.isEdgeLocalMinimum(OCCUtil.cast(brp.SupportOnShape1(k)),brp.ParOnEdgeS1(k),brp.PointOnShape1(k)):
-								#print "Warning: edge appears to be a local min/max.  Is it a tangent?"
+								print "Warning: edge appears to be a local min/max.  Is it a tangent?"
 								continue;
 							else:
 								#self.boundaryIntersectionsByEdge = {} #boundary intersections, hashed by edges
@@ -159,7 +160,7 @@ class Hatcher:
 						else:
 							raise ValueError("I dont know how to handle this kind of intersection");
 					else: #brp.Value is between 0.001 and 0.05
-
+						print "intersection is close";
 						#we know this is a place where the boundary is close to a fill contour.
 						#our goal is to eventually remove it from the list. Support1 is the boundary.
 						#print "found extremum close but not intersecting, distance = %0.3f" %  ( brp.Value() )
@@ -176,7 +177,7 @@ class Hatcher:
 				continue;
 			
 			if len(interSections) == 0:
-				#log.warn("Hatch has no intersections-- discarding");
+				print "Hatch has no intersections-- discarding";
 				continue;
 						
 			#at this point we have all the intersections for this hatch line.
@@ -208,7 +209,26 @@ class Hatcher:
 		print "%d Total Intersections computed." % ( numCompares )
 		self.graphBuilder.buildGraph();
 		
-	
+	"""
+		Returns a list of wires, that will fill the face supplied at creation.
+		There can be several wires since it may not be possible to fill the entire area
+		with a single path.
+	"""
+	def getWires(self):
+		q = time.clock();
+		en = self.graphBuilder.walkEdges();
+		
+		#print "Walked Edges-- %d total paths, %0.3f sec" % (len(en), ( time.clock() - q ) );
+		wires = [];
+		for path in en:
+			wb = OCCUtil.WireBuilder();
+			for edge in Util.pairwise(path):
+				#each pair is a set of nodes that form an edge in the graph. We need to ge the OCC edges from each
+				for occEdge in self.graphBuilder.getEdges(edge[0],edge[1]):
+					wb.add( OCCUtil.cast(occEdge) );
+				wires.append(wb.wire() );
+		return wires;
+		
 	def _makeHexHatchLines(self):
 		"make hatch lines using hexlib"
 		hex = hexagonlib.Hexagon(0.5,.02);
@@ -303,6 +323,11 @@ if __name__=='__main__':
 	#runProfiled('h.hatch()',0.9);
 	t = Util.Timer();
 	h.hatch();
+	q = time.clock();
+	ww = h.getWires();
+	print "got Wires in %0.3f" % ( time.clock() - q );
+	display.DisplayShape(ww,False );
+	display.FitAll();
 	g = h.graphBuilder.graph;
 	#debugGraph(g)
 	#h.hatch2();
@@ -324,7 +349,9 @@ if __name__=='__main__':
 	#display edges in walk-to-fill order
 	#each entry is a list of nodes that form a path
 
+	"""
 	if True:
+		
 		q = time.clock();
 		en = h.graphBuilder.walkEdges();
 		print "Walked Edges-- %d total paths, %0.3f sec" % (len(en), ( time.clock() - q ) );
@@ -334,7 +361,7 @@ if __name__=='__main__':
 					#print "Display Edge:",edge[0],edge[1]
 					displayEdgeFromGraph( g.get_edge_data(edge[0],edge[1]),False);
 					#time.sleep(.75)
-
+	"""
 	print "Done.";
 	display.FitAll();
 	start_display()

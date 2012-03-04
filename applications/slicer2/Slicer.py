@@ -5,6 +5,7 @@
     
 """
 import hashlib
+import time
 
 from OCC import TopTools,BRepBndLib,Bnd,gp,BRepBuilderAPI,GProp,BRepGProp,BRepPrimAPI,BRepAlgoAPI
 from OCC.Utils.Topology import Topo
@@ -14,12 +15,28 @@ import Wrappers
 import OCCUtil
 from Extruder import *
 from Constants import *;
-import time
+
 import hatchlib
 
 from OCC.Display.SimpleGui import *
 display, start_display, add_menu, add_function_to_menu = init_display()
 
+
+"""
+    Slices a solid,
+    
+    Still to implement:
+        (1) filling doesnt work right
+        (2) join paths together into nice single paths
+        (3) write out svg and gcode
+        
+    Performance ideas:  
+       (1) psyco
+       (2) go to 2d for filling-- saves performance on computation, and avoids transforms on copying
+       (3) remove/optimize close point computation during filling?
+
+
+"""
 class Slicer:    
     """
         Load the shape, and compute slicing options
@@ -27,7 +44,8 @@ class Slicer:
     def __init__(self,shape,options):
         
         self.solid = Wrappers.Solid(shape);
-        self.slices = [];
+        self.slices = []; #a list of slices
+        self.sliceMap = {}; #distinct slices. different because some slices are re-used instead of calculated again
         self.options = options;
         
         self.__setDefaultOptions();
@@ -144,76 +162,76 @@ class Slicer:
         for face in Topo(cutShape).faces():
             if OCCUtil.isFaceAtZLevel(zLevel,face):
                 foundFace = True;
-                cSlice.addFace(face);
+                cSlice.addFace(Face(face));
                 
         mySum = cSlice.computeFingerPrint();
 
+        #
+        #uncomment to enable layer copying.
+        #
         #check for identical slices. return matching ones if found.
-        for otherSlice in self.slices:
-            if mySum == otherSlice.fingerPrint:
-                #this fingerprint is identical to another one, so transform it instead of computing again
-                return otherSlice.copyToZ(zLevel,layerNo);
+        #if self.sliceMap.has_key(mySum):
+            #print "i can copy this layer!"
+        #    return self.sliceMap[mySum].copyToZ(zLevel,layerNo);
+                
         
-        #else, continue to fill this one         
-        
+        self.sliceMap[mySum] = cSlice;
+        print "This slice has %d faces." % len(cSlice.faces)
         #fill each face in the slice
-        for f in OCCUtil.hSeqIterator(cSlice.faces):
-        
+        for f in cSlice.faces: #Face object
+
             #how many shells do we need?
             #attempt to create the number of shells requested by the user, plus one additional for infill
 
             numShells = (int)( self.options.fillingWallThickness / self.extruder.trackWidth()) + 1;
             numShells = max(2,numShells);
-            
-            faceWires = OCCUtil.wireListFromFace(f);
+            faceWires = OCCUtil.wireListFromFace(f.face);
             
             #regardless, the last successfully created offset is used for hatch infill
-            lastPath = None;
+            shells = [];
             for i in range(1,numShells):
-                print "computing shell..."
                 #compute offset inwards by one track width               
-                offset =  (-1) * i *  self.extruder.trackWidth();
-                
+                offset =  (-1) * i *  self.extruder.trackWidth();                
                 innerEdge = OCCUtil.offsetWireList(faceWires,offset);
                 
-                #display.DisplayShape(innerEdge);
-                #time.sleep(1.0);
-                #now offset back outwards 1/2 track width. this creates a nice smooth path
+                if len(innerEdge) == 0:
+                    #performance: dont offset if there were already no wires
+                    continue;
+                
                 pathCenter = OCCUtil.offsetWireList(innerEdge,self.extruder.trackWidth()/2);
-                #display.DisplayShape(pathCenter)
-                #display.EraseAll();
-                               
-                for w in pathCenter:
-                    cSlice.fillWires.Append(w);
+                if len(pathCenter) > 0:
+                    shells.append(pathCenter);
 
-                lastPath = pathCenter;
-                    
-            #ok at this point, the last path represents the last successfully computed shell, which 
-            #should be the basis for filling
-            #opportunity for improvement: this bounds can and should be different for each layer.
-            #for lines it is cheaper to compute once for the whole slice object. but for
-            #hexagons it is cheaper to compute them only for the area needed.
-            
-            #ireList,zLevel,bounds,spacing,fillAngle
-            s = self.solid;
-            h = Hatcher(lastPath,cSlice.zLevel,(s.xMin,s.yMin,s.xMax,s.yMax), self.extruder.trackWidth(), cSlice.fillAngle );
-            h.hatch();
-            
+            if len(shells) > 1:
+                #use last one for filling.
+                print "%d shells were available for Hatching" % len(shells)
+                lastShell = shells.pop();
+                s = self.solid;
+                h = hatchlib.Hatcher(lastShell,cSlice.zLevel,(s.xMin,s.yMin,s.xMax,s.yMax), self.extruder.trackWidth(), cSlice.fillAngle );
+                h.hatch();
+                ww = h.getWires();
+                print "Hatching complete: %d fillWires created" % len(ww )
+                f.fillWires = ww;
+            else:
+                print "WARNING: not filling this layer, too few shells were computable"
+            #add shells 
+            for s in shells:
+                for ss in s:
+                    f.shellWires.append(ss);
+                
         return cSlice;
     
     def display(self):
         """
             for debugging purposes, display the result
-        """        
-
-        
-        for slice in self.slices:
-            
-            for f in OCCUtil.hSeqIterator(slice.faces):
-            #    display.DisplayColoredShape(f,'WHITE');
-               for w in OCCUtil.hSeqIterator(slice.fillWires):
-                 display.DisplayColoredShape(w, 'BLUE');
-        
+        """                
+        for slice in self.slices:            
+            for f in slice.faces:
+               for w in f.fillWires:
+                 display.DisplayColoredShape(w, 'BLUE',False);
+               for w in f.shellWires:
+                 display.DisplayColoredShape(w,'GREEN',False);
+        display.FitAll();
         start_display();
         
 class Slice:
@@ -236,9 +254,8 @@ class Slice:
     def __init__(self):
         self.zLevel = None;
         self.thickness = None;               
-        self.faces = TopTools.TopTools_HSequenceOfShape();
+        self.faces = [];
         self.layerNo = None;
-        self.fillWires = TopTools.TopTools_HSequenceOfShape();
         self.fillAngle = None;
         self.fingerPrint = None;
         
@@ -247,7 +264,8 @@ class Slice:
         #self.faces.Append(ts.Face(copier.Shape()));
         #self.faces.append(face);
         #copier.Delete();
-        self.faces.Append(face);
+        self.faces.append( face);
+
         
     def computeBounds(self):
         "Get the bounds of all the faces"
@@ -280,12 +298,12 @@ class Slice:
             "slice properties that would make them different besides the boundaries"
             m.update(str(self.fillAngle));
             m.update(NUMFORMAT % self.thickness);
-            m.update(NUMFORMAT % self.faces.Length() );
+            m.update(NUMFORMAT % len(self.faces) );
             gp = GProp.GProp_GProps();
             bg = BRepGProp.BRepGProp();
     
-            for f in OCCUtil.hSeqIterator(self.faces):
-                bg.SurfaceProperties(f,gp);
+            for f in self.faces:
+                bg.SurfaceProperties(f.face,gp);
     
             m.update(NUMFORMAT % gp.Mass() );
             m.update(NUMFORMAT % gp.CentreOfMass().X() );
@@ -311,18 +329,37 @@ class Slice:
         bt = BRepBuilderAPI.BRepBuilderAPI_Transform(xform);
         
         #copy all of the faces
-        for f in OCCUtil.hSeqIterator(self.faces):
-            bt.Perform(f,True);
-            theCopy.addFace( OCCUtil.cast(bt.Shape()));
-        
-        #copy all of the fillWires
-        for w in OCCUtil.hSeqIterator(self.fillWires):
-            bt.Perform(w,True);
-            #TestDisplay.display.showShape(bt.Shape() );
-            theCopy.fillWires.Append(OCCUtil.cast(bt.Shape()));
+        for f in self.faces:
+            
+            bt.Perform(f.face,True);
+            newFace = Face(OCCUtil.cast(bt.Shape()));
+            
+            #copy shells
+            for shell in f.shellWires:
+                #print shell
+                bt.Perform(shell,True);
+                newFace.shellWires.append(OCCUtil.cast(bt.Shape()));
+                
+            #copy fillWires
+            for fill in f.fillWires:
+                bt.Perform(fill,True);
+                newFace.shellWires.append(OCCUtil.cast(bt.Shape())); 
+            theCopy.addFace( newFace);
             
   
         return theCopy;        
+
+"""
+    A single Face inside of a slice.
+    A single slice can have several faces, each of which needs to be shelled and filled
+    
+"""
+class Face:
+    def __init__(self,face):
+        self.face = face;
+        self.shellWires = [];
+        self.fillWires = [];
+
 
 class ExtrusionPath:
     """

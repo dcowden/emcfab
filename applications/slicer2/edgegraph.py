@@ -181,6 +181,28 @@ class EdgeGraphBuilder:
 	"""
 	def walkEdges(self):
 		return traverse.travelAll(self.graph,self.fillEdges,isFillEdge );
+	
+	"""
+		given an edge, return a list of OCC edges.
+		This method unravels the varios performance enhancmenents that might have been performed.
+		In particular: an edge can be:
+		    * a segment of a longer edge
+		    * a single edge
+		    * a list of edges, which should be converted into a wire
+	"""
+	def getEdges(self,node1,node2):
+		ed = self.graph.get_edge_data(node1,node2);
+		if ed.has_key('node'):
+			#these are partial segments of edges"
+			return [ed['node'].newEdge()];
+
+		if ed.has_key('edge'):
+			return [ed['edge']];
+
+		if ed.has_key('edgeList'):
+			#print "Found EdgeList"
+			#these are full edges
+			return ed['edgeList'];
 				
 def isFillEdge(graph,n1,n2):
 	return graph[n1][n2]["type"] == 'FILL';

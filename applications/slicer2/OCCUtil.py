@@ -1,9 +1,9 @@
 """
     Utility functions related to OCC
 """
-import time,os,sys,string;
+import time,os,sys,string,math;
 
-from OCC import BRep,gp,GeomAbs,GeomAPI,GCPnts,TopoDS,BRepTools,GeomAdaptor,TopAbs,TopTools,TopExp,Approx,BRepLib
+from OCC import BRep,gp,GeomAbs,Geom,GeomAPI,GCPnts,TopoDS,BRepTools,GeomAdaptor,TopAbs,TopTools,TopExp,Approx,BRepLib
 from OCC import BRepGProp,BRepLProp, BRepBuilderAPI,BRepPrimAPI,GeomAdaptor,GeomAbs,BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI,BRepAdaptor
 from OCC import BRepExtrema,TColgp
 from OCC import ShapeAnalysis
@@ -15,9 +15,11 @@ from Constants import *;
 brt = BRepTools.BRepTools();
 brepTool = BRep.BRep_Tool();
 topoDS = TopoDS.TopoDS();
+
 import Wrappers
 import itertools
-
+import TestObjects
+import Util
 
 def pnt(x,y):
     return gp.gp_Pnt(x,y,0);
@@ -27,6 +29,15 @@ def make_vertex(pnt):
     s = BRepBuilderAPI.BRepBuilderAPI_MakeVertex(pnt);
     s.Build();
     return s.Shape();
+
+def listFromTopToolsListOfShape(listOfShape):
+    newList = [];
+    iterator = TopTools.TopTools_ListIteratorOfListOfShape(listOfShape);
+    while iterator.More():
+        newList.append(cast(iterator.Value()));
+        iterator.Next();
+        
+    return newList;
 
 def listFromHSequenceOfShape(seq):
     "return a list from a sequence o shape"
@@ -283,6 +294,17 @@ def makeWiresFromOffsetShape(shape):
         bb.ReInit();        
     return resultWires;    
 
+def childShapes(shape):
+    """
+        List immediate child shapes of the provided shape
+    """
+    children = [];
+    it = TopoDS.TopoDS_Iterator(shape)
+    while it.More():
+        children.append(cast(it.Value()));
+        it.Next()
+    return children;
+    
 def wireFromEdges(edgeList):
     "TODO: might need to use sortwires to make sure it is i nthe right order"
     mw = BRepBuilderAPI.BRepBuilderAPI_MakeWire();
@@ -472,7 +494,7 @@ def offsetWireList(wireList,offsetAmount):
     for w in wireList:
         bo.AddWire(w);
 
-    bo.Perform(offsetAmount,TOLERANCE);  #this line crashes hard, but only sometimes.
+    bo.Perform(offsetAmount,0.0);  #if this crashes, try using a small non zero number for the last argument
     if  not bo.IsDone():
         print "Warning: offset not computed!"
         return None;
@@ -493,6 +515,184 @@ def offsetWireList(wireList,offsetAmount):
             bb.ReInit();        
     return returnWires;            
 
+"""
+    returns the closest vertex to the provided point, on the provided wire list 
+    as well as the edge it is on.
+    This method appeared faster than BRepExtremaDistShapeShape
+    would projecting the point be faster?
+"""
+def nearestVertex(wireList,point):
+    dist = 9999999;
+    (nw,nv) = (None,None);
+    for w in wireList:
+        tw = Topo(w);
+        for v in tw.vertices():                    
+            p = brepTool.Pnt(v);
+            if point.Distance(p) < dist:
+                dist = point.Distance(p);                        
+                (nw,nv) =  (w,v );          
+    return ( nw,nv);
+
+   
+"""
+    Given a wire and a vertex, return a new wire
+    that is trimmed so that there is no overlap
+    
+    returns (new wire, edge that was trimmed, point on the edge )
+    new wire will not be closed
+    
+    TODO: this version of the method simply moves along the cuves by the trimWidth.
+    though this is easy, it is not most accurate, especially for curves that have high
+    overlap ( like very thin things ). There is a lot of code computing normal vectors here,
+    this code is still here, though not necessary if we take this simple approach.
+    
+    The shortenEdge function is simpler if we dont care about accounting for the angles involved.
+"""
+def getTrimmedWire(wire,startPoint, trimWidth):
+
+    (w,vertex) = nearestVertex([wire],startPoint);
+    
+    eL = []
+    tw = Topo(wire);
+    for e in tw.edges_from_vertex(vertex):
+        eL.append(e);
+      
+    if len(eL) > 2:  raise Exception("Cannot trim wire at vertex with more than two edges");    
+    if len(eL) == 0:  raise Exception("Vertex has no edges, cannot trim")
+    
+    if not brepTool.IsClosed(wire):
+        raise Exception ("Do not know how to trim a wire that is not closed!")
+
+    #if there is only one edge, it must be a circle or spline, because it is still closed
+    #we just need to trim the end a bit
+    if len(eL) == 1:
+       edge1 = eL[0]; 
+       (hCurve1, startp1, endp1) = brepTool.Curve(edge1);
+       curve1 = hCurve1.GetObject();
+       vPoint = brepTool.Pnt(vertex);
+       pEnd = endp1 - (trimWidth / 2.0 );
+       newEdge = trimmedEdge(edge1,startp1, pEnd );
+       
+       return (w,newEdge,curve1.Value(pEnd));
+   
+    #else len(eL) == 2
+    edge1 = eL[0];
+    edge2 = eL[1];
+    def D1AtPoint(curve,p):
+        qq = gp.gp_Pnt();
+        tt = gp.gp_Vec();
+        curve.D1(p,qq,tt);
+        return ( qq,tt);
+    
+    #measure the angle between the wires
+    #TODO: probably can factor this out somewhere. didnt, becaues
+    #moving the logic might result in getting Curve objects more
+    (hCurve1, startp1, endp1) = brepTool.Curve(edge1);
+    (hCurve2, startp2, endp2) = brepTool.Curve(edge2);
+
+    curve1 = hCurve1.GetObject();
+    curve2 = hCurve2.GetObject();
+    #print dir(curve1)
+    #print dir(hCurve1)
+    vPoint = brepTool.Pnt(vertex);
+
+    #TODO: performance improvement/refactor? right now this code is organized to be 
+    #shortest but in the line case we do two computations    
+
+    #which end of each edge is at the vertex? I think we should be able to know by
+    #some convention
+
+
+    curve2Reversed = False;
+    curve1Reversed = False;
+    (p1,v1) = D1AtPoint(curve1,startp1);
+    if p1.Distance(vPoint) > 0.001:
+        #recompute, we picked wrong end
+        curve1Reversed = True;
+        (p1,v1) = D1AtPoint(curve1,endp1);
+        
+    (p2,v2) = D1AtPoint(curve2,startp2);
+    if p2.Distance(vPoint) > 0.001:
+        #recompute, we picked wrong end
+        curve2Reversed = True;
+        (p2,v2) = D1AtPoint(curve2,endp2);
+        
+    if curve1.IsKind( "Geom_Line" ) and curve2.IsKind( "Geom_Line" ):
+        #ok now in theory v1 and v2 represent the slopes
+        #print "Both Curves are Lines"     
+        angle = abs( math.pi - v1.Angle(v2));
+        
+        if angle == 0:
+            print "Trimmed Wire: two edges are lines and are right on top of each other!"
+            #remove curve two completely.
+            trimDistance = endp2 - startp2;
+        elif  angle < (math.pi / 2):
+            trimDistance =  trimWidth / 2 * (1 + (1 / math.sin(angle)));
+        else:
+            trimDistance = trimWidth /2 ;
+    else:
+        #print "At least one curve is a curve"
+        #at least one of the curves is not a line. here, we'll sample each curve looking for where they
+        # are apart by the correct distance
+        #find parameterization that will step along both curves starting with the vertex
+        WIDTH = trimWidth / 8.0;
+        if curve1Reversed: (q1,q2,qstep) = (startp1,endp1,WIDTH);
+        else: (q1,q2,qstep) = (endp1,startp1,(-1.0)*WIDTH);
+        
+        if curve2Reversed: (s1,s2,sstep) = (startp2,endp2,WIDTH);
+        else: (s1,s2,sstep) = (endp2,startp2,(-1.0)*WIDTH);
+        
+        print "curve1: %d %d %0.3f" % ( q1, q2, qstep)
+        print "curve2: %d %d %0.3f" % ( s1, s2, sstep)
+        
+        distance = 0.0;
+        q = q1;
+        s = s1;
+        while distance < trimWidth and q != q2 and s != s2:
+            
+            distance = curve1.Value(q).Distance(curve2.Value(s));
+            q += qstep
+            s += sstep;
+        print "distance= %0.3f" % distance
+        #when we exit the loop, q and s are about WIDTH apart on curves 1 and 2
+        trimDistance = s - s1;
+        print "trimDistance = %0.3f" % trimDistance
+            
+    #for now, arbitrarily shorten edge 2, return wire following it around
+    #starting with edge 1
+    if curve2Reversed:
+        pTrimStart = startp2
+        pTrimEnd = endp2 - trimDistance
+    else:
+        pTrimStart = startp2 + trimDistance
+        pTrimEnd = endp2;
+
+    newE = trimmedEdge(edge2,pTrimStart,pTrimEnd);
+    
+    #find point at the end. there must be a better way to do this, but
+    #somehow the edge is getting reversed somewhere!
+    #here we just find the vertex closest to the original vertex point
+    dist=99999;
+    lastP = None;
+    for v in Topo(newE).vertices():
+        p = brepTool.Pnt(v);
+        if p.Distance(vPoint) < dist:
+            lastP = p;
+            dist = p.Distance(vPoint);
+            
+    #now build up the edges in order so we can return the wire
+    wB = WireBuilder();
+    wB.add(edge1);
+    
+    #add the edges we didnt touch
+    for e in tw.edges():
+        if not e.IsSame(edge1) and not e.IsSame(edge2 ):
+            wB.add(e);
+
+    wB.add( newE); #the last trimmed edge
+    return ( wB.wire(), edge2, lastP );
+    
+    
 #gets a list of wires from a face
 def wireListFromFace(face):
     rW = []
@@ -520,6 +720,7 @@ def offsetWire(wire,offsetAmount ):
         raise Exception, "Offset Was Not Successful.";
     else:
         return  bo.Shape();
+
 
 #offset a face, returning the offset shape
 """
@@ -582,6 +783,7 @@ class WireBuilder:
         self.fixer.SetClosedWireMode(True)
         self.fixer.FixReorder();
         self.fixer.FixConnected();
+        self.fixer.FixClosed();
         return self.fixer.Wire();
     
 def TestShortenEdge():
@@ -596,6 +798,28 @@ def TestShortenEdge():
     #display.DisplayColoredShape( shortenEdge(e1,p1,0.1), 'WHITE');
     display.DisplayColoredShape( shortenEdge(e1,p2,0.1), 'WHITE');    
 
+def TestTrimmedWire():
+    # test triming a wire
+    #this will select each vertex of the heart.
+    points = [];
+    points.append( gp.gp_Pnt(0,0,0));
+    points.append( gp.gp_Pnt(4,4,0));
+    points.append( gp.gp_Pnt(-4.2,4,0));
+    points.append( gp.gp_Pnt(0,3.5,0));
+
+
+    h = TestObjects.makeHeartWire();
+    
+    for p in points:
+        display.EraseAll();
+        display.DisplayColoredShape(h, 'GREEN');        
+        
+        (w2,edge,p2) = getTrimmedWire(h,p,0.5);
+        display.DisplayColoredShape(w2,'RED');
+        display.DisplayColoredShape(make_vertex(p2),'RED');
+        time.sleep(5);
+
+        
 def TestDivideEdge():
     #lines are parameterized between 0 and line length
     edge = edgeFromTwoPoints ( gp.gp_Pnt(0,0,0), gp.gp_Pnt(2,2,0));
@@ -626,7 +850,7 @@ if __name__=='__main__':
     from OCC.Display.SimpleGui import *
     display, start_display, add_menu, add_function_to_menu = init_display()
     
-    TestDivideEdge();
+    TestTrimmedWire();
     
     start_display();
     

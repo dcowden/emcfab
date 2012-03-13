@@ -32,6 +32,8 @@ import Util
 import Wrappers
 import OCCUtil
 
+import debugdisplay
+
 #20% speed boost from psyco
 #import psyco
 #psyco.full()
@@ -41,7 +43,10 @@ ts = TopoDS.TopoDS();
 btool = BRep.BRep_Tool();
 
 	
-
+"""
+	This class accounts for a lot of the performance hit-- one optimization strategy would be to simply
+	move this to C++
+"""
 class Hatcher:
 	"class that accepts a shape and produces a set of edges from it"
 	"usage: Hatcher(...) then hatch() then edges()"
@@ -55,7 +60,8 @@ class Hatcher:
 		self.HATCH_PADDING = 5.0; #TODO, should be based on unit of measure
 	
 		self.graphBuilder = eg.EdgeGraphBuilder();
-	
+		
+		
 	def wires(self):
 		"""
 			return a list of wires that resulted from the hatching operation.
@@ -64,7 +70,7 @@ class Hatcher:
 		"""
 		return [];
 	
-	
+
 	def  hatch(self):
 		"""take the a slice and compute hatches
 		
@@ -89,6 +95,7 @@ class Hatcher:
 		"""
 		q = time.clock();
 		hatchWires = self._makeHatchLines();
+		
 		numCompares = 0;
 		bbuilder = BRep.BRep_Builder();
 		comp = TopoDS.TopoDS_Compound();
@@ -123,12 +130,12 @@ class Hatcher:
 				also be included for later processing.
 			"""
 			if result and brp.Value() < 0.050: #if < tolerance we have an intersection. if < filament width we have a close sitation
-				print "intersection found!"
+				#print "intersection found, distance = %0.6f" % brp.Value()
 				#TODO need to handle the somewhat unusual cases that the intersection is
 				#on a vertex
 				for k in range(1,brp.NbSolution()+1):
 					if brp.Value() < 0.001:	#there is at least one intersection on this wire. there may also be extrema
-						print "spot on match" 					
+						#print "spot on match" 					
 						#try:
 						#make the node
 						#quite complex depending on where exactly the intersection is.
@@ -160,7 +167,7 @@ class Hatcher:
 						else:
 							raise ValueError("I dont know how to handle this kind of intersection");
 					else: #brp.Value is between 0.001 and 0.05
-						print "intersection is close";
+						#print "intersection is close";
 						#we know this is a place where the boundary is close to a fill contour.
 						#our goal is to eventually remove it from the list. Support1 is the boundary.
 						#print "found extremum close but not intersecting, distance = %0.3f" %  ( brp.Value() )
@@ -177,7 +184,7 @@ class Hatcher:
 				continue;
 			
 			if len(interSections) == 0:
-				print "Hatch has no intersections-- discarding";
+				#print "Hatch has no intersections-- discarding";
 				continue;
 						
 			#at this point we have all the intersections for this hatch line.

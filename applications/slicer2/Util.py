@@ -3,6 +3,15 @@
 """
 import time,os,itertools
      
+def printTiming(func):
+    def wrapper(*arg):
+        t1 = time.clock()
+        res = func(*arg)
+        t2 = time.clock()
+        print '%s : %0.3f ms' % (func.func_name, (t2-t1)*1000.0)
+        return res
+    return wrapper    
+
 class Timer:
     def __init__(self):
         self.startTime = time.time();

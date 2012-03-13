@@ -17,25 +17,36 @@ from Extruder import *
 from Constants import *;
 
 import hatchlib
-
-from OCC.Display.SimpleGui import *
-display, start_display, add_menu, add_function_to_menu = init_display()
+import Util
+import debugdisplay
 
 
 """
     Slices a solid,
     
     Still to implement:
-        (1) filling doesnt work right
-        (2) join paths together into nice single paths
-        (3) write out svg and gcode
+        (1) Filling
+            (a) implement fill density
+            (b) implement alternating fill angle
+            (c) join paths
+        (2) Output
+            (a) SVG output
+            (b) Gcode output
+            
+        (3) Testing: try loading STL
+        (4) support
+        (5) hexagonal fill ( even though it is slow )
         
-    Performance ideas:  
-       (1) psyco
-       (2) go to 2d for filling-- saves performance on computation, and avoids transforms on copying
-       (3) remove/optimize close point computation during filling?
-
-
+    Performance ideas: 
+        (0) profiling
+        (1) psyco
+        (2) go to 2d for filling-- saves performance on computation, and avoids transforms on copying
+        (3) remove/optimize close point computation during filling?
+        (4) during offsetting, instead of two offsets per shell, try one at the desired offset. If it works, 
+            then we know we can inset to that point without checking each time?
+            (a) can we speed offsetting in 2D?
+        (5) try slicing with a plane instead of halfspace ? ( BRepAlgoAPI_Section)
+    
 """
 class Slicer:    
     """
@@ -116,6 +127,7 @@ class Slicer:
         A slice is a horizontal section of the part.
         TODO: add 'skeinning'-- more perimeters than fill lines
     """
+    @Util.printTiming
     def execute(self):
         #at this point we have a solid ready to execute
         
@@ -131,7 +143,8 @@ class Slicer:
             self.slices.append(cSlice)    
             zLevel += self.options.layerHeight;
             
-    "computes the boundaries for the given slice"    
+    "computes the boundaries for the given slice"
+    #@Util.printTiming
     def _computeSlice(self,zLevel,layerNo,fillAngle):
         
         cSlice = Slice();
@@ -170,9 +183,9 @@ class Slicer:
         #uncomment to enable layer copying.
         #
         #check for identical slices. return matching ones if found.
-        #if self.sliceMap.has_key(mySum):
+        if self.sliceMap.has_key(mySum):
             #print "i can copy this layer!"
-        #    return self.sliceMap[mySum].copyToZ(zLevel,layerNo);
+            return self.sliceMap[mySum].copyToZ(zLevel,layerNo);
                 
         
         self.sliceMap[mySum] = cSlice;
@@ -207,7 +220,7 @@ class Slicer:
                 print "%d shells were available for Hatching" % len(shells)
                 lastShell = shells.pop();
                 s = self.solid;
-                h = hatchlib.Hatcher(lastShell,cSlice.zLevel,(s.xMin,s.yMin,s.xMax,s.yMax), self.extruder.trackWidth(), cSlice.fillAngle );
+                h = hatchlib.Hatcher(lastShell,zLevel,(s.xMin,s.yMin,s.xMax,s.yMax), self.extruder.trackWidth(), cSlice.fillAngle );
                 h.hatch();
                 ww = h.getWires();
                 print "Hatching complete: %d fillWires created" % len(ww )
@@ -228,11 +241,11 @@ class Slicer:
         for slice in self.slices:            
             for f in slice.faces:
                for w in f.fillWires:
-                 display.DisplayColoredShape(w, 'BLUE',False);
+                 debugdisplay.DisplayColoredShape(w, 'BLUE',False);
                for w in f.shellWires:
-                 display.DisplayColoredShape(w,'GREEN',False);
-        display.FitAll();
-        start_display();
+                 debugdisplay.DisplayColoredShape(w,'GREEN',False);
+        debugdisplay.FitAll();
+        debugdisplay.start_display();
         
 class Slice:
     """
@@ -375,7 +388,7 @@ class ExtrusionPath:
          self.path = None;          #either an edge or a wire
          self.speed = None;         #the speed of the move in the x-y plane
          self.extrudate = None;     #amount of movement for the extruder axis
-         self.role = None;          # fill, perimeter, support, etc
+         self.type = None;          # fill, perimeter, support, etc
 
          
 class ExtrusionPathChain:

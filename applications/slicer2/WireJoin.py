@@ -15,6 +15,7 @@ from OCC.Utils import Topo
 import OCCUtil
 import TestObjects
 import Wrappers
+import Util
 
 brt = BRepTools.BRepTools();
 brepTool = BRep.BRep_Tool();
@@ -33,6 +34,7 @@ class WireJoiner:
 		self.trackWidth = trackWidth;
 		
 	#get the resulting wire
+	@Util.printTiming
 	def build(self):
 		topoWire = Topo(self.wire);
 		

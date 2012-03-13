@@ -6,6 +6,36 @@ from OCC import gp,BRepBuilderAPI,GC
 
 import OCCUtil
 
+
+def makeHeartFace():
+    hw = makeHeartWire();
+    circle = makeCircleWire2();
+    builder = BRepBuilderAPI.BRepBuilderAPI_MakeFace(hw,True);
+    builder.Add(circle);
+    return builder.Face();
+
+def makeSquareWithRoundHole():
+    p1 = OCCUtil.pnt(0.0,0);
+    p2 = OCCUtil.pnt(2.0,0.0);
+    p3 = OCCUtil.pnt(2.0,6.0);
+    p4 = OCCUtil.pnt(0.0,6.0);
+    
+    edges = [];
+    edges.append( OCCUtil.edgeFromTwoPoints( p1, p2 ));
+    edges.append( OCCUtil.edgeFromTwoPoints( p2, p3 ));
+    edges.append( OCCUtil.edgeFromTwoPoints( p3, p4 ));
+    edges.append( OCCUtil.edgeFromTwoPoints( p4, p1 ));
+    ow = OCCUtil.wireFromEdges(edges);
+
+    circle = gp.gp_Circ(gp.gp_Ax2(gp.gp_Pnt(1.0,2,0),gp.gp().DZ()),0.75);
+    e1 = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(circle).Edge();
+    mw = BRepBuilderAPI.BRepBuilderAPI_MakeWire();
+    mw.Add(e1);
+    circle = mw.Wire();
+    builder = BRepBuilderAPI.BRepBuilderAPI_MakeFace(ow,True);
+    builder.Add(circle);
+    return builder.Face();         
+           
 def makeSquareWire():
     "this is a square"
     p1 = gp.gp_Pnt(0,0,0);

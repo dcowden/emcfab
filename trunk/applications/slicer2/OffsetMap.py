@@ -20,8 +20,8 @@ from OCC import BRepOffsetAPI,BRepTools, BRep,TopAbs,gp
 
 from OCC.Utils.Topology import Topo
 import OCC.Utils.Topology
-import OCCUtil,Util,TestObjects
-import time
+import OCCUtil,Util,TestObjects,WireJoiner
+import time,traceback
 import Util
 import math
 brt = BRepTools.BRepTools();
@@ -34,7 +34,7 @@ class OffsetMap:
         self.edgeMap = {};
         self.otherWires = [];
         self.lastWires = self.originalWires;
-    
+        self.display = None;
 
     """
         starting with a vertex on the original wire, 
@@ -58,31 +58,74 @@ class OffsetMap:
         #make sure to start at a point far outside the face so we start outside!
         toDraw = self.originalWires + self.otherWires;
 
-        currentPoint = startNearPoint;
-                
+        #find starting vertex and wire
         #must start on outer wire only
+        lastPoint = startNearPoint;
+        initialPoint =  OCCUtil.nearestVertex(self.originalWires,startNearPoint);
+        lastVector = gp.gp_Vec((gp.gp_Pnt(0,0,0)), startNearPoint);
+
+
+        #assume initial vector is sideways for now.  At the beginning of a layer, the start vector is not relevant,
+        #so anythign will work i think. here we assume the first vector is from the origin
+        
+        if initialPoint is None:
+            raise Exception ("Cannot find initial starting point on outer wire!");
+
+        (currentWire,currentVertex,currentPoint,distance) = OCCUtil.nearestVertex(self.originalWires,startNearPoint);
+
 
         while len(toDraw) > 0:
-    
-            (currentWire, currentStartVertex) = OCCUtil.nearestVertex(toDraw,currentPoint);
+
+            currentPoint = brepTool.Pnt(currentVertex);    
+            toDraw.remove(currentWire);                
+                      
+            #trim the wire at this point
+            #TODO: simplify syntax for this!
+            jrequest = WireJoiner.JointRequest( lastPoint,lastVector,pathWidth,currentWire);        
+            wj = WireJoiner.WireJoiner(jrequest,pathWidth*(2.0) ); 
+            solution = wj.build();            
             
-            #make a new wire, which ends before overlapping the original
-            #OCC.Utils.Topology.dumpTopology(currentWire);
-            (newWire,trimmedEdge, nextPoint) = OCCUtil.getTrimmedWire(currentWire,brepTool.Pnt(currentStartVertex), pathWidth);
-        
-            #add the new wire
-            outputWires.append(newWire);
-            display.DisplayColoredShape(newWire,'GREEN');
+            trimmedWire = solution.wire;
+            trimmedEdge = solution.trimmedEdge;
+            trimmedPoint = solution.trimmedPoint;
+            trimmedVec = solution.trimmedVec;
             
-            #join with a line between the two
-            joinEdge = OCCUtil.edgeFromTwoPoints(currentPoint,nextPoint);
+     
+            joinEdge = OCCUtil.edgeFromTwoPoints(lastPoint,currentPoint);
             joinWire = OCCUtil.wireFromEdges([joinEdge]);
             outputWires.append(joinWire);
             
-            display.DisplayColoredShape(joinWire,'RED');
-            toDraw.remove(currentWire);
-            currentPoint = nextPoint;
-            time.sleep(1);
+            if solution.isJoint:
+                display.DisplayColoredShape(joinWire,'RED');                
+            else:
+                display.DisplayColoredShape(joinWire,'YELLOW');
+            outputWires.append(trimmedWire);
+            display.DisplayColoredShape(trimmedWire,'GREEN');
+            
+            #look for another edge which was created by the trimmedEdge. this is where we should search for a connecting point.
+            (nextVertex,nextEdge,nextWire) = self.getNextEdge(trimmedEdge, trimmedPoint);
+
+            if nextVertex:
+                #connect edges and chain to the this wire
+                currentVertex = nextVertex;
+                currentWire = nextWire;
+            else:
+                #no next edge found. find next closest wire to last point, but don't connect it
+                #here we should assume the next move is a rapid and not connect it.
+                result = OCCUtil.nearestVertex(toDraw, currentPoint);
+                if result:
+                    (currentWire,currentVertex,point, distance) = result;
+                    lastPoint = trimmedPoint;
+                else:
+                    #couldnt find next vertex either -- not sure this should ever happen?
+                    #TODO this is a total hack, need to fix the loop to avoid this extra check
+                    if len(toDraw) > 0:
+                        raise Exception("Could not find a next vertex, but there are wires left. how did this happen?")
+                    else:
+                        break;
+            lastPoint = trimmedPoint;
+            lastVector = trimmedVec;    
+            #time.sleep(1);
 
     """
         given an edge and a point,
@@ -110,7 +153,55 @@ class OffsetMap:
                     sv = v;
                     sw = nw;        
         return (sv,se,sw); #return the next edge, wire, and vertex for the given location
-     
+
+    
+    """
+        simpleoffset
+        offset inwards by distance.
+    """
+    def offsetOnceSimple(self,distance):
+        
+        bo = BRepOffsetAPI.BRepOffsetAPI_MakeOffset();           
+        map(bo.AddWire, self.lastWires);
+        print "%d wires to offset at step 1" % len(self.lastWires)
+        bo.Perform(distance*(0.5),0.0);
+        result1 = Topo(bo.Shape());
+
+        returnList= [];
+        #compound result can be a compound of edges and/or wires. weird weird
+        for c in OCCUtil.childShapes(bo.Shape() ):
+            #display.DisplayColoredShape(c,'BLUE')
+            if c.ShapeType() == TopAbs.TopAbs_WIRE:
+                returnList.append(c);  #these are actually the wires we want to keep
+                self.otherWires.append(c);            
+            elif c.ShapeType() == TopAbs.TopAbs_EDGE:
+                w = OCCUtil.wireFromEdges([c])
+                returnList.append(w);
+                self.otherWires.append(w);            
+            else:
+                print "Warning: compound resulting from offset i am confused about-- not an edge or a wire."
+            
+        #for each original edge, compute its descendant edges
+        #self.edgeMap will contain entries with the original edges, pointing to the generated
+        #edges and the corresponding wire:
+        #      e1 --> [ (e2, w2 ), (e3 , w3 ) ];
+        for w in self.lastWires:
+            originalWire = Topo(w);
+            for oe in originalWire.edges():
+                self.edgeMap[oe.__hash__()] = [];
+                
+                #find generated values from first transformation
+                generatedStep1 = OCCUtil.listFromTopToolsListOfShape(bo.Generated(oe));
+                for ne in generatedStep1:
+                    #get wire this belongs to this returns a list but how could there ever be more than one?
+                    gwires = []
+                    for g in result1.wires_from_edge(ne):
+                        gwires.append(g);
+                    self.edgeMap[oe.__hash__()].append ( (ne,gwires[0]   ));
+        
+        self.lastWires = returnList;
+        return returnList;
+    
     """
         here we offset inwards the specified distance,
         but by first offsetting inwards by distance*2 and then
@@ -131,7 +222,7 @@ class OffsetMap:
         bo2 = BRepOffsetAPI.BRepOffsetAPI_MakeOffset();
         for w in result1.wires():
             bo2.AddWire(w);
-            
+        print "Offsetting %0.3f" % ( (-0.5)*distance);
         bo2.Perform((-0.5)*distance, 0.0);
         result2 = Topo(bo2.Shape());
 
@@ -217,18 +308,24 @@ def testOffsetMapPathWalker():
     #test that we can walk all of the wires in the offset map exactly once by using getNextEdge
     
     f = TestObjects.makeSquareWithRoundHole(); #face that will have odd offsets
-    om = OffsetMap(f);    
-    om.offsetOnce(-0.2);
-    om.offsetOnce(-0.2);
-
+    om = OffsetMap(f);
+    om.display = display;
+    om.offsetOnceSimple(-0.2);
+    #om.offsetOnceSimple(-0.2);
+    om.offsetOnce(-0.2)
+    om.offsetOnceSimple(-0.2);
+     
     display.DisplayColoredShape(om.originalWires,'GREEN');      
     display.DisplayColoredShape(om.otherWires,'RED');
-    #time.sleep(20);
+    time.sleep(2);
     display.EraseAll();
-    om.followWires(gp.gp_Pnt(-2.0,-2.0,0),0.5);
+    om.followWires(gp.gp_Pnt(-2.0,-2.0,0),0.2);
     
 if __name__=='__main__':
     from OCC.Display.SimpleGui import *
-    display, start_display, add_menu, add_function_to_menu = init_display()   
-    testOffsetMapPathWalker();
+    display, start_display, add_menu, add_function_to_menu = init_display()
+    try:   
+        testOffsetMapPathWalker();
+    except:
+        traceback.print_exc();
     start_display();

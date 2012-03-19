@@ -11,15 +11,37 @@ import itertools
 # OCC imports
 from OCC import BRep,gp,GeomAbs,GeomAPI,GCPnts,TopoDS,BRepTools,GeomAdaptor,TopAbs,TopTools,TopExp,Approx,BRepLib,Bnd,BRepBndLib
 from OCC import BRepGProp,BRepLProp, BRepBuilderAPI,BRepPrimAPI,GeomAdaptor,GeomAbs,BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI,BRepAdaptor
-from OCC import ShapeFix,ShapeExtend
+from OCC import ShapeFix,ShapeExtend,GProp,CPnts
 
 #project imports
 from Constants import *;
+import OCCUtil
 
 brepTool = BRep.BRep_Tool();
 topoDS = TopoDS.TopoDS();
 
 
+"""
+	Wraps a point.. helpful for debugging
+"""
+class Pnt:
+	def __init__(self,p):
+		self.pnt = p;
+		self.X = p.X();
+		self.Y = p.Y();
+		self.Z = p.Z();
+
+	def __str__(self):
+		return "[Point: ( %0.3f,%0.3f,%0.3f )]" % ( self.X, self.Y, self.Z );
+class Vec:
+	def __init__(self,v):
+		self.vec = v;
+		self.X = v.X();
+		self.Y = v.Y();
+		self.Z = v.Z();
+
+	def __str__(self):
+		return "[Vector: ( %0.3f,%0.3f,%0.3f )]" % ( self.X, self.Y, self.Z );
 """
 	Class that provides easy access to commonly
 	needed features of a solid shape
@@ -156,7 +178,7 @@ class Point:
 		return "[%0.3f %0.3f %0.3f]" % (self.point.X(), self.point.Y(), self.point.Z());
 		
 """
-  Edge: provides useful functions for dealing with an edge shape
+  Edge: provides useful functions for dealing with an edge
 """
 class Edge:
 	def __init__(self,edge):
@@ -181,14 +203,41 @@ class Edge:
 			self.firstPoint = p2;
 			self.lastPoint = p1;
 	
+	"returns a PointOnEdge object"
+	def getPointAtVertex(self,vertex):
+		p = brepTool.Parameter(vertex,self.edge);		
+		r = PointOnEdge();
+
+		r.param = p;
+		r.vertex = vertex;
+		r.edge = self.edge;
+				
+		(r.point,r.vector) = OCCUtil.D1AtPointOnCurve(self.curve,p);
+		#tricky-- reverse the vector if the edge is reversed
+		if self.reversed:
+			r.vector = r.vector.Reversed();
+		r.niceVec = Vec(r.vector);
+		r.nicePoint = Pnt(r.point);			
+		return r;
+		
 	def distanceBetweenEnds(self):
 		"length of the edge, assuming it is a straight line"
 		return self.firstPoint.Distance(self.lastPoint);
-		
+	
+	def length(self):
+		props = GProp.GProp_GProps();
+		gp = BRepGProp.BRepGProp().LinearProperties(self.edge,props);
+		length = props.Mass(); #really the length of an edge.
+		return length;
+	   
 	def isLine(self):
 		return self.curve.GetType() == GeomAbs.GeomAbs_Line;
 	
+	"""
+		Deprecated, please use getPointAtParameter!
+	"""
 	def pointAtParameter(self,p):
+		raise Exception("Please use getPointAtParamter instead, which also computes other stuff");
 		"return the point corresponding to the desired parameter"
 		if p < self.firstParameter or p > self.lastParameter:
 			raise ValueError,"Expected parameter between first and last."
@@ -225,7 +274,7 @@ class Edge:
 			else:
 				yield gc.Value(i);
 			i+=1;
-			
+	
 	def __str__(self):
 		if self.isLine():
 			s = "Line:\t";
@@ -235,7 +284,25 @@ class Edge:
 			s = "Curve:\t"; 
 		return s + str(Point(self.firstPoint)) + "-->" + str(Point(self.lastPoint));
 
-
+"""
+	Represents a point on an edge
+	(not a vertex necessarily).
+"""
+class PointOnEdge():
+	def __init__(self):
+		self.edge = None;
+		self.param = None;
+		self.point = None;
+		self.vector = None;
+		self.edge = None;
+		self.vertex = None;
+		
+		#TODO: remove these, they are for debug only.
+		self.niceVec = None;
+		self.nicePoint = None;
+		
+	def isVertex(self):
+		return self.vertex is None;
 """
 	Follow a wire's edges in order
 """

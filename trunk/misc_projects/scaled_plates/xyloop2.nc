@@ -36,7 +36,8 @@ O101 while [ #6 lt #4 ] ( x loop )
 	G92.2 ( disable offsets so we can move back to x=0.0)
 	G00 Y0.0
 	G92.3 ( re-enable them again )
-
+	G92 Y0.0 ( make this y=0 again )
+	
 O101 endwhile
 G92 Y0.0 ( make this point y=0 )
 

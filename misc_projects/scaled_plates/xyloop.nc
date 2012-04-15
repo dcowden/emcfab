@@ -23,7 +23,7 @@ M3 S16000
 
 G0 X0 Y0 Z#1 ( go to origin, clearance plane )
 
-0101 while [ #6 lt #4 ] ( x loop )
+O101 while [ #6 lt #4 ] ( x loop )
 	G00 X#6
 	G92 X0 ( make this appear to be the origin )
 	O102 while [ #7 lt #5 ] ( y loop )
@@ -31,7 +31,7 @@ G0 X0 Y0 Z#1 ( go to origin, clearance plane )
 		G92 Y0
 		O103 call ( run the provided program )
 		#7 = [#7 + #3 ]
-	0102 endwhile
+	O102 endwhile
 	G92.2 ( disable offsets so we can move back to y=0.0)
 	G00 Y0.0
 	G92.3 ( re-enable them again )
@@ -47,7 +47,7 @@ M30
 
 
 ( === PUT PROGRAM YOU WOULD LIKE TO REPEAT HERE === )
-0103 sub
+O103 sub
 	G0 X0.7724 Y0.2262
 	G1 F10.0 Z0.0
 	G3 F80.0 X0.7438 Y0.0594 Z-0.03 I0.4713 J-0.1669
@@ -60,5 +60,5 @@ M30
 	G1 X0.6613
 	G3 X0.7438 Y0.0594 I0.0 J0.0825
 	G0 Z0.125
-0103 endsub
+O103 endsub
 ( === END MAIN PROGRAM === )

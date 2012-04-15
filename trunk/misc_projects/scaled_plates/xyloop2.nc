@@ -28,7 +28,6 @@ O101 while [ #6 lt #4 ] ( x loop )
 			O103 call
 			#7 = [#7 + #3 ]
 			G00 Y#3
-			G92 Y0.0 (make this appear as origin )
 		O102 endwhile
 	
 	

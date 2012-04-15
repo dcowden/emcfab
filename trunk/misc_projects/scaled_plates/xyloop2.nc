@@ -25,8 +25,7 @@ O101 while [ #6 lt #4 ] ( x loop )
 	G92 X0.0 ( make this appear to be the origin )
 	O103 call
 	#6 = [ #6 + #2 ]
-	G00 X#6
-
+	G00 X#2
 
 O101 endwhile
 G92.3 ( clear offsets and set to zero )

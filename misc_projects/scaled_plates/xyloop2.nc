@@ -26,7 +26,7 @@ O101 while [ #6 lt #4 ] ( x loop )
 	O110 while [#7 lt #5 ] ( yloop)
 		O103 call
 		#7 = [#7 + #3 ]
-		O200 call #6 #7 0.125 ( move to new location in global coordinates )
+		O200 call [#6] [#7] [0.125] ( move to new location in global coordinates )
 		G92 X0.0 Y0.0
 	O110 endwhile	
 	#6 = [ #6 + #2 ]

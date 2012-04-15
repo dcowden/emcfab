@@ -23,21 +23,15 @@ G0 X0 Y0 Z#1 ( go to origin, clearance plane )
 
 O101 while [ #6 lt #4 ] ( x loop )
 	
-	
 	O110 while [#7 lt #5 ] ( yloop)
 		O103 call
 		#7 = [#7 + #3 ]
-		G00 Y#3
-		G92 Y0.0
-	O110 endwhile
-	
-	
-	
+		O200 call #6 #7 0.125 ( move to new location in global coordinates )
+		G92 X0.0 Y0.0
+	O110 endwhile	
 	#6 = [ #6 + #2 ]
-	G00 X#2
-	G92 X0.0 ( make this appear to be the origin )
-
 O101 endwhile
+
 G92.1( clear offsets and set to zero )
 G00 X0 Y0 Z#8
 
@@ -61,3 +55,10 @@ O103 sub
 	G0 Z0.125
 O103 endsub
 ( === END MAIN PROGRAM === )
+
+(=== Global Move in unadjusted coordinates === )
+O200 sub
+    G92.2
+	G00 X#1 Y#1 Z#3
+	G92.3
+O200 endsub

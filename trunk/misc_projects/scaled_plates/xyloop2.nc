@@ -39,8 +39,6 @@ O101 while [ #6 lt #4 ] ( x loop )
 	G92 Y0.0 ( make this y=0 again )
 	
 O101 endwhile
-G92 Y0.0 ( make this point y=0 )
-
 G92.3 ( clear offsets and set to zero )
 G00 X0 Y0 Z#8
 

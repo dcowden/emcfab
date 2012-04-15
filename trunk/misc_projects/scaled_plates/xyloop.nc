@@ -25,7 +25,7 @@ G0 X0 Y0 Z#1 ( go to origin, clearance plane )
 
 O101 while [ #6 lt #4 ] ( x loop )
 	G00 X#6
-	G92 X0 ( make this appear to be the origin )
+	G92 X0.0 ( make this appear to be the origin )
 	O102 while [ #7 lt #5 ] ( y loop )
 		G00 Y#7
 		G92 Y0

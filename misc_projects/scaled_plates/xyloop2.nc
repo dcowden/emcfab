@@ -18,7 +18,7 @@
 G20 G90 G64 G40 ( inches, absolute mode, path optimized mode, no cutter comp )
 T0 M6
 M3 S16000
-G92.3 ( cancel any offsets )
+G92.1 ( cancel any offsets )
 G0 X0 Y0 Z#1 ( go to origin, clearance plane )
 
 O101 while [ #6 lt #4 ] ( x loop )
@@ -33,7 +33,7 @@ O101 while [ #6 lt #4 ] ( x loop )
 	G92 X0.0 ( make this appear to be the origin )
 
 O101 endwhile
-G92.3 X Y Z ( clear offsets and set to zero )
+G92.1( clear offsets and set to zero )
 G00 X0 Y0 Z#8
 
 M5

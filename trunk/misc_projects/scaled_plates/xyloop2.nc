@@ -24,7 +24,7 @@ M3 S16000
 G0 X0 Y0 Z#1 ( go to origin, clearance plane )
 
 O101 while [ #6 lt #4 ] ( x loop )
-	G00 X#6
+	G00 X#2
 	G92 X0.0 ( make this appear to be the origin )
 	O103 call
 	G00 Y0.0

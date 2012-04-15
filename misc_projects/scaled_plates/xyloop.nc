@@ -8,7 +8,7 @@
 #1 = 0.125 ( clearance plane ) 
 #2 = 1.0 ( x spacing )
 #3 = 1.5 ( y spacing )
-#4 = 2.5 ( maximum in x direction )
+#4 = 5.0 ( maximum in x direction )
 #5 = 5.0 ( maxiumum in y direction )
 #6 = 0.0 ( current x grid location )
 #7 = 0.0 ( current y grid location )

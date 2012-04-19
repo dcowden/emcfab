@@ -1,0 +1,111 @@
+www.ParametricParts.com main page
+	links to sign on/register
+	navigation
+		search
+		upload a part
+	slide window
+		featured??
+		most downloaded
+	footer
+	big pretty button to search
+	
+User Signon/Registration
+	Register
+	Login
+	OpenID login
+	Connect to Facebook/Google/LinkedIn
+	provide picture ? 
+	
+Help
+	help creating parts
+	what is ParametricParts about?
+	
+User Profile
+	created models, and downloads of each
+	picture
+	
+Blog
+	tutorials
+	comments/news
+	rss subscribe
+	list by date/tag
+Parts
+	Upload a Part
+		tags
+		define parameter meta data ( type,name, help comments )
+		description
+		scad script
+		license
+		allow script download by others?
+		[script type]
+		dxf files ( [needs sandbox ] )
+	Part detail page
+		easy url to find : www.parametricparts.com/part/212321
+		3d view -- initial and configured views 
+		set parameteters
+		parameter values
+		customize button
+		download model
+			stl
+		send to shapeways
+		number of downloads
+		votes
+		qr code
+		comments
+	Part List page
+		list parts, a picture, author, total downloads, total comments,license
+	Search
+		by name
+		by tag ( tag cloud ) ?
+		recent
+		featured
+
+Future Items/ Ideas
+	Highlight  Authors more
+		authors listing
+	Ratings for parts by users 
+		votes like stack overflow?
+	Requests: 
+		users request models that do
+		entries are cataloged against each request
+	Creators toolkit
+		web gui to help create scripts
+		web-based creator?
+		derive-- copy a model to another
+		assemble: create models that compose others
+		text-- ie, personalized items
+	Better model engine
+		based on opencascade
+		chaining api
+		extrusions based on inkscape or other vectors
+	Rewards
+		pay authors for posted files
+		charge users for services
+			free trial to use 10 models
+		pay authors for each use of their file ( we take 5% ) 
+		authors earn downloads
+	Import thingiverse models
+		pull scad from a thing
+	AutoFix: make sure models are good quality
+		automatically fix with opencascade script?
+	Export AMF files
+		--> requires opencascade or other engine
+		--> specify materials
+	advanced download:
+		aggregate objects into a single AMF file for printing
+	Renderings
+		--> user provided, nice pictures of objects
+	Slicer:
+		produce gcode
+		produce zip file of png images for sliced printing
+		
+References
+	www.thingiverse.com
+	www.grabcad.com [ like their product detail page ]
+	http://grabcad.com/engineers
+	www.youtube.com ( upload wizard )
+	www.kickstarter.com ( longer wizard )
+	http://www.chromeexperiments.com/detail/cell-cycle/?f=webgl
+	http://replimat.com/thingiview/examples/ ( stl three.js examples )
+	http://www.openscad.org/
+	

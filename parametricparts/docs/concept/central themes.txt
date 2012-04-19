@@ -1,0 +1,18 @@
+Central Themes/ Ideas
+
+* Only high quality, parametric models
+    * export stl but fixed first
+	* first to market with AMF if possible
+    * stronger CAD engine than openscad
+	
+* User can customize and download
+    * initially parameters
+	* ideally pictoral help
+	
+* Model authors have a reason to contribute
+	--> money ( but we take 5% )
+	--> access to a certain number of downloads for each model uploaded?
+	
+*  Print directly from here
+	* shapeways, cubify, redeye, etc
+	* far future: producers can sign up too ? 

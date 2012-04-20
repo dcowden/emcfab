@@ -612,14 +612,15 @@
     <part Name="Part1">
       <machineops>
         <profile>
+          <Style>cutout</Style>
           <WorkPlane state="Default">XY</WorkPlane>
           <OptimisationMode state="Default">Experimental</OptimisationMode>
           <RoughingFinishing state="Value">Finishing</RoughingFinishing>
           <ToolDiameter state="Value">0.125</ToolDiameter>
           <ToolNumber state="Default">0</ToolNumber>
           <ToolProfile state="Value">EndMill</ToolProfile>
-          <PlungeFeedrate state="Default">10</PlungeFeedrate>
-          <CutFeedrate state="Value">80</CutFeedrate>
+          <PlungeFeedrate state="Value">11</PlungeFeedrate>
+          <CutFeedrate state="Value">60</CutFeedrate>
           <MaxCrossoverDistance state="Default">0.7</MaxCrossoverDistance>
           <CustomMOPHeader state="Default" />
           <CustomMOPFooter state="Default" />
@@ -675,8 +676,8 @@
             <prim>85</prim>
             <prim>86</prim>
           </primitive>
-          <TargetDepth state="Value">-0.03</TargetDepth>
-          <DepthIncrement state="Value">0.03</DepthIncrement>
+          <TargetDepth state="Value">-0.04</TargetDepth>
+          <DepthIncrement state="Value">0.02</DepthIncrement>
           <FinalDepthIncrement state="Default">0</FinalDepthIncrement>
           <CutOrdering state="Default">DepthFirst</CutOrdering>
           <CutWidth state="Default">0</CutWidth>
@@ -689,8 +690,8 @@
           <LeadInMove state="Value">
             <LeadInType>Tangent</LeadInType>
             <SpiralAngle>10</SpiralAngle>
-            <TangentRadius>0.5</TangentRadius>
-            <LeadInFeedrate>60</LeadInFeedrate>
+            <TangentRadius>0.75</TangentRadius>
+            <LeadInFeedrate>20</LeadInFeedrate>
           </LeadInMove>
           <LeadOutMove state="Default" />
           <HoldingTabs state="Default">

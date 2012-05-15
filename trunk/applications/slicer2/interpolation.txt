@@ -4,3 +4,10 @@ http://miarn.sourceforge.net/pdf/a1738b.pdf
 http://www.math.zju.edu.cn/yxn/papers/localfit.pdf
 http://www.cs.nott.ac.uk/TR/2001/2001-1.pdf
 http://sourceforge.net/apps/mediawiki/free-cad/index.php?title=Main_Page
+
+http://potrace.sourceforge.net/potrace.pdf
+http://www.imageprocessingplace.com/downloads_V3/root_downloads/tutorials/contour_tracing_Abeer_George_Ghuneim/moore.html
+http://www.vincent-net.com/luc/papers/01icdar_polylines.pdf
+Pavlidis and Horowitz algorithm
+
+http://cmp.felk.cvut.cz/~hlavac/Public/TeachingText/ch05d.pdf

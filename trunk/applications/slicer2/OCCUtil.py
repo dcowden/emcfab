@@ -5,7 +5,7 @@ import time,os,sys,string,math;
 
 from OCC import BRep,gp,GeomAbs,Geom,GeomAPI,GCPnts,TopoDS,BRepTools,GeomAdaptor,TopAbs,TopTools,TopExp,Approx,BRepLib
 from OCC import BRepGProp,BRepLProp, BRepBuilderAPI,BRepPrimAPI,GeomAdaptor,GeomAbs,BRepClass,GCPnts,BRepBuilderAPI,BRepOffsetAPI,BRepAdaptor
-from OCC import BRepExtrema,TColgp,GProp,CPnts
+from OCC import BRepExtrema,TColgp,GProp,CPnts,Bnd,BRepBndLib
 from OCC import ShapeAnalysis
 from OCC import ShapeFix,ShapeExtend
 from OCC.Utils.Topology import Topo
@@ -29,6 +29,17 @@ def make_vertex(pnt):
     s = BRepBuilderAPI.BRepBuilderAPI_MakeVertex(pnt);
     s.Build();
     return s.Shape();
+
+def boundingBox(shapeList):
+    "get a bounding box for a list of shapes"
+    box = Bnd.Bnd_Box();
+    b = BRepBndLib.BRepBndLib();    
+
+    for s in shapeList:
+        b.Add(s,box);
+        
+    bounds = box.Get();
+    return bounds; #(xMin,yMin,zMin,xMax,yMax,zMax)
 
 def listFromTopToolsListOfShape(listOfShape):
     newList = [];
@@ -258,17 +269,20 @@ def pointsFromWire(wire,spacing):
     return points;
     
 
-def findPointOnCurve(point,handleCurve,tolerance):
+def findPointOnCurve(point,handleCurve,tolerance,umin=None,umax=None):
     "return the closest parameter on the curve for the provided point"
     "returns none if a point is not within tolerance"
-    gp = GeomAPI.GeomAPI_ProjectPointOnCurve(point,handleCurve);
+    if umin is None:
+        gp = GeomAPI.GeomAPI_ProjectPointOnCurve(point,handleCurve);
+    else:
+        gp = GeomAPI.GeomAPI_ProjectPointOnCurve(point,handleCurve,umin,umax);
     gp.Perform(point);
+    #print "tolerance = %0.3f, nbpoints=%d" % ( tolerance , gp.NbPoints() )
     if gp.NbPoints()>0 and gp.LowerDistance() <= tolerance:
         #log.debug( "Projection Success!" );
         return [gp.LowerDistanceParameter(),gp.NearestPoint()];
     else:
-        #log.warn( "Projection Failed.");
-        return None;
+        raise Exception("Projection Failed, try larger Tolerance!");
 
 def makeWiresFromOffsetShape(shape):
     "get all the wires from the offset shape"
@@ -455,6 +469,11 @@ def D1AtPointOnCurve(curve,p):
     curve.D1(p,qq,tt);
     return ( qq,tt);
 
+def D0AtPointOnCurve(curve,p):
+    qq = gp.gp_Pnt();
+    curve.D0(p,qq);
+    return qq;
+
 def splitEdge(edge, p):
     "splits an edge at the supplied parameter, returns the new edges"
     "separationDist is the distance of the break between the two edges"
@@ -582,147 +601,6 @@ def nearestVertex(wireList,point):
         return None;
     else:
         return r[0];
-"""
-    Given a wire and a vertex, return a new wire
-    that is trimmed so that there is no overlap
-    
-    returns 4-tuple: (new wire, edge that was trimmed, point on the new edge,vector on the trimmed edge at the trimmed point )
-    the new wire will NOT be closed
-    
-    the trimming algorithm is as follows:
-      * at the junction, the trim distance is based on the angle between the edges, to prevent overlap
-      * most vertices will have two edges available-- if thats the case, the trimmed edge will be the one
-        with the highest angle relative to the vector between the provided point and the vertex, which 
-        makes the joint smoothest.
-        
-      * if one or both of the egdes are curved, the tangent vector at the vetex is used.
-      
-      * if the angle between the edges is zero, and both curves are lines, one edge is removed
-      
-      TODO::: handle this case
-      * if the angle between the edges is small, and one of the edges are curves, 
-    
-      * if the wire is not closed, then the original wire is returned, no trimming is required
-
-"""
-def getTrimmedWire(wire,startVector,startPoint, trimWidth,display=None):
-
-    #first task is to find where on the target wire we want to join in. 
-    #here's the approach:
-    #  1. consider only vertices on this wire
-    #  2. consider only vertices that are close
-    #  3. choose vertices that will result in the smallest angle between the startVector and the join edge ( the edge between 
-    #     the startPoint and the entry point on the newly trimmed wire )
-    
-    #find all vertices that are 3x trimWidth away as candidates
-    #TODO: is there a way to cleanly do this kind of selection function?
-    #there is, see this url: http://stackoverflow.com/questions/1222677/list-comprehensions-in-python-efficient-selection-in-a-list
-    #TODO: fix this constant. this is a boundary condition problem-- when the algo starts, or when we switch wires, 
-    #there can be a large distance to the best wire. but after that we want to search in the very close neighborhood for performance
-    #and to ensure we only consider the best solutions.
-    candidates = nearestVertices([wire],startPoint,(2.0)*trimWidth);
-    bestAngle = None;
-    bestCandidate = None;
-    for candidate in candidates:
-        (wire,vertex,point,distance)  = candidate;
-        joinVec = gp.gp_Vec(startPoint,point);
-        a = startVector.Angle(joinVec);
-        if bestAngle is None or a < bestAngle:
-            (bestAngle,bestCandidate) = (a,candidate);
-    
-    (wire,vertex,point,distance) = bestCandidate;
-    
-    tw = Topo(wire);
-    eL = list(tw.edges_from_vertex(vertex));
-      
-    if len(eL) > 2:  raise Exception("Cannot trim wire at vertex with more than two edges");    
-    if len(eL) == 0:  raise Exception("Vertex has no edges, cannot trim")
-    
-    #if the wire is not closed, return this wire,
-    #and the last vertex on the wire
-    if not brepTool.IsClosed(wire):
-        lastVertex = list(tw.vertices())[-1];
-        
-        #compute vector on last vertex of last edge
-        raise Exception("Not Implemented: compute vector on last edge before returning.")        
-        return ( wire,None,brepTool.Pnt(lastVertex),vec);
-
-    #if there is only one edge, it must be a circle or spline, because it is still closed
-    #we just need to trim the end a bit
-    if len(eL) == 1:
-        vPoint = brepTool.Pnt(vertex);
-        (newEdge,newPoint,newVec) = shortenEdge(eL[0],vPoint,trimWidth);
-        return ( wireFromEdges([newEdge]), newEdge, newPoint,newVec);
-   
-    #else len(eL) == 2
-    (edge1,edge2) = eL[:2];
-    
-    #measure the angle between the wires
-    #TODO: probably can factor this out somewhere. didnt, becaues
-    #moving the logic might result in getting Curve objects more
-    (hCurve1, startp1, endp1) = brepTool.Curve(edge1);
-    (hCurve2, startp2, endp2) = brepTool.Curve(edge2);
-    curve1 = hCurve1.GetObject();
-    curve2 = hCurve2.GetObject();
-
-    vPoint = brepTool.Pnt(vertex);
-    approachVec = gp.gp_Vec(startPoint,vPoint); #this is the direction of the incoming join line for this wire.
-
-    #TODO: performance improvement/refactor? right now this code is organized to be 
-    #shortest but in the line case we do two computations    
-    #which end of each edge is at the vertex? I think we should be able to know by
-    #some convention
-    curve2Reversed = False;
-    curve1Reversed = False;
-    (p1,v1) = D1AtPointOnCurve(curve1,startp1);
-    if p1.Distance(vPoint) > 0.001:
-        #recompute, we picked wrong end
-        curve1Reversed = True;
-        (p1,v1) = D1AtPointOnCurve(curve1,endp1);
-        
-    (p2,v2) = D1AtPointOnCurve(curve2,startp2);
-    if p2.Distance(vPoint) > 0.001:
-        #recompute, we picked wrong end
-        curve2Reversed = True;
-        (p2,v2) = D1AtPointOnCurve(curve2,endp2);
-       
-    wB = WireBuilder();
-    
-    angle = abs( v1.Angle(v2));
-    #if curve1.IsKind( "Geom_Circle" ) or curve2.IsKind( "Geom_Circle" ):
-    #    print "one curve is circle, angle is %0.3f" % angle
-    print angle;
-    if angle < 0.1:
-        print "Trimmed Wire: two edges are very close to each other!"
-        #here we have to handle it differently if the curves are lines vs circles.
-        #if the curves are both lines, then we are dealing with a very thin feature.
-        #if the curves are circles, then there is a more clever solution.
-        #for now, though, we'll handle this in the shortening routine, which will
-        #essentially never allow replacing an entire edge
-        trimDistance = trimWidth*5.0;
-    elif  angle < (math.pi / 2):
-        trimDistance =  trimWidth / 2 * (1 + (1 / math.sin(angle)));
-    else:
-        trimDistance = trimWidth /2 ;
-    print trimDistance;
-    
-    #which edge should we trim? trim the edge with the largest angle relative to the approach Vector    
-    if approachVec.Angle(v1) > approachVec.Angle(v2):
-        print "chooing edge1 to trim"
-        (edgeToTrim,otherEdge) = (edge1,edge2);
-    else:
-        print "chooing edge2 to trim"
-        (edgeToTrim,otherEdge) = (edge2,edge1);
-    
-    (newEdge,newPoint,newVec) = shortenEdge(edgeToTrim,vPoint ,trimDistance);    
-    wB.add(newEdge);
-    #add the edges we didnt touch
-    for e in tw.edges():
-        if not e.IsSame(edge1) and not e.IsSame(edge2 ):
-            wB.add(e); 
-    wB.add(otherEdge);
-    return ( wB.wire(), edge2, newPoint,newVec);
-
     
 #gets a list of wires from a face
 def wireListFromFace(face):
@@ -790,11 +668,9 @@ def isFaceAtZLevel(zLevel,face):
     return (abs(z - zLevel) < 0.0001 ) and ( zDir.IsParallel(sDir,0.0001))
 
 """
-
     Smart Wire Builder..
     accepts edges, and then uses WireOrder to connect them together into the best possible order.
-    edges
-
+    Assumes that all edges are on a single Wire
 """
 class WireBuilder:
     def __init__(self):
@@ -816,7 +692,32 @@ class WireBuilder:
         self.fixer.FixConnected();
         self.fixer.FixClosed();
         return self.fixer.Wire();
+
+"""
+    MultiWireBuilder
+    accepts edges and then builds a list of wires from them
+"""
+
+class MultiWireBuilder:
+
+    def __init__(self):
+        self.edges = TopTools.TopTools_HSequenceOfShape();
+    def addEdge(self,edge):
+        self.edges.Append(edge);
     
+    @Util.printTiming
+    def getWires(self):
+
+        wireSeq = TopTools.TopTools_HSequenceOfShape();
+        #use of this method detailed by Roman Here:
+        #http://www.opencascade.org/org/forum/thread_15635/?forum=3
+        #this really should work but it doensnt, and its not clear why at all.
+        ShapeAnalysis.ShapeAnalysis_FreeBounds().ConnectEdgesToWires(self.edges.GetHandle(),0.0001,False,wireSeq.GetHandle());
+
+        l= listFromHSequenceOfShape(wireSeq);
+        print "Merged %d edges into %d wires" % ( self.edges.Length() ,wireSeq.Length() );
+        return l;
+  
 def TestShortenEdge():
     #test trimming and such
     e1 = edgeFromTwoPoints ( gp.gp_Pnt(0,0,0), gp.gp_Pnt(1,1,0));

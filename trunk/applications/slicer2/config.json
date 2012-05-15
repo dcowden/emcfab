@@ -5,9 +5,10 @@
   "tableCenterX": 63,
   "tableCenterY": 63,
   "translateToPositiveCenter":true,
-  "layerHeight" : 4.0,
+  "layerHeight" : 2.0,
   "trackWidth": 0.4,
   "machineMaxFeedRate": 2000,
   "filamentDiameter" : 1.75,
-  "fillingWallThickness": 1.8
+  "fillingWallThickness": 1.8,
+  "fillingEnabled" : false
 }      

@@ -44,13 +44,16 @@ class WireJoiner:
 		point is the point we'd like to join from
 		wire is the wire we'd like to join to
 	"""
-	def __init__(self,jointRequest,tolerance=None, ):
-		self.request = jointRequest;
+	def __init__(self,point,approachVector,trackWidth,wire,tolerance=None):
+		jr = JointRequest(point,approachVector,trackWidth,wire);
+
+		self.request = jr;
 		
 		if tolerance is None:
 			self.tolerance = (3.5)*self.request.trackWidth;
 		else:
-			self.tolerance = tolerance;
+			self.tolerance = tolerance;		
+			
 	#@Util.printTiming
 	"""
 		a lot of the work is done inside of JointSolution and JoinAtVertex,
@@ -128,7 +131,13 @@ class JointSolution:
 		#NOTE: since it is possible to travel an edge backwards, 
 		#take the minimum angle after trying it reversed
 		#also, if the joint angles are close, we defer to the approachAngle to avoid switchbacks when possible.
-		self.jointSegmentAngle = min( vec.Angle( pointOnEdge.vector), vec.Reversed().Angle(pointOnEdge.vector));
+		a1 = vec.Angle( pointOnEdge.vector);
+		a2 = vec.Reversed().Angle(pointOnEdge.vector);
+		
+		#remember whether we're following edge in reverse, so the trim distance is correct
+		if a2 > a1:
+			self.pointOnEdge.vector.Reverse();
+		self.jointSegmentAngle = min( a1,a2);
 		
 		#computed when we ask for a wire computation.
 		self.wire = None;
@@ -241,11 +250,18 @@ class JoinAtVertex:
 		pointOnEdge2 = edgeWrapper2.getPointAtVertex(self.vertex);
 		solution1 = JointSolution(self.request,pointOnEdge1);
 		solution2 = JointSolution(self.request,pointOnEdge2);
+
+		#choose the solution that is best. ideally, we want wide angles,
+		#remember, these are direction vectors, so small angles means 'same direction' which is good,
+		#while pi ( 180 ) angles are bad, becaues the paths switch back onto themselves.
+		if solution1.isBetterThan(solution2):
+			self.solution = solution1;
+		else:
+			self.solution = solution2;
 		
 		#compute the trim distance, which is based on the angles between the edges
 		#edges with vectors pi apart overlap, and 0 degrees are aligned
-		#TODO: this assumes all angles are between zero and 2pi
-		
+		#TODO: this assumes all angles are between zero and 2pi		
 		angleAtVertex = pointOnEdge1.vector.Angle(pointOnEdge2.vector);
 		angleDiff = abs(math.pi - angleAtVertex)
 		
@@ -268,13 +284,7 @@ class JoinAtVertex:
 		solution1.trimDistance = trimDistance;
 		solution2.trimDistance = trimDistance;	
 		
-		#choose the solution that is best. ideally, we want wide angles,
-		#remember, these are direction vectors, so small angles means 'same direction' which is good,
-		#while pi ( 180 ) angles are bad, becaues the paths switch back onto themselves.
-		if solution1.isBetterThan(solution2):
-			self.solution = solution1;
-		else:
-			self.solution = solution2;
+
 		
 		if self.solution is None:
 			raise Exception("No solution selected, this should not ever occur.");

@@ -176,6 +176,13 @@ def boundarypixmapFromFace(face):
 	
 	return pixmap;
 
+def tuplesFromEdge(edge,deflection):
+	ew = Wrappers.Edge(edge);
+	list = [];
+	for p in ew.discretePoints(deflection):
+		list.append(tP(p));
+	return list;
+
 def tuplesFromWire(wire,deflection):
 	"return a list of tuples from a wire"
 	list = [];
@@ -359,8 +366,8 @@ def testHugePixmap(face):
 		pixmap.get(p1)
 	print "Tested 1000 points in %0.3f seconds" % ( time.clock() - q );
 	pixmap.saveImage( "c:\\temp\scanline.jpg" );
-	
-def pixmapFromFace2(face,fillpattern=None):
+
+def pixmapFromWires(outerWire,innerWireList,fillpattern=None):
 	"""
 		create a filled pixmap from a defined face.
 		
@@ -379,6 +386,55 @@ def pixmapFromFace2(face,fillpattern=None):
 	"""
 	
 	PIXEL = 0.010 ;
+	DEFLECTION = PIXEL / 2.0;
+
+	#get bounding box
+	(xMin,yMin,zMin,xMax,yMax,zMax) = boundingBox([outerWire]);
+	
+	#adjust boundaries a bit
+	BUFFER=PIXEL*5;
+	#make pixmap
+	pixmap = pixmaptest.pixmap((xMin-BUFFER,yMin-BUFFER),(xMax+BUFFER,yMax+BUFFER),PIXEL);
+
+	#we will draw the outer wire as a filled polygon, then
+	#draw the inner wire as another filled polygon
+	
+	outerPoints = tuplesFromWire(outerWire,DEFLECTION);
+	#outerPoints.pop(2);
+	#print outerPoints
+	pixmap.drawPolygon(outerPoints,1,1);
+	#drawWire(outerPoints,pixmap);
+	#pixmap.saveImage("c:\\temp\\heartborder-1.bmp");
+	
+	#get the other wires.
+	wires = []
+	wires.append(outerPoints);
+	for w in innerWireList:
+		wp = tuplesFromWire(w,DEFLECTION);
+		pixmap.drawPolygon(wp,0,0);
+		wires.append(wp);
+			
+	return pixmap;
+
+def pixmapFromFace2(face,fillpattern=None):
+	"""
+		create a filled pixmap from a defined face.
+		
+		ideally, this is really really fast, based on a triangulation of the face.
+		a face with 800x600 pixels took 56ms to raster with this algo. @ 0.012" that is a 6x8 " part!
+
+		this creates a pixel map that has all the interior pixels filled
+		
+		This version uses the boundaries and PIL.polygon instead of 
+		the triangulagion, primarily becaseu the OCC triangulation seems to suck
+		
+		the general approach is:
+			compute a filled shape containging a bit mask
+			draw borders using a value
+			tile a fill pattern onto the background
+	"""
+	
+	PIXEL = 0.012 ;
 	DEFLECTION = PIXEL / 2.0;
 
 	#get bounding box
@@ -409,21 +465,6 @@ def pixmapFromFace2(face,fillpattern=None):
 			pixmap.drawPolygon(wp,0,0);
 			wires.append(wp);
 			
-
-	#pixmap.saveImage("c:\\temp\\heartborder-2.bmp");
-	#if fillpattern is not None:
-	#	pixmap.tileOnto(fillpattern);
-	#pixmap.saveImage("c:\\temp\\heartborder-3.bmp");
-	
-	#now draw the borders, while marking vertices.
-	#after this runs, all vertices in the graph should have value 9
-	#vertexList = [];
-	#for w in wires:
-	#	for et in Wrappers.pairwise(w):
-	#		#vertexList.extend(pixmap.drawLine2(et[0],et[1],1));
-	#		pixmap.drawLine(et[0],et[1],2);
-
-	#pixmap.saveImage("c:\\temp\\heartborder-4.bmp");
 	return pixmap;
 
 def testPointInFacePerformance(face):
@@ -569,6 +610,11 @@ def faceFromWires(outer, innerWireList):
 	#TestDisplay.display.showShape(f);
 	return f;
 	
+def getHeartFace():
+	w2 = makeCircleWire();
+	w = makeHeartWire();
+	return faceFromWires(w, [w2]);
+
 if __name__=='__main__':
 
 	w = makeHeartWire();
@@ -669,7 +715,7 @@ if __name__=='__main__':
 	#print "Trimming Edges..."
 	
 	q = time.clock();
-	g = testWirePixmap(f);
+	#g = testWirePixmap(f);
 	print "Trim Edges: Elapsed %0.3f" % ( time.clock() - q );
 	print "Displaying..."
 	#print g.edges();

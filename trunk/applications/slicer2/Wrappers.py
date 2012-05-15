@@ -20,6 +20,8 @@ import OCCUtil
 brepTool = BRep.BRep_Tool();
 topoDS = TopoDS.TopoDS();
 
+def tP(pnt):
+	return (pnt.X(),pnt.Y());
 
 """
 	Wraps a point.. helpful for debugging
@@ -42,6 +44,8 @@ class Vec:
 
 	def __str__(self):
 		return "[Vector: ( %0.3f,%0.3f,%0.3f )]" % ( self.X, self.Y, self.Z );
+	
+	
 """
 	Class that provides easy access to commonly
 	needed features of a solid shape
@@ -252,20 +256,76 @@ class Edge:
 		e2 = self.trimmedEdge(p,self.lastParameter);
 		return [e1,e2];
 	
+	"""
+		get a trimmed version of this edge between two points, projected as necessary  
+		onto the underlying curve
+		
+		OK, the simple GeomAPI_ProjectPointOnCurve approach didnt work at all-- even for simple lines, 
+		when the point was outside of the curve's range, it didnt work.
+	"""
+	def trimmedEdgeFromPoints(self,point1, point2,tolerance):
+		print "I am %s" % self
+		print "Creating new edge from points: ",Point(point1),Point(point2)
+		#(param1,newPoint1) = OCCUtil.findPointOnCurve(point1,self.handleCurve,tolerance);
+		#(param2,newPoint2) = OCCUtil.findPointOnCurve(point2,self.handleCurve,tolerance);
+		#well this is annoying-- the parameter range appears to be preventing projection, so we need to pad them
+		fp = self.firstParameter;
+		fpnt = self.firstPoint;
+		lp = self.lastParameter;
+		lpnt = self.lastPoint;
+		if fp > lp:
+			(lp,fp)=(fp,lp);
+			(fpnt,lpnt)=(lpnt,fpnt);
+			
+		print "Params: fp=%0.3f, lp=%0.3f,tolerance=%0.3f" % ( fp, lp,tolerance);
+
+		(param1,newPoint1) = OCCUtil.findPointOnCurve(point1,self.handleCurve,tolerance);
+		#check bounds by hand
+		if param1 < fp: 
+			param1 = fp;
+			newPoint1 = fpnt;
+		if param1 > lp: 
+			parm1 = fp;
+			newPoint1 = lpnt;
+		print "point 1!"
+		(param2,newPoint2) = OCCUtil.findPointOnCurve(point2,self.handleCurve,tolerance);
+		if param2 < fp: 
+			param2 = fp;
+			newPoint2 = fpnt;
+		if param2 > lp: 
+			parm2 = fp;
+			newPoint2 = lpnt;
+
+		return self.trimmedEdge(param1,param2);
+		
+		
 	def trimmedEdge(self,parameter1, parameter2):
 		"make a trimmed edge based on a start and end parameter on the same curve"
 		"p1 and p2 are either points or parameters"
-
-		e = edgeFromTwoPointsOnCurve(self.handleCurve, parameter1, parameter2 );		
+		print "Computing new edge: p1=%0.3f, p2=%0.3f, fp=%0.3f, lp=%0.3f" % (parameter1,parameter2,self.firstParameter,self.lastParameter);
+		if abs(parameter1 - parameter2) < 0.0001:
+			print "WARNING: removing degenerate edge";
+			return None;
+		e = OCCUtil.edgeFromTwoPointsOnCurve(self.handleCurve, parameter1, parameter2 );		
 		return e;
 		
 	def isCircle(self):
 		return self.curve.GetType() == GeomAbs.GeomAbs_Circle;
 	
+	
+	"""
+		same as discretePoints, but returns a list of tuples not a generator fo gp_Pnt
+	"""
+	def discreteTuples(self,deflection):
+		r = [];
+		for p in self.discretePoints(deflection):
+			r.append(( p.X(), p.Y() ) );
+		return r;
+
 	def discretePoints(self,deflection):
 		"a generator for all the points on the edge, in forward order"
 		gc = GCPnts.GCPnts_QuasiUniformDeflection(self.curve,deflection,self.firstParameter,self.lastParameter);
-		print "Making Dicrete Points!"
+		#print "Making Dicrete Points!"
 		i = 1;
 		numPts = gc.NbPoints();
 		while i<=numPts:
@@ -369,7 +429,15 @@ class Wire():
 			s.append( str(ew) );
 		return "\n".join(s);
 		
-		
+	"""
+		same as discretePoints, but returns a list of tuples not a generator fo gp_Pnt
+	"""
+	def discreteTuples(self,deflection):
+		r = [];
+		for p in self.discretePoints(deflection):
+			r.append(( p.X(), p.Y() ) );
+		return r;
+			
 	def discretePoints(self,deflection):
 		"discrete points for all of a wire"
 		for e in self.edges():

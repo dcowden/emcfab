@@ -46,15 +46,17 @@ class SlicingOptions:
         self.zMin= None;                            #bottom of part
         self.zMax = None;                           #top of part
         self.units = None;                          #guess based on part
-        self.fillingEnable = None;                  #true
+        self.fillingEnabled = None;                  #true
         self.fillingWallThickness = None;           #1mm if filling density < 1.0
         self.gcodeNumberFormat = None;              #0.000
         self.gcodeVerboseComments = None;           #false
         self.gcodeUseArcs = None;                   #true
+        self.gcodeFeedRate = None;                  #1000.0
         self.gcodeAxisName = None;                  #E
         self.gcodeCurveApproxTolerance = None;      #0.001
         self.gcodeFileExtension = None;             #.gcode
         self.svgFileExtension = None;               #.svg
+        self.svgNumberFormat = None;                #0.001
         
         #type conversion dictionary. Also useful later for building the GUI
         self.dTypes = {};

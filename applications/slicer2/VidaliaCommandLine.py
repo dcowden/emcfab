@@ -7,7 +7,7 @@ import os,os.path,sys
 import Slicer
 import SlicingOptions
 import SolidFileReader
-import Exporters
+import SvgExporter,GcodeExporter,ImageExporter
 
 def printUsage():
     print """
@@ -42,28 +42,28 @@ if __name__=='__main__':
     #TODO: need to be able to pass in progress monitor here for occasional chances to cancel and to report progress
     #
     slicer.execute(); #run the slice operation. this runs a potentially long time.
-    slicer.display(); #show the result
+    
     
     #compute output files based on input file location
     (path,file) = os.path.split(inputFile);
     rootFileName = file.split(".")[0]
     
-    outputGcodeFile = os.path.join(path,rootFileName + ".gcode");
-    outputSVGFile = os.path.join(path,rootFileName + ".svg");
-    
-    print "GCODE FILE: %s" % outputGcodeFile
-    print "SVG FILE: %s" % outputSVGFile
 
-    #gce = Exporters.GcodeExporter(opts);
-    #sve = Exporters.SvgExporter(opts);
-    
-    #gf = open(outputGcodeFile,'w');
-    #sf = open(outputSVGFile,'w');
-    
-    #gce.export(slicer,gf);
-    #sve.export(slicer,sf);
-    
-    #gf.close();
-    #sf.close();
+    outputSVGFile = os.path.join(path,rootFileName + ".svg");
+    print "SVG FILE: %s" % outputSVGFile
+    sve = SvgExporter.SvgExporter(slicer,opts);
+    sve.export(outputSVGFile);
+
+    #outputGcodeFile = os.path.join(path,rootFileName + ".gcode");    
+    #print "GCODE FILE: %s" % outputGcodeFile
+    #gce = GcodeExporter.GcodeExporter(slicer,opts);           
+    #gce.export(outputGcodeFile);
+
+    outputImageFile = os.path.join(path,rootFileName + ".zip");
+    print "SVG FILE: %s" % outputImageFile
+    sve = ImageExporter.ImageExporter(slicer,opts);
+    sve.export(outputImageFile);
+
+    #slicer.display(); #show the result
     
     

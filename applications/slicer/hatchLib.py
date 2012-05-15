@@ -118,7 +118,7 @@ class Hatcher:
 			
 		self.bounds = bounds;
 		self.zLevel = zLevel;
-		self.HATCH_PADDING = 1; #TODO, should be based on unit of measure
+		self.HATCH_PADDING = 0.1; #TODO, should be based on unit of measure
 	
 		self.graphBuilder = eg.EdgeGraphBuilder();
 		
@@ -221,7 +221,6 @@ class Hatcher:
 							else:
 								raise ValueError("I dont know how to handle this kind of intersection");
 						else: #brp.Value is between 0.001 and 0.05
-
 							#we know this is a place where the boundary is close to a fill contour.
 							#our goal is to eventually remove it from the list. Support1 is the boundary.
 							#print "found extremum close but not intersecting, distance = %0.3f" %  ( brp.Value() )
@@ -256,7 +255,7 @@ class Hatcher:
 				#intersect a wire. ( ie, they are 'just outside' of the boundary )
 				for cp in closePoints:
 					self.graphBuilder.addPointsTooClose(cp[0], cp[1]);
-					#display.DisplayShape(cp[0].edge );
+					display.DisplayShape(Wrappers.make_vertex(cp[0].point) );
 					#display.DisplayShape(cp[2] );
 					
 			#add the edges 'inside' the shape to the graph
@@ -282,7 +281,15 @@ class Hatcher:
 		print "%d Total Intersections computed." % ( numCompares )
 		self.graphBuilder.buildGraph();
 		
-	
+	"""
+		TODO: speedup opportunity: use horizontal lines to create hexagons
+		instead of creating them for a bounding box.  this will make performance
+		much better for shapes that do not need as many hexagons.
+		
+		an even better and faster approach would be to use single lines to determine roughly where the intersections
+		should be, and then bracket those positions with a few hexagons-- and then fill in the remaining ones with edges that 
+		do not need to be intersected. But, that would mean it would become necessary to do collision detection with pixel grids.
+	"""
 	def _makeHatchLines22(self):
 		"make hatch lines using hexlib"
 		hex = hexagonlib.Hexagon(0.5,.02);
@@ -302,7 +309,7 @@ class Hatcher:
 		xMax = self.bounds[2] + (self.HATCH_PADDING);
 		yMax = self.bounds[3] + (self.HATCH_PADDING) ;
 		wires = [];
-		for y in Wrappers.frange6(yMin,yMax,0.05):
+		for y in Wrappers.frange6(yMin,yMax,0.02):
 			e = Wrappers.edgeFromTwoPoints(gp.gp_Pnt(xMin,y,self.zLevel),gp.gp_Pnt(xMax,y,self.zLevel));
 			#display.DisplayShape(e);
 			wires.append(Wrappers.wireFromEdges([e]));
@@ -417,7 +424,7 @@ if __name__=='__main__':
 	#display edges in walk-to-fill order
 	#each entry is a list of nodes that form a path
 
-	if False:
+	if True:
 		q = time.clock();
 		en = h.graphBuilder.walkEdges();
 		print "Walked Edges-- %d total paths, %0.3f sec" % (len(en), ( time.clock() - q ) );

@@ -7,12 +7,14 @@
 import hashlib
 import time
 
-from OCC import TopTools,BRepBndLib,Bnd,gp,BRepBuilderAPI,GProp,BRepGProp,BRepPrimAPI,BRepAlgoAPI
+from OCC import TopTools,BRepBndLib,Bnd,gp,BRepBuilderAPI,GProp,BRepGProp,BRepPrimAPI,BRepAlgoAPI,BRepTools,BRepAlgo
 from OCC.Utils.Topology import Topo
-
+from OCC.Utils import Topology
 import SlicingOptions
 import Wrappers
 import OCCUtil
+
+
 from Extruder import *
 from Constants import *;
 
@@ -20,7 +22,7 @@ import hatchlib
 import Util
 import debugdisplay
 
-
+brt = BRepTools.BRepTools();
 """
     Slices a solid,
     
@@ -112,7 +114,10 @@ class Slicer:
         options.generateSupports = False;
         options.machineMaxFeedRate = 200;  
         options.fixShape = True;
-        options.fillingEnable = True;                 
+        
+        if options.fillingEnabled is None:
+            options.fillingEnabled = True;
+                             
         options.gcodeNumberFormat = "%0.3f";            
         options.gcodeVerboseComments = True; 
         options.gcodeUseArcs = True; 
@@ -129,6 +134,9 @@ class Slicer:
     """
     @Util.printTiming
     def execute(self):
+        
+        #TODO: use parallel cores to speed this up, see
+        #http://code.google.com/p/pythonocc/source/browse/trunk/src/examples/Level2/Concurrency/parallel_slicer.py
         #at this point we have a solid ready to execute
         
         zLevel = self.options.zMin + TOLERANCE;        
@@ -142,7 +150,62 @@ class Slicer:
             cSlice = self._computeSlice(zLevel,layerNo,fillAngle);
             self.slices.append(cSlice)    
             zLevel += self.options.layerHeight;
+    
+    #return (resultShape,outerWire,otherWires)
+    @Util.printTiming
+    def makeSection(self,cuttingPlane,shapeToSection,zLevel):
+        """
+            Uses halfspaces to make a cut.
+        """
+        bff = BRepBuilderAPI.BRepBuilderAPI_MakeFace(cuttingPlane);
+        face = bff.Face();
+        origin = gp.gp_Pnt(0,0,zLevel-1);
+        
+        #odd, a halfspace is faster than a box?
+        hs = BRepPrimAPI.BRepPrimAPI_MakeHalfSpace(face,origin);
+        hs.Build();    
+        halfspace = hs.Solid();
+                
+        #make the cut
+        bc = BRepAlgoAPI.BRepAlgoAPI_Cut(self.solid.shape,halfspace);
+        cutShape = bc.Shape();
+        
+        ff = [];
+        for face in Topo(cutShape).faces():
+            if OCCUtil.isFaceAtZLevel(zLevel,face):
+                ff.append(face);   
+        return ff;
+    
+    @Util.printTiming
+    def makeSection2(self,cuttingPlane,shapeToSection,zLevel):
+        """
+            Uses BrepSection Algo. this generally returns a list of wires, not a face      
+        """
+        #section is certainly faster, but produces only edges.
+        #those have to be re-organized into wires, probably
+        #using ShapeAnalysis_WireOrder
+        
+        face = BRepBuilderAPI.BRepBuilderAPI_MakeFace( cuttingPlane ).Shape()
+        # Computes Shape/Plane intersection
+        section = BRepAlgoAPI.BRepAlgoAPI_Section( self.solid.shape, face )
+        #section = BRepAlgo.BRepAlgo_Section(self.solid.shape,face);
+        section.Build()
+        if section.IsDone():
+            #Topology.dumpTopology(section.Shape());
             
+            #what we got back was a compound of edges
+            t = Topo(section.Shape());
+            wb = OCCUtil.MultiWireBuilder();
+            for e in t.edges():
+                wb.addEdge(e);
+            wires = wb.getWires();
+            print wires;
+            for w in wires:
+                Topology.dumpTopology(w);
+            return wires;
+        else:
+            raise Exception( "Could not compute Section!");
+        
     "computes the boundaries for the given slice"
     #@Util.printTiming
     def _computeSlice(self,zLevel,layerNo,fillAngle):
@@ -156,27 +219,32 @@ class Slicer:
         #make a cutting plane
         p = gp.gp_Pnt ( 0,0,zLevel );
             
-        origin = gp.gp_Pnt(0,0,zLevel-1);
+        
         csys = gp.gp_Ax3(p,gp.gp().DZ())
-        cuttingPlane = gp.gp_Pln(csys);    
-        bff = BRepBuilderAPI.BRepBuilderAPI_MakeFace(cuttingPlane);
-        face = bff.Face();
+        cuttingPlane = gp.gp_Pln(csys);
+        
+        #makeSection will use the old reliable way that will get a face from each cut.
+        #makeSection2 will use BRepAlgoaPI_Section, but has problems ordering the edges correctly.
+        newFaces = self.makeSection(cuttingPlane, self.solid.shape,zLevel);
+        for f in newFaces:
+            cSlice.addFace(Face(f));    
+        #bff = BRepBuilderAPI.BRepBuilderAPI_MakeFace(cuttingPlane);
+        #face = bff.Face();
         
         #odd, a halfspace is faster than a box?
-        hs = BRepPrimAPI.BRepPrimAPI_MakeHalfSpace(face,origin);
-        hs.Build();    
-        halfspace = hs.Solid();
+        #hs = BRepPrimAPI.BRepPrimAPI_MakeHalfSpace(face,origin);
+        #hs.Build();    
+        #halfspace = hs.Solid();
                 
         #make the cut
-        bc = BRepAlgoAPI.BRepAlgoAPI_Cut(self.solid.shape,halfspace);
-        cutShape = bc.Shape();
+        #bc = BRepAlgoAPI.BRepAlgoAPI_Cut(self.solid.shape,halfspace);
+        #cutShape = bc.Shape();
         
-        foundFace = False;
-        for face in Topo(cutShape).faces():
-            if OCCUtil.isFaceAtZLevel(zLevel,face):
-                foundFace = True;
-                cSlice.addFace(Face(face));
-                
+        #for face in Topo(cutShape).faces():
+        #    if OCCUtil.isFaceAtZLevel(zLevel,face):
+        #        cSlice.addFace(Face(face));
+        #        break;
+            
         mySum = cSlice.computeFingerPrint();
 
         #
@@ -189,13 +257,20 @@ class Slicer:
                 
         
         self.sliceMap[mySum] = cSlice;
-        print "This slice has %d faces." % len(cSlice.faces)
-        #fill each face in the slice
-        for f in cSlice.faces: #Face object
+        #print "This slice has %d faces." % len(cSlice.faces)
+        
+        if self.options.fillingEnabled:        
+            self._fillSlice(cSlice);
 
-            #how many shells do we need?
-            #attempt to create the number of shells requested by the user, plus one additional for infill
-
+        return cSlice;
+    
+    """
+        Fills a slice with vector paths for FDM
+    """
+    def _fillSlice(self,slice):
+        #how many shells do we need?
+        #attempt to create the number of shells requested by the user, plus one additional for infill
+        for f in slice.faces:
             numShells = (int)( self.options.fillingWallThickness / self.extruder.trackWidth()) + 1;
             numShells = max(2,numShells);
             faceWires = OCCUtil.wireListFromFace(f.face);
@@ -214,7 +289,7 @@ class Slicer:
                 pathCenter = OCCUtil.offsetWireList(innerEdge,self.extruder.trackWidth()/2);
                 if len(pathCenter) > 0:
                     shells.append(pathCenter);
-
+    
             if len(shells) > 1:
                 #use last one for filling.
                 print "%d shells were available for Hatching" % len(shells)
@@ -231,9 +306,7 @@ class Slicer:
             for s in shells:
                 for ss in s:
                     f.shellWires.append(ss);
-                
-        return cSlice;
-    
+        
     def display(self):
         """
             for debugging purposes, display the result
@@ -317,7 +390,7 @@ class Slice:
     
             for f in self.faces:
                 bg.SurfaceProperties(f.face,gp);
-    
+
             m.update(NUMFORMAT % gp.Mass() );
             m.update(NUMFORMAT % gp.CentreOfMass().X() );
             m.update(NUMFORMAT % gp.CentreOfMass().Y() );
@@ -374,33 +447,10 @@ class Face:
         self.fillWires = [];
 
 
-class ExtrusionPath:
-    """
-        A single path that should be drawn. Does not include travel paths
-        
-        NOTE: paths should not include Z level information-- this allows copying paths
-        from one layer to another without adjustments required
-    """ 
-    def __init__(self):
-         self.startPoint = None;
-         self.endPoint = None;
-         self.width = None;         #the track width of this path      
-         self.path = None;          #either an edge or a wire
-         self.speed = None;         #the speed of the move in the x-y plane
-         self.extrudate = None;     #amount of movement for the extruder axis
-         self.type = None;          # fill, perimeter, support, etc
-
-         
-class ExtrusionPathChain:
-    """
-        a list of paths that should be drawn in the specified order
-
-        NOTE: paths should not include Z level information-- this allows copying paths
-        from one layer to another without adjustments required        
-    """
-    
-    def __init__(self):
-        self.startPoint = None;
-        self.endPoint = None;
-        self.paths = [];            #each entry is an ExtrusionPath
-        
+        self.otherWires = [];
+        #compute inner and other wires
+        self.outerWire = brt.OuterWire(face);
+        for w in Topo(face).wires():
+            if not w.IsSame(self.outerWire):
+                self.otherWires.append(w);
+       

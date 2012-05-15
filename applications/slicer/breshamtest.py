@@ -364,7 +364,7 @@ def bresham_line(array,value,t,(x0,y0),(x1,y1)):
 	error = -deltax / 2
 	y = y0
 
-
+	#to put this to a single thickness version, simply set t to zero
 	for x in range(x0, x1 + 1): # We add 1 to x1 so that the range includes x1
 		if steep:
 			array[y-t:y+t, x-t:x+t]= value;

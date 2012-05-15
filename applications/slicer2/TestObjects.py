@@ -17,6 +17,11 @@ def makeHeartFace():
     return builder.Face();
 
 
+def makeHeartFaceNoHole():
+    hw = makeHeartWire();
+    builder = BRepBuilderAPI.BRepBuilderAPI_MakeFace(hw,True);
+    return builder.Face();
+
 """
     Makes a wire from al ist of x,y tuples
 """
@@ -129,20 +134,26 @@ def makeBsplineEdge():
     pts.append( OCCUtil.pnt(3.0,2.4));
     pts.append( OCCUtil.pnt(4.0,1.5 ));
     pts.append( OCCUtil.pnt(5.0,1.5 ));
-    pts.append( OCCUtil.pnt(5.2,1.9 ));
-    
+    pts.append( OCCUtil.pnt(4.0,0 ));
+    pts.append( OCCUtil.pnt(3.0,-0.1 ));    
+    pts.append( OCCUtil.pnt(2.0,-0.1 ));
+    pts.append( OCCUtil.pnt(2.0,-0.1 ));
+    pts.append( OCCUtil.pnt(2.0,0.2 ));
+    pts.append( OCCUtil.pnt(3.0,0.5 ));    
+    pts.append( OCCUtil.pnt(3.0,1.0 ));     
+            
     points = TColgp.TColgp_HArray1OfPnt(1,len(pts));
     i = 1;
     for p in pts:
         points.SetValue(i,p);
         i+=1;
     
-    q = time.clock();
-    for i in range(1000):
-        gi = GeomAPI.GeomAPI_Interpolate(points.GetHandle(),False,0.001);
-        gi.Perform();
-        curve = gi.Curve();
-    print "1000 iters: Elapsed: %0.3f " % ( time.clock() -  q)
+    #q = time.clock();
+    #for i in range(1000):
+    gi = GeomAPI.GeomAPI_Interpolate(points.GetHandle(),False,0.001);
+    gi.Perform();
+    curve = gi.Curve();
+    #print "1000 iters: Elapsed: %0.3f " % ( time.clock() -  q)
     
     builder = BRepBuilderAPI.BRepBuilderAPI_MakeEdge(curve);
     return builder.Edge();
@@ -214,8 +225,8 @@ if __name__=='__main__':
     #display.DisplayShape(makeKeyHoleWire());
     #display.DisplayShape(makeSquareWire());
     #display.DisplayShape(makeOffsetTestWire());
-    #display.DisplayShape(makeBsplineEdge() );
-    display.DisplayShape(makeSquareWithRoundHole());
+    display.DisplayShape(makeBsplineEdge() );
+    #display.DisplayShape(makeSquareWithRoundHole());
     display.FitAll();
     start_display()
 

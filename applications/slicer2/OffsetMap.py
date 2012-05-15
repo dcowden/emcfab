@@ -35,7 +35,7 @@ class OffsetMap:
         self.otherWires = [];
         self.lastWires = self.originalWires;
         self.display = None;
-
+        self.outputWires = [];
     """
         starting with a vertex on the original wire, 
         draw all of the wires in this set exactly once, following them
@@ -52,7 +52,7 @@ class OffsetMap:
     """
     def followWires (self,startNearPoint,pathWidth):
         
-        outputWires = [];
+        outputWires = self.outputWires;
 
         #list wires we must draw. we want to connect them in a sane order
         #make sure to start at a point far outside the face so we start outside!
@@ -96,11 +96,13 @@ class OffsetMap:
             outputWires.append(joinWire);
             
             if solution.isJoint:
-                display.DisplayColoredShape(joinWire,'RED');                
+                #display.DisplayColoredShape(joinWire,'RED');
+                pass;                
             else:
-                display.DisplayColoredShape(joinWire,'YELLOW');
+                #display.DisplayColoredShape(joinWire,'YELLOW');
+                pass;
             outputWires.append(trimmedWire);
-            display.DisplayColoredShape(trimmedWire,'GREEN');
+            #display.DisplayColoredShape(trimmedWire,'GREEN');
             
             #look for another edge which was created by the trimmedEdge. this is where we should search for a connecting point.
             (nextVertex,nextEdge,nextWire) = self.getNextEdge(trimmedEdge, trimmedPoint);
@@ -159,25 +161,24 @@ class OffsetMap:
         simpleoffset
         offset inwards by distance.
     """
+    @Util.printTiming
     def offsetOnceSimple(self,distance):
         
         bo = BRepOffsetAPI.BRepOffsetAPI_MakeOffset();           
         map(bo.AddWire, self.lastWires);
-        print "%d wires to offset at step 1" % len(self.lastWires)
+        print "%d wires to offset at step 1, distance = %0.3f" % ( len(self.lastWires),distance);
         bo.Perform(distance*(0.5),0.0);
         result1 = Topo(bo.Shape());
 
         returnList= [];
         #compound result can be a compound of edges and/or wires. weird weird
         for c in OCCUtil.childShapes(bo.Shape() ):
-            #display.DisplayColoredShape(c,'BLUE')
+            display.DisplayColoredShape(c,'BLUE')
             if c.ShapeType() == TopAbs.TopAbs_WIRE:
-                returnList.append(c);  #these are actually the wires we want to keep
-                self.otherWires.append(c);            
+                returnList.append(c);  #these are actually the wires we want to keep          
             elif c.ShapeType() == TopAbs.TopAbs_EDGE:
                 w = OCCUtil.wireFromEdges([c])
                 returnList.append(w);
-                self.otherWires.append(w);            
             else:
                 print "Warning: compound resulting from offset i am confused about-- not an edge or a wire."
             
@@ -200,6 +201,7 @@ class OffsetMap:
                     self.edgeMap[oe.__hash__()].append ( (ne,gwires[0]   ));
         
         self.lastWires = returnList;
+        self.otherWires.extend(returnList);
         return returnList;
     
     """
@@ -213,7 +215,7 @@ class OffsetMap:
         
         bo = BRepOffsetAPI.BRepOffsetAPI_MakeOffset();           
         map(bo.AddWire, self.lastWires);
-        print "%d wires to offset at step 1" % len(self.lastWires)
+        print "%d wires to offset at step 1, distance = %0.3f" % ( len(self.lastWires),distance);
         bo.Perform(distance,0.0);
         result1 = Topo(bo.Shape());
 
@@ -304,27 +306,71 @@ def testOffsetMapDecendants():
                 display.DisplayColoredShape(nv,'BLUE');
                 time.sleep(5);
 
+
+def testBasicFaceOffset2():
+    f = TestObjects.makeHeartFaceNoHole();
+    om = OffsetMap(f);    
+    om.offsetOnceSimple(-0.2);
+    om.offsetOnceSimple(-0.2);
+    om.offsetOnceSimple(-0.2);
+    #om.offsetOnce(-0.2);
+
+@Util.printTiming
+def testBasicFaceOffset():
+    f = TestObjects.makeHeartFaceNoHole();
+    startWires = OCCUtil.wireListFromFace(f);
+    display.DisplayColoredShape(startWires,'GREEN');
+    cw = startWires;
+    for i in range(3):
+        w = OCCUtil.offsetWireList(cw,-0.2);
+        display.DisplayColoredShape(w,'RED');
+        cw = w;
+
+@Util.printTiming        
 def testOffsetMapPathWalker():
     #test that we can walk all of the wires in the offset map exactly once by using getNextEdge
     
-    f = TestObjects.makeSquareWithRoundHole(); #face that will have odd offsets
+    #f = TestObjects.makeSquareWithRoundHole(); #face that will have odd offsets
+    f = TestObjects.makeHeartFace();
     om = OffsetMap(f);
-    om.display = display;
-    om.offsetOnceSimple(-0.2);
-    #om.offsetOnceSimple(-0.2);
-    om.offsetOnce(-0.2)
-    om.offsetOnceSimple(-0.2);
+    #display.DisplayColoredShape(om.originalWires,'GREEN');
+    #om.display = display;
+    
+    #WEIRD BUG-- after one offset, things are good, but after two offsets,
+    #the curve is offest back outwards instead of inwards?
+    wires1 = om.offsetOnceSimple(-0.1);
+    wires2 = om.offsetOnceSimple(-0.1);
+    wires3 = om.offsetOnceSimple(-0.1);
+    #display.DisplayColoredShape(wires1,'RED');
+    #display.DisplayColoredShape(wires2,'RED');
+    #display.DisplayColoredShape(wires3,'RED');
+    display.DisplayColoredShape(om.originalWires,'GREEN');
+    #display.DisplayColoredShape(om.otherWires, 'RED');
+    
+    ##wires2 = om.offsetOnceSimple(-0.2);
+    #display.DisplayColoredShape(wires2,'RED');
+    #wires3 = om.offsetOnceSimple(-0.2);
+    #display.DisplayColoredShape(wires3,'RED');
+    #wires4 = om.offsetOnceSimple(-0.2);  #<-------- breaks!
+    #display.DisplayColoredShape(wires4,'RED');
+    #CHAINED OFFSETTING IS NOT WORKING---- MUST KEEP THEM TOGETHER AS a face  
+    #wires1 = om.offsetOnce(-0.2);
+    #display.DisplayColoredShape(wires1,'RED');
+    #wires2 = om.offsetOnce(-0.2);
+    #display.DisplayColoredShape(wires2,'RED');
      
-    display.DisplayColoredShape(om.originalWires,'GREEN');      
-    display.DisplayColoredShape(om.otherWires,'RED');
-    time.sleep(2);
-    display.EraseAll();
-    om.followWires(gp.gp_Pnt(-2.0,-2.0,0),0.2);
+    #display.DisplayColoredShape(om.originalWires,'GREEN');      
+    #display.DisplayColoredShape(om.otherWires,'RED');
+    #time.sleep(5);
+    #display.EraseAll();
+    #om.followWires(gp.gp_Pnt(-2.0,-2.0,0),0.2);
+    #display.DisplayColoredShape(om.outputWires,'RED');
     
 if __name__=='__main__':
     from OCC.Display.SimpleGui import *
     display, start_display, add_menu, add_function_to_menu = init_display()
-    try:   
+    try: 
+        #testBasicFaceOffset();  
         testOffsetMapPathWalker();
     except:
         traceback.print_exc();
